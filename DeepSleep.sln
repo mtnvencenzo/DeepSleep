@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep", "DeepSleep\DeepSleep.csproj", "{E4B5519F-BC6F-4262-9188-F854389669CB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.NetCore", "DeepSleep.NetCore\DeepSleep.NetCore.csproj", "{54F03560-8097-4C38-92E2-F5ECA4910663}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".examples", ".examples", "{10A872B4-1959-41BB-801F-5954DAE1064C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.ExampleApi.NetCore", "DeepSleep.ExampleApi.NetCore\DeepSleep.ExampleApi.NetCore.csproj", "{1FA21065-D401-4198-AD10-B6BD5D5EA3E1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.Example.Controllers", "DeepSleep.Example.Controllers\DeepSleep.Example.Controllers.csproj", "{B3C731EA-BA24-4F5C-8BE3-D54373F640C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Validation.DataAnnotations", "DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.csproj", "{E8F6A3C0-26E8-4DD6-AAC2-4AC35059B118}"
 EndProject
@@ -29,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget.local", ".nuget.loca
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".test", ".test", "{DFEBD416-C35F-45CF-89E8-29BD52268577}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.Tests", "DeepSleep.Tests\DeepSleep.Tests.csproj", "{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Tests", "DeepSleep.Tests\DeepSleep.Tests.csproj", "{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,14 +39,6 @@ Global
 		{54F03560-8097-4C38-92E2-F5ECA4910663}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54F03560-8097-4C38-92E2-F5ECA4910663}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54F03560-8097-4C38-92E2-F5ECA4910663}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FA21065-D401-4198-AD10-B6BD5D5EA3E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FA21065-D401-4198-AD10-B6BD5D5EA3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FA21065-D401-4198-AD10-B6BD5D5EA3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FA21065-D401-4198-AD10-B6BD5D5EA3E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3C731EA-BA24-4F5C-8BE3-D54373F640C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3C731EA-BA24-4F5C-8BE3-D54373F640C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3C731EA-BA24-4F5C-8BE3-D54373F640C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3C731EA-BA24-4F5C-8BE3-D54373F640C9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8F6A3C0-26E8-4DD6-AAC2-4AC35059B118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E8F6A3C0-26E8-4DD6-AAC2-4AC35059B118}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8F6A3C0-26E8-4DD6-AAC2-4AC35059B118}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,40 +52,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1FA21065-D401-4198-AD10-B6BD5D5EA3E1} = {10A872B4-1959-41BB-801F-5954DAE1064C}
-		{B3C731EA-BA24-4F5C-8BE3-D54373F640C9} = {10A872B4-1959-41BB-801F-5954DAE1064C}
 		{E223CE9B-84FB-4758-B81A-BC96C15C8143} = {1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}
 		{96F4A844-D61B-4FD4-8E71-903E0E9F0377} = {1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}
 		{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8628A44-548F-4E07-8852-1C13652D7637}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mtnvencenzo.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DeepSleep\\DeepSleep.csproj
-		SccProjectName1 = DeepSleep
-		SccLocalPath1 = DeepSleep
-		SccProjectUniqueName2 = DeepSleep.NetCore\\DeepSleep.NetCore.csproj
-		SccProjectName2 = DeepSleep.NetCore
-		SccLocalPath2 = DeepSleep.NetCore
-		SccProjectUniqueName3 = DeepSleep.ExampleApi.NetCore\\DeepSleep.ExampleApi.NetCore.csproj
-		SccProjectTopLevelParentUniqueName3 = DeepSleep.sln
-		SccProjectName3 = DeepSleep.ExampleApi.NetCore
-		SccLocalPath3 = DeepSleep.ExampleApi.NetCore
-		SccProjectUniqueName4 = DeepSleep.Example.Controllers\\DeepSleep.Example.Controllers.csproj
-		SccProjectTopLevelParentUniqueName4 = DeepSleep.sln
-		SccProjectName4 = DeepSleep.Example.Controllers
-		SccLocalPath4 = DeepSleep.Example.Controllers
-		SccProjectUniqueName5 = DeepSleep.Validation.DataAnnotations\\DeepSleep.Validation.DataAnnotations.csproj
-		SccProjectName5 = DeepSleep.Validation.DataAnnotations
-		SccLocalPath5 = DeepSleep.Validation.DataAnnotations
-		SccProjectUniqueName6 = DeepSleep.Tests\\DeepSleep.Tests.csproj
-		SccProjectTopLevelParentUniqueName6 = DeepSleep.sln
-		SccProjectName6 = DeepSleep.Tests
-		SccLocalPath6 = DeepSleep.Tests
 	EndGlobalSection
 EndGlobal
