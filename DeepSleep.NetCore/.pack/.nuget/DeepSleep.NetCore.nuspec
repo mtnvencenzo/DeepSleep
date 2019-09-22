@@ -2,25 +2,26 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.1-alpha</version>
+    <version>0.0.1</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <iconUrl>http://www.tisdaleplumbing.com/deepsleep_netcore.png</iconUrl>
     <description>DeepSleep</description>
-    <releaseNotes>Alpha release of the DeepSleep.NetCore package</releaseNotes>
-    <license type="expression">MIT</license>
+    <releaseNotes>Release of the DeepSleep.NetCore package</releaseNotes>
+    <license type="file">LICENSE</license>
     <copyright>Copyright 2019</copyright>
     <tags>deepsleep</tags>
     <dependencies>
       <group targetFramework="netcoreapp2.0">
-        <dependency id="DeepSleep" version="0.0.1-alpha" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\bin\release\netcoreapp2.0\DeepSleep.NetCore.deps.json" target="lib\netcoreapp2.0" />
-    <file src="..\..\bin\release\netcoreapp2.0\DeepSleep.NetCore.dll" target="lib\netcoreapp2.0" />
-    <file src="..\..\bin\release\netcoreapp2.0\DeepSleep.NetCore.xml" target="lib\netcoreapp2.0" />
+    <file src="..\..\..\LICENSE" target="LICENSE" />
+    <file src="..\..\bin\Release\netcoreapp2.0\DeepSleep.NetCore.deps.json" target="lib\netcoreapp2.0" />
+    <file src="..\..\bin\Release\netcoreapp2.0\DeepSleep.NetCore.dll" target="lib\netcoreapp2.0" />
+    <file src="..\..\bin\Release\netcoreapp2.0\DeepSleep.NetCore.xml" target="lib\netcoreapp2.0" />
   </files>
 </package>
