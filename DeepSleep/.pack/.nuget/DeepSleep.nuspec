@@ -9,7 +9,7 @@
     <iconUrl>http://www.tisdaleplumbing.com/deepsleep.png</iconUrl>
     <description>DeepSleep Alpha</description>
     <releaseNotes>Alpha release of the DeepSleep package</releaseNotes>
-    <license type="expression">MIT</license>
+    <license type="expression">repository</license>
     <copyright>Copyright 2019</copyright>
     <tags>deepsleep</tags>
     <dependencies>

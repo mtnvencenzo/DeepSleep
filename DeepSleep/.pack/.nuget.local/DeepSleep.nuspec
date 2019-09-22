@@ -9,7 +9,7 @@
     <iconUrl>http://www.tisdaleplumbing.com/deepsleep.png</iconUrl>
     <description>Deep Sleep RESTful API Framework</description>
     <releaseNotes>Inital stable releast of the Deep Sleep RESTful API Framework</releaseNotes>
-    <license type="expression">MIT</license>
+    <license type="expression">repository</license>
     <copyright>Copyright 2019</copyright>
     <tags>rest api core webapi aspnet deepsleep</tags>
     <dependencies>
