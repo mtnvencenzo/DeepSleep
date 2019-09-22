@@ -1,0 +1,175 @@
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="APIRequestInfo.cs" company="Ronaldo Vecchi">
+//   Copyright © Ronaldo Vecchi
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+
+namespace DeepSleep
+{
+    /// <summary>The API request info.</summary>
+    public class ApiRequestInfo
+    {
+        #region Constructors & Initialization
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiRequestInfo"/> class.
+        /// </summary>
+        public ApiRequestInfo()
+        {
+            Headers = new List<ApiHeader>();
+        }
+
+        #endregion
+
+        /// <summary>Gets or sets the request accept types.</summary>
+        /// <value>The request accept types.</value>
+        public MediaHeaderValueWithQualityString Accept { get; set; }
+
+        /// <summary>Gets or sets the accept language.</summary>
+        /// <value>The accept language.</value>
+        public LanguageHeaderValueWithQualityString AcceptLanguage { get; set; }
+
+        /// <summary>Gets or sets the accept culture.</summary>
+        /// <value>The accept culture.</value>
+        public CultureInfo AcceptCulture { get; set; }
+
+        /// <summary>Gets or sets the accept charset.</summary>
+        /// <value>The accept charset.</value>
+        public CharsetHeaderValueWithQualityString AcceptCharset { get; set; }
+
+        /// <summary>Gets or sets the accept encoding.</summary>
+        /// <value>The accept encoding.</value>
+        public MediaHeaderValueWithQualityString AcceptEncoding { get; set; }
+
+        /// <summary>Gets or sets the authentication info.</summary>
+        /// <value>The authentication info.</value>
+        public ClientAuthentication ClientAuthenticationInfo { get; set; }
+
+        /// <summary>Gets or sets the cross origin request.</summary>
+        /// <value>The cross origin request.</value>
+        public CrossOriginRequestValues CrossOriginRequest { get; set; }
+
+        /// <summary>Gets or sets the type of the content.</summary>
+        /// <value>The type of the content.</value>
+        public MediaHeaderValueWithParameters ContentType { get; set; }
+
+        /// <summary>Gets or sets the length of the content.</summary>
+        /// <value>The length of the content.</value>
+        public long? ContentLength { get; set; }
+
+        /// <summary>Gets or sets the client specified correlation id for the request.</summary>
+        /// <value>The correlation id.</value>
+        public string CorrelationId { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether [force download].</summary>
+        /// <value><c>true</c> if [force download]; otherwise, <c>false</c>.</value>
+        public bool ForceDownload { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [pretty print].
+        /// </summary>
+        /// <value><c>true</c> if [pretty print]; otherwise, <c>false</c>.</value>
+        public bool PrettyPrint { get; set; }
+
+        /// <summary>Gets or sets the method.</summary>
+        /// <value>The method.</value>
+        public string Method { get; set; }
+
+        /// <summary>Gets or sets the remote user.  These fields are automatically mapped from the TCP level server variables.</summary>
+        /// <value>The remote user.</value>
+        public ApiRemoteUser RemoteUser { get; set; }
+
+        /// <summary>Gets or sets the request date.</summary>
+        /// <value>The request date.</value>
+        public DateTime? RequestDate { get; set; }
+
+        /// <summary>Gets or sets the request identifier.</summary>
+        /// <value>The request identifier.</value>
+        public string RequestIdentifier { get; set; }
+
+        /// <summary>Gets or sets the request URI.</summary>
+        /// <value>The request URI.</value>
+        public string RequestUri { get; set; }
+
+        /// <summary>Gets or sets the secured transport mode.</summary>
+        /// <value>The secured transport mode.</value>
+        public TransportSecurity SecuredTransportMode { get; set; }
+
+        /// <summary>Gets or sets the invocation context.</summary>
+        /// <value>The invocation context.</value>
+        public ApiInvocationContext InvocationContext { get; set; }
+
+        /// <summary>Gets or sets the query variables.</summary>
+        /// <value>The query variables.</value>
+        public Dictionary<string, string> QueryVariables { get; set; }
+
+        /// <summary>Gets or sets the protocol.</summary>
+        /// <value>The protocol.</value>
+        public string Protocol { get; set; }
+
+        /// <summary>Gets or sets the path.</summary>
+        /// <value>The path.</value>
+        public string Path { get; set; }
+
+        /// <summary>Gets or sets the headers.</summary>
+        /// <value>The headers.</value>
+        public List<ApiHeader> Headers { get; set; }
+
+        /// <summary>Gets or sets the body.</summary>
+        /// <value>The body.</value>
+        public Stream Body { get; set; }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ApiRequestInfoExtensionMethods
+    {
+        /// <summary>
+        /// Determines whether [is cors preflight request].
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>
+        ///   <c>true</c> if [is cors preflight request] [the specified request]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsCorsPreflightRequest(this ApiRequestInfo request)
+        {
+            if (request?.Method?.ToUpper() == "OPTIONS")
+            {
+                if (!string.IsNullOrWhiteSpace(request?.CrossOriginRequest?.Origin))
+                {
+                    if (!string.IsNullOrWhiteSpace(request.CrossOriginRequest.AccessControlRequestMethod))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether [is head request].
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>
+        ///   <c>true</c> if [is head request] [the specified request]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsHeadRequest(this ApiRequestInfo request)
+        {
+            if (request?.Method?.ToUpper() == "HEAD")
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+}

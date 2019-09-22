@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>0.0.1</Version>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+    <PackageIconUrl>http://www.tisdaleplumbing.com/deepsleep_netcore.png</PackageIconUrl>
+    <Description>Shim project to enable the Deep Sleep API framework within a .NetCore application.</Description>
+    <Authors>Ronaldo Vecchi</Authors>
+    <Company>Ronaldo Vecchi</Company>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.NetCore\DeepSleep.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.NetCore\DeepSleep.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include=".pack\deepsleep_netcore.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".pack\.nuget\DeepSleep.NetCore.nuspec" />
+    <None Include=".pack\.nuget\DeepSleep.NetCore.pack.ps1" />
+    <None Include=".pack\.nuget.local\DeepSleep.NetCore.nuspec" />
+    <None Include=".pack\.nuget.local\DeepSleep.NetCore.pack.ps1" />
+    <None Include=".pack\deepsleep_netcore.pdn" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeepSleep\DeepSleep.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\UnhandledExceptionErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UnhandledExceptionErrors.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\UnhandledExceptionErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UnhandledExceptionErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

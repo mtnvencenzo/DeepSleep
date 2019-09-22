@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include=".pack\deepsleep_validation_dataannotations.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeepSleep\DeepSleep.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.nuspec" />
+    <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.pack.ps1" />
+    <None Include=".pack\.nuget.local\DeepSleep.Validation.DataAnnotations.nuspec" />
+    <None Include=".pack\.nuget.local\DeepSleep.Validation.DataAnnotations.pack.ps1" />
+    <None Include=".pack\deepsleep_validation_dataannotations.pdn" />
+  </ItemGroup>
+
+</Project>

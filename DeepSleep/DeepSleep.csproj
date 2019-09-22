@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Ronaldo Vecchi</Authors>
+    <Company />
+    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+    <Product>Deep Sleep RESTful API Framework</Product>
+    <Description>Deep Sleep RESTful API Framework</Description>
+    <PackageReleaseNotes>Inital stable releast of the Deep Sleep RESTful API Framework</PackageReleaseNotes>
+    <PackageIconUrl>http://www.tisdaleplumbing.com/deepsleep.png</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep\DeepSleep.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep\DeepSleep.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".pack\.nuget\DeepSleep.nuspec" />
+    <None Include=".pack\.nuget\DeepSleep.pack.ps1" />
+    <None Include=".pack\.nuget.local\DeepSleep.nuspec" />
+    <None Include=".pack\.nuget.local\DeepSleep.pack.ps1" />
+    <None Include=".pack\deepsleep.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Auth\AuthenticationErrors.Designer.cs">
+      <DependentUpon>AuthenticationErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\InfoMessages.Designer.cs">
+      <DependentUpon>InfoMessages.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\UnhandledExceptionErrors.Designer.cs">
+      <DependentUpon>UnhandledExceptionErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\ValidationErrors.Designer.cs">
+      <DependentUpon>ValidationErrors.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Auth\AuthenticationErrors.resx">
+      <LastGenOutput>AuthenticationErrors.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\InfoMessages.resx">
+      <LastGenOutput>InfoMessages.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\UnhandledExceptionErrors.resx">
+      <LastGenOutput>UnhandledExceptionErrors.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\ValidationErrors.resx">
+      <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

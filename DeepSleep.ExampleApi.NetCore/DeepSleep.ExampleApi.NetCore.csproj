@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".fiddler\local-helloworld.saz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeepSleep.Example.Controllers\DeepSleep.Example.Controllers.csproj" />
+    <ProjectReference Include="..\DeepSleep.NetCore\DeepSleep.NetCore.csproj" />
+    <ProjectReference Include="..\DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.csproj" />
+    <ProjectReference Include="..\DeepSleep\DeepSleep.csproj" />
+  </ItemGroup>
+
+</Project>

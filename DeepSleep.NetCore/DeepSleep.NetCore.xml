@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeepSleep.NetCore</name>
+    </assembly>
+    <members>
+        <member name="T:DeepSleep.NetCore.ApiCoreHttpExtensionMethods">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultValidationProvider(System.IServiceProvider)">
+            <summary>Gets the default validation provider.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultResponseMessageProcessorProvider(System.IServiceProvider)">
+            <summary>Gets the default response message processor provider.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultFormatterFactory(System.IServiceProvider)">
+            <summary>Gets the default formatter factory.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultAuthenticationFactory(System.IServiceProvider)">
+            <summary>Gets the default authentication factory.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultCrossOriginConfigResolver(System.IServiceProvider)">
+            <summary>Gets the default cross origin configuration resolver.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultRequestPipeline(System.IServiceProvider)">
+            <summary>Gets the default request pipeline.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultApiResponseMessageConverter(System.IServiceProvider)">
+            <summary>Gets the default API response message converter.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.__getDefaultRoutingTable(System.IServiceProvider)">
+            <summary>Gets the default routing table.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.UseApiCoreHttp(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>Uses the API request context.</summary>
+            <param name="builder">The builder.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiCoreHttpExtensionMethods.UseApiCoreServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,DeepSleep.IApiServiceConfiguration)">
+            <summary>Uses the API core services.</summary>
+            <param name="services">The services.</param>
+            <param name="config">The configuration.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.NetCore.ApiRequestContextPipelineComponent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeepSleep.NetCore.ApiRequestContextPipelineComponent"/> class.
+            </summary>
+            <param name="next">The next.</param>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.BuildApiRequestContext(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>Builds the API request context.</summary>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetRequestDate(Microsoft.AspNetCore.Http.HttpRequest,System.DateTime)">
+            <summary>Gets the request date.</summary>
+            <param name="request">The request.</param>
+            <param name="serverTime">The server time.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetRequestHeaders(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the request headers.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.ProcessHeaderDateValue(System.String,System.DateTime)">
+            <summary>Processes the header date value.</summary>
+            <param name="val">The value.</param>
+            <param name="serverTime">The server time (UTC) when the service started processing the request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.ProcessDateHeaderValueKind(System.DateTime,System.DateTime,System.Boolean,System.Boolean)">
+            <summary>Processes the kind of the date header value.</summary>
+            <param name="parsed">The parsed.</param>
+            <param name="serverTime">The serverTime when the service started processing the request.</param>
+            <param name="isInUtc">if set to <c>true</c> [is in UTC].</param>
+            <param name="hasLocalOffSet">if set to <c>true</c> [has local off set].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetCorrelationId(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the client specified correlation id from the reuqest.  A check is first made on the request headers for a
+                header named 'X-CorrelationID'.
+                If non-existent the the check is made against the query string for the xCorrelationID parameter.</summary>
+            <param name="request">The request.</param>
+            <returns>The correlation id from the request or null.</returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetAcceptTypes(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the client specified correlation id from the reuqest.  A check is first made on the request headers for a
+                header named 'X-CorrelationID'.
+                If non-existent the the check is made against the query string for the xCorrelationID parameter.</summary>
+            <param name="request">The request.</param>
+            <returns>The correlation id from the request or null.</returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetAcceptLanguage(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the accept language.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetAcceptEncoding(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the accept encoding.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetAcceptCharset(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the accept charset.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetClientAuthInfo(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the client authentication information.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetCrossOriginRequestValues(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the cross origin request values.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetTransportSecurityMode(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary> Gets the transport security mode.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetRemoteUserFromServerVariables(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the remote user from server variables.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetRequestIP(Microsoft.AspNetCore.Http.HttpContext,System.Boolean)">
+            <summary>Gets the request ip.</summary>
+            <param name="context">The context.</param>
+            <param name="tryUseXForwardHeader">if set to <c>true</c> [try use x forward header].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetRequestPort(Microsoft.AspNetCore.Http.HttpContext,System.Boolean)">
+            <summary>Gets the request port.</summary>
+            <param name="context">The context.</param>
+            <param name="tryUseXForwardHeader">if set to <c>true</c> [try use x forward header].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetHeaderValueAs``1(Microsoft.AspNetCore.Http.HttpContext,System.String)">
+            <summary>Gets the header value as.</summary>
+            <typeparam name="T"></typeparam>
+            <param name="context">The context.</param>
+            <param name="headerName">Name of the header.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.SplitCsv(System.String,System.Boolean)">
+            <summary>Splits the CSV.</summary>
+            <param name="csvList">The CSV list.</param>
+            <param name="nullOrWhitespaceInputReturnsNull">if set to <c>true</c> [null or whitespace input returns null].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetForceDownloadFlag(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the force download flag.</summary>
+            <param name="request">The request.</param>
+            <returns>The <see cref="T:System.Boolean"/>.</returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetPrettyPrint(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Gets the pretty print.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.GetQueryStringVariables(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>Gets the query string variables.</summary>
+            <param name="context">The context.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponent.Invoke(Microsoft.AspNetCore.Http.HttpContext,DeepSleep.IApiRequestContextResolver,DeepSleep.IApiRequestPipeline)">
+            <summary>Invokes the specified httpcontext.</summary>
+            <param name="httpcontext">The httpcontext.</param>
+            <param name="contextResolver">The context resolver.</param>
+            <param name="requestPipeline">The request pipeline.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.NetCore.ApiRequestContextPipelineComponentExtensionMethods">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.NetCore.ApiRequestContextPipelineComponentExtensionMethods.UseApiRequestContext(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>Uses the API request context.</summary>
+            <param name="builder">The builder.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.NetCore.DateTimeExtensions">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:DeepSleep.NetCore.DateTimeExtensions._epoch">
+            <summary></summary>
+        </member>
+        <member name="M:DeepSleep.NetCore.DateTimeExtensions.ToUtcDate(System.Int64)">
+            <summary>Toes the UTC date.</summary>
+            <param name="unixTime">The UNIX time.</param>
+            <returns>The <see cref="T:System.DateTime"/>.</returns>
+        </member>
+        <member name="M:DeepSleep.NetCore.DateTimeExtensions.ChangeKind(System.DateTime,System.DateTimeKind)">
+            <summary>Changes the kind.</summary>
+            <param name="date">The date.</param>
+            <param name="kind">The kind.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.NetCore.Resources.UnhandledExceptionErrors">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:DeepSleep.NetCore.Resources.UnhandledExceptionErrors.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:DeepSleep.NetCore.Resources.UnhandledExceptionErrors.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:DeepSleep.NetCore.Resources.UnhandledExceptionErrors.NotImplemented">
+            <summary>
+              Looks up a localized string similar to 501.000001|Error|Resource Not Implemented|The resource you are trying to reach has not been implemented..
+            </summary>
+        </member>
+        <member name="P:DeepSleep.NetCore.Resources.UnhandledExceptionErrors.UnhandledException">
+            <summary>
+              Looks up a localized string similar to 500.000001|Error|Unhandled Exception|An unhandled exception has occurred..
+            </summary>
+        </member>
+        <member name="T:DeepSleep.NetCore.StringExtensions">
+            <summary>The string extensions.</summary>
+        </member>
+        <member name="M:DeepSleep.NetCore.StringExtensions.Contains(System.String,System.String,System.StringComparison)">
+            <summary>This allows for a case insensitive search for a string in a string.</summary>
+            <param name="inString">The source string.</param>
+            <param name="value">The string to search for.</param>
+            <param name="comparisonType">The comparison type.</param>
+            <returns>The <see cref="T:System.Boolean"/>.</returns>
+        </member>
+    </members>
+</doc>
