@@ -7,9 +7,9 @@
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <iconUrl>http://www.tisdaleplumbing.com/deepsleep.png</iconUrl>
-    <description>DeepSleep Alpha</description>
-    <releaseNotes>Alpha release of the DeepSleep package</releaseNotes>
-    <license type="expression">repository</license>
+    <description>DeepSleep</description>
+    <releaseNotes>Release of the DeepSleep package</releaseNotes>
+    <license type="file">LICENSE</license>
     <copyright>Copyright 2019</copyright>
     <tags>deepsleep</tags>
     <dependencies>
@@ -19,6 +19,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="..\..\..\LICENSE" target="LICENSE" />
     <file src="..\..\bin\release\netstandard2.0\DeepSleep.deps.json" target="lib\netstandard2.0" />
     <file src="..\..\bin\release\netstandard2.0\DeepSleep.dll" target="lib\netstandard2.0" />
     <file src="..\..\bin\release\netstandard2.0\DeepSleep.xml" target="lib\netstandard2.0" />
