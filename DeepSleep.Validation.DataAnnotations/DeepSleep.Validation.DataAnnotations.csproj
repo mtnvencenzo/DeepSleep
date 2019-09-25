@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Globals">
     <SccProjectName>SAK</SccProjectName>
@@ -34,8 +34,6 @@
   <ItemGroup>
     <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.nuspec" />
     <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.pack.ps1" />
-    <None Include=".pack\.nuget.local\DeepSleep.Validation.DataAnnotations.nuspec" />
-    <None Include=".pack\.nuget.local\DeepSleep.Validation.DataAnnotations.pack.ps1" />
     <None Include=".pack\deepsleep_validation_dataannotations.pdn" />
   </ItemGroup>
 

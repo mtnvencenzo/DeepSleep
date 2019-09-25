@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.Validation.DataAnnotations</id>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <iconUrl>http://www.tisdaleplumbing.com/deepsleep_validation_dataannotations.png</iconUrl>
+    <iconUrl>https://outdoorsite.blob.core.windows.net/public/cdn/nuget/deepsleep_validation_dataannotations.png</iconUrl>
     <description>DeepSleep</description>
     <releaseNotes>Release of the DeepSleep.Validation.DataAnnotations package</releaseNotes>
     <license type="file">LICENSE</license>
@@ -14,7 +14,7 @@
     <tags>deepsleep</tags>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.2" exclude="Build,Analyzers" />
         <dependency id="System.ComponentModel.Annotations" version="4.5.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
