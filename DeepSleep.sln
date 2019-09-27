@@ -16,11 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E223CE
 		DeepSleep.Nuget.pack-all.ps1 = DeepSleep.Nuget.pack-all.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget.local", ".nuget.local", "{96F4A844-D61B-4FD4-8E71-903E0E9F0377}"
-	ProjectSection(SolutionItems) = preProject
-		DeepSleep.pack-all.ps1 = DeepSleep.pack-all.ps1
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".test", ".test", "{DFEBD416-C35F-45CF-89E8-29BD52268577}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Tests", "DeepSleep.Tests\DeepSleep.Tests.csproj", "{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF}"
@@ -53,7 +48,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E223CE9B-84FB-4758-B81A-BC96C15C8143} = {1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}
-		{96F4A844-D61B-4FD4-8E71-903E0E9F0377} = {1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}
 		{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
