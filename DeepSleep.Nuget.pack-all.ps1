@@ -7,3 +7,4 @@ nuget restore DeepSleep.sln
 nuget pack DeepSleep\.pack\.nuget\DeepSleep.nuspec -Verbosity detailed -OutputDirectory ..\.nuget
 nuget pack DeepSleep.NetCore\.pack\.nuget\DeepSleep.NetCore.nuspec -Verbosity detailed -OutputDirectory ..\.nuget
 nuget pack DeepSleep.Validation.DataAnnotations\.pack\.nuget\DeepSleep.Validation.DataAnnotations.nuspec -Verbosity detailed -OutputDirectory ..\.nuget
+
