@@ -7,6 +7,7 @@ using System;
 using DeepSleep.Pipeline;
 using DeepSleep.Formatting.Formatters;
 using DeepSleep.Auth.Providers;
+using DeepSleep.NetCore.Controllers;
 
 namespace DeepSleep.NetCore
 {
@@ -93,12 +94,61 @@ namespace DeepSleep.NetCore
             return new DefaultApiResponseMessageConverter();
         }
 
-        /// <summary>Gets the default routing table.</summary>
-        /// <param name="serviceProvider">The service provider.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceProvider"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
-        private static IApiRoutingTable __getDefaultRoutingTable(IServiceProvider serviceProvider)
+        private static IApiRoutingTable __getDefaultRoutingTable(IServiceProvider serviceProvider, IApiServiceConfiguration config)
         {
-            return new DefaultApiRoutingTable();
+            var table = new DefaultApiRoutingTable();
+
+            if (config?.UsePingEndpoint ?? false)
+            {
+                table.AddRoute(
+                   template: $"ping",
+                   httpMethod: "GET",
+                   name: $"GET_ping",
+                   controller: typeof(PingController),
+                   endpoint: nameof(PingController.Ping),
+                   config: new ApiResourceConfig
+                   {
+                       AllowAnonymous = true,
+                       CacheDirective = new HttpCacheDirective
+                       {
+                           Cacheability = HttpCacheType.NoCache,
+                           CacheLocation = HttpCacheLocation.Private,
+                           ExpirationSeconds = -5
+                       },
+                       Deprecated = false,
+                       ResourceId = $"{Guid.Empty}_Ping"
+                   }).ConfigureAwait(false).GetAwaiter();
+            }
+
+            if (config?.UseEnvironmentEndpoint ?? false)
+            {
+                table.AddRoute(
+                   template: $"env",
+                   httpMethod: "GET",
+                   name: $"GET_env",
+                   controller: typeof(EnnvironmentController),
+                   endpoint: nameof(EnnvironmentController.Env),
+                   config: new ApiResourceConfig
+                   {
+                       AllowAnonymous = true,
+                       CacheDirective = new HttpCacheDirective
+                       {
+                           Cacheability = HttpCacheType.NoCache,
+                           CacheLocation = HttpCacheLocation.Private,
+                           ExpirationSeconds = -5
+                       },
+                       Deprecated = false,
+                       ResourceId = $"{Guid.Empty}_Environment"
+                   }).ConfigureAwait(false).GetAwaiter();
+            }
+
+            return table;
         }
 
         #endregion
@@ -127,7 +177,7 @@ namespace DeepSleep.NetCore
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider(p, __getDefaultValidationProvider(p)))
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider(p, __getDefaultResponseMessageProcessorProvider(p)))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter(p, __getDefaultApiResponseMessageConverter(p)))
-                .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTableResolver(p, __getDefaultRoutingTable(p)))
+                .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTableResolver(p, __getDefaultRoutingTable(p, config)))
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipelineBuilder(p, __getDefaultRequestPipeline(p)))
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
         }

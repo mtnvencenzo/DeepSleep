@@ -837,7 +837,7 @@ namespace DeepSleep.NetCore
         /// <summary>Gets the query string variables.</summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        public Dictionary<string, string> GetQueryStringVariables(HttpContext context)
+        private Dictionary<string, string> GetQueryStringVariables(HttpContext context)
         {
             var qvars = new Dictionary<string, string>();
 

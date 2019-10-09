@@ -48,6 +48,16 @@ namespace DeepSleep
         /// <value>The exception handler.</value>
         Func<ApiRequestContext, Exception, Task<long>> ExceptionHandler { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        bool UsePingEndpoint { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool UseEnvironmentEndpoint { get; set; }
+
         /// <summary>Adds the pipeline hook.</summary>
         /// <param name="types">The types.</param>
         /// <param name="placements">The placements.</param>

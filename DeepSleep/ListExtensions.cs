@@ -5,7 +5,7 @@ namespace DeepSleep
     /// <summary>
     /// 
     /// </summary>
-    public static class ListExtensions
+    internal static class ListExtensions
     {
         /// <summary>Concatenates the specified separator.</summary>
         /// <param name="list">The list.</param>

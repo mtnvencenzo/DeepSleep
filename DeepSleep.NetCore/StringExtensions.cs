@@ -5,7 +5,7 @@ using System.Text;
 namespace DeepSleep.NetCore
 {
     /// <summary>The string extensions.</summary>
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         /// <summary>This allows for a case insensitive search for a string in a string.</summary>
         /// <param name="inString">The source string.</param>

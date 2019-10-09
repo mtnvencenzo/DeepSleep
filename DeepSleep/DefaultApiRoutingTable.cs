@@ -99,7 +99,7 @@ namespace DeepSleep
         /// </exception>
         public async Task<IApiRoutingTable> AddRoute(string name, string template, string httpMethod, Type controller, string endpoint, Func<Task<ApiResourceConfig>> config)
         {
-            var method = controller.GetMethod(endpoint);
+            var method = controller.GetMethod(endpoint, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
 
             if (method == null)
             {
