@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary></summary>
     public interface IApiResponseMessageProcessorProvider
     {

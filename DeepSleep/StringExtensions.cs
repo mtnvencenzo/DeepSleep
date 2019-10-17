@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+
     /// <summary>The string extensions.</summary>
     internal static class StringExtensions
     {

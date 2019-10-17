@@ -1,10 +1,7 @@
-﻿using DeepSleep.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using DeepSleep.Pipeline;
+
     /// <summary>
     /// 
     /// </summary>

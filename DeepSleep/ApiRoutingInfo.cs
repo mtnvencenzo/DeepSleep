@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public class ApiRoutingInfo
     {
         /// <summary>Gets or sets the template information.</summary>

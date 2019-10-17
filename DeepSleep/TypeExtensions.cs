@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq.Expressions;
-using System.Reflection;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     /// <summary>
     /// 
     /// </summary>

@@ -1,15 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AuthFactory.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DeepSleep.Auth
+﻿namespace DeepSleep.Auth
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary></summary>
     public class DefaultAuthenticationFactory : IAuthenticationFactory
     {

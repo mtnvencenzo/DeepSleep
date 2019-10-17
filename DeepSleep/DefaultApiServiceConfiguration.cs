@@ -1,15 +1,12 @@
-﻿using DeepSleep.Formatting;
-using DeepSleep.Formatting.Formatters;
-using DeepSleep.Auth;
-using DeepSleep.Auth.Providers;
-using DeepSleep.Pipeline;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DeepSleep.Validation;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using DeepSleep.Formatting;
+    using DeepSleep.Auth;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using DeepSleep.Validation;
+
     /// <summary>
     /// 
     /// </summary>

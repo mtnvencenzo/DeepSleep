@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
-
-namespace DeepSleep.Text
+﻿namespace DeepSleep.Text
 {
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+
     /// <summary>
     /// 
     /// </summary>

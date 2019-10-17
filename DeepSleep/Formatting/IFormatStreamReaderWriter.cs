@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>

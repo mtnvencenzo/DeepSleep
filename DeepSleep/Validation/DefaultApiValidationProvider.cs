@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// 
     /// </summary>

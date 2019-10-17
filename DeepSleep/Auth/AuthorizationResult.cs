@@ -1,14 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AuthorizationResult.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
-namespace DeepSleep.Auth
+﻿namespace DeepSleep.Auth
 {
+    using System.Collections.Generic;
+
     /// <summary></summary>
     public class AuthorizationResult
     {

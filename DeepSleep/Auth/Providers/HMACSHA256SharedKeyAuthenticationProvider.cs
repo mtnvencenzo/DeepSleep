@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Text;
-using System.Security.Cryptography;
-using System.Net;
-
-namespace DeepSleep.Auth.Providers
+﻿namespace DeepSleep.Auth.Providers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Text;
+    using System.Security.Cryptography;
+    using System.Net;
+
     /// <summary></summary>
     public class HMACSHA256SharedKeyAuthenticationProvider : IAuthenticationProvider
     {
@@ -132,7 +132,7 @@ namespace DeepSleep.Auth.Providers
                 return new AuthenticationResult(false, AuthenticationErrors.EmptySignature, responseMessageConverter);
             }
 
-            var privateKey = (await KeyInfoProvider.GetKeyInfo(publicKey))?.PrivateKey ?? string.Empty;
+            var privateKey = (await KeyInfoProvider.GetKeyInfo(publicKey).ConfigureAwait(false))?.PrivateKey ?? string.Empty;
             if (string.IsNullOrWhiteSpace(privateKey))
             {
                 return new AuthenticationResult(false, AuthenticationErrors.InvalidPrivateKey, responseMessageConverter);

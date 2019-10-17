@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using System.Text;
-
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using System.Globalization;
+    using System.Text;
+
     /// <summary>
     /// 
     /// </summary>

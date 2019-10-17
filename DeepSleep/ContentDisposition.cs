@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
     /// <summary>Represents a Multipart content disposition header</summary>
     /// <remarks>

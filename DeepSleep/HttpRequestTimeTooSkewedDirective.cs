@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
     /// <summary>Defines how a particular HTTP resource should be handle request time skewing.</summary>
-    [Serializable]
     public class HttpRequestTimeTooSkewedDirective
     {
         /// <summary>Gets or sets the cacheability.</summary>

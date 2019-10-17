@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DeepSleep.Text
+﻿namespace DeepSleep.Text
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>

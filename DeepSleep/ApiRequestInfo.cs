@@ -1,18 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="APIRequestInfo.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+
     /// <summary>The API request info.</summary>
     public class ApiRequestInfo
     {

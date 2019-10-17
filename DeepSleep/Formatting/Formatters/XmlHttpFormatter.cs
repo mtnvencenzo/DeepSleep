@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.IO;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Text;
-
-namespace DeepSleep.Formatting.Formatters
+﻿namespace DeepSleep.Formatting.Formatters
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.IO;
+    using System.Xml.Serialization;
+    using System.Xml;
+    using System.Text;
+
     /// <summary>
     /// 
     /// </summary>

@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IRequestContext.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
     /// <summary></summary>
     public interface IApiRequestContextResolver

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
@@ -65,7 +65,7 @@ namespace DeepSleep
         /// <exception cref="System.MissingMethodException"></exception>
         public async Task<IApiRoutingTable> AddRoute(string name, string template, string httpMethod, Type controller, string endpoint)
         {
-            return await AddRoute(name, template, httpMethod, controller, endpoint, null as ApiResourceConfig);
+            return await AddRoute(name, template, httpMethod, controller, endpoint, null as ApiResourceConfig).ConfigureAwait(false);
         }
 
         /// <summary>Adds the route.</summary>
@@ -83,7 +83,7 @@ namespace DeepSleep
                 TaskCompletionSource<ApiResourceConfig> source = new TaskCompletionSource<ApiResourceConfig>();
                 source.SetResult(config);
                 return source.Task;
-            });
+            }).ConfigureAwait(false);
         }
 
         /// <summary>Adds the route.</summary>
@@ -111,7 +111,7 @@ namespace DeepSleep
                 throw new Exception(string.Format("Configuration must be supplied", endpoint, controller.FullName));
             }
 
-            var configuration = await config();
+            var configuration = await config().ConfigureAwait(false);
 
             if (configuration == null)
             {
@@ -132,7 +132,7 @@ namespace DeepSleep
                 Config = configuration,
                 EndpointLocation = new ApiEndpointLocation
                 {
-                    Controller = controller,
+                    Controller = Type.GetType(controller.AssemblyQualifiedName),
                     Endpoint = endpoint,
                     HttpMethod = httpMethod.ToUpper()
                 }

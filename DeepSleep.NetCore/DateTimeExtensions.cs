@@ -1,8 +1,7 @@
-﻿using System;
-using System.Globalization;
-
-namespace DeepSleep.NetCore
+﻿namespace DeepSleep.NetCore
 {
+    using System;
+
     /// <summary>
     /// </summary>
     internal static class DateTimeExtensions

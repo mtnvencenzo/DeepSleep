@@ -1,21 +1,18 @@
-﻿using DeepSleep.Formatting;
-using DeepSleep.Auth;
-using DeepSleep.Resources;
-using DeepSleep.Validation;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Resources;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Formatting;
+    using DeepSleep.Auth;
+    using DeepSleep.Resources;
+    using DeepSleep.Validation;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
+
     /// <summary>
     /// 
     /// </summary>
@@ -106,7 +103,7 @@ namespace DeepSleep.Pipeline
                    RouteMatch result;
                    foreach (var route in potentialRoutes)
                    {
-                       result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path);
+                       result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path).ConfigureAwait(false);
 
                        if (result?.IsMatch ?? false)
                        {
@@ -121,16 +118,16 @@ namespace DeepSleep.Pipeline
 
                 if (context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "head"))
                 {
-                    var routeInfo = await routeMatch("HEAD");
+                    var routeInfo = await routeMatch("HEAD").ConfigureAwait(false);
 
                     if (routeInfo == null)
-                        routeInfo = await routeMatch("GET");
+                        routeInfo = await routeMatch("GET").ConfigureAwait(false);
 
                     return routeInfo;
                 }
                 else
                 {
-                    return await routeMatch(context.RequestInfo.Method);
+                    return await routeMatch(context.RequestInfo.Method).ConfigureAwait(false);
                 }
             }
 
@@ -151,7 +148,7 @@ namespace DeepSleep.Pipeline
             {
                 foreach (var route in routes.GetRoutes())
                 {
-                    result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path);
+                    result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path).ConfigureAwait(false);
 
                     if (result?.IsMatch ?? false)
                     {
@@ -315,8 +312,10 @@ namespace DeepSleep.Pipeline
 
             if (!context.RequestAborted.IsCancellationRequested)
             {
+                var validHttpVersions = new[] { "http/1.1", "http/1.2", "http/2.0", "http/2.1" };
+
                 // Only supportting http 1.1 and http 2.0
-                if (!(context?.RequestInfo?.Protocol ?? string.Empty).In(StringComparison.InvariantCultureIgnoreCase, "http/1.1"))
+                if (!validHttpVersions.Contains(context?.RequestInfo?.Protocol?.ToLowerInvariant()) )
                 {
                     context.ResponseInfo.ResponseObject = new ApiResponse
                     {
@@ -353,7 +352,7 @@ namespace DeepSleep.Pipeline
 
                     if (formatterFactory != null)
                     {
-                        formatter = await formatterFactory.GetAcceptableFormatter(accept, out var _);
+                        formatter = await formatterFactory.GetAcceptableFormatter(accept, out var _).ConfigureAwait(false);
                     }
 
                     if (formatter == null)
@@ -398,7 +397,7 @@ namespace DeepSleep.Pipeline
 
                     var authProvider = authFactory?.GetProvider(context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme);
                     var result = (authProvider != null)
-                        ? await authProvider?.Authenticate(context, responseMessageConverter)
+                        ? await authProvider.Authenticate(context, responseMessageConverter).ConfigureAwait(false)
                         : null;
 
                     if (result == null || !result.IsAuthenticated)
@@ -492,7 +491,7 @@ namespace DeepSleep.Pipeline
                     if (context.RequestInfo.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
                         IFormatStreamReaderWriter formatter = (formatterFactory != null)
-                            ? await formatterFactory?.GetMediaTypeFormatter(context.RequestInfo.ContentType, out var formatterType)
+                            ? await formatterFactory.GetMediaTypeFormatter(context.RequestInfo.ContentType, out var formatterType).ConfigureAwait(false)
                             : null;
 
                         if (formatter == null)
@@ -507,7 +506,8 @@ namespace DeepSleep.Pipeline
 
                         try
                         {
-                            context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType);
+                            context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType)
+                                .ConfigureAwait(false);
                         }
                         catch (System.Exception)
                         {
@@ -713,7 +713,7 @@ namespace DeepSleep.Pipeline
                     {
                         if (context.RequestInfo.InvocationContext.UriModel != null)
                         {
-                            var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.UriModel, context, serviceProvider, responseMessageConverter);
+                            var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.UriModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
                             if (!objectUriValidationResult)
                             {
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -726,7 +726,7 @@ namespace DeepSleep.Pipeline
                     {
                         if (context.RequestInfo.InvocationContext.BodyModel != null)
                         {
-                            var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.BodyModel, context, serviceProvider, responseMessageConverter);
+                            var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.BodyModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
                             if (!objectBodyValidationResult)
                             {
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -739,7 +739,7 @@ namespace DeepSleep.Pipeline
                     {
                         if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
                         {
-                            var methodValidationResult = await validationInvoker.InvokeMethodValidation(context.RequestInfo.InvocationContext.ControllerMethod, context, serviceProvider, responseMessageConverter);
+                            var methodValidationResult = await validationInvoker.InvokeMethodValidation(context.RequestInfo.InvocationContext.ControllerMethod, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
                             if (!methodValidationResult)
                             {
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -818,16 +818,16 @@ namespace DeepSleep.Pipeline
             return source.Task;
         }
 
-        /// <summary>Processes the HTTP endpoint initialization.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
-        /// <exception cref="Exception">
-        /// </exception>
-        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider)
-        {
-            TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="logger"></param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider, ILogger logger)
+        {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller == null)
@@ -867,15 +867,36 @@ namespace DeepSleep.Pipeline
 
                 try
                 {
-                    endpointController = serviceProvider?.GetService(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller);
+                    if (serviceProvider != null)
+                    {
+                        endpointController = serviceProvider.GetService(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller);
+                    }
                 }
-                catch (System.Exception) { }
+                catch (System.Exception ex)
+                {
+                    if (logger != null)
+                    {
+                        logger.LogInformation($"Controller {context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller} cound not be activated.");
+                        logger.LogInformation($"{ex.ToString()}");
+                    }
+                }
 
                 try
                 {
                     if (endpointController == null)
                     {
-                        endpointController = Activator.CreateInstance(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller);
+                        var constructors = context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller.GetConstructors();
+
+                        if (constructors.Length == 0 || constructors.FirstOrDefault(c => c.GetParameters().Length == 0) != null)
+                        {
+                            endpointController = Activator.CreateInstance(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller);
+                        }
+
+                        var firstConstructor = constructors.First();
+                        var constructorParameters = new List<object>();
+
+                        firstConstructor.GetParameters().ToList().ForEach(p => constructorParameters.Add(null));
+                        endpointController = Activator.CreateInstance(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller, constructorParameters.ToArray());
                     }
                 }
                 catch (System.Exception)
@@ -993,12 +1014,10 @@ namespace DeepSleep.Pipeline
                     BodyModelType = bodyParameter?.ParameterType
                 };
 
-                source.SetResult(true);
-                return source.Task;
+                return Task.FromResult(true);
             }
 
-            source.SetResult(false);
-            return source.Task;
+            return Task.FromResult(false);
         }
 
         /// <summary>Processes the HTTP request localization.</summary>
@@ -1149,8 +1168,8 @@ namespace DeepSleep.Pipeline
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                context.RouteInfo.RoutingItem = await context.GetRouteInfo(resolver, routes);
-                context.RouteInfo.TemplateInfo = await context.GetTemplateInfo(resolver, routes);
+                context.RouteInfo.RoutingItem = await context.GetRouteInfo(resolver, routes).ConfigureAwait(false);
+                context.RouteInfo.TemplateInfo = await context.GetTemplateInfo(resolver, routes).ConfigureAwait(false);
                 return true;
             }
 
@@ -1314,7 +1333,7 @@ namespace DeepSleep.Pipeline
                         : new MediaHeaderValueWithQualityString("*/*");
 
                     var formatterType = string.Empty;
-                    var formatter = await formatterFactory.GetAcceptableFormatter(accept, out formatterType);
+                    var formatter = await formatterFactory.GetAcceptableFormatter(accept, out formatterType).ConfigureAwait(false);
 
                     if (formatter != null)
                     {
@@ -1330,7 +1349,7 @@ namespace DeepSleep.Pipeline
                             await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, new FormatterOptions
                             {
                                 PrettyPrint = context.RequestInfo.PrettyPrint
-                            });
+                            }).ConfigureAwait(false);
 
                             context.ResponseInfo.ContentLength = m.Length;
                             context.ResponseInfo.RawResponseObject = m.ToArray();
@@ -1403,7 +1422,7 @@ namespace DeepSleep.Pipeline
 
                     if (configResolver != null)
                     {
-                        var corsConfig = await configResolver.ResolveConfig();
+                        var corsConfig = await configResolver.ResolveConfig().ConfigureAwait(false);
 
                         if (corsConfig?.ExposeHeaders != null && corsConfig.ExposeHeaders.Count() > 0)
                         {
@@ -1496,7 +1515,7 @@ namespace DeepSleep.Pipeline
                     {
                         foreach (var processor in responseMessageProcessorProvider.GetProcessors())
                         {
-                            await processor.Process(context);
+                            await processor.Process(context).ConfigureAwait(false);
                         }
                     }
                 }
@@ -1521,7 +1540,7 @@ namespace DeepSleep.Pipeline
                 {
                     try
                     {
-                        await config.ExceptionHandler(context, exception);
+                        await config.ExceptionHandler(context, exception).ConfigureAwait(false);
                     }
                     catch (System.Exception) { }
                 }

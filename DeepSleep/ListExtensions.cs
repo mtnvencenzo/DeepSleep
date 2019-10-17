@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>

@@ -1,18 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ApiRequestContext.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Resources;
-using System.Threading;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+    using System.Reflection;
+    using System.Resources;
+    using System.Threading;
+
+
     /// <summary>The API request context.</summary>
     public class ApiRequestContext
     {

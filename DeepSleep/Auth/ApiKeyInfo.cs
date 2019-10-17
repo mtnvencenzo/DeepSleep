@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep.Auth
+﻿namespace DeepSleep.Auth
 {
     /// <summary>
     /// 

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// 
     /// </summary>

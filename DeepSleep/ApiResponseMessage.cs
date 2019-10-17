@@ -1,16 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ResponseMessage.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary></summary>
     public class ApiResponseMessage
     {

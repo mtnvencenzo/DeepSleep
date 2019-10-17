@@ -1,13 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IApiResourceRepository.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System.Threading.Tasks;
+
     /// <summary>Handles data for retrieval/updating of API resource related data.</summary>
     public interface IApiResourceRepository
     {

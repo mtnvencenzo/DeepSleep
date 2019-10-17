@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public class ApiRoutingItem
     {
         #region Constructors & Initialization

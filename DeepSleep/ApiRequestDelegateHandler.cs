@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
@@ -80,7 +79,7 @@ namespace DeepSleep
             }
 
             var task = (Task)_target.Invoke(instance, targetInvocationParameters.ToArray());
-            await task;
+            await task.ConfigureAwait(false);
         }
 
         /// <summary>Tasks the finisher.</summary>

@@ -1,13 +1,13 @@
-﻿using DeepSleep.Formatting;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Formatting;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
-    public class ApiResponseBodyWriterPipelineComponent
+    public class ApiResponseBodyWriterPipelineComponent : PipelineComponentBase
     {
         #region Constructors & Initialization
 
@@ -31,7 +31,7 @@ namespace DeepSleep.Pipeline
         /// <returns></returns>
         public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IFormatStreamReaderWriterFactory formatterFactory)
         {
-            await _apinext.Invoke(contextResolver);
+            await _apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
             var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseBodyWriterPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
@@ -41,7 +41,7 @@ namespace DeepSleep.Pipeline
 
             if (beforeHook != null)
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseBodyWriterPipeline, ApiRequestPipelineHookPlacements.Before);
+                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseBodyWriterPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
                     canInvokeComponent = false;
             }
@@ -49,13 +49,13 @@ namespace DeepSleep.Pipeline
 
             if (canInvokeComponent)
             {
-                await context.ProcessHttpResponseBodyWriting(formatterFactory);
+                await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
             }
 
 
             if (afterHook != null)
             {
-                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseBodyWriterPipeline, ApiRequestPipelineHookPlacements.After);
+                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseBodyWriterPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
             }
         }
     }

@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ClientAuthentication.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
     /// <summary></summary>
     public class ClientAuthentication

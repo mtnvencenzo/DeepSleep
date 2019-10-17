@@ -1,13 +1,13 @@
-﻿using DeepSleep.Validation;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Validation;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
-    public class ApiRequestEndpointValidationPipelineComponent
+    public class ApiRequestEndpointValidationPipelineComponent : PipelineComponentBase
     {
         #region Constructors & Initialization
 
@@ -41,7 +41,7 @@ namespace DeepSleep.Pipeline
 
             if (beforeHook != null)
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestEndpointValidationPipeline, ApiRequestPipelineHookPlacements.Before);
+                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestEndpointValidationPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
                     canInvokeComponent = false;
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
@@ -50,20 +50,20 @@ namespace DeepSleep.Pipeline
 
             if (canInvokeComponent)
             {
-                if (!await context.ProcessHttpEndpointValidation(validationProvider, context.RequestServices, responseMessageConverter))
+                if (!await context.ProcessHttpEndpointValidation(validationProvider, context.RequestServices, responseMessageConverter).ConfigureAwait(false))
                     canContinuePipeline = false;
             }
 
             if (afterHook != null)
             {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestEndpointValidationPipeline, ApiRequestPipelineHookPlacements.After);
+                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestEndpointValidationPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
                     canContinuePipeline = false;
             }
 
 
             if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver);
+                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 

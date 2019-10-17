@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public class ApiEndpointLocation
     {
         /// <summary>Gets or sets the controller.</summary>

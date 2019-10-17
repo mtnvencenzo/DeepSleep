@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// 
     /// </summary>

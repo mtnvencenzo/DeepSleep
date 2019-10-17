@@ -1,14 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IAuthProvider.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Auth
+﻿namespace DeepSleep.Auth
 {
+    using System.Threading.Tasks;
+
     /// <summary></summary>
     public interface IAuthenticationProvider
     {

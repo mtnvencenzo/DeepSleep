@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using System.Text;
-using System.Threading;
-
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using System.Globalization;
+    using System.Text;
+    using System.Threading;
+
     /// <summary>
     /// 
     /// </summary>

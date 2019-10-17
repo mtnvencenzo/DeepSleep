@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep.JsonPatch
+﻿namespace DeepSleep.JsonPatch
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>

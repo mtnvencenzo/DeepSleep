@@ -1,8 +1,8 @@
-﻿using DeepSleep.Formatting;
-using System;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Formatting;
+    using System;
+
     /// <summary>
     /// 
     /// </summary>

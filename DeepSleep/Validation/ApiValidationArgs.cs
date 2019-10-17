@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public class ApiValidationArgs
     {
         /// <summary>Gets or sets the API context.</summary>

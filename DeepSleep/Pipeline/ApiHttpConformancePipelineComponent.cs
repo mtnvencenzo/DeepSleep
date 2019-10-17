@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using System.Linq;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using System.Threading.Tasks;
+    using System.Linq;
+
     /// <summary>
     /// 
     /// </summary>
-    public class ApiHttpConformancePipelineComponent
+    public class ApiHttpConformancePipelineComponent : PipelineComponentBase
     {
         #region Constructors & Initialization
 
@@ -38,7 +38,7 @@ namespace DeepSleep.Pipeline
 
             if (beforeHook != null)
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.HttpConformancePipeline, ApiRequestPipelineHookPlacements.Before);
+                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.HttpConformancePipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
                     canInvokeComponent = false;
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
@@ -47,20 +47,20 @@ namespace DeepSleep.Pipeline
 
             if (canInvokeComponent)
             {
-                if (!await context.ProcessHttpConformance())
+                if (!await context.ProcessHttpConformance().ConfigureAwait(false))
                     canContinuePipeline = false;
             }
 
             if (afterHook != null)
             {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.HttpConformancePipeline, ApiRequestPipelineHookPlacements.After);
+                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.HttpConformancePipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
                     canContinuePipeline = false;
             }
 
 
             if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver);
+                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 

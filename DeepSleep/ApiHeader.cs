@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// 
     /// </summary>

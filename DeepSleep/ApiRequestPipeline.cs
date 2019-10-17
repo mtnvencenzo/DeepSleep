@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
@@ -72,7 +71,7 @@ namespace DeepSleep
 
             if (first != null)
             {
-                await first.TaskInvoker(contextResolver);
+                await first.TaskInvoker(contextResolver).ConfigureAwait(false);
             }
         }
     }

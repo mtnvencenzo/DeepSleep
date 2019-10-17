@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
@@ -44,7 +42,7 @@ namespace DeepSleep.Validation
                     {
                         ApiContext = context,
                         ValiationState = context.ValidationState()
-                    });
+                    }).ConfigureAwait(false);
 
                     if (results != null)
                     {

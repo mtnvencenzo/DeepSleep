@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep.NetCore
+﻿namespace DeepSleep.NetCore
 {
+    using System;
+
     /// <summary>The string extensions.</summary>
     internal static class StringExtensions
     {

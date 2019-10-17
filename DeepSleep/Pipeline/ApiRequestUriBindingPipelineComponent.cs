@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
-    public class ApiRequestUriBindingPipelineComponent
+    public class ApiRequestUriBindingPipelineComponent : PipelineComponentBase
     {
         #region Constructors & Initialization
 
@@ -41,7 +41,7 @@ namespace DeepSleep.Pipeline
 
             if (beforeHook != null)
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.Before);
+                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
                     canInvokeComponent = false;
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
@@ -50,20 +50,20 @@ namespace DeepSleep.Pipeline
 
             if (canInvokeComponent)
             {
-                if (!await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter))
+                if (!await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter).ConfigureAwait(false))
                     canContinuePipeline = false;
             }
 
             if (afterHook != null)
             {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.After);
+                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
                     canContinuePipeline = false;
             }
 
 
             if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver);
+                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 

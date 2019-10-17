@@ -1,16 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="APIProcessingInfo.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>The API processing info.</summary>
-    [Serializable]
     public class ApiProcessingInfo
     {
         #region Constructors and Destructors

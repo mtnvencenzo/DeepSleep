@@ -1,14 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="APIException.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Net;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Net;
+
     /// <summary></summary>
     public class ApiException : Exception
     {

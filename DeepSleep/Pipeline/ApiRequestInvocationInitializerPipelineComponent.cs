@@ -1,12 +1,13 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
-    public class ApiRequestInvocationInitializerPipelineComponent
+    public class ApiRequestInvocationInitializerPipelineComponent : PipelineComponentBase
     {
         #region Constructors & Initialization
 
@@ -38,29 +39,31 @@ namespace DeepSleep.Pipeline
 
             if (beforeHook != null)
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.Before);
+                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
                     canInvokeComponent = false;
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
                     canContinuePipeline = false;
             }
 
+            ILogger logger = this.GetLogger<ApiRequestInvocationInitializerPipelineComponent>(context.RequestServices);
+
             if (canInvokeComponent)
             {
-                if (!await context.ProcessHttpEndpointInitialization(context.RequestServices))
+                if (!await context.ProcessHttpEndpointInitialization(context.RequestServices, logger).ConfigureAwait(false))
                     canContinuePipeline = false;
             }
 
             if (afterHook != null)
             {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.After);
+                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
                     canContinuePipeline = false;
             }
 
 
             if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver);
+                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 

@@ -1,16 +1,16 @@
-﻿using DeepSleep.Formatting;
-using DeepSleep.Auth;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using DeepSleep.Validation;
-using System;
-using DeepSleep.Pipeline;
-using DeepSleep.Formatting.Formatters;
-using DeepSleep.Auth.Providers;
-using DeepSleep.NetCore.Controllers;
-
-namespace DeepSleep.NetCore
+﻿namespace DeepSleep.NetCore
 {
+    using DeepSleep.Formatting;
+    using DeepSleep.Auth;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
+    using DeepSleep.Validation;
+    using System;
+    using DeepSleep.Pipeline;
+    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Auth.Providers;
+    using DeepSleep.NetCore.Controllers;
+
     /// <summary>
     /// 
     /// </summary>

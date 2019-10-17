@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>

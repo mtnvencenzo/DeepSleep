@@ -1,13 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HTTPCacheType.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+
     /// <summary></summary>
     public enum HttpCacheType
     {

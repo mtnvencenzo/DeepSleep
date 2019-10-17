@@ -1,15 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IApiValidator.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     /// <summary></summary>
     public interface IApiValidator
     {

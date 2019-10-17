@@ -1,14 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RequestContextItemGroup.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System.Collections.Generic;
+
     /// <summary></summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TItem">The type of the item.</typeparam>

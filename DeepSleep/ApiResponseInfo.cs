@@ -1,10 +1,7 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Collections.Generic;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System.Collections.Generic;
+
     /// <summary>The API response info.
     /// </summary>
     public class ApiResponseInfo

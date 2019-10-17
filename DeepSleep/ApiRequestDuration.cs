@@ -1,11 +1,10 @@
-﻿using System;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     public class ApiRequestDuration
     {
         #region Constructors

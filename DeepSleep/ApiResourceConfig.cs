@@ -1,17 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="APIResourceConfig.cs" company="Ronaldo Vecchi">
-//   Copyright © Ronaldo Vecchi
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>Defines the configuration settings for a particular service resource.</summary>
-    [Serializable]
     public class ApiResourceConfig
     {
         /// <summary>Gets or sets the identity.</summary>

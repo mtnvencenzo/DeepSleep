@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeepSleep.Auth
+﻿namespace DeepSleep.Auth
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>
