@@ -308,11 +308,9 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpConformance(this ApiRequestContext context)
         {
-            TaskCompletionSource<bool> source = new TaskCompletionSource<bool>();
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var validHttpVersions = new[] { "http/1.1", "http/1.2", "http/2.0", "http/2.1" };
+                var validHttpVersions = new[] { "http/1.1", "http/1.2", "http/2", "http/2.0", "http/2.1" };
 
                 // Only supportting http 1.1 and http 2.0
                 if (!validHttpVersions.Contains(context?.RequestInfo?.Protocol?.ToLowerInvariant()) )
@@ -322,16 +320,13 @@
                         StatusCode = 505
                     };
 
-                    source.SetResult(false);
-                    return source.Task;
+                    return Task.FromResult(false);
                 }
 
-                source.SetResult(true);
-                return source.Task;
+                return Task.FromResult(true);
             }
 
-            source.SetResult(false);
-            return source.Task;
+            return Task.FromResult(false);
         }
 
         /// <summary>Processes the HTTP request accept.</summary>
@@ -817,7 +812,6 @@
             source.SetResult(false);
             return source.Task;
         }
-
 
         /// <summary>
         /// 

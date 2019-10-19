@@ -63,7 +63,7 @@
         /// <param name="objType">Type of the object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
+        public async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
             object obj = null;
             string data = null;
@@ -72,7 +72,7 @@
 
             using (var reader = new StreamReader(stream, true))
             {
-                data = reader.ReadToEnd();
+                data = await reader.ReadToEndAsync().ConfigureAwait(false);
                 readEncoding = reader.CurrentEncoding;
             }
 
@@ -84,10 +84,7 @@
             }
 
             obj = JsonConvert.DeserializeObject(data, objType);
-
-            TaskCompletionSource<object> source = new TaskCompletionSource<object>();
-            source.SetResult(obj);
-            return source.Task;
+            return obj;
         }
 
         /// <summary>Writes the type.</summary>
