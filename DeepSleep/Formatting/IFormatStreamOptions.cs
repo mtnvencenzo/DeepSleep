@@ -21,5 +21,10 @@
         /// <summary>Gets or sets the culture.</summary>
         /// <value>The culture.</value>
         CultureInfo Culture { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        bool NullValuesExcluded { get; set; }
     }
 }

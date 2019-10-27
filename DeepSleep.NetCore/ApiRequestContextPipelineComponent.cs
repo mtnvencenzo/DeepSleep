@@ -892,7 +892,15 @@
                 if (context.ResponseInfo.RawResponseObject != null && context.ResponseInfo.RawResponseObject.Length > 0)
                 {
                     httpcontext.Response.Headers.Add("Content-Length", context.ResponseInfo.ContentLength.ToString());
-                    httpcontext.Response.Headers.Add("Content-Type", context.ResponseInfo.ContentType.ToString());
+
+                    if (httpcontext.Response.Headers.FirstOrDefault(k => k.Key == "Content-Type").Key != null)
+                    {
+                        httpcontext.Response.ContentType = context.ResponseInfo.ContentType.ToString();
+                    }
+                    else
+                    {
+                        httpcontext.Response.Headers.Add("Content-Type", context.ResponseInfo.ContentType.ToString());
+                    }
 
                     if (!string.IsNullOrWhiteSpace(context.ResponseInfo.ContentLanguage))
                     {

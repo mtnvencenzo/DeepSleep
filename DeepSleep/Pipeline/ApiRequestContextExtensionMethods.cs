@@ -829,33 +829,13 @@
                     throw new Exception("Routing item's controller type is null");
                 }
 
-                if (string.IsNullOrWhiteSpace(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Endpoint))
+                if (string.IsNullOrWhiteSpace(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint))
                 {
                     throw new Exception("Routing item's endpoint name is null");
                 }
 
 
-                MethodInfo method = null;
-
-
-                var methods = context.RouteInfo?.RoutingItem.EndpointLocation.Controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-                if (methods != null)
-                {
-                    foreach (var methodinfo in methods)
-                    {
-                        if (string.Compare(methodinfo.Name, context.RouteInfo.RoutingItem.EndpointLocation.Endpoint, false) == 0)
-                        {
-                            method = methodinfo;
-                            break;
-                        }
-                    }
-                }
-
-                if (method == null)
-                {
-                    throw new Exception(string.Format("Routing item's controller endpoint method does not exist"));
-                }
-
+                MethodInfo method = context.RouteInfo.RoutingItem.EndpointLocation.GetEndpointMethod();
 
                 object endpointController = null;
 
@@ -863,14 +843,14 @@
                 {
                     if (serviceProvider != null)
                     {
-                        endpointController = serviceProvider.GetService(context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller);
+                        endpointController = serviceProvider.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
                     }
                 }
                 catch (System.Exception ex)
                 {
                     if (logger != null)
                     {
-                        logger.LogInformation($"Controller {context?.RouteInfo?.RoutingItem?.EndpointLocation?.Controller} cound not be activated.");
+                        logger.LogInformation($"Controller {context.RouteInfo.RoutingItem.EndpointLocation.Controller} cound not be activated.");
                         logger.LogInformation($"{ex.ToString()}");
                     }
                 }
@@ -899,106 +879,8 @@
                 }
 
 
-                var nonBindableTypes = new List<Type>
-                {
-                    typeof(string),
-                    typeof(DateTime),
-                    typeof(DateTime?),
-                    typeof(short),
-                    typeof(short?),
-                    typeof(int),
-                    typeof(int?),
-                    typeof(long),
-                    typeof(long?),
-                    typeof(ushort),
-                    typeof(ushort?),
-                    typeof(uint),
-                    typeof(uint?),
-                    typeof(ulong),
-                    typeof(ulong?),
-                    typeof(byte),
-                    typeof(byte?),
-                    typeof(byte[])
-                };
-                
-
-                ParameterInfo uriParameter = null;
-                ParameterInfo bodyParameter = null;
-                var parameters = method.GetParameters()
-                    .Where(p => p.ParameterType.IsPrimitive == false)
-                    .Where(p => p.ParameterType.IsEnum == false)
-                    .Where(p => nonBindableTypes.Contains(p.ParameterType) == false);
-
-
-                var routeVarsCount = context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0;
-
-
-                if (parameters != null && parameters.Count() > 0)
-                {
-                    uriParameter = parameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
-
-                    if (uriParameter == null && context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == false)
-                    {
-                        uriParameter = parameters.FirstOrDefault(p => string.Compare(p.Name, "uri", true) == 0);
-
-                        if (uriParameter == null)
-                        {
-                            uriParameter = parameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() == null);
-                        }
-
-                        if (uriParameter == null)
-                        {
-                            uriParameter = parameters.FirstOrDefault();
-                        }
-                    }
-
-
-
-                    if (context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
-                    {
-                        bodyParameter = parameters.FirstOrDefault(p => p != uriParameter && p.GetCustomAttribute<BodyBoundAttribute>() != null);
-
-                        if (uriParameter == null)
-                        {
-                            uriParameter = parameters.FirstOrDefault(p => p != bodyParameter && string.Compare(p.Name, "uri", true) == 0);
-                        }
-
-                        if (bodyParameter == null)
-                        {
-                            bodyParameter = parameters.FirstOrDefault(p => p != uriParameter && string.Compare(p.Name, "body", true) == 0);
-                        }
-
-                        if (uriParameter == null && (context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0) > 0)
-                        {
-                            uriParameter = parameters.FirstOrDefault(p => p != bodyParameter);
-                        }
-
-                        if (bodyParameter == null)
-                        {
-                            bodyParameter = parameters.FirstOrDefault(p => p != uriParameter);
-                        }
-
-                        if (uriParameter == null)
-                        {
-                            uriParameter = parameters.FirstOrDefault(p => p != bodyParameter);
-                        }
-                    }
-
-
-
-
-                    if (uriParameter == null && context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == false)
-                    {
-                        uriParameter = parameters.FirstOrDefault(p => p != bodyParameter);
-                    }
-
-                    if (bodyParameter == null && context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
-                    {
-                        bodyParameter = parameters.LastOrDefault(p => p != uriParameter);
-                    }
-
-
-                }
+                ParameterInfo uriParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetUriParameter(context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0);
+                ParameterInfo bodyParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetBodyParameter(context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0);
 
                 context.RequestInfo.InvocationContext = new ApiInvocationContext
                 {
@@ -1340,10 +1222,11 @@
 
                         using (var m = new MemoryStream())
                         {
-                            await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, new FormatterOptions
-                            {
-                                PrettyPrint = context.RequestInfo.PrettyPrint
-                            }).ConfigureAwait(false);
+                            var formatterOptions = (context.ProcessingInfo.OverridingFormatOptions != null)
+                                ? context.ProcessingInfo.OverridingFormatOptions
+                                : new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
+
+                            await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, formatterOptions).ConfigureAwait(false);
 
                             context.ResponseInfo.ContentLength = m.Length;
                             context.ResponseInfo.RawResponseObject = m.ToArray();

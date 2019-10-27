@@ -21,12 +21,12 @@
         {
             return new JsonSerializerSettings
             {
-                Formatting = options.PrettyPrint ? Newtonsoft.Json.Formatting.Indented : Newtonsoft.Json.Formatting.None,
+                Formatting = options.PrettyPrint ? Formatting.Indented : Formatting.None,
                 Culture = options.Culture,
                 DateFormatHandling = DateFormatHandling.IsoDateFormat,
                 DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
                 DefaultValueHandling = DefaultValueHandling.Include,
-                NullValueHandling = NullValueHandling.Include,
+                NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
                 StringEscapeHandling = StringEscapeHandling.Default
             };
         }

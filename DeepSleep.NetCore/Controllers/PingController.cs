@@ -10,7 +10,7 @@
     /// </summary>
     internal class PingController
     {
-        private Type pingModelType;
+        private static Type pingModelType;
 
         /// <summary>
         /// 
@@ -18,7 +18,7 @@
         /// <returns></returns>
         internal Task<ApiResponse> Ping()
         {
-            var pingModelType = this.CreatePingModelType();
+            var pingModelType = PingTypeDescriptor();
 
             dynamic pingModel = Activator.CreateInstance(pingModelType);
             pingModel.Ping = "Pong";
@@ -30,9 +30,9 @@
             });
         }
 
-        private Type CreatePingModelType()
+        private static Type PingTypeDescriptor()
         {
-            if (this.pingModelType == null)
+            if (pingModelType == null)
             {
                 var assemblyName = new AssemblyName("PingDynamicAssembly");
 
@@ -51,12 +51,12 @@
                     typeof(ValueType)
                 );
 
-                typeBuilder.DefineField("Ping", typeof(string), FieldAttributes.Public);
+                typeBuilder.AddProperty("Ping", typeof(string));
 
-                this.pingModelType = typeBuilder.CreateType();
+                pingModelType = typeBuilder.CreateType();
             }
 
-            return this.pingModelType;
+            return pingModelType;
         }
     }
 }

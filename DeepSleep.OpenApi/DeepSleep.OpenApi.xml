@@ -1,0 +1,1353 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeepSleep.OpenApi</name>
+    </assembly>
+    <members>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiCallback3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiCallback3_0.expression">
+            <summary>
+            Gets or sets the expression.
+            </summary>
+            <value>
+            The expression.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiCallback3_0.pathItem">
+            <summary>
+            Gets or sets the path item.
+            </summary>
+            <value>
+            The path item.
+            </value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.schemas">
+            <summary>
+            Gets or sets the schemas.
+            </summary>
+            <value>
+            The schemas.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.responses">
+            <summary>
+            Gets or sets the responses.
+            </summary>
+            <value>
+            The responses.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.parameters">
+            <summary>
+            Gets or sets the parameters.
+            </summary>
+            <value>
+            The parameters.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.examples">
+            <summary>
+            Gets or sets the examples.
+            </summary>
+            <value>
+            The examples.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.requestBodies">
+            <summary>
+            Gets or sets the request bodies.
+            </summary>
+            <value>
+            The request bodies.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.headers">
+            <summary>
+            Gets or sets the headers.
+            </summary>
+            <value>
+            The headers.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.securitySchemes">
+            <summary>
+            Gets or sets the security schemes.
+            </summary>
+            <value>
+            The security schemes.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.links">
+            <summary>
+            Gets or sets the links.
+            </summary>
+            <value>
+            The links.
+            </value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.callbacks">
+            <summary>
+            Gets or sets the callbacks.
+            </summary>
+            <value>
+            The callbacks.
+            </value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiContact3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiContact3_0.name">
+            <summary>Gets or sets the name.</summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiContact3_0.url">
+            <summary>Gets or sets the URL.</summary>
+            <value>The URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiContact3_0.email">
+            <summary>Gets or sets the email.</summary>
+            <value>The email.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiContact3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiDiscriminator3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDiscriminator3_0.propertyName">
+            <summary>Gets or sets the name of the property.</summary>
+            <value>The name of the property.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDiscriminator3_0.mapping">
+            <summary>Gets or sets the mapping.</summary>
+            <value>The mapping.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.openapi">
+            <summary>Gets the openapi.</summary>
+            <value>The openapi.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.info">
+            <summary>Gets or sets the information.</summary>
+            <value>The information.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.servers">
+            <summary>Gets or sets the servers.</summary>
+            <value>The servers.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.paths">
+            <summary>The paths</summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.components">
+            <summary>Gets or sets the components.</summary>
+            <value>The components.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.security">
+            <summary>Gets or sets the security.</summary>
+            <value>The security.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.externalDocs">
+            <summary>Gets or sets the external docs.</summary>
+            <value>The external docs.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.tags">
+            <summary>Gets or sets the tags.</summary>
+            <value>The tags.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiDocument3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.contentType">
+            <summary>Gets or sets the type of the content.</summary>
+            <value>The type of the content.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.headers">
+            <summary>Gets or sets the headers.</summary>
+            <value>The headers.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.style">
+            <summary>Gets or sets the style.</summary>
+            <value>The style.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.explode">
+            <summary>Gets or sets a value indicating whether this <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0"/> is explode.</summary>
+            <value><c>true</c> if explode; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.allowReserved">
+            <summary>Gets or sets a value indicating whether [allow reserved].</summary>
+            <value><c>true</c> if [allow reserved]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiEncoding3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiExternalDocumentation3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiExternalDocumentation3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiExternalDocumentation3_0.url">
+            <summary>Gets or sets the URL.</summary>
+            <value>The URL.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiExternalDocumentation3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.required">
+            <summary>Gets or sets a value indicating whether this <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0"/> is required.</summary>
+            <value><c>true</c> if required; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.deprecated">
+            <summary>Gets or sets a value indicating whether this <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0"/> is deprecated.</summary>
+            <value><c>true</c> if deprecated; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.allowEmptyValue">
+            <summary>Gets or sets a value indicating whether [allow empty value].</summary>
+            <value><c>true</c> if [allow empty value]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.style">
+            <summary>Gets or sets the style.</summary>
+            <value>The style.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.explode">
+            <summary>Gets or sets a value indicating whether this <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0"/> is explode.</summary>
+            <value><c>true</c> if explode; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.allowReserved">
+            <summary>Gets or sets a value indicating whether [allow reserved].</summary>
+            <value><c>true</c> if [allow reserved]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.schema">
+            <summary>Gets or sets the schema.</summary>
+            <value>The schema.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.example">
+            <summary>Gets or sets the example.</summary>
+            <value>The example.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.examples">
+            <summary>Gets or sets the examples.</summary>
+            <value>The examples.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.content">
+            <summary>Gets or sets the content.</summary>
+            <value>The content.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiHeader3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiIn3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiIn3_0.path">
+            <summary>The path</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiIn3_0.query">
+            <summary>The query</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiIn3_0.header">
+            <summary>The header</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiIn3_0.cookie">
+            <summary>The cookie</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiIn3_0.body">
+            <summary>The body</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.title">
+            <summary>Gets or sets the title.</summary>
+            <value>The title.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.termsOfService">
+            <summary>Gets or sets the terms of service.</summary>
+            <value>The terms of service.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.version">
+            <summary>Gets or sets the version.</summary>
+            <value>The version.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.contact">
+            <summary>Gets or sets the contact.</summary>
+            <value>The contact.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.license">
+            <summary>Gets or sets the license.</summary>
+            <value>The license.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiInfo3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiCallback3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0"/> class.</summary>
+            <param name="callback">The callback.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceCallback3_0.callback">
+            <summary>Gets or sets the callback.</summary>
+            <value>The callback.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiHeader3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0"/> class.</summary>
+            <param name="header">The header.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceHeader3_0.header">
+            <summary>Gets the header.</summary>
+            <value>The header.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiLink3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0"/> class.</summary>
+            <param name="link">The link.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceLink3_0.link">
+            <summary>Gets or sets the link.</summary>
+            <value>The link.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiParameter3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0"/> class.</summary>
+            <param name="parameter">The parameter.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.parameter">
+            <summary>Gets or sets the parameter.</summary>
+            <value>The parameter.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0"/> class.</summary>
+            <param name="requestBody">The request body.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0.requestBody">
+            <summary>Gets or sets the request body.</summary>
+            <value>The request body.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0"/> class.</summary>
+            <param name="ref">The reference.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0"/> class.</summary>
+            <param name="securitySchema">The security schema.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceSecuritySchema3_0.securitySchema">
+            <summary>Gets or sets the security schema.</summary>
+            <value>The security schema.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiLicense3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLicense3_0.name">
+            <summary>Gets or sets the name.</summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLicense3_0.url">
+            <summary>Gets or sets the URL.</summary>
+            <value>The URL.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiLicense3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiLink3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.operationRef">
+            <summary>Gets or sets the operation reference.</summary>
+            <value>The operation reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.operationId">
+            <summary>Gets or sets the operation identifier.</summary>
+            <value>The operation identifier.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.parameters">
+            <summary>Gets or sets the parameters.</summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.requestBody">
+            <summary>Gets or sets the request body.</summary>
+            <value>The request body.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.server">
+            <summary>Gets or sets the server.</summary>
+            <value>The server.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiLink3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiMediaType3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiMediaType3_0.schema">
+            <summary>Gets or sets the schema.</summary>
+            <value>The schema.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiMediaType3_0.example">
+            <summary>Gets or sets the example.</summary>
+            <value>The example.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiMediaType3_0.examples">
+            <summary>Gets or sets the examples.</summary>
+            <value>The examples.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiMediaType3_0.encoding">
+            <summary>Gets or sets the encoding.</summary>
+            <value>The encoding.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0.authorizationUrl">
+            <summary>Gets or sets the authorization URL.</summary>
+            <value>The authorization URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0.tokenUrl">
+            <summary>Gets or sets the token URL.</summary>
+            <value>The token URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0.refreshUrl">
+            <summary>Gets or sets the refresh URL.</summary>
+            <value>The refresh URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0.scopes">
+            <summary>Gets or sets the scopes.</summary>
+            <value>The scopes.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlow3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0.implicit">
+            <summary>Gets or sets the implicit.</summary>
+            <value>The implicit.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0.password">
+            <summary>Gets or sets the password.</summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0.clientCredentials">
+            <summary>Gets or sets the client credentials.</summary>
+            <value>The client credentials.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0.authorizationCode">
+            <summary>Gets or sets the authorization code.</summary>
+            <value>The authorization code.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiOAuthFlows3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.tags">
+            <summary>Gets or sets the tags.</summary>
+            <value>The tags.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.summary">
+            <summary>Gets or sets the summary.</summary>
+            <value>The summary.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.externalDocs">
+            <summary>Gets or sets the external docs.</summary>
+            <value>The external docs.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.operationId">
+            <summary>Gets or sets the operation identifier.</summary>
+            <value>The operation identifier.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.parameters">
+            <summary>Gets or sets the parameters.</summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.requestBody">
+            <summary>Gets or sets the request body.</summary>
+            <value>The request body.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.responses">
+            <summary>Gets or sets the responses.</summary>
+            <value>The responses.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.callbacks">
+            <summary>Gets or sets the callbacks.</summary>
+            <value>The callbacks.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.deprecated">
+            <summary>Gets or sets the deprecated.</summary>
+            <value>The deprecated.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.security">
+            <summary>Gets or sets the security.</summary>
+            <value>The security.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.servers">
+            <summary>Gets or sets the servers.</summary>
+            <value>The servers.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiOperation3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.name">
+            <summary>Gets or sets the name.</summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.in">
+            <summary>Gets or sets the in.</summary>
+            <value>The in.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.required">
+            <summary>Gets or sets the required.</summary>
+            <value>The required.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.deprecated">
+            <summary>Gets or sets the deprecated.</summary>
+            <value>The deprecated.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.allowEmptyValue">
+            <summary>Gets or sets the allow empty value.</summary>
+            <value>The allow empty value.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.style">
+            <summary>Gets or sets the style.</summary>
+            <value>The style.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.explode">
+            <summary>Gets or sets the explode.</summary>
+            <value>The explode.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.allowReserved">
+            <summary>Gets or sets the allow reserved.</summary>
+            <value>The allow reserved.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.schema">
+            <summary>Gets or sets the schema.</summary>
+            <value>The schema.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.example">
+            <summary>Gets or sets the example.</summary>
+            <value>The example.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.examples">
+            <summary>Gets or sets the examples.</summary>
+            <value>The examples.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.content">
+            <summary>Gets or sets the content.</summary>
+            <value>The content.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiPath3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPath3_0.Path">
+            <summary>Gets or sets the path.</summary>
+            <value>The path.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPath3_0.PathObject">
+            <summary>Gets or sets the path object.</summary>
+            <value>The path object.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiPath3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.summary">
+            <summary>Gets or sets the summary.</summary>
+            <value>The summary.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.get">
+            <summary>Gets or sets the get.</summary>
+            <value>The get.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.put">
+            <summary>Gets or sets the put.</summary>
+            <value>The put.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.post">
+            <summary>Gets or sets the post.</summary>
+            <value>The post.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.delete">
+            <summary>Gets or sets the delete.</summary>
+            <value>The delete.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.options">
+            <summary>Gets or sets the options.</summary>
+            <value>The options.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.head">
+            <summary>Gets or sets the head.</summary>
+            <value>The head.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.patch">
+            <summary>Gets or sets the patch.</summary>
+            <value>The patch.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.trace">
+            <summary>Gets or sets the trace.</summary>
+            <value>The trace.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.servers">
+            <summary>Gets or sets the servers.</summary>
+            <value>The servers.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.parameters">
+            <summary>Gets or sets the parameters.</summary>
+            <value>The parameters.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0.content">
+            <summary>Gets or sets the content.</summary>
+            <value>The content.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0.required">
+            <summary>Gets or sets a value indicating whether this <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0" /> is required.</summary>
+            <value><c>true</c> if required; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiRequestBody3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.headers">
+            <summary>Gets or sets the headers.</summary>
+            <value>The headers.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.content">
+            <summary>Gets or sets the content.</summary>
+            <value>The content.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.links">
+            <summary>Gets or sets the links.</summary>
+            <value>The links.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponse3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiResponses3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponses3_0.responses">
+            <summary>Gets or sets the responses.</summary>
+            <value>The responses.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiResponses3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.title">
+            <summary>Gets or sets the title.</summary>
+            <value>The title.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.multipleOf">
+            <summary>Gets or sets the multiple of.</summary>
+            <value>The multiple of.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.maximum">
+            <summary>Gets or sets the maximum.</summary>
+            <value>The maximum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.exclusiveMaximum">
+            <summary>Gets or sets the exclusive maximum.</summary>
+            <value>The exclusive maximum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.minimum">
+            <summary>Gets or sets the minimum.</summary>
+            <value>The minimum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.exclusiveMinimum">
+            <summary>Gets or sets the exclusive minimum.</summary>
+            <value>The exclusive minimum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.maxLength">
+            <summary>Gets or sets the maximum length.</summary>
+            <value>The maximum length.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.minLength">
+            <summary>Gets or sets the minimum length.</summary>
+            <value>The minimum length.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.pattern">
+            <summary>Gets or sets the pattern.</summary>
+            <value>The pattern.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.maxItems">
+            <summary>Gets or sets the maximum items.</summary>
+            <value>The maximum items.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.minItems">
+            <summary>Gets or sets the minimum items.</summary>
+            <value>The minimum items.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.uniqueItems">
+            <summary>Gets or sets the unique items.</summary>
+            <value>The unique items.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.maxProperties">
+            <summary>Gets or sets the maximum properties.</summary>
+            <value>The maximum properties.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.minProperties">
+            <summary>Gets or sets the minimum properties.</summary>
+            <value>The minimum properties.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.required">
+            <summary>Gets or sets the required.</summary>
+            <value>The required.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.enum">
+            <summary>Gets or sets the enum.</summary>
+            <value>The enum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.type">
+            <summary>Gets or sets the type.</summary>
+            <value>The type.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.properties">
+            <summary>Gets or sets the properties.</summary>
+            <value>The properties.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.allOf">
+            <summary>Gets or sets all of.</summary>
+            <value>All of.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.oneOf">
+            <summary>Gets or sets the one of.</summary>
+            <value>The one of.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.anyOf">
+            <summary>Gets or sets any of.</summary>
+            <value>Any of.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.not">
+            <summary>Gets or sets the not.</summary>
+            <value>The not.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.items">
+            <summary>Gets or sets the items.</summary>
+            <value>The items.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.additionalProperties">
+            <summary>Gets or sets the additional properties.</summary>
+            <value>The additional properties.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.format">
+            <summary>Gets or sets the format.</summary>
+            <value>The format.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.default">
+            <summary>Gets or sets the default.</summary>
+            <value>The default.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.nullable">
+            <summary>Gets or sets the nullable.</summary>
+            <value>The nullable.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.discriminator">
+            <summary>Gets or sets the discriminator.</summary>
+            <value>The discriminator.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.readOnly">
+            <summary>Gets or sets the read only.</summary>
+            <value>The read only.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.writeonly">
+            <summary>Gets or sets the writeonly.</summary>
+            <value>The writeonly.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.xml">
+            <summary>Gets or sets the XML.</summary>
+            <value>The XML.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.externalDocs">
+            <summary>Gets or sets the external docs.</summary>
+            <value>The external docs.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.example">
+            <summary>Gets or sets the example.</summary>
+            <value>The example.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.deprecated">
+            <summary>Gets or sets the deprecated.</summary>
+            <value>The deprecated.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSchema3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecurityRequirement3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityRequirement3_0.names">
+            <summary>Gets or sets the names.</summary>
+            <value>The names.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecurityRequirementContainer3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityRequirementContainer3_0.security">
+            <summary>Gets or sets the security.</summary>
+            <value>The security.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemaContainer3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemaContainer3_0.security">
+            <summary>Gets or sets the security.</summary>
+            <value>The security.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.type">
+            <summary>Gets or sets the type.</summary>
+            <value>The type.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.name">
+            <summary>Gets or sets the name.</summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.in">
+            <summary>Gets or sets the in.</summary>
+            <value>The in.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.scheme">
+            <summary>Gets or sets the scheme.</summary>
+            <value>The scheme.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.bearerFormat">
+            <summary>Gets or sets the bearer format.</summary>
+            <value>The bearer format.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.flows">
+            <summary>Gets or sets the flows.</summary>
+            <value>The flows.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.openIdConnectUrl">
+            <summary>Gets or sets the open identifier connect URL.</summary>
+            <value>The open identifier connect URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiSecurityScheme3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeIn3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeIn3_0.query">
+            <summary>The query</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeIn3_0.header">
+            <summary>The header</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeIn3_0.cookie">
+            <summary>The cookie</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeType3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeType3_0.apiKey">
+            <summary>The API key</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeType3_0.http">
+            <summary>The HTTP</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeType3_0.oauth2">
+            <summary>The oauth2</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiSecuritySchemeType3_0.openIdConnect">
+            <summary>The open identifier connect</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiServer3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServer3_0.url">
+            <summary>Gets or sets the URL.</summary>
+            <value>The URL.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServer3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServer3_0.variables">
+            <summary>Gets or sets the variables.</summary>
+            <value>The variables.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServer3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiServerVariable3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServerVariable3_0.enum">
+            <summary>Gets or sets the enum.</summary>
+            <value>The enum.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServerVariable3_0.default">
+            <summary>Gets or sets the default.</summary>
+            <value>The default.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServerVariable3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiServerVariable3_0.extensions">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.matrix">
+            <summary>The matrix</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.label">
+            <summary>The label</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.form">
+            <summary>The form</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.simple">
+            <summary>The simple</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.spaceDelimited">
+            <summary>The space delimited</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.pipeDelimited">
+            <summary>The pipe delimited</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiStyle3_0.deepObject">
+            <summary>The deep object</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiTag3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiTag3_0.name">
+            <summary>Gets or sets the name.</summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiTag3_0.description">
+            <summary>Gets or sets the description.</summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiTag3_0.externalDocs">
+            <summary>Gets or sets the external docs.</summary>
+            <value>The external docs.</value>
+        </member>
+        <member name="F:DeepSleep.OpenApi.v3_0.OpenApiTag3_0.extensions">
+            <summary>The extensions</summary>
+        </member>
+        <member name="T:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:System.Attribute" />
+        </member>
+        <member name="M:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute.#ctor(System.Type)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute"/> class.</summary>
+            <param name="responseType">Type of the response.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute.#ctor(System.String,System.Type)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute"/> class.</summary>
+            <param name="statusCode">The status code.</param>
+            <param name="responseType">Type of the response.</param>
+        </member>
+        <member name="P:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute.StatusCode">
+            <summary>Gets the status code.</summary>
+            <value>The status code.</value>
+        </member>
+        <member name="P:DeepSleep.OpenApi.Decorators.OpenApiResponseAttribute.ResponseType">
+            <summary>Gets the type of the response.</summary>
+            <value>The type of the response.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.DefaultOpenApiGenerator">
+            <summary></summary>
+            <seealso cref="T:DeepSleep.OpenApi.IOpenApiGenerator" />
+        </member>
+        <member name="F:DeepSleep.OpenApi.DefaultOpenApiGenerator.PrefixNamesWithNamespace">
+            <summary>
+            The prefix names with namespace
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.DefaultOpenApiGenerator.IncludeHeadOperationsForGets">
+            <summary>
+            The include head operations for gets
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.Generate(DeepSleep.OpenApi.OpenApiVersion,DeepSleep.IApiRoutingTable)">
+            <summary>
+            Generates the specified version.
+            </summary>
+            <param name="version">The version.</param>
+            <param name="routingTable">The routing table.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddRoute(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.ApiRoutingItem)">
+            <summary>
+            Adds the route.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="route">The route.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddOperation(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.OpenApi.v3_0.OpenApiPathItem3_0,DeepSleep.ApiRoutingItem,System.String)">
+            <summary>
+            Adds the operation.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="pathItem">The path item.</param>
+            <param name="route">The route.</param>
+            <param name="httpMethod">The HTTP method.</param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">
+            </exception>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddOperationResponses(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.OpenApi.v3_0.OpenApiOperation3_0,DeepSleep.ApiRoutingItem,System.String)">
+            <summary>
+            Adds the operation responses.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="operation">The operation.</param>
+            <param name="route">The route.</param>
+            <param name="httpMethod">The HTTP method.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddResponseToOperation(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.OpenApi.v3_0.OpenApiOperation3_0,System.String,System.Type,DeepSleep.ApiRoutingItem)">
+            <summary>
+            Adds the response to operation.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="operation">The operation.</param>
+            <param name="status">The status.</param>
+            <param name="responseType">Type of the response.</param>
+            <param name="route">The route.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddResponseToDocument(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type,DeepSleep.ApiRoutingItem)">
+            <summary>
+            Adds the response to document.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="responseType">Type of the response.</param>
+            <param name="route">The route.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetResponseContents(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type)">
+            <summary>
+            Gets the response contents.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="responseType">Type of the response.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddAndGetSchemaRefrence(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type)">
+            <summary>
+            Adds the and get schema refrence.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddSchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type,System.Boolean)">
+            <summary>
+            Adds the schema.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="type">The type.</param>
+            <param name="returnReferenceIfAddedAsRoot">if set to <c>true</c> [return reference if added as root].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddArraySchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type)">
+            <summary>
+            Adds the array schema.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddSimpleTypeSchema(System.Type)">
+            <summary>
+            Adds the simple type schema.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.AddComplexTypeSchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.Type,System.Boolean)">
+            <summary>
+            Adds the complex type schema.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="type">The type.</param>
+            <param name="returnReferenceIfAddedAsRoot">if set to <c>true</c> [return reference if added as root].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetParameters(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.ApiRoutingItem)">
+            <summary>
+            Gets the parameters.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="route">The route.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetRouteVariableSchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.String,DeepSleep.ApiEndpointLocation,System.Int32)">
+            <summary>
+            Gets the route variable schema.
+            </summary>
+            <param name="document">The document.</param>
+            <param name="routeVar">The route variable.</param>
+            <param name="location">The location.</param>
+            <param name="routeVariableCount">The route variable count.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.OpenApi.IOpenApiGenerator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.IOpenApiGenerator.Generate(DeepSleep.OpenApi.OpenApiVersion,DeepSleep.IApiRoutingTable)">
+            <summary>
+            Generates the specified version.
+            </summary>
+            <param name="version">The version.</param>
+            <param name="routingTable">The routing table.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.OpenApi.OpenApiVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.OpenApiVersion.V2">
+            <summary>The v2</summary>
+        </member>
+        <member name="F:DeepSleep.OpenApi.OpenApiVersion.V3">
+            <summary>The v3</summary>
+        </member>
+    </members>
+</doc>

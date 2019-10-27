@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeepSleep.OpenApi.NetCore</name>
+    </assembly>
+    <members>
+        <member name="T:DeepSleep.OpenApi.NetCore.OpenApiCoreHttpExtensionMethods">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.NetCore.OpenApiCoreHttpExtensionMethods.UseOpenApiEndpoint(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String,System.Boolean,System.Boolean)">
+            <summary>Uses the open API endpoint.</summary>
+            <param name="builder">The builder.</param>
+            <param name="routeTemplate">The route template.</param>
+            <param name="prefixNamesWithNamespace">if set to <c>true</c> [prefix names with namespace].</param>
+            <param name="includeHeadOperationsForGets">if set to <c>true</c> [include head operations for gets].</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.NetCore.OpenApiCoreHttpExtensionMethods.UseOpenApiServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>Uses the open API services.</summary>
+            <param name="services">The services.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DeepSleep.OpenApi.NetCore.Controllers.OpenApiController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DeepSleep.OpenApi.NetCore.Controllers.OpenApiController.#ctor(DeepSleep.OpenApi.IOpenApiGenerator,DeepSleep.IApiRoutingTable,DeepSleep.IApiRequestContextResolver)">
+            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.NetCore.Controllers.OpenApiController"/> class.</summary>
+            <param name="generator">The generator.</param>
+            <param name="routingTable">The routing table.</param>
+            <param name="requestContextResolver">The request context resolver.</param>
+        </member>
+        <member name="M:DeepSleep.OpenApi.NetCore.Controllers.OpenApiController.Doc">
+            <summary>Documents this instance.</summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

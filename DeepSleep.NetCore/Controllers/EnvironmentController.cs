@@ -4,13 +4,14 @@
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Reflection.Emit;
+    using DeepSleep.NetCore;
 
     /// <summary>
     /// 
     /// </summary>
     internal class EnnvironmentController
     {
-        private Type environmentModelType;
+        private static Type environmentModelType;
 
         /// <summary>
         /// 
@@ -18,7 +19,7 @@
         /// <returns></returns>
         internal Task<ApiResponse> Env()
         {
-            var environmentModelType = CreateEnvironmentModel();
+            var environmentModelType = EnvTypeDescriptor();
 
             dynamic environmentModel = Activator.CreateInstance(environmentModelType);
 
@@ -38,9 +39,9 @@
             });
         }
 
-        private Type CreateEnvironmentModel()
+        private static Type EnvTypeDescriptor()
         {
-            if (this.environmentModelType == null)
+            if (environmentModelType == null)
             {
                 var assemblyName = new AssemblyName("EnvironmentDynamicAssembly");
 
@@ -59,19 +60,22 @@
                     typeof(ValueType)
                 );
 
-                typeBuilder.DefineField("Is64BitOperatingSystem", typeof(bool), FieldAttributes.Public);
-                typeBuilder.DefineField("Is64BitProcess", typeof(bool), FieldAttributes.Public);
-                typeBuilder.DefineField("MachineName", typeof(string), FieldAttributes.Public);
-                typeBuilder.DefineField("OSVersion", typeof(string), FieldAttributes.Public);
-                typeBuilder.DefineField("TickCount", typeof(int), FieldAttributes.Public);
-                typeBuilder.DefineField("ProcessorCount", typeof(int), FieldAttributes.Public);
-                typeBuilder.DefineField("ClrVersion", typeof(string), FieldAttributes.Public);
-                typeBuilder.DefineField("WorkingSet", typeof(long), FieldAttributes.Public);
+                typeBuilder
+                    .AddProperty("Is64BitOperatingSystem", typeof(bool))
+                    .AddProperty("Is64BitProcess", typeof(bool))
+                    .AddProperty("MachineName", typeof(string))
+                    .AddProperty("OSVersion", typeof(string))
+                    .AddProperty("TickCount", typeof(int))
+                    .AddProperty("ProcessorCount", typeof(int))
+                    .AddProperty("ClrVersion", typeof(string))
+                    .AddProperty("WorkingSet", typeof(long));
 
-                this.environmentModelType = typeBuilder.CreateType();
+                environmentModelType = typeBuilder.CreateType();
             }
 
-            return this.environmentModelType;
+            return environmentModelType;
         }
+
+
     }
 }

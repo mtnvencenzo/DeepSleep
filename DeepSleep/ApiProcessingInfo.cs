@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
 
@@ -36,5 +37,10 @@
         /// <summary>Gets or sets the validation.</summary>
         /// <value>The validation.</value>
         public ApiValidationInfo Validation { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IFormatStreamOptions OverridingFormatOptions { get; set; }
     }
 }

@@ -36,5 +36,10 @@
         /// <summary>Gets or sets the culture.</summary>
         /// <value>The culture.</value>
         public CultureInfo Culture { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool NullValuesExcluded { get; set; }
     }
 }
