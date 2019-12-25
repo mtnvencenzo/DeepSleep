@@ -8,6 +8,11 @@
     /// </summary>
     public class OpenApiParameter3_0
     {
+        /// <summary>Gets or sets the reference.</summary>
+        /// <value>The reference.</value>
+        [JsonProperty("$ref")]
+        public string @ref { get; set; }
+
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         [JsonProperty("name")]
@@ -16,7 +21,7 @@
         /// <summary>Gets or sets the in.</summary>
         /// <value>The in.</value>
         [JsonProperty("in")]
-        public OpenApiIn3_0 @in { get; set; }
+        public string @in { get; set; }
 
         /// <summary>Gets or sets the description.</summary>
         /// <value>The description.</value>
@@ -40,7 +45,7 @@
 
         /// <summary>Gets or sets the style.</summary>
         /// <value>The style.</value>
-        public OpenApiStyle3_0 style { get; set; }
+        public string style { get; set; }
 
         /// <summary>Gets or sets the explode.</summary>
         /// <value>The explode.</value>

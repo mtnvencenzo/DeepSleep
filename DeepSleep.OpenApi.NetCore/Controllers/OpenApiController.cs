@@ -31,6 +31,10 @@
             var document = this.generator.Generate(OpenApiVersion.V3, routingTable);
 
             var context = this.requestContextResolver.GetContext();
+
+            // Force json serialization since the standard demands it
+            context.RequestInfo.Accept = new MediaHeaderValueWithQualityString("application/json");
+
             if (context.ProcessingInfo.OverridingFormatOptions == null)
             {
                 context.ProcessingInfo.OverridingFormatOptions = new Formatting.FormatterOptions

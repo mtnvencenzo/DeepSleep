@@ -36,7 +36,7 @@
   <ItemGroup>
     <None Include=".pack\.nuget\DeepSleep.nuspec" />
     <None Include=".pack\.nuget\DeepSleep.pack.ps1" />
-    <None Include=".pack\deepsleep.png" />
+    <None Include=".pack\.nuget\deepsleep.png" />
   </ItemGroup>
 
   <ItemGroup>

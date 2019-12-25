@@ -13,13 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".pack\deepsleep_openapi.png" />
+    <Content Include=".pack\.nuget\deepsleep_openapi.png" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include=".pack\.nuget\DeepSleep.OpenApi.nuspec" />
     <None Include=".pack\.nuget\DeepSleep.OpenApi.pack.ps1" />
-    <None Include=".pack\deepsleep_netcore.pdn" />
+    <None Include=".pack\.nuget\deepsleep_netcore.pdn" />
   </ItemGroup>
 
   <ItemGroup>

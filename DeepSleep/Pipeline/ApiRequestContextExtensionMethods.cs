@@ -1296,6 +1296,7 @@
                 if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))
                 {
                     context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", context.RequestInfo.CrossOriginRequest.Origin);
+                    context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", "true");
 
                     if (configResolver != null)
                     {
@@ -1308,14 +1309,6 @@
                                           select h.Trim();
                                           
                             context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", headers.Distinct()).Trim());
-                        }
-                    }
-
-                    if (context.RouteInfo?.RoutingItem?.EndpointLocation != null)
-                    {
-                        if ((context.RouteInfo.RoutingItem.Config?.AllowAnonymous ?? false) == false)
-                        {
-                            context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", "true");
                         }
                     }
                 }

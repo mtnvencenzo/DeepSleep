@@ -102,13 +102,26 @@
             }
 
             this.AddOperationResponses(document, operation, route, route.HttpMethod);
+            operation.parameters = this.GetQueryStringParameters(document, route);
+
+            if (route.HttpMethod.ToLower() == "put" || route.HttpMethod.ToLower() == "post" || route.HttpMethod.ToLower() == "patch")
+            {
+                var bodyParameter = GetRequestBody(document, route);
+
+                if (bodyParameter != null)
+                {
+                    operation.requestBody = bodyParameter;
+                }
+            }
+
 
             if (string.Equals(route.HttpMethod, "get", StringComparison.OrdinalIgnoreCase) && IncludeHeadOperationsForGets)
             {
-                operation = this.AddOperation(document, existingPath.Value, route, "head");
-                if (operation != null)
+                var headOperation = this.AddOperation(document, existingPath.Value, route, "head");
+                if (headOperation != null)
                 {
-                    this.AddOperationResponses(document, operation, route, "head");
+                    this.AddOperationResponses(document, headOperation, route, "head");
+                    headOperation.parameters = this.GetQueryStringParameters(document, route);
                 }
             }
         }
@@ -559,30 +572,106 @@
         /// <param name="document">The document.</param>
         /// <param name="route">The route.</param>
         /// <returns></returns>
-        private List<OpenApiInlineOrReferenceParameter3_0> GetParameters(OpenApiDocument3_0 document, ApiRoutingItem route)
+        private List<OpenApiParameter3_0> GetParameters(OpenApiDocument3_0 document, ApiRoutingItem route)
         {
-            var parameters = new List<OpenApiInlineOrReferenceParameter3_0>();
+            var container = new List<OpenApiParameter3_0>();
 
-            if ((route.RouteVariables?.Count ?? 0) > 0)
+            if ((route.VariablesList?.Count ?? 0) > 0)
             {
                 foreach (var routeVar in route.VariablesList)
                 {
-                    var schema = this.GetRouteVariableSchema(document, routeVar, route.EndpointLocation, route.RouteVariables.Count);
+                    var schema = this.GetRouteVariableSchema(document, routeVar, route.EndpointLocation, route.VariablesList.Count);
 
                     if (schema != null)
                     {
-                        parameters.Add(new OpenApiInlineOrReferenceParameter3_0(new OpenApiParameter3_0
+                        var paramName = routeVar.Replace("{", string.Empty).Replace("}", string.Empty);
+
+                        container.Add(new OpenApiParameter3_0
                         {
-                            name = routeVar,
+                            name = paramName,
                             required = true,
-                            @in = OpenApiIn3_0.path,
+                            @in = OpenApiIn3_0.path.ToString(),
                             schema = schema
-                        }));
+                        });
                     }
                 }
             }
 
-            return parameters;
+            return container;
+        }
+
+        /// <summary>Gets the query string parameters.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="route">The route.</param>
+        /// <returns></returns>
+        private List<OpenApiParameter3_0> GetQueryStringParameters(OpenApiDocument3_0 document, ApiRoutingItem route)
+        {
+            var container = new List<OpenApiParameter3_0>();
+
+            var uriParameter = route.EndpointLocation.GetUriParameter(route.VariablesList?.Count ?? 0);
+
+            if (uriParameter != null)
+            {
+                var preparedRouteVars = route.VariablesList != null
+                    ? route.VariablesList.Select(v => v.ToLower().Replace("{", string.Empty).Replace("}", string.Empty)).ToList()
+                    : new List<string>();
+
+                var properties = uriParameter.ParameterType.GetProperties()
+                   .Where(p => p.CanWrite)
+                   .Where(p => !preparedRouteVars.Contains(p.Name.ToLower()))
+                   .ToArray();
+
+                foreach (var prop in properties)
+                {
+                    var schema = new OpenApiSchema3_0
+                    {
+                        type = Helpers.GetOpenApiSchemaType(prop.PropertyType),
+                        nullable = !prop.PropertyType.IsValueType
+                    };
+
+                    container.Add(new OpenApiParameter3_0
+                    {
+                        name = prop.Name,
+                        required = false,
+                        @in = OpenApiIn3_0.query.ToString(),
+                        schema = schema
+                    });
+                }
+            }
+
+            return container.Count > 0
+                ? container
+                : null;
+        }
+
+        /// <summary>Gets the request body parameter.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="route">The route.</param>
+        /// <returns></returns>
+        private OpenApiRequestBody3_0 GetRequestBody(OpenApiDocument3_0 document, ApiRoutingItem route)
+        {
+            var bodyParameter = route.EndpointLocation.GetBodyParameter((route.VariablesList?.Count) ?? 0);
+
+            if (bodyParameter != null)
+            {
+                var schema = this.AddAndGetSchemaRefrence(document, bodyParameter.ParameterType);
+
+                var content = new OpenApiMediaType3_0
+                {
+                    schema = schema,
+                };
+
+                return new OpenApiRequestBody3_0
+                {
+                    content = new Dictionary<string, OpenApiMediaType3_0>
+                    {
+                        { "*/*", content }
+                    },
+                    required = true
+                };
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -603,7 +692,7 @@
                    .Where(p => p.CanWrite)
                    .ToArray();
  
-                var prop = properties.FirstOrDefault(p => string.Compare(p.Name, routeVar, true) == 0);
+                var prop = properties.FirstOrDefault(p => string.Compare($"{{{p.Name}}}", routeVar, true) == 0);
 
                 if (prop != null)
                 {

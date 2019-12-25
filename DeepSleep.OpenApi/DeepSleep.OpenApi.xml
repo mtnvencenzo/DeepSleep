@@ -46,14 +46,6 @@
             The responses.
             </value>
         </member>
-        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.parameters">
-            <summary>
-            Gets or sets the parameters.
-            </summary>
-            <value>
-            The parameters.
-            </value>
-        </member>
         <member name="P:DeepSleep.OpenApi.v3_0.OpenApiComponents3_0.examples">
             <summary>
             Gets or sets the examples.
@@ -386,27 +378,6 @@
             <summary>Gets or sets the link.</summary>
             <value>The link.</value>
         </member>
-        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.#ctor(System.String)">
-            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0"/> class.</summary>
-            <param name="ref">The reference.</param>
-        </member>
-        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.#ctor(DeepSleep.OpenApi.v3_0.OpenApiParameter3_0)">
-            <summary>Initializes a new instance of the <see cref="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0"/> class.</summary>
-            <param name="parameter">The parameter.</param>
-        </member>
-        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.ref">
-            <summary>Gets or sets the reference.</summary>
-            <value>The reference.</value>
-        </member>
-        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceParameter3_0.parameter">
-            <summary>Gets or sets the parameter.</summary>
-            <value>The parameter.</value>
-        </member>
         <member name="T:DeepSleep.OpenApi.v3_0.OpenApiInlineOrReferenceRequestBody3_0">
             <summary>
             
@@ -628,6 +599,10 @@
             
             </summary>
         </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.ref">
+            <summary>Gets or sets the reference.</summary>
+            <value>The reference.</value>
+        </member>
         <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.name">
             <summary>Gets or sets the name.</summary>
             <value>The name.</value>
@@ -683,6 +658,20 @@
         <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParameter3_0.extensions">
             <summary>Gets or sets the extensions.</summary>
             <value>The extensions.</value>
+        </member>
+        <member name="T:DeepSleep.OpenApi.v3_0.OpenApiParametersContainer3_0">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DeepSleep.OpenApi.v3_0.OpenApiParametersContainer3_0.parameters">
+            <summary>Gets or sets the extensions.</summary>
+            <value>The extensions.</value>
+        </member>
+        <member name="M:DeepSleep.OpenApi.v3_0.OpenApiParametersContainer3_0.AddParameter(System.String,DeepSleep.OpenApi.v3_0.OpenApiParameter3_0)">
+            <summary>Adds the parameter.</summary>
+            <param name="paramName">Name of the parameter.</param>
+            <param name="parameter">The parameter.</param>
         </member>
         <member name="T:DeepSleep.OpenApi.v3_0.OpenApiPath3_0">
             <summary>
@@ -1311,6 +1300,18 @@
             <summary>
             Gets the parameters.
             </summary>
+            <param name="document">The document.</param>
+            <param name="route">The route.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetQueryStringParameters(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.ApiRoutingItem)">
+            <summary>Gets the query string parameters.</summary>
+            <param name="document">The document.</param>
+            <param name="route">The route.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetRequestBody(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,DeepSleep.ApiRoutingItem)">
+            <summary>Gets the request body parameter.</summary>
             <param name="document">The document.</param>
             <param name="route">The route.</param>
             <returns></returns>

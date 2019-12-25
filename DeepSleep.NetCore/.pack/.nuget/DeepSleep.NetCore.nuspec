@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.2-beta.9</version>
+    <version>0.0.2-beta.10</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <iconUrl>https://outdoorsite.blob.core.windows.net/public/cdn/nuget/deepsleep_netcore.png</iconUrl>
+    <iconUrl>https://cezzi.azureedge.net/nuget/deepsleep_netcore.png</iconUrl>
     <description>DeepSleep</description>
     <releaseNotes>Release of the DeepSleep.NetCore package</releaseNotes>
     <license type="file">LICENSE</license>

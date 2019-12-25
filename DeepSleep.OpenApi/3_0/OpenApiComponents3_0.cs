@@ -29,7 +29,7 @@
         /// <value>
         /// The parameters.
         /// </value>
-        public Dictionary<string, OpenApiInlineOrReferenceParameter3_0> parameters { get; set; } = new Dictionary<string, OpenApiInlineOrReferenceParameter3_0>();
+        //public Dictionary<string, OpenApiInlineOrReferenceParameter3_0> parameters { get; set; } = new Dictionary<string, OpenApiInlineOrReferenceParameter3_0>();
 
         /// <summary>
         /// Gets or sets the examples.

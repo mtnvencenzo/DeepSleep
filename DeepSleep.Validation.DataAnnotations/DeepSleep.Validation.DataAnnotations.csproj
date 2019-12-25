@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".pack\deepsleep_validation_dataannotations.png" />
+    <Content Include=".pack\.nuget\deepsleep_validation_dataannotations.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +34,7 @@
   <ItemGroup>
     <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.nuspec" />
     <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.pack.ps1" />
-    <None Include=".pack\deepsleep_validation_dataannotations.pdn" />
+    <None Include=".pack\.nuget\deepsleep_validation_dataannotations.pdn" />
   </ItemGroup>
 
 </Project>

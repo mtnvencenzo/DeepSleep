@@ -30,11 +30,11 @@
 
         /// <summary>Gets or sets the parameters.</summary>
         /// <value>The parameters.</value>
-        public List<OpenApiInlineOrReferenceParameter3_0> parameters { get; set; }
+        public List<OpenApiParameter3_0> parameters { get; set; }
 
         /// <summary>Gets or sets the request body.</summary>
         /// <value>The request body.</value>
-        public OpenApiInlineOrReferenceRequestBody3_0 requestBody { get; set; }
+        public OpenApiRequestBody3_0 requestBody { get; set; }
 
         /// <summary>Gets or sets the responses.</summary>
         /// <value>The responses.</value>

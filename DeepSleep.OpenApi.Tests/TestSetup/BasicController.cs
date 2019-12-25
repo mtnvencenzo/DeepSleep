@@ -12,5 +12,17 @@
         {
             throw new NotImplementedException();
         }
+
+        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        public Task<ApiResponse> EndpointWithRouteParam([UriBound] ComplexRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        public Task<ApiResponse> EndpointWithBodyParam([BodyBound] ComplexResponse request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

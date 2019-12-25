@@ -61,7 +61,7 @@
 
         /// <summary>Gets or sets the parameters.</summary>
         /// <value>The parameters.</value>
-        public List<OpenApiInlineOrReferenceParameter3_0> parameters { get; set; }
+        public List<OpenApiParameter3_0> parameters { get; set; }
 
         /// <summary>Gets or sets the extensions.</summary>
         /// <value>The extensions.</value>
