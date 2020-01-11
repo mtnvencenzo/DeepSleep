@@ -49,5 +49,9 @@
         /// <summary>Gets or sets the supported languages.</summary>
         /// <value>The supported languages.</value>
         public IEnumerable<string> SupportedLanguages { get; set; }
+
+        /// <summary>Gets or sets the cross origin configuration.</summary>
+        /// <value>The cross origin configuration.</value>
+        public CrossOriginConfiguration CrossOriginConfig { get; set; }
     }
 }

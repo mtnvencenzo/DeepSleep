@@ -65,16 +65,17 @@
             return new DefaultCrossOriginConfigResolver()
                 .AddExposeHeaders(new string[]
                 {
-                            "X-CorrelationId",
-                            "X-Deprecated",
-                            "X-Api-Message",
-                            "X-Api-Version",
-                            "X-Api-RequestId",
-                            "X-Allow-Accept",
-                            "X-Allow-Accept-Charset",
-                            "X-PrettyPrint",
-                            "Location"
-                });
+                    "X-CorrelationId",
+                    "X-Deprecated",
+                    "X-Api-Message",
+                    "X-Api-Version",
+                    "X-Api-RequestId",
+                    "X-Allow-Accept",
+                    "X-Allow-Accept-Charset",
+                    "X-PrettyPrint",
+                    "Location"
+                })
+                .AddAllowedOrigins(new string[] { "*" });
         }
 
         /// <summary>Gets the default request pipeline.</summary>

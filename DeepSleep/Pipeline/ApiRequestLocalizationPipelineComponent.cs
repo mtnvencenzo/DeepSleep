@@ -48,19 +48,25 @@
             if (canInvokeComponent)
             {
                 if (!await context.ProcessHttpRequestLocalization().ConfigureAwait(false))
+                {
                     canContinuePipeline = false;
+                }
             }
 
             if (afterHook != null)
             {
                 var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestLocalizationPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
                 if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
+                {
                     canContinuePipeline = false;
+                }
             }
 
 
             if (canContinuePipeline)
+            {
                 await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+            }
         }
     }
 

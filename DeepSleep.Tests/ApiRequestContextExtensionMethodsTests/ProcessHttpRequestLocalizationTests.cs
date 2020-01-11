@@ -1,11 +1,11 @@
-using DeepSleep.Pipeline;
-using FluentAssertions;
-using System;
-using System.Globalization;
-using Xunit;
-
 namespace DeepSleep.Tests.ApiRequestContextExtensionMethodsTests
 {
+    using DeepSleep.Pipeline;
+    using FluentAssertions;
+    using System;
+    using System.Globalization;
+    using Xunit;
+
     /// <summary>
     /// 
     /// </summary>

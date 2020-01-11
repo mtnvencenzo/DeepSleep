@@ -1291,31 +1291,52 @@
         /// <returns></returns>
         public async static Task<bool> ProcessHttpResponseCrossOriginResourceSharing(this ApiRequestContext context, ICrossOriginConfigResolver configResolver)
         {
-            if (!context.RequestAborted.IsCancellationRequested)
+            if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
                 if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))
                 {
-                    context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", context.RequestInfo.CrossOriginRequest.Origin);
+                    var crossOriginConfig = configResolver != null
+                        ? await configResolver.ResolveConfig().ConfigureAwait(false)
+                        : new CrossOriginConfiguration();
+
+                    var allowedOrigins = context?.ResourceConfig?.CrossOriginConfig?.AllowedOrigins ?? crossOriginConfig?.AllowedOrigins;
+                    var exposeHeaders = context?.ResourceConfig?.CrossOriginConfig?.ExposeHeaders ?? crossOriginConfig?.ExposeHeaders;
+
+
+                    string allowedOrigin = null;
+
+                    if ((allowedOrigins?.Count() ?? 0) > 0 && allowedOrigins.Contains("*"))
+                    {
+                        allowedOrigin = context.RequestInfo.CrossOriginRequest.Origin;
+                    }
+                    else
+                    {
+                        allowedOrigin = (allowedOrigins ?? new string[] { })
+                            .Distinct()
+                            .Where(i => !string.IsNullOrWhiteSpace(i))
+                            .Select(i => i.Trim())
+                            .Where(i => i.Equals(context.RequestInfo.CrossOriginRequest.Origin, StringComparison.OrdinalIgnoreCase))
+                            .FirstOrDefault();
+                    }
+
+                    context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", allowedOrigin ?? string.Empty);
                     context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", "true");
 
-                    if (configResolver != null)
+                    if ((exposeHeaders?.Count() ?? 0) > 0)
                     {
-                        var corsConfig = await configResolver.ResolveConfig().ConfigureAwait(false);
-
-                        if (corsConfig?.ExposeHeaders != null && corsConfig.ExposeHeaders.Count() > 0)
-                        {
-                            var headers = from h in corsConfig.ExposeHeaders
-                                          where h.Trim() != string.Empty
-                                          select h.Trim();
+                        var headers = exposeHeaders
+                            .Distinct()
+                            .Where(i => !string.IsNullOrWhiteSpace(i))
+                            .Select(i => i.Trim());
                                           
-                            context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", headers.Distinct()).Trim());
-                        }
+                        context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", headers));
                     }
                 }
+
+                return true;
             }
 
-
-            return true;
+            return false;
         }
 
         /// <summary>Processes the HTTP response caching.</summary>
