@@ -10,8 +10,6 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamOptions" />
     public class FormatterOptions : IFormatStreamOptions
     {
-        #region Constructors & Initialization
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FormatterOptions"/> class.
         /// </summary>
@@ -20,8 +18,6 @@
             Encoding = Encoding.UTF8;
             Culture = Thread.CurrentThread.CurrentCulture;
         }
-
-        #endregion
 
         /// <summary>
         /// Gets or sets a value indicating whether [pretty print].

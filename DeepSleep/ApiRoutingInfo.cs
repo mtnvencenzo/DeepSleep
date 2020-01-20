@@ -9,10 +9,10 @@
     {
         /// <summary>Gets or sets the template information.</summary>
         /// <value>The template information.</value>
-        public ApiRoutingTemplate TemplateInfo { get; set; }
+        public virtual ApiRoutingTemplate TemplateInfo { get; set; }
 
         /// <summary>Gets or sets the routing item.</summary>
         /// <value>The routing item.</value>
-        public ApiRoutingItem RoutingItem { get; set; }
+        public virtual ApiRoutingItem RoutingItem { get; set; }
     }
 }

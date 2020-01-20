@@ -1,7 +1,10 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Resources;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -9,7 +12,7 @@
     /// </summary>
     public class ApiRequestUriBindingPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestUriBindingPipelineComponent"/> class.
@@ -17,53 +20,22 @@
         /// <param name="next">The next.</param>
         public ApiRequestUriBindingPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestUriBindingPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestUriBindingPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter).ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter).ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestUriBindingPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -78,6 +50,163 @@
         public static IApiRequestPipeline UseApiRequestUriBinding(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestUriBindingPipelineComponent>();
+        }
+
+        /// <summary>Converts the value.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="convertTo">The convert to.</param>
+        /// <returns></returns>
+        private static object ConvertValue(string value, Type convertTo)
+        {
+            var type = Nullable.GetUnderlyingType(convertTo) ?? convertTo;
+
+            if (value == null)
+            {
+                return type.GetDefaultValue();
+            }
+
+            if (type == typeof(string))
+            {
+                return value;
+            }
+
+            if (type == typeof(DateTime))
+            {
+                return DateTimeOffset.Parse(value).UtcDateTime;
+            }
+
+            if (type == typeof(DateTimeOffset))
+            {
+                return DateTimeOffset.Parse(value);
+            }
+
+            if (type == typeof(TimeSpan))
+            {
+                return TimeSpan.Parse(value);
+            }
+
+            if (type == typeof(bool) && value == "1")
+            {
+                return true;
+            }
+
+            if (type == typeof(bool) && value == "0")
+            {
+                return false;
+            }
+
+            if (type == typeof(Guid))
+            {
+                return Guid.Parse(value);
+            }
+
+            if (type.IsEnum)
+            {
+                return Enum.Parse(type, value, true);
+            }
+
+            return Convert.ChangeType(value, type);
+        }
+
+        /// <summary>Processes the HTTP request URI binding.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                var addedBindingError = false;
+                object uriModel = null;
+
+                if (context.RequestInfo.InvocationContext?.UriModelType != null)
+                {
+
+                    try
+                    {
+                        uriModel = serviceProvider?.GetService(context.RequestInfo.InvocationContext.UriModelType);
+                    }
+                    catch (Exception) { }
+
+
+                    if (uriModel == null)
+                    {
+                        try
+                        {
+                            uriModel = Activator.CreateInstance(context.RequestInfo.InvocationContext.UriModelType);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception(string.Format("Unable to instantiate UriModel '{0}'", context.RequestInfo.InvocationContext.UriModelType.FullName), ex);
+                        }
+                    }
+
+
+                    var propertiesSet = new List<string>();
+                    Action<PropertyInfo, string> propertySetter = (p, v) =>
+                    {
+                        if (p != null && !propertiesSet.Contains(p.Name))
+                        {
+                            try
+                            {
+                                var convertedValue = ConvertValue(v, p.PropertyType);
+
+                                p.SetValue(uriModel, convertedValue);
+                                propertiesSet.Add(p.Name);
+                            }
+                            catch (Exception)
+                            {
+                                addedBindingError = true;
+                                context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.UriRouteBindingError,
+                                    v,
+                                    p.Name)));
+                            }
+                        }
+                    };
+
+                    var properties = context.RequestInfo.InvocationContext.UriModelType.GetProperties()
+                        .Where(p => p.CanWrite)
+                        .ToArray();
+
+                    if ((context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0) > 0)
+                    {
+                        foreach (var routeVar in context.RouteInfo.RoutingItem.RouteVariables.Keys)
+                        {
+                            var prop = properties.FirstOrDefault(p => string.Compare(p.Name, routeVar, true) == 0);
+                            propertySetter(prop, context.RouteInfo.RoutingItem.RouteVariables[routeVar]);
+                        }
+                    }
+
+                    if ((context.RequestInfo.QueryVariables?.Count ?? 0) > 0)
+                    {
+                        foreach (var qvar in context.RequestInfo.QueryVariables.Keys)
+                        {
+                            var prop = properties.Where(p => !propertiesSet.Contains(p.Name)).FirstOrDefault(p => string.Compare(p.Name, qvar, true) == 0);
+                            propertySetter(prop, context.RequestInfo.QueryVariables[qvar]);
+                        }
+                    }
+                }
+
+                if (addedBindingError)
+                {
+                    context.ResponseInfo.ResponseObject = new ApiResponse
+                    {
+                        StatusCode = 400
+                    };
+                    return Task.FromResult(false);
+                }
+
+                if (context.RequestInfo.InvocationContext != null)
+                {
+                    context.RequestInfo.InvocationContext.UriModel = uriModel;
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

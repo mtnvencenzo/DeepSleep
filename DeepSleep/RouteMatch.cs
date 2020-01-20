@@ -7,8 +7,6 @@
     /// </summary>
     public class RouteMatch
     {
-        #region Constructors & Initialization
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteMatch"/> class.
         /// </summary>
@@ -16,8 +14,6 @@
         {
             RouteVariables = new Dictionary<string, string>();
         }
-
-        #endregion
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is match.

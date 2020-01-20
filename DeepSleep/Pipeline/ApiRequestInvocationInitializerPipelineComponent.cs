@@ -1,7 +1,10 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using Microsoft.Extensions.Logging;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -9,7 +12,7 @@
     /// </summary>
     public class ApiRequestInvocationInitializerPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestInvocationInitializerPipelineComponent"/> class.
@@ -17,53 +20,20 @@
         /// <param name="next">The next.</param>
         public ApiRequestInvocationInitializerPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpEndpointInitialization(context.RequestServices).ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-
-            ILogger logger = this.GetLogger<ApiRequestInvocationInitializerPipelineComponent>(context.RequestServices);
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpEndpointInitialization(context.RequestServices, logger).ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestInvocationInitializerPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -78,6 +48,84 @@
         public static IApiRequestPipeline UseApiRequestInvocationInitializer(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestInvocationInitializerPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP endpoint initialization.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">
+        /// Routing item's controller type is null
+        /// or
+        /// Routing item's endpoint name is null
+        /// or
+        /// </exception>
+        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if (context.RouteInfo?.RoutingItem?.EndpointLocation?.Controller == null)
+                {
+                    throw new Exception("Routing item's controller type is null");
+                }
+
+                if (string.IsNullOrWhiteSpace(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint))
+                {
+                    throw new Exception("Routing item's endpoint name is null");
+                }
+
+                MethodInfo method = context.RouteInfo.RoutingItem.EndpointLocation.GetEndpointMethod();
+                object endpointController = null;
+
+
+                if (serviceProvider != null)
+                {
+                    try
+                    {
+                        endpointController = serviceProvider.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
+                    }
+                    catch (Exception) { }
+                }
+
+
+                if (endpointController == null)
+                {
+                    try
+                    {
+                        var constructors = context.RouteInfo.RoutingItem.EndpointLocation.Controller.GetConstructors();
+
+                        if (constructors.Length == 0 || constructors.FirstOrDefault(c => c.GetParameters().Length == 0) != null)
+                        {
+                            endpointController = Activator.CreateInstance(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
+                        }
+
+                        var firstConstructor = constructors.First();
+                        var constructorParameters = new List<object>();
+
+                        firstConstructor.GetParameters().ToList().ForEach(p => constructorParameters.Add(null));
+                        endpointController = Activator.CreateInstance(context.RouteInfo.RoutingItem.EndpointLocation.Controller, constructorParameters.ToArray());
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception(string.Format("Endpoint controller could not be instantiated.  Ensure that the controller has a parameterless contructor or is registered in the DI container"));
+                    }
+                }
+
+                ParameterInfo uriParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetUriParameter();
+                ParameterInfo bodyParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetBodyParameter();
+
+                context.RequestInfo.InvocationContext = new ApiInvocationContext
+                {
+                    Controller = endpointController,
+                    ControllerMethod = method,
+                    UriModelType = uriParameter?.ParameterType,
+                    BodyModelType = bodyParameter?.ParameterType
+                };
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

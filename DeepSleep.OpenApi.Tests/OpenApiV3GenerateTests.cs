@@ -1,5 +1,6 @@
 namespace DeepSleep.OpenApi.Tests
 {
+    using DeepSleep.Configuration;
     using DeepSleep.OpenApi.Tests.TestSetup;
     using Newtonsoft.Json;
     using System;
@@ -9,32 +10,32 @@ namespace DeepSleep.OpenApi.Tests
     public class OpenApiV3GenerateTests
     {
         [Fact]
-        public async Task Test1()
+        public void Test1()
         {
             var table = new DefaultApiRoutingTable();
-            await table.AddRoute(
+            table.AddRoute(
                 "/test/basic/EndpointNoParams",
                 "/test/basic/EndpointNoParams",
                 "GET",
                 typeof(BasicController),
                 nameof(BasicController.EndpointNoParams),
-                new ApiResourceConfig());
+                new DefaultApiRequestConfiguration());
 
-            await table.AddRoute(
+            table.AddRoute(
                 "/test/basic/EndpointWithRouteParam/{name}",
                 "/test/basic/EndpointWithRouteParam/{name}",
                 "GET",
                 typeof(BasicController),
                 nameof(BasicController.EndpointWithRouteParam),
-                new ApiResourceConfig());
+                new DefaultApiRequestConfiguration());
 
-            await table.AddRoute(
+            table.AddRoute(
                 "/test/basic/EndpointWithBodyParam",
                 "/test/basic/EndpointWithBodyParam",
                 "POST",
                 typeof(BasicController),
                 nameof(BasicController.EndpointWithBodyParam),
-                new ApiResourceConfig());
+                new DefaultApiRequestConfiguration());
 
             var generator = new DefaultOpenApiGenerator();
 

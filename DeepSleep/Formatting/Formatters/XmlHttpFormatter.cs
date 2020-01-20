@@ -13,43 +13,6 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class XmlHttpFormatter : IFormatStreamReaderWriter
     {
-        #region Helpers
-
-        /// <summary>Internals the type of the write.</summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
-        /// <param name="options">The options.</param>
-        /// <returns></returns>
-        private Task InternalWriteType(Stream stream, object obj, IFormatStreamOptions options)
-        {
-            if (obj != null)
-            {
-                var serializer = new XmlSerializer(obj.GetType());
-                var settings = new XmlWriterSettings
-                {
-                    NewLineOnAttributes = false,
-                    CloseOutput = false,
-                    Encoding = Encoding.UTF8,
-                    Indent = options.PrettyPrint,
-                    NamespaceHandling = NamespaceHandling.Default,
-                    OmitXmlDeclaration = true
-                };
-
-                using (XmlWriter writer = XmlWriter.Create(stream, settings))
-                {
-                    serializer.Serialize(writer, obj);
-                    writer.Flush();
-                }
-            }
-
-
-            TaskCompletionSource<object> source = new TaskCompletionSource<object>();
-            source.SetResult(null);
-            return source.Task;
-        }
-
-        #endregion
-
         /// <summary>Reads the type.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="objType">Type of the object.</param>
@@ -135,5 +98,38 @@
         /// </summary>
         /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
         public virtual bool SupportsPrettyPrint => true;
+
+        /// <summary>Internals the type of the write.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
+        private Task InternalWriteType(Stream stream, object obj, IFormatStreamOptions options)
+        {
+            if (obj != null)
+            {
+                var serializer = new XmlSerializer(obj.GetType());
+                var settings = new XmlWriterSettings
+                {
+                    NewLineOnAttributes = false,
+                    CloseOutput = false,
+                    Encoding = Encoding.UTF8,
+                    Indent = options.PrettyPrint,
+                    NamespaceHandling = NamespaceHandling.Default,
+                    OmitXmlDeclaration = true
+                };
+
+                using (XmlWriter writer = XmlWriter.Create(stream, settings))
+                {
+                    serializer.Serialize(writer, obj);
+                    writer.Flush();
+                }
+            }
+
+
+            TaskCompletionSource<object> source = new TaskCompletionSource<object>();
+            source.SetResult(null);
+            return source.Task;
+        }
     }
 }

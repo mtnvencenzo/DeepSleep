@@ -7,7 +7,8 @@
     /// </summary>
     public class CrossOriginConfiguration
     {
-        /// <summary>Initializes a new instance of the <see cref="CrossOriginConfiguration"/> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CrossOriginConfiguration"/> class.</summary>
         public CrossOriginConfiguration()
         {
             ExposeHeaders = new List<string>();
@@ -16,10 +17,14 @@
 
         /// <summary>Gets or sets the expose headers.</summary>
         /// <value>The expose headers.</value>
-        public IEnumerable<string> ExposeHeaders { get; set; }
+        public IList<string> ExposeHeaders { get; set; }
 
         /// <summary>Gets or sets the allowed origins.</summary>
         /// <value>The allowed origins.</value>
-        public IEnumerable<string> AllowedOrigins { get; set; }
+        public IList<string> AllowedOrigins { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether [allow credentials].</summary>
+        /// <value><c>true</c> if [allow credentials]; otherwise, <c>false</c>.</value>
+        public bool? AllowCredentials { get; set; }
     }
 }

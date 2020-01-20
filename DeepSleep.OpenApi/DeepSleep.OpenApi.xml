@@ -1316,14 +1316,13 @@
             <param name="route">The route.</param>
             <returns></returns>
         </member>
-        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetRouteVariableSchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.String,DeepSleep.ApiEndpointLocation,System.Int32)">
+        <member name="M:DeepSleep.OpenApi.DefaultOpenApiGenerator.GetRouteVariableSchema(DeepSleep.OpenApi.v3_0.OpenApiDocument3_0,System.String,DeepSleep.ApiEndpointLocation)">
             <summary>
             Gets the route variable schema.
             </summary>
             <param name="document">The document.</param>
             <param name="routeVar">The route variable.</param>
             <param name="location">The location.</param>
-            <param name="routeVariableCount">The route variable count.</param>
             <returns></returns>
         </member>
         <member name="T:DeepSleep.OpenApi.IOpenApiGenerator">

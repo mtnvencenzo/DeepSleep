@@ -580,7 +580,7 @@
             {
                 foreach (var routeVar in route.VariablesList)
                 {
-                    var schema = this.GetRouteVariableSchema(document, routeVar, route.EndpointLocation, route.VariablesList.Count);
+                    var schema = this.GetRouteVariableSchema(document, routeVar, route.EndpointLocation);
 
                     if (schema != null)
                     {
@@ -608,7 +608,7 @@
         {
             var container = new List<OpenApiParameter3_0>();
 
-            var uriParameter = route.EndpointLocation.GetUriParameter(route.VariablesList?.Count ?? 0);
+            var uriParameter = route.EndpointLocation.GetUriParameter();
 
             if (uriParameter != null)
             {
@@ -650,7 +650,7 @@
         /// <returns></returns>
         private OpenApiRequestBody3_0 GetRequestBody(OpenApiDocument3_0 document, ApiRoutingItem route)
         {
-            var bodyParameter = route.EndpointLocation.GetBodyParameter((route.VariablesList?.Count) ?? 0);
+            var bodyParameter = route.EndpointLocation.GetBodyParameter();
 
             if (bodyParameter != null)
             {
@@ -680,11 +680,10 @@
         /// <param name="document">The document.</param>
         /// <param name="routeVar">The route variable.</param>
         /// <param name="location">The location.</param>
-        /// <param name="routeVariableCount">The route variable count.</param>
         /// <returns></returns>
-        private OpenApiSchema3_0 GetRouteVariableSchema(OpenApiDocument3_0 document, string routeVar, ApiEndpointLocation location, int routeVariableCount)
+        private OpenApiSchema3_0 GetRouteVariableSchema(OpenApiDocument3_0 document, string routeVar, ApiEndpointLocation location)
         {
-            var uriParameter = location.GetUriParameter(routeVariableCount);
+            var uriParameter = location.GetUriParameter();
 
             if (uriParameter != null)
             {

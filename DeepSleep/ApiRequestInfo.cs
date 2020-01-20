@@ -8,8 +8,6 @@
     /// <summary>The API request info.</summary>
     public class ApiRequestInfo
     {
-        #region Constructors & Initialization
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestInfo"/> class.
         /// </summary>
@@ -18,105 +16,99 @@
             Headers = new List<ApiHeader>();
         }
 
-        #endregion
-
         /// <summary>Gets or sets the request accept types.</summary>
         /// <value>The request accept types.</value>
-        public MediaHeaderValueWithQualityString Accept { get; set; }
+        public virtual MediaHeaderValueWithQualityString Accept { get; set; }
 
         /// <summary>Gets or sets the accept language.</summary>
         /// <value>The accept language.</value>
-        public LanguageHeaderValueWithQualityString AcceptLanguage { get; set; }
+        public virtual LanguageHeaderValueWithQualityString AcceptLanguage { get; set; }
 
         /// <summary>Gets or sets the accept culture.</summary>
         /// <value>The accept culture.</value>
-        public CultureInfo AcceptCulture { get; set; }
+        public virtual CultureInfo AcceptCulture { get; set; }
 
         /// <summary>Gets or sets the accept charset.</summary>
         /// <value>The accept charset.</value>
-        public CharsetHeaderValueWithQualityString AcceptCharset { get; set; }
+        public virtual CharsetHeaderValueWithQualityString AcceptCharset { get; set; }
 
         /// <summary>Gets or sets the accept encoding.</summary>
         /// <value>The accept encoding.</value>
-        public MediaHeaderValueWithQualityString AcceptEncoding { get; set; }
+        public virtual MediaHeaderValueWithQualityString AcceptEncoding { get; set; }
 
         /// <summary>Gets or sets the authentication info.</summary>
         /// <value>The authentication info.</value>
-        public ClientAuthentication ClientAuthenticationInfo { get; set; }
+        public virtual ClientAuthentication ClientAuthenticationInfo { get; set; }
 
         /// <summary>Gets or sets the cross origin request.</summary>
         /// <value>The cross origin request.</value>
-        public CrossOriginRequestValues CrossOriginRequest { get; set; }
+        public virtual CrossOriginRequestValues CrossOriginRequest { get; set; }
 
         /// <summary>Gets or sets the type of the content.</summary>
         /// <value>The type of the content.</value>
-        public MediaHeaderValueWithParameters ContentType { get; set; }
+        public virtual MediaHeaderValueWithParameters ContentType { get; set; }
 
         /// <summary>Gets or sets the length of the content.</summary>
         /// <value>The length of the content.</value>
-        public long? ContentLength { get; set; }
+        public virtual long? ContentLength { get; set; }
 
         /// <summary>Gets or sets the client specified correlation id for the request.</summary>
         /// <value>The correlation id.</value>
-        public string CorrelationId { get; set; }
+        public virtual string CorrelationId { get; set; }
 
         /// <summary>Gets or sets a value indicating whether [force download].</summary>
         /// <value><c>true</c> if [force download]; otherwise, <c>false</c>.</value>
-        public bool ForceDownload { get; set; }
+        public virtual bool ForceDownload { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [pretty print].
         /// </summary>
         /// <value><c>true</c> if [pretty print]; otherwise, <c>false</c>.</value>
-        public bool PrettyPrint { get; set; }
+        public virtual bool PrettyPrint { get; set; }
 
         /// <summary>Gets or sets the method.</summary>
         /// <value>The method.</value>
-        public string Method { get; set; }
+        public virtual string Method { get; set; }
 
         /// <summary>Gets or sets the remote user.  These fields are automatically mapped from the TCP level server variables.</summary>
         /// <value>The remote user.</value>
-        public ApiRemoteUser RemoteUser { get; set; }
+        public virtual ApiRemoteUser RemoteUser { get; set; }
 
         /// <summary>Gets or sets the request date.</summary>
         /// <value>The request date.</value>
-        public DateTime? RequestDate { get; set; }
+        public virtual DateTime? RequestDate { get; set; }
 
         /// <summary>Gets or sets the request identifier.</summary>
         /// <value>The request identifier.</value>
-        public string RequestIdentifier { get; set; }
+        public virtual string RequestIdentifier { get; set; }
 
         /// <summary>Gets or sets the request URI.</summary>
         /// <value>The request URI.</value>
-        public string RequestUri { get; set; }
-
-        /// <summary>Gets or sets the secured transport mode.</summary>
-        /// <value>The secured transport mode.</value>
-        public TransportSecurity SecuredTransportMode { get; set; }
+        public virtual string RequestUri { get; set; }
 
         /// <summary>Gets or sets the invocation context.</summary>
         /// <value>The invocation context.</value>
-        public ApiInvocationContext InvocationContext { get; set; }
+        public virtual ApiInvocationContext InvocationContext { get; set; }
 
         /// <summary>Gets or sets the query variables.</summary>
         /// <value>The query variables.</value>
-        public Dictionary<string, string> QueryVariables { get; set; }
+        public virtual Dictionary<string, string> QueryVariables { get; set; }
 
         /// <summary>Gets or sets the protocol.</summary>
         /// <value>The protocol.</value>
-        public string Protocol { get; set; }
+        public virtual string Protocol { get; set; }
 
         /// <summary>Gets or sets the path.</summary>
         /// <value>The path.</value>
-        public string Path { get; set; }
+        public virtual string Path { get; set; }
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public List<ApiHeader> Headers { get; set; }
+        public virtual List<ApiHeader> Headers { get; set; }
 
         /// <summary>Gets or sets the body.</summary>
         /// <value>The body.</value>
-        public Stream Body { get; set; }
+        public virtual Stream Body { get; set; }
     }
 
     /// <summary>

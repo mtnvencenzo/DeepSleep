@@ -75,7 +75,5 @@
 
             return environmentModelType;
         }
-
-
     }
 }

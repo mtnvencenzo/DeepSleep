@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -11,9 +12,7 @@
     /// <summary>The API request context.</summary>
     public class ApiRequestContext
     {
-        static Dictionary<string, ResourceManager> _resxTypes = new Dictionary<string, ResourceManager>();
-
-        #region Constructors and Destructors
+        static readonly Dictionary<string, ResourceManager> resxTypes = new Dictionary<string, ResourceManager>();
 
         /// <summary>Initializes a new instance of the <see cref="ApiRequestContext"/> class.</summary>
         public ApiRequestContext()
@@ -24,68 +23,67 @@
             RouteInfo = new ApiRoutingInfo();
             ResponseInfo = new ApiResponseInfo();
             RequestAborted = new CancellationToken(false);
+            RequestConfig = new DefaultApiRequestConfiguration();
         }
-
-        #endregion
 
         /// <summary>Gets the items.</summary>
         /// <value>The items.</value>
-        public Dictionary<string, object> Items { get; private set; }
+        public virtual Dictionary<string, object> Items { get; private set; }
 
         /// <summary>Gets the request information.</summary>
         /// <value>The request information.</value>
-        public ApiRequestInfo RequestInfo { get; set; }
+        public virtual ApiRequestInfo RequestInfo { get; set; }
+
+        /// <summary>Gets or sets the request configuration.</summary>
+        /// <value>The request configuration.</value>
+        public virtual IApiRequestConfiguration RequestConfig { get; set; }
 
         /// <summary>Gets or sets the response information.</summary>
         /// <value>The response information.</value>
-        public ApiResponseInfo ResponseInfo { get; set; }
+        public virtual ApiResponseInfo ResponseInfo { get; set; }
 
         /// <summary>Gets or sets the route information.</summary>
         /// <value>The route information.</value>
-        public ApiRoutingInfo RouteInfo { get; set; }
+        public virtual ApiRoutingInfo RouteInfo { get; set; }
 
         /// <summary>Gets the response information.</summary>
         /// <value>The response information.</value>
-        public ApiProcessingInfo ProcessingInfo { get; set; }
-
-        /// <summary>Gets or sets the resource identity.</summary>
-        /// <value>The resource identity.</value>
-        public ApiResourceConfig ResourceConfig { get; set; }
+        public virtual ApiProcessingInfo ProcessingInfo { get; set; }
 
         /// <summary>Gets or sets the path base.</summary>
         /// <value>The path base.</value>
-        public string PathBase { get; set; }
+        public virtual string PathBase { get; set; }
 
         /// <summary>Gets or sets the request aborted.</summary>
         /// <value>The request aborted.</value>
-        public CancellationToken RequestAborted { get; set; }
+        public virtual CancellationToken RequestAborted { get; set; }
 
         /// <summary>Gets or sets the request services.</summary>
         /// <value>The request services.</value>
-        public IServiceProvider RequestServices { get; set; }
+        public virtual IServiceProvider RequestServices { get; set; }
 
         /// <summary>Gets the resource.</summary>
         /// <param name="expression">The expression.</param>
         /// <returns></returns>
-        public string GetAcceptLanguageResource(Expression<Func<string>> expression)
+        public virtual string GetAcceptLanguageResource(Expression<Func<string>> expression)
         {
-            var expr = expression.Body as MemberExpression;
             string resx = null;
 
-            if (expr != null)
+            if (expression.Body is MemberExpression expr)
             {
                 var propertyInfo = expr.Member as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    if (!_resxTypes.ContainsKey(propertyInfo.DeclaringType.FullName))
+                    if (!resxTypes.ContainsKey(propertyInfo.DeclaringType.FullName))
                     {
-                        _resxTypes.Add(propertyInfo.DeclaringType.FullName, new ResourceManager(propertyInfo.DeclaringType));
+                        resxTypes.Add(propertyInfo.DeclaringType.FullName, new ResourceManager(propertyInfo.DeclaringType));
                     }
 
-                    var rm = _resxTypes[propertyInfo.DeclaringType.FullName];
+                    var rm = resxTypes[propertyInfo.DeclaringType.FullName];
                     resx = rm.GetString(propertyInfo.Name, RequestInfo?.AcceptCulture);
                 }
             }
+
             return resx;
         }
     }
@@ -148,7 +146,7 @@
         /// <returns>The <see cref="bool" />.</returns>
         public static bool TryGetItem<TKey, TItem>(this ApiRequestContext request, string contextKey, TKey key, out TItem item)
         {
-            item = default(TItem);
+            item = default;
 
             RequestContextItemGroup<TKey, TItem> itemGroup;
             if (!request.TryGetItemGroup(contextKey, out itemGroup))
@@ -174,7 +172,7 @@
         /// <returns>The <see cref="bool" />.</returns>
         private static bool TryGetItemGroup<TItem>(this ApiRequestContext request, string contextKey, out TItem item)
         {
-            item = default(TItem);
+            item = default;
 
             if (!request.Items.ContainsKey(contextKey))
             {

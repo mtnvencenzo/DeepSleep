@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Resources;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -8,52 +9,25 @@
     /// </summary>
     public class ApiResponseDeprecatedPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>Initializes a new instance of the <see cref="ApiResponseDeprecatedPipelineComponent"/> class.</summary>
         /// <param name="next">The next.</param>
         public ApiResponseDeprecatedPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+            await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseDeprecatedPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseDeprecatedPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
-
-            bool canInvokeComponent = true;
-
-            if (beforeHook != null)
-            {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseDeprecatedPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-            }
-
-
-            if (canInvokeComponent)
-            {
-                await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
-            }
-
-
-            if (afterHook != null)
-            {
-                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseDeprecatedPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-            }
+            
+            await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
         }
     }
 
@@ -68,6 +42,22 @@
         public static IApiRequestPipeline UseApiResponseDeprecated(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiResponseDeprecatedPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP response deprecated.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpResponseDeprecated(this ApiRequestContext context)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if (context.RequestConfig?.Deprecated ?? false)
+                {
+                    context.ResponseInfo.AddHeader("X-Deprecated", true.ToString().ToLower());
+                }
+            }
+
+            return Task.FromResult(true);
         }
     }
 }

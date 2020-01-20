@@ -6,8 +6,6 @@
     /// </summary>
     public class ApiResponseInfo
     {
-        #region Constructors & Initialization
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseInfo"/> class.
         /// </summary>
@@ -16,31 +14,29 @@
             Headers = new List<ApiHeader>();
         }
 
-        #endregion
-
         /// <summary>Gets or sets the response object.</summary>
         /// <value>The response object.</value>
-        public ApiResponse ResponseObject { get; set; }
+        public virtual ApiResponse ResponseObject { get; set; }
 
         /// <summary>Gets or sets the raw response object.</summary>
         /// <value>The raw response object.</value>
-        public byte[] RawResponseObject { get; set; }
+        public virtual byte[] RawResponseObject { get; set; }
 
         /// <summary>Gets or sets the content language.</summary>
         /// <value>The content language.</value>
-        public string ContentLanguage { get; set; }
+        public virtual string ContentLanguage { get; set; }
 
         /// <summary>Gets or sets the type of the content.</summary>
         /// <value>The type of the content.</value>
-        public MediaHeaderValueWithQualityString ContentType { get; set; }
+        public virtual MediaHeaderValueWithQualityString ContentType { get; set; }
 
         /// <summary>Gets or sets the length of the content.</summary>
         /// <value>The length of the content.</value>
-        public long ContentLength { get; set; }
+        public virtual long ContentLength { get; set; }
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public List<ApiHeader> Headers { get; set; }
+        public virtual List<ApiHeader> Headers { get; set; }
     }
 
     /// <summary>

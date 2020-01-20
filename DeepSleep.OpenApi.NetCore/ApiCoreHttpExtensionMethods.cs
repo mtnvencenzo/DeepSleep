@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.OpenApi.NetCore
 {
+    using DeepSleep.Configuration;
     using DeepSleep.OpenApi.NetCore.Controllers;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@
                name: $"GET_openapi",
                controller: typeof(OpenApiController),
                endpoint: nameof(OpenApiController.Doc),
-               config: new ApiResourceConfig
+               config: new DefaultApiRequestConfiguration
                {
                    AllowAnonymous = true,
                    CacheDirective = new HttpCacheDirective
@@ -44,7 +45,7 @@
                    },
                    Deprecated = false,
                    ResourceId = $"{Guid.Empty}_OpenApi"
-               }).ConfigureAwait(false).GetAwaiter();
+               });
 
             return builder;
         }

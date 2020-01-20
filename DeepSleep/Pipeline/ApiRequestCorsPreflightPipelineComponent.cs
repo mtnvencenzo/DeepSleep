@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
     /// </summary>
     public class ApiRequestCorsPreflightPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestCorsPreflightPipelineComponent"/> class.
@@ -16,51 +17,20 @@
         /// <param name="next">The next.</param>
         public ApiRequestCorsPreflightPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestCorsPreflightPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestCorsPreflightPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestCorsPreflightPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestCorsPreflightPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+                await this.apinext.Invoke(contextResolver).ConfigureAwait(false);
+            }  
         }
     }
 
@@ -75,6 +45,44 @@
         public static IApiRequestPipeline UseApiRequestCorsPreflight(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestCorsPreflightPipelineComponent>();
+        }
+
+        /// <summary>
+        /// Processes the HTTP request cross origin resource sharing preflight.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpRequestCrossOriginResourceSharingPreflight(this ApiRequestContext context)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if (context.RequestInfo?.IsCorsPreflightRequest() ?? false)
+                {
+                    var methods = (context.RouteInfo?.TemplateInfo?.EndpointLocations ?? new List<ApiEndpointLocation>())
+                        .Where(r => !string.IsNullOrWhiteSpace(r.HttpMethod))
+                        .Select(r => r.HttpMethod.ToUpper())
+                        .Distinct()
+                        .ToArray();
+
+                    context.ResponseInfo.ResponseObject = new ApiResponse
+                    {
+                        StatusCode = 200
+                    };
+
+                    context.ResponseInfo.AddHeader("Access-Control-Allow-Methods", string.Join(", ", methods).Trim());
+
+                    if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.AccessControlRequestHeaders))
+                    {
+                        context.ResponseInfo.AddHeader("Access-Control-Allow-Headers", context.RequestInfo.CrossOriginRequest.AccessControlRequestHeaders);
+                    }
+
+                    return Task.FromResult(false);
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

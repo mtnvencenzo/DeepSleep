@@ -16,7 +16,7 @@
     /// </summary>
     public class ApiRequestContextPipelineComponent
     {
-        #region Constructors & Initialization
+        private readonly RequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestContextPipelineComponent"/> class.
@@ -24,12 +24,8 @@
         /// <param name="next">The next.</param>
         public ApiRequestContextPipelineComponent(RequestDelegate next)
         {
-            _next = next;
+            apinext = next;
         }
-
-        private readonly RequestDelegate _next;
-
-        #endregion
 
         #region Helper Methods and Fields
 
@@ -67,7 +63,6 @@
                     ContentLength = context.Request.ContentLength,
                     RequestDate = GetRequestDate(context.Request, serverTime),
                     CorrelationId = GetCorrelationId(context.Request),
-                    SecuredTransportMode = GetTransportSecurityMode(context.Request),
                     RemoteUser = GetRemoteUserFromServerVariables(context.Request),
                     ForceDownload = GetForceDownloadFlag(context.Request),
                     ClientAuthenticationInfo = GetClientAuthInfo(context.Request),
@@ -610,35 +605,6 @@
                 AccessControlRequestMethod = requestMethod,
                 AccessControlRequestHeaders = requestHeaders
             };
-
-
-        }
-
-        /// <summary> Gets the transport security mode.</summary>
-        /// <param name="request">The request.</param>
-        /// <returns></returns>
-        private TransportSecurity GetTransportSecurityMode(HttpRequest request)
-        {
-            if (request.IsHttps)
-                return TransportSecurity.SSL;
-
-            if (request.Headers.ContainsKey("X-Forwarded-Proto"))
-            {
-                var headerVal = request.Headers["X-Forwarded-Proto"][0];
-
-                if (string.Compare(headerVal, "https", true) == 0)
-                    return TransportSecurity.SSL;
-            }
-
-            if (request.Headers.ContainsKey("X-Original-Proto"))
-            {
-                var headerVal = request.Headers["X-Original-Proto"][0];
-
-                if (string.Compare(headerVal, "https", true) == 0)
-                    return TransportSecurity.SSL;
-            }
-
-            return TransportSecurity.None;
         }
 
         /// <summary>Gets the remote user from server variables.</summary>
@@ -868,7 +834,7 @@
             {
                 await requestPipeline.Run(contextResolver);
 
-                await _next.Invoke(httpcontext);
+                await apinext.Invoke(httpcontext);
 
                 httpcontext.Response.Headers.Add("Date", DateTime.UtcNow.ToString("r"));
 

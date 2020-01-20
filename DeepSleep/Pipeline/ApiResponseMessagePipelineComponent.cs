@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -8,7 +7,7 @@
     /// </summary>
     public class ApiResponseMessagePipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseMessagePipelineComponent"/> class.
@@ -16,46 +15,20 @@
         /// <param name="next">The next.</param>
         public ApiResponseMessagePipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
         {
-            await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+            await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseMessagePipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseMessagePipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-
-            if (beforeHook != null)
-            {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseMessagePipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-            }
-
-
-            if (canInvokeComponent)
-            {
-                await context.ProcessHttpResponseMessages(responseMessageProcessorProvider).ConfigureAwait(false);
-            }
-
-
-            if (afterHook != null)
-            {
-                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseMessagePipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-            }
+            await context.ProcessHttpResponseMessages(responseMessageProcessorProvider).ConfigureAwait(false);
         }
     }
 
@@ -70,6 +43,32 @@
         public static IApiRequestPipeline UseApiResponseMessages(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiResponseMessagePipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP response messages.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
+        /// <returns></returns>
+        public static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if ((context.ProcessingInfo?.ExtendedMessages?.Count ?? 0) > 0)
+                {
+                    context.ProcessingInfo.ExtendedMessages.ClearDuplicates();
+                    context.ProcessingInfo.ExtendedMessages.SortMessagesByCode();
+
+                    if (responseMessageProcessorProvider != null)
+                    {
+                        foreach (var processor in responseMessageProcessorProvider.GetProcessors())
+                        {
+                            await processor.Process(context).ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

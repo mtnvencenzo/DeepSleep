@@ -8,7 +8,7 @@
     /// </summary>
     public class ApiResponseCorrelationPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseCorrelationPipelineComponent"/> class.
@@ -16,46 +16,19 @@
         /// <param name="next">The next.</param>
         public ApiResponseCorrelationPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+            await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseCorrelationPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseCorrelationPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-
-            if (beforeHook != null)
-            {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseCorrelationPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-            }
-
-
-            if (canInvokeComponent)
-            {
-                await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
-            }
-
-
-            if (afterHook != null)
-            {
-                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseCorrelationPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-            }
+            await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
         }
     }
 
@@ -70,6 +43,22 @@
         public static IApiRequestPipeline UseApiResponseCorrelation(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiResponseCorrelationPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP response correlation.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if (context.RequestInfo?.CorrelationId != null)
+                {
+                    context.ResponseInfo.AddHeader("X-CorrelationId", context.RequestInfo.CorrelationId);
+                }
+            }
+
+            return Task.FromResult(true);
         }
     }
 }

@@ -5,14 +5,14 @@
     {
         /// <summary>Gets or sets the cacheability.</summary>
         /// <value>The cacheability.</value>
-        public HttpCacheType Cacheability { get; set; }
+        public HttpCacheType? Cacheability { get; set; }
 
         /// <summary>Gets or sets the expiration.</summary>
         /// <value>The expiration.</value>
-        public int ExpirationSeconds { get; set; }
+        public int? ExpirationSeconds { get; set; }
 
         /// <summary>Gets or sets the cache location.</summary>
         /// <value>The cache location.</value>
-        public HttpCacheLocation CacheLocation { get; set; }
+        public HttpCacheLocation? CacheLocation { get; set; }
     }
 }

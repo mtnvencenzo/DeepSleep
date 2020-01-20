@@ -8,7 +8,7 @@
     /// </summary>
     public class ApiRequestNotFoundPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestNotFoundPipelineComponent"/> class.
@@ -16,51 +16,20 @@
         /// <param name="next">The next.</param>
         public ApiRequestNotFoundPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestNotFoundPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestNotFoundPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestNotFound().ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestNotFoundPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestNotFound().ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestNotFoundPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
+            } 
         }
     }
 
@@ -75,6 +44,29 @@
         public static IApiRequestPipeline UseApiRequestNotFound(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestNotFoundPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP request not found.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
+                {
+                    context.ResponseInfo.ResponseObject = new ApiResponse
+                    {
+                        StatusCode = 404
+                    };
+
+                    return Task.FromResult(false);
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

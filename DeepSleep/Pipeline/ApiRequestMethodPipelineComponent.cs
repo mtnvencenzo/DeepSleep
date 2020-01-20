@@ -8,7 +8,7 @@
     /// </summary>
     public class ApiRequestMethodPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestMethodPipelineComponent"/> class.
@@ -16,51 +16,20 @@
         /// <param name="next">The next.</param>
         public ApiRequestMethodPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestMethodPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestMethodPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestMethod().ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestMethodPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestMethod().ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestMethodPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -75,6 +44,46 @@
         public static IApiRequestPipeline UseApiRequestMethod(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestMethodPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP request method.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                // Templates exist for thies route
+                if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) > 0)
+                {
+                    // A route was not found for the template 
+                    if (context.RouteInfo.RoutingItem == null)
+                    {
+                        var methods = context.RouteInfo.TemplateInfo.EndpointLocations
+                            .Where(e => !string.IsNullOrWhiteSpace(e?.HttpMethod))
+                            .Select(e => e.HttpMethod.ToUpper())
+                            .Distinct()
+                            .ToList();
+
+                        if (methods.Contains("GET") && !methods.Contains("HEAD"))
+                        {
+                            methods.Add("HEAD");
+                        }
+
+                        context.ResponseInfo.AddHeader("Allow", string.Join(", ", methods));
+                        context.ResponseInfo.ResponseObject = new ApiResponse
+                        {
+                            StatusCode = 405
+                        };
+
+                        return Task.FromResult(false);
+                    }
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

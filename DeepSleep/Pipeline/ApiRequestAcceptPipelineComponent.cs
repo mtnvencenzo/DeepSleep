@@ -9,7 +9,7 @@
     /// </summary>
     public class ApiRequestAcceptPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestAcceptPipelineComponent"/> class.
@@ -17,52 +17,21 @@
         /// <param name="next">The next.</param>
         public ApiRequestAcceptPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified formatter factory.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiServiceConfiguration config)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestAcceptPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestAcceptPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestAccept(formatterFactory).ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestAcceptPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestAccept(formatterFactory).ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestAcceptPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -77,6 +46,48 @@
         public static IApiRequestPipeline UseApiRequestAccept(this IApiRequestPipeline pipline)
         {
             return pipline.UsePipelineComponent<ApiRequestAcceptPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP request accept.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="formatterFactory">The formatter factory.</param>
+        /// <returns></returns>
+        public static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                if (context.RequestInfo != null)
+                {
+                    var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
+                        ? context.RequestInfo.Accept
+                        : new MediaHeaderValueWithQualityString("*/*");
+
+                    IFormatStreamReaderWriter formatter = null;
+
+                    if (formatterFactory != null)
+                    {
+                        formatter = await formatterFactory.GetAcceptableFormatter(accept, out var _).ConfigureAwait(false);
+                    }
+
+                    if (formatter == null)
+                    {
+                        string acceptable = (formatterFactory != null)
+                            ? string.Join(", ", formatterFactory.GetTypes())
+                            : string.Empty;
+
+                        context.ResponseInfo.AddHeader("X-Allow-Accept", acceptable);
+                        context.ResponseInfo.ResponseObject = new ApiResponse
+                        {
+                            StatusCode = 406
+                        };
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

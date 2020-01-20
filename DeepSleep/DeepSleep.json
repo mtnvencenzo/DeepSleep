@@ -1,0 +1,32 @@
+{
+  "HttpConfig": {
+    "SupportedVersions": [
+      "http/1.1", // list of support http versions - use '*' to support all versions
+      "http/1.2",
+      "http/2",
+      "http/2.0",
+      "http/2.1"
+    ],
+    "RequireSSL": false
+  },
+  "CrossOriginConfig": {
+    "AllwedOrigins": [
+      "*" // use * to allow all origins - default is '' (or none)
+    ],
+    "ExposeHeaders": [
+      "X-CorrelationId",
+      "X-Deprecated",
+      "X-Api-Message",
+      "X-Api-Version",
+      "X-Api-RequestId",
+      "X-Allow-Accept",
+      "X-Allow-Accept-Charset",
+      "X-PrettyPrint",
+      "Location"
+    ],
+    "AllowCredentials": false // default value is false
+  },
+  "HeaderValidationConfig": {
+    "MaxHeaderLength":  10000
+  }
+}

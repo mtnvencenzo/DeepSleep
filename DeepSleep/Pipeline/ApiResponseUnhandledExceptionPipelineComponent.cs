@@ -1,5 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
+    using DeepSleep.Resources;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -9,7 +11,7 @@
     /// </summary>
     public class ApiResponseUnhandledExceptionPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseUnhandledExceptionPipelineComponent"/> class.
@@ -17,12 +19,8 @@
         /// <param name="next">The next.</param>
         public ApiResponseUnhandledExceptionPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
@@ -31,44 +29,15 @@
         /// <returns></returns>
         public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
         {
-            Exception caught = null;
-
             try
             {
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                caught = ex;
-            }
+                var context = contextResolver.GetContext();
 
-            if (caught == null)
-                return;
-
-
-            var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseUnhandledExceptionPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseUnhandledExceptionPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
-
-            bool canInvokeComponent = true;
-
-            if (beforeHook != null)
-            {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseUnhandledExceptionPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-            }
-
-
-            if (canInvokeComponent)
-            {
-                await context.ProcessHttpResponseUnhandledException(caught, config, responseMessageConverter).ConfigureAwait(false);
-            }
-
-
-            if (afterHook != null)
-            {
-                await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseUnhandledExceptionPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
+                await context.ProcessHttpResponseUnhandledException(ex, config, responseMessageConverter).ConfigureAwait(false);
             }
         }
     }
@@ -84,6 +53,69 @@
         public static IApiRequestPipeline UseApiResponseUnhandledExceptionHandler(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiResponseUnhandledExceptionPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP response unhandled exception.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="config">The configuration.</param>
+        /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <returns></returns>
+        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
+        {
+            if (exception != null)
+            {
+                var code = context.HandleException(exception, responseMessageConverter);
+
+                if (config?.ExceptionHandler != null && exception as ApiNotImplementedException == null)
+                {
+                    try
+                    {
+                        await config.ExceptionHandler(context, exception).ConfigureAwait(false);
+                    }
+                    catch (Exception) { }
+                }
+
+                context.ResponseInfo.ResponseObject = new ApiResponse
+                {
+                    StatusCode = code
+                };
+            }
+
+            return true;
+        }
+
+        /// <summary>Handles the exception.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <returns></returns>
+        private static int HandleException(this ApiRequestContext context, Exception exception, IApiResponseMessageConverter responseMessageConverter)
+        {
+            int code;
+
+            if (exception is ApiNotImplementedException)
+            {
+                code = 501;
+
+                if (context != null)
+                {
+                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.NotImplemented));
+                    context.AddException(exception);
+                }
+            }
+            else
+            {
+                code = 500;
+
+                if (context != null)
+                {
+                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.UnhandledException));
+                    context.AddException(exception);
+                }
+            }
+
+            return code;
         }
     }
 }

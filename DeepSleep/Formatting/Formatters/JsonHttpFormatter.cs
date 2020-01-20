@@ -12,43 +12,6 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class JsonHttpFormatter : IFormatStreamReaderWriter
     {
-        #region Helpers
-
-        /// <summary>Gets the write settings.</summary>
-        /// <param name="options">The options.</param>
-        /// <returns></returns>
-        private JsonSerializerSettings GetWriteSettings(IFormatStreamOptions options)
-        {
-            return new JsonSerializerSettings
-            {
-                Formatting = options.PrettyPrint ? Formatting.Indented : Formatting.None,
-                Culture = options.Culture,
-                DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
-                DefaultValueHandling = DefaultValueHandling.Include,
-                NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
-                StringEscapeHandling = StringEscapeHandling.Default
-            };
-        }
-
-        /// <summary>Gets the read settings.</summary>
-        /// <param name="options">The options.</param>
-        /// <returns></returns>
-        private JsonSerializerSettings GetReadSettings(IFormatStreamOptions options)
-        {
-            return new JsonSerializerSettings
-            {
-                DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
-                DefaultValueHandling = DefaultValueHandling.Include,
-                NullValueHandling = NullValueHandling.Include,
-                StringEscapeHandling = StringEscapeHandling.Default,
-                MissingMemberHandling = MissingMemberHandling.Ignore
-            };
-        }
-
-        #endregion
-
         /// <summary>Reads the type.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="objType">Type of the object.</param>
@@ -129,5 +92,22 @@
         /// </summary>
         /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
         public virtual bool SupportsPrettyPrint => true;
+
+        /// <summary>Gets the write settings.</summary>
+        /// <param name="options">The options.</param>
+        /// <returns></returns>
+        private JsonSerializerSettings GetWriteSettings(IFormatStreamOptions options)
+        {
+            return new JsonSerializerSettings
+            {
+                Formatting = options.PrettyPrint ? Formatting.Indented : Formatting.None,
+                Culture = options.Culture,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
+                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
+                DefaultValueHandling = DefaultValueHandling.Include,
+                NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
+                StringEscapeHandling = StringEscapeHandling.Default
+            };
+        }
     }
 }

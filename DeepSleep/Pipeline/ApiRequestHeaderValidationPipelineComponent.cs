@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Resources;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
     /// </summary>
     public class ApiRequestHeaderValidationPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestHeaderValidationPipelineComponent"/> class.
@@ -16,52 +17,21 @@
         /// <param name="next">The next.</param>
         public ApiRequestHeaderValidationPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
-
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
-            var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestHeaderValidationPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-            var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.RequestHeaderValidationPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
 
-            bool canInvokeComponent = true;
-            bool canContinuePipeline = true;
-
-            if (beforeHook != null)
+            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter).ConfigureAwait(false))
             {
-                var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.RequestHeaderValidationPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                    canInvokeComponent = false;
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
-
-            if (canInvokeComponent)
-            {
-                if (!await context.ProcessHttpRequestHeaderValidation(responseMessageConverter).ConfigureAwait(false))
-                    canContinuePipeline = false;
-            }
-
-            if (afterHook != null)
-            {
-                var result = await afterHook.Hook(context, ApiRequestPipelineComponentTypes.RequestHeaderValidationPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.InvokeComponentAndCancel)
-                    canContinuePipeline = false;
-            }
-
-
-            if (canContinuePipeline)
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -76,6 +46,50 @@
         public static IApiRequestPipeline UseApiRequestHeaderValidation(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiRequestHeaderValidationPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP request header validation.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        {
+            if (!context.RequestAborted.IsCancellationRequested)
+            {
+                var addedHeaderError = false;
+
+                if (context.RequestInfo.Headers != null)
+                {
+                    var maxHeaderLength = context.RequestConfig?.HeaderValidationConfig?.MaxHeaderLength ?? 0;
+
+                    if (maxHeaderLength > 0)
+                    {
+                        foreach (var header in context.RequestInfo.Headers)
+                        {
+                            if (header.Value.Length > maxHeaderLength)
+                            {
+                                addedHeaderError = true;
+                                context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.HeaderLengthExceeded,
+                                    header.Name,
+                                    maxHeaderLength.ToString())));
+                            }
+                        }
+                    }
+                }
+
+                if (addedHeaderError)
+                {
+                    context.ResponseInfo.ResponseObject = new ApiResponse
+                    {
+                        StatusCode = 431
+                    };
+                    return Task.FromResult(false);
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

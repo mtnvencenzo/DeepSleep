@@ -7,16 +7,12 @@
     /// <typeparam name="TItem">The type of the item.</typeparam>
     public class RequestContextItemGroup<TKey, TItem>
     {
-        #region Constructors and Destructors
-
         /// <summary>Initializes a new instance of the <see cref="RequestContextItemGroup{TKey,TItem}"/> class. 
         ///     Initializes a new instance of the <see cref="RequestContextItemGroup{TKey, TItem}"/> class.</summary>
         public RequestContextItemGroup()
         {
             Items = new Dictionary<TKey, TItem>();
         }
-
-        #endregion
 
         /// <summary>Gets the items.</summary>
         /// <value>The items.</value>

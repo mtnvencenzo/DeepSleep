@@ -10,24 +10,14 @@
     /// </summary>
     public class ApiRequestPipeline : IApiRequestPipeline
     {
-        private Dictionary<int, ApiRequestDelegateHandler> _pipeline;
-
-        /// <summary>Gets the registered pipeline.</summary>
-        /// <value>The registered pipeline.</value>
-        Dictionary<int, ApiRequestDelegateHandler> IApiRequestPipeline.RegisteredPipeline
-        {
-            get
-            {
-                return _pipeline;
-            }
-        }
+        private readonly Dictionary<int, ApiRequestDelegateHandler> pipeline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestPipeline"/> class.
         /// </summary>
         public ApiRequestPipeline()
         {
-            _pipeline = new Dictionary<int, ApiRequestDelegateHandler>();
+            pipeline = new Dictionary<int, ApiRequestDelegateHandler>();
         }
 
         /// <summary>Uses the pipeline component.</summary>
@@ -50,8 +40,8 @@
                 {
                     if (parameters[0].ParameterType == typeof(IApiRequestContextResolver))
                     {
-                        var delegateHandler = new ApiRequestDelegateHandler(this, _pipeline.Count, type, method);
-                        _pipeline.Add(_pipeline.Count, delegateHandler);
+                        var delegateHandler = new ApiRequestDelegateHandler(this, pipeline.Count, type, method);
+                        pipeline.Add(pipeline.Count, delegateHandler);
                         break;
                     }
                 }
@@ -65,8 +55,8 @@
         /// <returns></returns>
         public virtual async Task Run(IApiRequestContextResolver contextResolver)
         {
-            var first = _pipeline.Count > 0
-                ? _pipeline[0]
+            var first = pipeline.Count > 0
+                ? pipeline[0]
                 : null;
 
             if (first != null)
@@ -74,5 +64,16 @@
                 await first.TaskInvoker(contextResolver).ConfigureAwait(false);
             }
         }
+
+        /// <summary>Gets the registered pipeline.</summary>
+        /// <value>The registered pipeline.</value>
+        Dictionary<int, ApiRequestDelegateHandler> IApiRequestPipeline.RegisteredPipeline
+        {
+            get
+            {
+                return pipeline;
+            }
+        }
+
     }
 }

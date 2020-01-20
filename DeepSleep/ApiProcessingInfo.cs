@@ -28,7 +28,7 @@
 
         /// <summary>Gets or sets the extended messages.</summary>
         /// <value>The extended messages.</value>
-        public List<ApiResponseMessage> ExtendedMessages { get; private set; }
+        public List<ApiResponseMessage> ExtendedMessages { get; set; }
 
         /// <summary>Gets or sets the duration of the request.</summary>
         /// <value>The duration of the request.</value>

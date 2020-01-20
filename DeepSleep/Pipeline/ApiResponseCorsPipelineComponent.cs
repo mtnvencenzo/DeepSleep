@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
     /// </summary>
     public class ApiResponseCorsPipelineComponent : PipelineComponentBase
     {
-        #region Constructors & Initialization
+        private readonly ApiRequestDelegate apinext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseCorsPipelineComponent"/> class.
@@ -16,50 +17,23 @@
         /// <param name="next">The next.</param>
         public ApiResponseCorsPipelineComponent(ApiRequestDelegate next)
         {
-            _apinext = next;
+            apinext = next;
         }
 
-        private readonly ApiRequestDelegate _apinext;
-
-        #endregion
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
-        /// <param name="corsConfigResolver">The cors configuration resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, ICrossOriginConfigResolver corsConfigResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
-                await _apinext.Invoke(contextResolver).ConfigureAwait(false);
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
             finally
             {
                 var context = contextResolver.GetContext();
-                var beforeHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseCorsPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.Before));
-                var afterHook = config.GetPipelineHooks(ApiRequestPipelineComponentTypes.ResponseCorsPipeline).FirstOrDefault(h => h.Placements.HasFlag(ApiRequestPipelineHookPlacements.After));
-
-                bool canInvokeComponent = true;
-
-                if (beforeHook != null)
-                {
-                    var result = await beforeHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseCorsPipeline, ApiRequestPipelineHookPlacements.Before).ConfigureAwait(false);
-                    if (result.Continuation == ApiRequestPipelineHookContinuation.ByPassComponentAndCancel || result.Continuation == ApiRequestPipelineHookContinuation.BypassComponentAndContinue)
-                        canInvokeComponent = false;
-                }
-
-
-                if (canInvokeComponent)
-                {
-                    await context.ProcessHttpResponseCrossOriginResourceSharing(corsConfigResolver).ConfigureAwait(false);
-                }
-
-
-                if (afterHook != null)
-                {
-                    await afterHook.Hook(context, ApiRequestPipelineComponentTypes.ResponseCorsPipeline, ApiRequestPipelineHookPlacements.After).ConfigureAwait(false);
-                }
+                await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
             }
         }
     }
@@ -75,6 +49,55 @@
         public static IApiRequestPipeline UseApiResponseCors(this IApiRequestPipeline pipeline)
         {
             return pipeline.UsePipelineComponent<ApiResponseCorsPipelineComponent>();
+        }
+
+        /// <summary>Processes the HTTP response cross origin resource sharing.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static Task<bool> ProcessHttpResponseCrossOriginResourceSharing(this ApiRequestContext context)
+        {
+            if (!(context?.RequestAborted.IsCancellationRequested ?? false))
+            {
+                if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))
+                {
+                    var allowedOrigins = context.RequestConfig?.CrossOriginConfig?.AllowedOrigins;
+                    var exposeHeaders = context.RequestConfig?.CrossOriginConfig?.ExposeHeaders;
+                    var allowCredentials = context.RequestConfig?.CrossOriginConfig?.AllowCredentials;
+
+                    string allowedOrigin = null;
+
+                    if ((allowedOrigins?.Count() ?? 0) > 0 && allowedOrigins.Contains("*"))
+                    {
+                        allowedOrigin = context.RequestInfo.CrossOriginRequest.Origin;
+                    }
+                    else
+                    {
+                        allowedOrigin = (allowedOrigins ?? new string[] { })
+                            .Distinct()
+                            .Where(i => !string.IsNullOrWhiteSpace(i))
+                            .Select(i => i.Trim())
+                            .Where(i => i.Equals(context.RequestInfo.CrossOriginRequest.Origin, StringComparison.OrdinalIgnoreCase))
+                            .FirstOrDefault();
+                    }
+
+                    context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", allowedOrigin ?? string.Empty);
+                    context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", (allowCredentials ?? false).ToString().ToLowerInvariant());
+
+                    if ((exposeHeaders?.Count() ?? 0) > 0)
+                    {
+                        var headers = exposeHeaders
+                            .Distinct()
+                            .Where(i => !string.IsNullOrWhiteSpace(i))
+                            .Select(i => i.Trim());
+
+                        context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", headers));
+                    }
+                }
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

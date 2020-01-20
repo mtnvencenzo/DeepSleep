@@ -10,6 +10,12 @@
     /// </summary>
     public class ApiRequestDelegateHandler
     {
+        private readonly MethodInfo target;
+        private readonly ApiRequestDelegate requestDelegate;
+        private readonly IApiRequestPipeline pipeline;
+        private readonly int index;
+        private readonly Type type;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestDelegateHandler" /> class.
         /// </summary>
@@ -19,20 +25,13 @@
         /// <param name="target">The target.</param>
         public ApiRequestDelegateHandler(IApiRequestPipeline pipeline, int index, Type type, MethodInfo target)
         {
-            _target = target;
-            _pipeline = pipeline;
-            _index = index;
-            _delegate = new ApiRequestDelegate(TaskInvoker);
-            _type = type;
+            this.target = target;
+            this.pipeline = pipeline;
+            this.index = index;
+            this.requestDelegate = new ApiRequestDelegate(TaskInvoker);
+            this.type = type;
         }
         
-        private MethodInfo _target;
-        private ApiRequestDelegate _delegate;
-        private IApiRequestPipeline _pipeline;
-        private readonly int _index;
-        private Type _type;
-
-
         /// <summary>Tasks the invoker.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
@@ -40,16 +39,16 @@
         {
             var context = contextResolver.GetContext();
 
-            var next = (_index >= _pipeline.RegisteredPipeline.Count - 1)
+            var next = (this.index >= this.pipeline.RegisteredPipeline.Count - 1)
                 ? new ApiRequestDelegate(TaskFinisher)
-                : _pipeline.RegisteredPipeline[_index + 1]._delegate;
+                : this.pipeline.RegisteredPipeline[this.index + 1].requestDelegate;
 
-            var constructor = _type.GetConstructor(new Type[] { typeof(ApiRequestDelegate) });
+            var constructor = this.type.GetConstructor(new Type[] { typeof(ApiRequestDelegate) });
 
-            var instance = Activator.CreateInstance(_type, new object[] { next });
+            var instance = Activator.CreateInstance(this.type, new object[] { next });
 
             var targetInvocationParameters = new List<object>();
-            var methodParams = _target.GetParameters();
+            var methodParams = this.target.GetParameters();
 
             foreach (var methodParam in methodParams)
             {
@@ -78,7 +77,7 @@
                 }
             }
 
-            var task = (Task)_target.Invoke(instance, targetInvocationParameters.ToArray());
+            var task = (Task)this.target.Invoke(instance, targetInvocationParameters.ToArray());
             await task.ConfigureAwait(false);
         }
 
@@ -87,9 +86,7 @@
         /// <returns></returns>
         public static Task TaskFinisher(IApiRequestContextResolver contextResolver)
         {
-            var source = new TaskCompletionSource<object>();
-            source.SetResult(null);
-            return source.Task;
+            return Task.CompletedTask;
         }
     }
 }
