@@ -207,74 +207,54 @@
                 ? endpointConfig.Init()
                 : defaultConfig.Init();
 
-            requestConfig.AllowAnonymous = (endpointConfig ?? defaultConfig).AllowAnonymous;
-            requestConfig.Deprecated = (endpointConfig ?? defaultConfig).Deprecated;
-            requestConfig.FallBackLanguage = (endpointConfig ?? defaultConfig).FallBackLanguage;
-            requestConfig.MaxRequestLength = (endpointConfig ?? defaultConfig).MaxRequestLength;
-            requestConfig.MaxRequestUriLength = (endpointConfig ?? defaultConfig).MaxRequestUriLength;
-            requestConfig.MinRequestLength = (endpointConfig ?? defaultConfig).MinRequestLength;
-            requestConfig.ResourceId = (endpointConfig ?? defaultConfig).ResourceId;
-            requestConfig.SupportedLanguages = (endpointConfig ?? defaultConfig).SupportedLanguages;
+            requestConfig.AllowAnonymous = endpointConfig?.AllowAnonymous ?? defaultConfig.AllowAnonymous;
+            requestConfig.Deprecated = endpointConfig?.Deprecated ?? defaultConfig.Deprecated;
+            requestConfig.FallBackLanguage = endpointConfig?.FallBackLanguage ?? defaultConfig.FallBackLanguage;
+            requestConfig.MaxRequestLength = endpointConfig?.MaxRequestLength ?? defaultConfig.MaxRequestLength;
+            requestConfig.MaxRequestUriLength = endpointConfig?.MaxRequestUriLength ?? defaultConfig.MaxRequestUriLength;
+            requestConfig.MinRequestLength = endpointConfig?.MinRequestLength ?? defaultConfig.MinRequestLength;
+            requestConfig.ResourceId = endpointConfig?.ResourceId ?? defaultConfig.ResourceId;
+            requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
 
             // Merge CacheDirective
-            requestConfig.CacheDirective = defaultConfig.CacheDirective;
-            if (endpointConfig.CacheDirective != null)
+            if (defaultConfig?.CacheDirective != null || endpointConfig?.CacheDirective != null)
             {
-                if (requestConfig.CacheDirective == null)
+                requestConfig.CacheDirective = new HttpCacheDirective
                 {
-                    requestConfig.CacheDirective = endpointConfig.CacheDirective;
-                }
-                else if (endpointConfig.CacheDirective != null)
-                {
-                    requestConfig.CacheDirective.Cacheability = endpointConfig.CacheDirective.Cacheability ?? requestConfig.CacheDirective.Cacheability;
-                    requestConfig.CacheDirective.CacheLocation = endpointConfig.CacheDirective.CacheLocation ?? requestConfig.CacheDirective.CacheLocation;
-                    requestConfig.CacheDirective.ExpirationSeconds = endpointConfig.CacheDirective.ExpirationSeconds ?? requestConfig.CacheDirective.ExpirationSeconds;
-                }
+                    Cacheability = endpointConfig?.CacheDirective?.Cacheability ?? defaultConfig?.CacheDirective?.Cacheability,
+                    CacheLocation = endpointConfig?.CacheDirective?.CacheLocation ?? defaultConfig?.CacheDirective?.CacheLocation,
+                    ExpirationSeconds = endpointConfig?.CacheDirective?.ExpirationSeconds ?? defaultConfig?.CacheDirective?.ExpirationSeconds
+                };
             }
 
             // Merge CrossOriginConfig
-            requestConfig.CrossOriginConfig = defaultConfig.CrossOriginConfig;
-            if (endpointConfig.CrossOriginConfig != null)
+            if (defaultConfig?.CrossOriginConfig != null || endpointConfig?.CrossOriginConfig != null)
             {
-                if (requestConfig.CrossOriginConfig == null)
+                requestConfig.CrossOriginConfig = new CrossOriginConfiguration
                 {
-                    requestConfig.CrossOriginConfig = endpointConfig.CrossOriginConfig;
-                }
-                else if (endpointConfig.CrossOriginConfig != null)
-                {
-                    requestConfig.CrossOriginConfig.AllowCredentials = endpointConfig.CrossOriginConfig.AllowCredentials ?? requestConfig.CrossOriginConfig.AllowCredentials;
-                    requestConfig.CrossOriginConfig.AllowedOrigins = endpointConfig.CrossOriginConfig.AllowedOrigins ?? requestConfig.CrossOriginConfig.AllowedOrigins;
-                    requestConfig.CrossOriginConfig.ExposeHeaders = endpointConfig.CrossOriginConfig.ExposeHeaders ?? requestConfig.CrossOriginConfig.ExposeHeaders;
-                }
+                    AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials ?? defaultConfig?.CrossOriginConfig?.AllowCredentials,
+                    AllowedOrigins = endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins,
+                    ExposeHeaders = endpointConfig?.CrossOriginConfig?.ExposeHeaders ?? defaultConfig?.CrossOriginConfig?.ExposeHeaders
+                };
             }
 
             // Merge HeaderValidationConfig
-            requestConfig.HeaderValidationConfig = defaultConfig.HeaderValidationConfig;
-            if (endpointConfig.HeaderValidationConfig != null)
+            if (defaultConfig?.HeaderValidationConfig != null || endpointConfig?.HeaderValidationConfig != null)
             {
-                if (requestConfig.HeaderValidationConfig == null)
+                requestConfig.HeaderValidationConfig = new ApiHeaderValidationConfiguration
                 {
-                    requestConfig.HeaderValidationConfig = endpointConfig.HeaderValidationConfig;
-                }
-                else if (endpointConfig.HeaderValidationConfig != null)
-                {
-                    requestConfig.HeaderValidationConfig.MaxHeaderLength = endpointConfig.HeaderValidationConfig.MaxHeaderLength ?? requestConfig.HeaderValidationConfig.MaxHeaderLength;
-                }
+                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength ?? defaultConfig?.HeaderValidationConfig?.MaxHeaderLength
+                };
             }
 
             // Merge HttpConfig
-            requestConfig.HttpConfig = defaultConfig.HttpConfig;
-            if (endpointConfig.HttpConfig != null)
+            if (defaultConfig?.HttpConfig != null || endpointConfig?.HttpConfig != null)
             {
-                if (requestConfig.HttpConfig == null)
+                requestConfig.HttpConfig = new ApiHttpConfiguration
                 {
-                    requestConfig.HttpConfig = endpointConfig.HttpConfig;
-                }
-                else if (endpointConfig.HttpConfig != null)
-                {
-                    requestConfig.HttpConfig.RequireSSL = endpointConfig.HttpConfig.RequireSSL ?? requestConfig.HttpConfig.RequireSSL;
-                    requestConfig.HttpConfig.SupportedVersions = endpointConfig.HttpConfig.SupportedVersions ?? requestConfig.HttpConfig.SupportedVersions;
-                }
+                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL ?? defaultConfig?.HttpConfig?.RequireSSL,
+                    SupportedVersions = endpointConfig?.HttpConfig?.SupportedVersions ?? defaultConfig?.HttpConfig?.SupportedVersions
+                };
             }
 
             return requestConfig;
