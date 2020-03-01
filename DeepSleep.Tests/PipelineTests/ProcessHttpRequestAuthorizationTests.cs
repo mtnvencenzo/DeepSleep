@@ -17,7 +17,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestAuthorization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAuthorization(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -32,7 +32,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestAuthorization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAuthorization(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

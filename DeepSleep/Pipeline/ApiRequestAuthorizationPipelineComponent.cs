@@ -2,6 +2,7 @@
 {
     using DeepSleep.Auth;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,12 +28,15 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The responseMessageConverter.</param>
+        /// <param name="loggerFactory">The loggerFactory.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILoggerFactory loggerFactory)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter).ConfigureAwait(false))
+            var logger = loggerFactory?.CreateLogger<ApiRequestAuthorizationPipelineComponent>();
+
+            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -55,8 +59,9 @@
         /// <summary>Processes the HTTP request authorization.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The responseMessageConverter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -72,13 +77,16 @@
                     {
                         authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig?.ResourceAuthorizationConfig?.Policy));
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
+                        logger?.LogError(ex, $"Could not retrive auth providers for DI.");
                         // TODO: log message
                     }
 
                     if (authProvider != null)
                     {
+                        logger?.LogInformation($"Attemping authorization using policy '{authProvider.Policy}'.");
+
                         await authProvider.Authorize(context, responseMessageConverter).ConfigureAwait(false);
                     }
 
@@ -86,6 +94,15 @@
 
                     if (result == null || !result.IsAuthorized)
                     {
+                        if (result == null)
+                        {
+                            logger?.LogWarning($"Invalid authorization, null result returned.");
+                        }
+                        else
+                        {
+                            logger?.LogWarning($"Invalid authorization, Unauthorized.");
+                        }
+
                         if (authProvider == null)
                         {
                             throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig?.ResourceAuthorizationConfig?.Policy}'");
@@ -99,6 +116,7 @@
                     }
                 }
 
+                logger?.LogInformation($"Request authorized.");
                 return true;
             }
 
