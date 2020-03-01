@@ -1,4 +1,5 @@
 ﻿using DeepSleep.Auth;
+using System.Security.Principal;
 
 namespace DeepSleep
 {
@@ -17,5 +18,9 @@ namespace DeepSleep
         /// 
         /// </summary>
         public AuthenticationResult AuthResult { get; set; }
+
+        /// <summary>Gets or sets the authenticated security principal.
+        /// </summary>
+        public IPrincipal Principal { get; set; }
     }
 }
