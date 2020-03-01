@@ -9,7 +9,7 @@
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns>The <see cref="Task" />.</returns>
-        Task<AuthorizationResult> Authorize(ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter);
+        Task Authorize(ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter);
 
         /// <summary>Determines whether this instance [can handle authorization policy] the specified scheme.</summary>
         /// <param name="policy">The policy.</param>
