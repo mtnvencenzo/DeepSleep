@@ -26,6 +26,10 @@
         /// <value>The header validation configuration.</value>
         public ApiHeaderValidationConfiguration HeaderValidationConfig { get; set; }
 
+        /// <summary>Gets or sets the authorization configuration
+        /// </summary>
+        public ResourceAuthorizationConfiguration ResourceAuthorizationConfig { get; set; }
+
         /// <summary>Gets or sets a value indicating whether [allow anonymous].</summary>
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
         public bool? AllowAnonymous { get; set; }

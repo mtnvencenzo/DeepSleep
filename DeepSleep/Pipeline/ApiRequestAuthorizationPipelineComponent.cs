@@ -60,7 +60,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestInfo?.ClientAuthorizationInfo?.Policy))
+                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.ResourceAuthorizationConfig?.Policy))
                 {
                     var providers = context.RequestServices
                         .GetServices<IAuthorizationProvider>()
@@ -70,7 +70,7 @@
 
                     try
                     {
-                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestInfo?.ClientAuthorizationInfo?.Policy));
+                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig?.ResourceAuthorizationConfig?.Policy));
                     }
                     catch (System.Exception)
                     {
@@ -88,7 +88,7 @@
                     {
                         if (authProvider == null)
                         {
-                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestInfo?.ClientAuthorizationInfo?.Policy}'");
+                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig?.ResourceAuthorizationConfig?.Policy}'");
                         }
 
                         context.ResponseInfo.ResponseObject = new ApiResponse

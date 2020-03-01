@@ -257,6 +257,35 @@
                 };
             }
 
+            // Merge Resource Authorization Config
+            if (defaultConfig?.ResourceAuthorizationConfig != null || endpointConfig?.ResourceAuthorizationConfig != null)
+            {
+                requestConfig.ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration
+                {
+                    Policy = endpointConfig?.ResourceAuthorizationConfig?.Policy ?? defaultConfig?.ResourceAuthorizationConfig?.Policy
+                };
+
+                if (endpointConfig?.ResourceAuthorizationConfig?.Roles != null || defaultConfig?.ResourceAuthorizationConfig?.Roles != null)
+                {
+                    requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
+
+                    if (endpointConfig?.ResourceAuthorizationConfig?.Roles != null)
+                    {
+                        foreach (var role in endpointConfig.ResourceAuthorizationConfig.Roles)
+                        {
+                            requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
+                        }
+                    }
+                    else if (defaultConfig?.ResourceAuthorizationConfig?.Roles != null)
+                    {
+                        foreach (var role in defaultConfig.ResourceAuthorizationConfig.Roles)
+                        {
+                            requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
+                        }
+                    }
+                }
+            }
+
             return requestConfig;
         }
     }

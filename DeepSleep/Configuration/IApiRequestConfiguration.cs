@@ -23,6 +23,10 @@
         /// <value>The header validation configuration.</value>
         ApiHeaderValidationConfiguration HeaderValidationConfig { get; set; }
 
+        /// <summary>Gets or sets the authorization configuration
+        /// </summary>
+        ResourceAuthorizationConfiguration ResourceAuthorizationConfig { get; set; }
+
         /// <summary>Gets or sets a value indicating whether [allow anonymous].</summary>
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
         bool? AllowAnonymous { get; set; }
