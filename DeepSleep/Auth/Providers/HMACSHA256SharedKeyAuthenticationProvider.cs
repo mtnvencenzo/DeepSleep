@@ -9,8 +9,6 @@
     /// <summary></summary>
     public class HMACSHA256SharedKeyAuthenticationProvider : IAuthenticationProvider
     {
-        #region Constuctors & Initialization
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HMACSHA256SharedKeyAuthenticationProvider"/> class.
         /// </summary>
@@ -20,14 +18,100 @@
             Realm = realm;
         }
 
-        #endregion
+        /// <summary>Authenticates the specified identity.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <returns>The <see cref="Task" />.</returns>
+        public virtual async Task Authenticate(ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        {
+            if (context.RequestInfo.ClientAuthenticationInfo == null)
+            {
+                context.RequestInfo.ClientAuthenticationInfo = new ClientAuthentication();
+            }
 
-        #region Helpers
+            var authValue = context.RequestInfo.ClientAuthenticationInfo.AuthValue ?? string.Empty;
 
-        /// <summary>
-        /// 
+            if (string.IsNullOrWhiteSpace(authValue))
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.EmptyAuthField, responseMessageConverter);
+                return;
+            }
+
+            var authPairs = authValue.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+            if (authPairs.Length != 2)
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.InvalidAuthValuePairing, responseMessageConverter);
+                return;
+            }
+
+            var publicKey = authPairs[0];
+            if (string.IsNullOrWhiteSpace(publicKey))
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.InvalidPublicKey, responseMessageConverter);
+                return;
+            }
+
+            var signature = authPairs[1];
+            if (string.IsNullOrWhiteSpace(signature))
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.EmptySignature, responseMessageConverter);
+                return;
+            }
+
+            var privateKey = (await KeyInfoProvider.GetKeyInfo(publicKey).ConfigureAwait(false))?.PrivateKey ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(privateKey))
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.InvalidPrivateKey, responseMessageConverter);
+                return;
+            }
+
+            // GENERATE THE SIGNAURE BASED ON PROPERTIES OF THE REQUEST.  IF THIS MATCHES 
+            // THE SIGNAUTE THAT THE CLIENT SUPPLIED THEN AUTHENTICATION IS SUCCESSFUL
+            var builtSignature = BuildSignature(
+                context.RequestInfo.RequestUri,
+                context.RequestInfo.Method,
+                publicKey,
+                privateKey,
+                context.RequestInfo.RequestDate);
+
+            if (CompareSignatures(builtSignature, signature))
+            {
+                context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
+                return;
+            }
+
+            context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, AuthenticationErrors.InvalidSignature, responseMessageConverter);
+        }
+
+        /// <summary>Determines whether this instance [can handle authentication type] the specified type.</summary>
+        /// <param name="scheme">The authorization scheme.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public virtual bool CanHandleAuthScheme(string scheme)
+        {
+            if (string.IsNullOrWhiteSpace(scheme))
+                return false;
+
+            if (scheme.Equals(Scheme, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary> Gets or sets the key info provider
         /// </summary>
         public IApiKeyInfoProvider KeyInfoProvider { get; set; }
+
+        /// <summary>Gets the authentication scheme.</summary>
+        /// <value>The authentication scheme.</value>
+        public string Scheme => AuthSchemeType.Shared.ToString();
+
+        /// <summary>Gets the realm.</summary>
+        /// <value>The realm.</value>
+        public string Realm { get; }
+
+        #region Helpers
 
         /// <summary>Builds the signature.</summary>
         /// <param name="requestUri">The request URI.</param>
@@ -101,91 +185,5 @@
         }
 
         #endregion
-
-        /// <summary>Authenticates the specified identity.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <returns>The <see cref="Task" />.</returns>
-        public virtual async Task<AuthenticationResult> Authenticate(ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
-        {
-            var authValue = context?.RequestInfo?.ClientAuthenticationInfo?.AuthValue ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(authValue))
-            {
-                return new AuthenticationResult(false, AuthenticationErrors.EmptyAuthField, responseMessageConverter);
-            }
-
-            var authPairs = authValue.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-            if (authPairs.Length != 2)
-            {
-                return new AuthenticationResult(false, AuthenticationErrors.InvalidAuthValuePairing, responseMessageConverter);
-            }
-
-            var publicKey = authPairs[0];
-            if (string.IsNullOrWhiteSpace(publicKey))
-            {
-                return new AuthenticationResult(false, AuthenticationErrors.InvalidPublicKey, responseMessageConverter);
-            }
-
-            var signature = authPairs[1];
-            if (string.IsNullOrWhiteSpace(signature))
-            {
-                return new AuthenticationResult(false, AuthenticationErrors.EmptySignature, responseMessageConverter);
-            }
-
-            var privateKey = (await KeyInfoProvider.GetKeyInfo(publicKey).ConfigureAwait(false))?.PrivateKey ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(privateKey))
-            {
-                return new AuthenticationResult(false, AuthenticationErrors.InvalidPrivateKey, responseMessageConverter);
-            }
-
-            // GENERATE THE SIGNAURE BASED ON PROPERTIES OF THE REQUEST.  IF THIS MATCHES 
-            // THE SIGNAUTE THAT THE CLIENT SUPPLIED THEN AUTHENTICATION IS SUCCESSFUL
-            var builtSignature = BuildSignature(
-                context.RequestInfo.RequestUri,
-                context.RequestInfo.Method,
-                publicKey,
-                privateKey,
-                context.RequestInfo.RequestDate);
-
-
-
-            if (CompareSignatures(builtSignature, signature))
-            {
-                return new AuthenticationResult(true);
-            }
-
-
-            return new AuthenticationResult(false, AuthenticationErrors.InvalidSignature, responseMessageConverter);
-        }
-
-        /// <summary>Determines whether this instance [can handle authentication type] the specified type.</summary>
-        /// <param name="scheme">The authorization scheme.</param>
-        /// <returns>The <see cref="bool"/>.</returns>
-        public virtual bool CanHandleAuthScheme(string scheme)
-        {
-            if (string.IsNullOrWhiteSpace(scheme))
-                return false;
-
-            if (scheme.Equals(AuthScheme, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>Gets the authentication scheme.</summary>
-        /// <value>The authentication scheme.</value>
-        public string AuthScheme
-        {
-            get
-            {
-                return AuthSchemeType.Shared.ToString();
-            }
-        }
-
-        /// <summary>Gets the realm.</summary>
-        /// <value>The realm.</value>
-        public string Realm { get; private set; }
     }
 }

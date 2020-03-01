@@ -497,7 +497,6 @@
 
             string authScheme = string.Empty;
             string authValue = string.Empty;
-            var authPlacement = RequestMetaDataPlacement.None;
 
             var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "authorization");
             if (header.Key != null)
@@ -508,7 +507,6 @@
                 {
                     authScheme = authParts[0];
                     authValue = authParts[1];
-                    authPlacement = RequestMetaDataPlacement.StandardHeader;
                 }
             }
 
@@ -521,7 +519,6 @@
                 {
                     authScheme = authParts[0];
                     authValue = authParts[1];
-                    authPlacement = RequestMetaDataPlacement.CustomHeader;
                 }
             }
 
@@ -534,7 +531,6 @@
                 {
                     authScheme = authSchemeQueryString.Value.ToString();
                     authValue = authValueQueryString.Value.ToString();
-                    authPlacement = RequestMetaDataPlacement.QueryString;
                 }
             }
 
@@ -545,8 +541,7 @@
                 return new ClientAuthentication
                 {
                     AuthScheme = authScheme,
-                    AuthValue = authValue,
-                    AuthValuePlacement = authPlacement
+                    AuthValue = authValue
                 };
             }
 

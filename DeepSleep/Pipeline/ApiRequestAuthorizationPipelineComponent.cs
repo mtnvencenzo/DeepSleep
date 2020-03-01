@@ -1,5 +1,9 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Auth;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -22,12 +26,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="responseMessageConverter">The responseMessageConverter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthorization().ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -49,15 +54,55 @@
 
         /// <summary>Processes the HTTP request authorization.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="responseMessageConverter">The responseMessageConverter.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context)
+        public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                return Task.FromResult(true);
+                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestInfo?.ClientAuthorizationInfo?.Policy))
+                {
+                    var providers = context.RequestServices
+                        .GetServices<IAuthorizationProvider>()
+                        .ToList();
+
+                    IAuthorizationProvider authProvider = null;
+
+                    try
+                    {
+                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestInfo?.ClientAuthorizationInfo?.Policy));
+                    }
+                    catch (System.Exception)
+                    {
+                        // TODO: log message
+                    }
+
+                    if (authProvider != null)
+                    {
+                        await authProvider.Authorize(context, responseMessageConverter).ConfigureAwait(false);
+                    }
+
+                    var result = context.RequestInfo?.ClientAuthorizationInfo?.AuthResult;
+
+                    if (result == null || !result.IsAuthorized)
+                    {
+                        if (authProvider == null)
+                        {
+                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestInfo?.ClientAuthorizationInfo?.Policy}'");
+                        }
+
+                        context.ResponseInfo.ResponseObject = new ApiResponse
+                        {
+                            StatusCode = 403
+                        };
+                        return false;
+                    }
+                }
+
+                return true;
             }
 
-            return Task.FromResult(false);
+            return false;
         }
     }
 }

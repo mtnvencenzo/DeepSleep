@@ -5,6 +5,7 @@
     using System;
     using System.Threading.Tasks;
     using DeepSleep.Validation;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -14,10 +15,6 @@
         /// <summary>Gets or sets the routing table.</summary>
         /// <value>The routing table.</value>
         public IApiRoutingTable RoutingTable { get; set; }
-
-        /// <summary>Gets or sets the authentication factory.</summary>
-        /// <value>The authentication factory.</value>
-        public IAuthenticationFactory AuthenticationFactory { get; set; }
 
         /// <summary>Gets or sets the format factory.</summary>
         /// <value>The format factory.</value>

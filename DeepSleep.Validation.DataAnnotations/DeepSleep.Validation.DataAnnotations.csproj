@@ -12,11 +12,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netstandard2.0/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netstandard2.0/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

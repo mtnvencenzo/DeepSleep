@@ -40,6 +40,10 @@
         /// <value>The authentication info.</value>
         public virtual ClientAuthentication ClientAuthenticationInfo { get; set; }
 
+        /// <summary>Gets or sets the authorization info.</summary>
+        /// <value>The authorization info.</value>
+        public virtual ClientAuthorization ClientAuthorizationInfo { get; set; }
+
         /// <summary>Gets or sets the cross origin request.</summary>
         /// <value>The cross origin request.</value>
         public virtual CrossOriginRequestValues CrossOriginRequest { get; set; }

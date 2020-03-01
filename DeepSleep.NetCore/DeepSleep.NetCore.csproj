@@ -21,11 +21,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.NetCore\DeepSleep.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netcoreapp2.0/DeepSleep.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep.NetCore\DeepSleep.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netcoreapp2.0/DeepSleep.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

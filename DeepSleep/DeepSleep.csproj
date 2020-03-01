@@ -19,18 +19,17 @@
     <Product>Deep Sleep RESTful API Framework</Product>
     <Description>Deep Sleep RESTful API Framework</Description>
     <PackageReleaseNotes>Inital stable releast of the Deep Sleep RESTful API Framework</PackageReleaseNotes>
-    <PackageIconUrl>http://www.tisdaleplumbing.com/deepsleep.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep\DeepSleep.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netstandard2.0/DeepSleep.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\Code\W\DeepSleep\DeepSleep\DeepSleep.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netstandard2.0/DeepSleep.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,7 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

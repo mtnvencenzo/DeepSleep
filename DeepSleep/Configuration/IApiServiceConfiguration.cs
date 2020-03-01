@@ -15,10 +15,6 @@
         /// <value>The routing table.</value>
         IApiRoutingTable RoutingTable { get; set; }
 
-        /// <summary>Gets or sets the authentication factory.</summary>
-        /// <value>The authentication factory.</value>
-        IAuthenticationFactory AuthenticationFactory { get; set; }
-
         /// <summary>Gets or sets the format factory.</summary>
         /// <value>The format factory.</value>
         IFormatStreamReaderWriterFactory FormatterFactory { get; set; }

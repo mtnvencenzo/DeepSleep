@@ -16,6 +16,10 @@
 
         /// <summary>Represents a dynamically generated login token based authentication type for use in a SHA256 HMAC hash signature
         /// </summary>
-        Token = 2
+        Token = 2,
+
+        /// <summary>Represents a dynamically jwt token based authentication type for use in a bearer token authentication.
+        /// </summary>
+        Bearer = 3
     }
 }

@@ -48,14 +48,6 @@
                 .Add(new XmlHttpFormatter(), new string[] { "text/xml", "application/xml" }, new string[] { "utf-32, utf-16, utf-8" });
         }
 
-        /// <summary>Gets the default authentication factory.</summary>
-        /// <returns></returns>
-        private static IAuthenticationFactory GetDefaultAuthenticationFactory()
-        {
-            return new DefaultAuthenticationFactory()
-                .AddProvider(new HMACSHA256SharedKeyAuthenticationProvider("api"));
-        }
-
         /// <summary>Gets the default request pipeline.</summary>
         /// <returns></returns>
         private static IApiRequestPipeline GetDefaultRequestPipeline()
@@ -239,7 +231,6 @@
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
-                .AddScoped<IAuthenticationFactory, IAuthenticationFactory>((p) => config.AuthenticationFactory ?? GetDefaultAuthenticationFactory())
                 .AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory ?? GetDefaultFormatterFactory())
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? GetDefaultRequestPipeline())
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))

@@ -1,21 +1,22 @@
 ﻿using DeepSleep.Auth;
+using System.Collections.Generic;
 
 namespace DeepSleep
 {
     /// <summary></summary>
-    public class ClientAuthentication
+    public class ClientAuthorization
     {
         /// <summary>Gets or sets the authentication value.</summary>
         /// <value>The authentication value.</value>
-        public string AuthValue { get; set; }
+        public string Policy { get; set; }
 
         /// <summary>Gets or sets the authentication scheme.</summary>
         /// <value>The authentication scheme.</value>
-        public string AuthScheme { get; set; }
+        public IList<string> Roles { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public AuthenticationResult AuthResult { get; set; }
+        public AuthorizationResult AuthResult { get; set; }
     }
 }

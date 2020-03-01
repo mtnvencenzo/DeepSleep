@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\GIT\deepsleep\DeepSleep.OpenApi.NetCore\DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netcoreapp2.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\GIT\deepsleep\DeepSleep.OpenApi.NetCore\DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/DRelease/netcoreapp2.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

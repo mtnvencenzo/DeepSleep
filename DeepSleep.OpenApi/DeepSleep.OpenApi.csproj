@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\GIT\deepsleep\DeepSleep.OpenApi\DeepSleep.OpenApi.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netstandard2.0/DeepSleep.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\GIT\deepsleep\DeepSleep.OpenApi\DeepSleep.OpenApi.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netstandard2.0/DeepSleep.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
