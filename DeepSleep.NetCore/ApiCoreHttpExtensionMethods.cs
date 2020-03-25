@@ -57,6 +57,7 @@
                 .UseApiRequestCanceled()
                 .UseApiHttpComformance()
                 .UseApiResponseBodyWriter()
+                .UseApiResponseCookies()
                 .UseApiResponseMessages()
                 .UseApiResponseHttpCaching()
                 .UseApiRequestUriValidation()

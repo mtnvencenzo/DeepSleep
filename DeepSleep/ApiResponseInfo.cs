@@ -11,7 +11,8 @@
         /// </summary>
         public ApiResponseInfo()
         {
-            Headers = new List<ApiHeader>();
+            this.Headers = new List<ApiHeader>();
+            this.Cookies = new List<ApiCookie>();
         }
 
         /// <summary>Gets or sets the response object.</summary>
@@ -37,6 +38,11 @@
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
         public virtual List<ApiHeader> Headers { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<ApiCookie> Cookies { get; set; }
     }
 
     /// <summary>

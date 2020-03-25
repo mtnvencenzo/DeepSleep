@@ -84,7 +84,10 @@
                     {
                         endpointController = serviceProvider.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
                     }
-                    catch (Exception) { }
+                    catch (Exception ex) 
+                    {
+                        throw ex;
+                    }
                 }
 
 

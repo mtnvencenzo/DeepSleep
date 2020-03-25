@@ -13,7 +13,8 @@
         /// </summary>
         public ApiRequestInfo()
         {
-            Headers = new List<ApiHeader>();
+            this.Headers = new List<ApiHeader>();
+            this.Cookies = new Dictionary<string, string>();
         }
 
         /// <summary>Gets or sets the request accept types.</summary>
@@ -51,6 +52,11 @@
         /// <summary>Gets or sets the type of the content.</summary>
         /// <value>The type of the content.</value>
         public virtual MediaHeaderValueWithParameters ContentType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Dictionary<string, string> Cookies { get; set; }
 
         /// <summary>Gets or sets the length of the content.</summary>
         /// <value>The length of the content.</value>

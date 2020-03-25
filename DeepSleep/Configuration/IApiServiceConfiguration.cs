@@ -1,10 +1,10 @@
 ﻿namespace DeepSleep.Configuration
 {
     using DeepSleep.Formatting;
-    using DeepSleep.Auth;
     using System;
     using System.Threading.Tasks;
     using DeepSleep.Validation;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -42,6 +42,11 @@
         /// <summary>Gets or sets the exception handler.</summary>
         /// <value>The exception handler.</value>
         Func<ApiRequestContext, Exception, Task<long>> ExceptionHandler { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IList<string> ExcludePaths { get; set; }
 
         /// <summary>
         /// 

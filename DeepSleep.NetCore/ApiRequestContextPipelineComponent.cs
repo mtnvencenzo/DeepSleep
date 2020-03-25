@@ -1,11 +1,14 @@
 ﻿namespace DeepSleep.NetCore
 {
+    using DeepSleep.Configuration;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
@@ -69,6 +72,7 @@
                     CrossOriginRequest = GetCrossOriginRequestValues(context.Request),
                     QueryVariables = GetQueryStringVariables(context),
                     PrettyPrint = GetPrettyPrint(context.Request),
+                    Cookies = GetRequestCookies(context.Request),
                     // GETTING FULL URI BASED ON HEADER HOST AND NOT DIRECTLY FROM RequestURI.
                     // THIS CAN BE CHANGED VIA PROXY SERVERS BUT CLIENT APPS USE THE HOST HEADER
                     RequestUri = WebUtility.UrlDecode(context.Request.Scheme + "://" + context.Request.Host + context.Request.Path + context.Request.QueryString),
@@ -812,24 +816,68 @@
 
             return qvars;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private Dictionary<string, string> GetRequestCookies(HttpRequest request)
+        {
+            var cookies = new Dictionary<string, string>();
+
+            if (request.Cookies != null)
+            {
+                foreach (var requestCookie in request.Cookies)
+                {
+                    if (!cookies.ContainsKey(requestCookie.Key))
+                    {
+                        cookies.Add(requestCookie.Key, requestCookie.Value);
+                    }
+                }
+            }
+
+            return cookies;
+        }
+
         #endregion
 
         /// <summary>Invokes the specified httpcontext.</summary>
         /// <param name="httpcontext">The httpcontext.</param>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="requestPipeline">The request pipeline.</param>
+        /// <param name="config">The config.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
+        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
         {
+            var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
+
+            var excludePaths = new List<string>
+            {
+                @"^\/.*\.[a-zA-Z]{1,}$",
+                @"^\/$",
+                @"^\/sockjs-node$"
+            };
+
+            if (config?.ExcludePaths != null)
+            {
+                foreach (var excludedPath in excludePaths)
+                {
+                    var match = Regex.IsMatch(path, excludedPath);
+                    if (match)
+                    {
+                        await apinext.Invoke(httpcontext);
+                        return;
+                    }
+                }
+            }
+
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
             
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 await requestPipeline.Run(contextResolver);
-
-                await apinext.Invoke(httpcontext);
 
                 httpcontext.Response.Headers.Add("Date", DateTime.UtcNow.ToString("r"));
 
@@ -848,7 +896,6 @@
                         httpcontext.Response.Headers.Add(h.Name, context.ResponseInfo.GetHeaderValues(h.Name));
                     }
                 });
-
 
                 if (context.ResponseInfo.RawResponseObject != null && context.ResponseInfo.RawResponseObject.Length > 0)
                 {

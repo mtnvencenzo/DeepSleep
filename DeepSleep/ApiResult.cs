@@ -18,6 +18,11 @@
 
         #endregion
 
+        /// <summary>
+        /// The http status code
+        /// </summary>
+        public int StatusCode { get; set; }
+
         /// <summary>Gets or sets the messages.</summary>
         /// <value>The messages.</value>
         public List<ApiResponseMessage> Messages { get; set; }

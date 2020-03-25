@@ -86,6 +86,17 @@
 
             return resx;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        public ApiRequestContext AddResponseCookie(ApiCookie cookie)
+        {
+            this.ResponseInfo.Cookies.Add(cookie);
+            return this;
+        }
     }
 
     /// <summary>

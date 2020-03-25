@@ -44,6 +44,10 @@
         /// <value>The exception handler.</value>
         public virtual Func<ApiRequestContext, Exception, Task<long>> ExceptionHandler { get; set; }
 
+        /// <summary>Gets or sets a list of regular expression paths to exclude from processing</summary>
+        /// <value>The paths to exclude.</value>
+        public IList<string> ExcludePaths { get; set; }
+
         /// <summary>
         /// </summary>
         public bool UsePingEndpoint { get; set; } = true;

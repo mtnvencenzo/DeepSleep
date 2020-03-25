@@ -21,17 +21,14 @@
                     {
                         context.ResponseInfo.ResponseObject.Body = new ApiResult
                         {
+                            StatusCode = context.ResponseInfo.ResponseObject?.StatusCode ?? 0,
                             Messages = context.ProcessingInfo.ExtendedMessages
                         };
                     }
                 }
             }
 
-
-
-            var source = new TaskCompletionSource<object>();
-            source.SetResult(null);
-            return source.Task;
+            return Task.CompletedTask;
         }
     }
 }
