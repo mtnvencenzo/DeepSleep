@@ -215,6 +215,7 @@
             requestConfig.MinRequestLength = endpointConfig?.MinRequestLength ?? defaultConfig.MinRequestLength;
             requestConfig.ResourceId = endpointConfig?.ResourceId ?? defaultConfig.ResourceId;
             requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
+            requestConfig.SupportedLanguages = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
 
             // Merge CacheDirective
             if (defaultConfig?.CacheDirective != null || endpointConfig?.CacheDirective != null)

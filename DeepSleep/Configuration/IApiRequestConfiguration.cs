@@ -59,7 +59,12 @@
         /// <value>The supported languages.</value>
         IList<string> SupportedLanguages { get; set; }
 
-        /// <summary>Initializes this instance.</summary>
+        /// <summary>Gets or sets the supported authentication schemes.  If not provided all available schemes are supported.</summary>
+        /// <value>The supported authentication schemes.</value>
+        public IList<string> SupportedAuthenticationSchemes { get; set; }
+
+        /// <summary>I
+        /// nitializes this instance.</summary>
         /// <returns></returns>
         IApiRequestConfiguration Init();
     }

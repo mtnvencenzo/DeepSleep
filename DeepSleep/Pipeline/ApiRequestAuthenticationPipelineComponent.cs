@@ -68,7 +68,13 @@
                         .GetServices<IAuthenticationProvider>()
                         .ToList();
 
-                    var authProvider = providers.FirstOrDefault(p => p.CanHandleAuthScheme(context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme));
+                    var supportedAuthSchemes = context.RequestConfig.SupportedLanguages?.Count > 0
+                        ? context.RequestConfig.SupportedLanguages.Where(a => a != null).Distinct().ToArray()
+                        : new string[] { };
+
+                    var authProvider = providers
+                        .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
+                        .FirstOrDefault(p => p.CanHandleAuthScheme(context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme));
 
                     if (authProvider != null)
                     {
