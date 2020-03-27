@@ -220,8 +220,7 @@
             requestConfig.MinRequestLength = endpointConfig?.MinRequestLength ?? defaultConfig.MinRequestLength;
             requestConfig.ResourceId = endpointConfig?.ResourceId ?? defaultConfig.ResourceId;
             requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
-            requestConfig.SupportedLanguages = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
-            requestConfig.ResourceAuthorizationConfig = endpointConfig?.ResourceAuthorizationConfig ?? defaultConfig.ResourceAuthorizationConfig;
+            requestConfig.SupportedAuthenticationSchemes = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
 
             // Merge CacheDirective
             if (defaultConfig?.CacheDirective != null || endpointConfig?.CacheDirective != null)
@@ -272,19 +271,32 @@
                     Policy = endpointConfig?.ResourceAuthorizationConfig?.Policy ?? defaultConfig?.ResourceAuthorizationConfig?.Policy
                 };
 
-                if (endpointConfig?.ResourceAuthorizationConfig?.Roles != null || defaultConfig?.ResourceAuthorizationConfig?.Roles != null)
+                if (endpointConfig?.ResourceAuthorizationConfig != null)
                 {
-                    requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
+                    requestConfig.ResourceAuthorizationConfig.Policy = endpointConfig.ResourceAuthorizationConfig.Policy;
+                }
+                else if (defaultConfig?.ResourceAuthorizationConfig != null)
+                {
+                    requestConfig.ResourceAuthorizationConfig.Policy = defaultConfig.ResourceAuthorizationConfig.Policy;
+                }
 
-                    if (endpointConfig?.ResourceAuthorizationConfig?.Roles != null)
+
+                if (endpointConfig?.ResourceAuthorizationConfig != null)
+                {
+                    if (endpointConfig.ResourceAuthorizationConfig.Roles != null)
                     {
+                        requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
                         foreach (var role in endpointConfig.ResourceAuthorizationConfig.Roles)
                         {
                             requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
                         }
                     }
-                    else if (defaultConfig?.ResourceAuthorizationConfig?.Roles != null)
+                }
+                else if (defaultConfig?.ResourceAuthorizationConfig != null)
+                {
+                    if (defaultConfig.ResourceAuthorizationConfig.Roles != null)
                     {
+                        requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
                         foreach (var role in defaultConfig.ResourceAuthorizationConfig.Roles)
                         {
                             requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
