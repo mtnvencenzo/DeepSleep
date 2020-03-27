@@ -216,6 +216,7 @@
             requestConfig.ResourceId = endpointConfig?.ResourceId ?? defaultConfig.ResourceId;
             requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
             requestConfig.SupportedLanguages = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
+            requestConfig.ResourceAuthorizationConfig = endpointConfig?.ResourceAuthorizationConfig ?? defaultConfig.ResourceAuthorizationConfig;
 
             // Merge CacheDirective
             if (defaultConfig?.CacheDirective != null || endpointConfig?.CacheDirective != null)
