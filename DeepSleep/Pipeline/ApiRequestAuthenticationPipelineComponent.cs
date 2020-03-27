@@ -75,8 +75,10 @@
                         .GetServices<IAuthenticationProvider>()
                         .ToList();
 
-                    var supportedAuthSchemes = context.RequestConfig.SupportedLanguages?.Count > 0
-                        ? context.RequestConfig.SupportedLanguages.Where(a => a != null).Distinct().ToArray()
+                    logger?.LogInformation($"Found {providers.Count} authentication providers: {string.Join(", ", providers.Select(p => p.Scheme))}");
+
+                    var supportedAuthSchemes = context.RequestConfig.SupportedAuthenticationSchemes?.Count > 0
+                        ? context.RequestConfig.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
                         : new string[] { };
 
                     if (supportedAuthSchemes.Length > 0)
