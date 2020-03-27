@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -23,12 +24,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestLocalizationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestLocalization().ConfigureAwait(false))
+            if (await context.ProcessHttpRequestLocalization(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,9 +55,12 @@
 
         /// <summary>Processes the HTTP request localization.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var fallBackLanguage = !string.IsNullOrWhiteSpace(context.RequestConfig?.FallBackLanguage)

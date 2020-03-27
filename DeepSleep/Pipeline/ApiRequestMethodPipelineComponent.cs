@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -21,12 +22,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestMethodPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestMethod().ConfigureAwait(false))
+            if (await context.ProcessHttpRequestMethod(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -48,9 +50,12 @@
 
         /// <summary>Processes the HTTP request method.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 // Templates exist for thies route

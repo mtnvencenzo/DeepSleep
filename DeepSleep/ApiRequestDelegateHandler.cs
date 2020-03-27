@@ -43,10 +43,7 @@
                 ? new ApiRequestDelegate(TaskFinisher)
                 : this.pipeline.RegisteredPipeline[this.index + 1].requestDelegate;
 
-            var constructor = this.type.GetConstructor(new Type[] { typeof(ApiRequestDelegate) });
-
             var instance = Activator.CreateInstance(this.type, new object[] { next });
-
             var targetInvocationParameters = new List<object>();
             var methodParams = this.target.GetParameters();
 

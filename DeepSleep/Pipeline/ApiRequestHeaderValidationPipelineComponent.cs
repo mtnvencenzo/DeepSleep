@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Resources;
+    using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -23,12 +24,13 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestHeaderValidationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -51,9 +53,12 @@
         /// <summary>Processes the HTTP request header validation.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        public static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var addedHeaderError = false;

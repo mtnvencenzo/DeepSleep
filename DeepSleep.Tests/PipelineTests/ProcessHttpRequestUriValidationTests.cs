@@ -17,7 +17,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -33,7 +33,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -55,7 +55,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -76,7 +76,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -96,7 +96,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation(new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();

@@ -18,7 +18,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpConformance().ConfigureAwait(false);
+            var processed = await context.ProcessHttpConformance(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -46,7 +46,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpConformance().ConfigureAwait(false);
+            var processed = await context.ProcessHttpConformance(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -78,7 +78,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpConformance().ConfigureAwait(false);
+            var processed = await context.ProcessHttpConformance(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -112,7 +112,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpConformance().ConfigureAwait(false);
+            var processed = await context.ProcessHttpConformance(null).ConfigureAwait(false);
             processed.Should().Be(accept);
 
             if (!accept)

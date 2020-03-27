@@ -25,12 +25,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestInvocationInitializerPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointInitialization(context.RequestServices).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointInitialization(context.RequestServices, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,6 +54,7 @@
         /// <summary>Processes the HTTP endpoint initialization.</summary>
         /// <param name="context">The context.</param>
         /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
         /// <exception cref="Exception">
         /// Routing item's controller type is null
@@ -60,8 +62,10 @@
         /// Routing item's endpoint name is null
         /// or
         /// </exception>
-        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider)
+        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RouteInfo?.RoutingItem?.EndpointLocation?.Controller == null)

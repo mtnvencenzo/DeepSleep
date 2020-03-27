@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
+    using Microsoft.Extensions.Logging;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,14 +25,15 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, ILogger<ApiResponseBodyWriterPipelineComponent> logger)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
 
-            await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            await context.ProcessHttpResponseBodyWriting(formatterFactory, logger).ConfigureAwait(false);
         }
     }
 
@@ -52,9 +54,12 @@
         /// <summary>Processes the HTTP response body writing.</summary>
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.ResponseInfo.ResponseObject == null)

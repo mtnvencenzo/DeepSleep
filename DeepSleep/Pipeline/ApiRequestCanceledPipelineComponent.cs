@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -20,12 +21,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestCanceledPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestCanceled().ConfigureAwait(false))
+            if (await context.ProcessHttpRequestCanceled(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -47,9 +49,12 @@
 
         /// <summary>Processes the HTTP request canceled.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestCanceled(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpRequestCanceled(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (context.RequestAborted.IsCancellationRequested)
             {
                 context.ResponseInfo.ResponseObject = new ApiResponse

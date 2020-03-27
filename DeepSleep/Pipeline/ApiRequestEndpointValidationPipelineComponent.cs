@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Validation;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -25,12 +26,13 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="validationProvider">The validation provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiValidationProvider validationProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiValidationProvider validationProvider, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestEndpointValidationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointValidation(validationProvider, context.RequestServices, responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointValidation(validationProvider, context.RequestServices, responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -55,9 +57,12 @@
         /// <param name="validationProvider">The validation provider.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 context.ProcessingInfo.Validation.State = ApiValidationState.Validating;

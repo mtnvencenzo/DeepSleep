@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,8 +24,9 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseCookiesPipelineComponent> logger)
         {
             try
             {
@@ -33,7 +35,7 @@
             finally
             {
                 var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseCookies().ConfigureAwait(false);
+                await context.ProcessHttpResponseCookies(logger).ConfigureAwait(false);
             }
         }
     }
@@ -53,9 +55,12 @@
 
         /// <summary>Processes the HTTP response cross origin resource sharing.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpResponseCookies(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpResponseCookies(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
                 if (context.ResponseInfo != null && context.ResponseInfo.Cookies != null)

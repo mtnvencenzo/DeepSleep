@@ -2,6 +2,7 @@
 {
     using DeepSleep.Auth;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,12 +27,13 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestAuthenticationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthentication(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAuthentication(responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -54,12 +56,15 @@
         /// <summary>Processes the HTTP request authentication.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
         /// <exception cref="Exception">No auth factory established for authenticated route
         /// or
         /// No auth providers established for authenticated route</exception>
-        public static async Task<bool> ProcessHttpRequestAuthentication(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        public static async Task<bool> ProcessHttpRequestAuthentication(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false))

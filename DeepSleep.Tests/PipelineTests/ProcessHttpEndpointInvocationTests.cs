@@ -20,7 +20,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -39,7 +39,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -61,7 +61,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -86,7 +86,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -115,7 +115,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -144,7 +144,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -174,7 +174,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -209,7 +209,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -252,7 +252,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -295,7 +295,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -338,7 +338,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using System.Linq;
+    using Microsoft.Extensions.Logging;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -21,12 +21,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestNotFoundPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestNotFound().ConfigureAwait(false))
+            if (await context.ProcessHttpRequestNotFound(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             } 
@@ -48,9 +49,12 @@
 
         /// <summary>Processes the HTTP request not found.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)

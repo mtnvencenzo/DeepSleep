@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
+    using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -22,13 +23,14 @@
 
         /// <summary>Invokes the specified formatter factory.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="formatterFactory">The formatter factory.</param>
+        /// <param name="formatterFactory">The formatterFactory.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, ILogger<ApiRequestAcceptPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAccept(formatterFactory).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAccept(formatterFactory, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -51,9 +53,12 @@
         /// <summary>Processes the HTTP request accept.</summary>
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        public static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo != null)

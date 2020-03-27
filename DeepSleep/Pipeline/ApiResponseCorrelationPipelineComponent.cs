@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -21,14 +22,15 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseCorrelationPipelineComponent> logger)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
 
-            await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
+            await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
         }
     }
 
@@ -47,9 +49,12 @@
 
         /// <summary>Processes the HTTP response correlation.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo?.CorrelationId != null)

@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using System.Linq;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// 
@@ -21,12 +22,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<HttpConformancePipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpConformance().ConfigureAwait(false))
+            if (await context.ProcessHttpConformance(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -48,9 +50,12 @@
 
         /// <summary>Processes the HTTP conformance.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpConformance(this ApiRequestContext context)
+        public static Task<bool> ProcessHttpConformance(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var validHttpVersions = (context?.RequestConfig?.HttpConfig?.SupportedVersions ?? new string[] { "*" })

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Resources;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,12 +28,13 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestUriBindingPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -112,10 +114,13 @@
         /// <param name="context">The context.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public static Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var addedBindingError = false;

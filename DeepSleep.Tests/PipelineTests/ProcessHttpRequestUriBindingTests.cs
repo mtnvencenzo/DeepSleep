@@ -21,7 +21,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -40,7 +40,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -62,7 +62,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -87,7 +87,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -115,7 +115,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -143,7 +143,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -173,7 +173,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -231,7 +231,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -294,7 +294,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -343,7 +343,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -410,7 +410,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -481,7 +481,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -559,7 +559,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -659,7 +659,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -741,7 +741,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -805,7 +805,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();

@@ -20,7 +20,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -39,7 +39,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -199,7 +199,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -268,7 +268,7 @@
                 }
             };
             
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -304,7 +304,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -342,7 +342,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -380,7 +380,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -418,7 +418,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -456,7 +456,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -509,7 +509,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -557,7 +557,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -605,7 +605,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -653,7 +653,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -701,7 +701,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -749,7 +749,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();

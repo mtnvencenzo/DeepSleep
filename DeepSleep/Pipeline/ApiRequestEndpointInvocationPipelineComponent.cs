@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -23,12 +24,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestEndpointInvocationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointInvocation().ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointInvocation(logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +52,12 @@
 
         /// <summary>Processes the HTTP endpoint invocation.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpEndpointInvocation(this ApiRequestContext context)
+        public static async Task<bool> ProcessHttpEndpointInvocation(this ApiRequestContext context, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
@@ -102,9 +107,7 @@
                         await ((Task)endpointResponse).ConfigureAwait(false);
                         var resultProperty = endpointResponse.GetType().GetProperty("Result");
 
-                        var response = resultProperty != null
-                            ? resultProperty.GetValue(endpointResponse)
-                            : null;
+                        var response = resultProperty?.GetValue(endpointResponse);
 
                         if (response != null && response.GetType().FullName != "System.Threading.Tasks.VoidTaskResult")
                         {

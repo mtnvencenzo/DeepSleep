@@ -22,7 +22,7 @@
                 ResponseInfo = null
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().BeNull();
@@ -44,7 +44,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -72,7 +72,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -100,7 +100,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -126,7 +126,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -161,7 +161,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -195,7 +195,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -236,7 +236,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -274,7 +274,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -321,7 +321,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();

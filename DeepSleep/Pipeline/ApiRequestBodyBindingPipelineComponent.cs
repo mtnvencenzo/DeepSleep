@@ -2,6 +2,7 @@
 {
     using DeepSleep.Formatting;
     using DeepSleep.Resources;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -26,12 +27,13 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestBodyBindingPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestBodyBinding(formatterFactory, responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestBodyBinding(formatterFactory, responseMessageConverter, logger).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -55,9 +57,12 @@
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
+        public static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo.Method?.In(StringComparison.InvariantCultureIgnoreCase, "post", "patch", "put") ?? false)

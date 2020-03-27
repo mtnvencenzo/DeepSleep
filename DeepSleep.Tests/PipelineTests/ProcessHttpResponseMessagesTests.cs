@@ -31,7 +31,7 @@
                 .Setup(m => m.GetProcessors())
                 .Throws(new System.Exception("test"));
 
-            var processed = await context.ProcessHttpResponseMessages(provider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(provider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -70,7 +70,7 @@
                 .RegisterProcessor<ApiResultResponseMessageProcessor>()
                 .RegisterProcessor<HttpHeaderResponseMessageProcessor>();
 
-            var processed = await context.ProcessHttpResponseMessages(provider).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(provider, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -117,7 +117,7 @@
                 .Setup(m => m.GetProcessors())
                 .Throws(new System.Exception("test"));
 
-            var processed = await context.ProcessHttpResponseMessages(provider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(provider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -141,7 +141,7 @@
                 .Setup(m => m.GetProcessors())
                 .Throws(new System.Exception("test"));
 
-            var processed = await context.ProcessHttpResponseMessages(provider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(provider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -165,7 +165,7 @@
                 .Setup(m => m.GetProcessors())
                 .Throws(new System.Exception("test"));
 
-            var processed = await context.ProcessHttpResponseMessages(provider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(provider.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -188,7 +188,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

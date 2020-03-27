@@ -22,7 +22,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -46,7 +46,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -76,7 +76,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -109,7 +109,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -142,7 +142,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -175,7 +175,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -208,7 +208,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -241,7 +241,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -274,7 +274,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -307,7 +307,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -344,7 +344,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);
@@ -378,7 +378,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(3);
@@ -414,7 +414,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCrossOriginResourceSharing(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Headers.Should().NotBeEmpty();
             context.ResponseInfo.Headers.Should().HaveCount(2);

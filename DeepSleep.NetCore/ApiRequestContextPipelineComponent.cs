@@ -852,16 +852,9 @@
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
-            var excludePaths = new List<string>
-            {
-                @"^\/.*\.[a-zA-Z]{1,}$",
-                @"^\/$",
-                @"^\/sockjs-node$"
-            };
-
             if (config?.ExcludePaths != null)
             {
-                foreach (var excludedPath in excludePaths)
+                foreach (var excludedPath in config.ExcludePaths)
                 {
                     var match = Regex.IsMatch(path, excludedPath);
                     if (match)

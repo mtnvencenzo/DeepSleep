@@ -24,17 +24,14 @@
             apinext = next;
         }
 
-
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The responseMessageConverter.</param>
-        /// <param name="loggerFactory">The loggerFactory.</param>
+        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILoggerFactory loggerFactory)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestAuthorizationPipelineComponent> logger)
         {
             var context = contextResolver.GetContext();
-
-            var logger = loggerFactory?.CreateLogger<ApiRequestAuthorizationPipelineComponent>();
 
             if (await context.ProcessHttpRequestAuthorization(responseMessageConverter, logger).ConfigureAwait(false))
             {
@@ -63,10 +60,14 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
+            logger?.LogInformation("Invoked");
+
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.ResourceAuthorizationConfig?.Policy))
                 {
+                    logger?.LogInformation($"Using authorization policy ${context.RequestConfig.ResourceAuthorizationConfig.Policy}");
+
                     var providers = context.RequestServices
                         .GetServices<IAuthorizationProvider>()
                         .ToList();
