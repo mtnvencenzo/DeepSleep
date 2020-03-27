@@ -81,7 +81,6 @@
                     catch (System.Exception ex)
                     {
                         logger?.LogError(ex, $"Could not retrive auth providers for DI.");
-                        // TODO: log message
                     }
 
                     if (authProvider != null)
@@ -101,7 +100,7 @@
                         }
                         else
                         {
-                            logger?.LogWarning($"Invalid authorization, Unauthorized.");
+                            logger?.LogWarning($"Request failed authorization with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
                         }
 
                         if (authProvider == null)
@@ -117,7 +116,8 @@
                     }
                 }
 
-                logger?.LogInformation($"Request authorized.");
+                logger?.LogInformation($"Client request was successfully authorized using policy: {context.RequestConfig?.ResourceAuthorizationConfig?.Policy}.");
+
                 return true;
             }
 

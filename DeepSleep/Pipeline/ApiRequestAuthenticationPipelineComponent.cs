@@ -69,6 +69,8 @@
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false))
                 {
+                    logger?.LogInformation($"Endpoint does not allow anonymous access, preparing to authenticate request.");
+
                     var providers = context.RequestServices
                         .GetServices<IAuthenticationProvider>()
                         .ToList();
@@ -77,19 +79,42 @@
                         ? context.RequestConfig.SupportedLanguages.Where(a => a != null).Distinct().ToArray()
                         : new string[] { };
 
+                    if (supportedAuthSchemes.Length > 0)
+                    {
+                        logger?.LogInformation($"Endpoint is configured using these supported auth schemes: {string.Join(", ", supportedAuthSchemes)}");
+                    }
+
+                    logger?.LogInformation($"Client request is using authentication scheme: {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}");
+
+
                     var authProvider = providers
                         .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
                         .FirstOrDefault(p => p.CanHandleAuthScheme(context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme));
 
                     if (authProvider != null)
                     {
+                        logger?.LogInformation($"Authentication provider using scheme {authProvider.Scheme} was match and will authenticate the request.");
+
                         await authProvider.Authenticate(context, responseMessageConverter).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        logger?.LogInformation($"No Authentication provider was found for client request scheme {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
                     }
 
                     var result = context.RequestInfo?.ClientAuthenticationInfo?.AuthResult;
 
                     if (result == null || !result.IsAuthenticated)
                     {
+                        if (result == null)
+                        {
+                            logger?.LogWarning($"Request failed authentication,  auth result is null");
+                        }
+                        else
+                        {
+                            logger?.LogWarning($"Request failed authentication with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
+                        }
+
                         if (providers.FirstOrDefault() == null)
                         {
                             throw new Exception("No authentication providers established for authenticated route");
@@ -112,6 +137,8 @@
                         return false;
                     }
                 }
+
+                logger?.LogInformation($"Client request was successfully authenticated using scheme: {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
 
                 return true;
             }

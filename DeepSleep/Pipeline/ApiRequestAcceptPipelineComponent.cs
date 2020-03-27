@@ -76,6 +76,8 @@
 
                     if (formatter == null)
                     {
+                        logger?.LogInformation($"Could not find a formatter for Accept: {accept}");
+
                         string acceptable = (formatterFactory != null)
                             ? string.Join(", ", formatterFactory.GetTypes())
                             : string.Empty;
