@@ -54,8 +54,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 // Templates exist for thies route
@@ -76,6 +74,9 @@
                         }
 
                         context.ResponseInfo.AddHeader("Allow", string.Join(", ", methods));
+                        
+                        logger?.LogWarning($"Request method {context.RequestInfo.Method} could be not matched with template {context.RouteInfo.TemplateInfo}.  Available methods are {string.Join(", ", methods)}, issueing HTTP 405 Method Not Allowed");
+
                         context.ResponseInfo.ResponseObject = new ApiResponse
                         {
                             StatusCode = 405

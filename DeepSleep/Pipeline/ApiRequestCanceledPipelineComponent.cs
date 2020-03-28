@@ -53,10 +53,10 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestCanceled(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (context.RequestAborted.IsCancellationRequested)
             {
+                logger?.LogInformation($"Request has been cancelled by client, issuing HTTP 408 Request Timeout");
+
                 context.ResponseInfo.ResponseObject = new ApiResponse
                 {
                     StatusCode = 408

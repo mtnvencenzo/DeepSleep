@@ -53,8 +53,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo?.CorrelationId != null)

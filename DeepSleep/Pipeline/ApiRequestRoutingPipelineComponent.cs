@@ -62,7 +62,7 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
+            logger?.LogInformation("LogDebug");
 
             if (!context.RequestAborted.IsCancellationRequested)
             {

@@ -57,8 +57,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo != null)

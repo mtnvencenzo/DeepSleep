@@ -59,8 +59,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpResponseCookies(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
                 if (context.ResponseInfo != null && context.ResponseInfo.Cookies != null)

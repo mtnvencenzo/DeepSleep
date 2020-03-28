@@ -82,7 +82,7 @@
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async void ReturnsFalseAnd415StatusForMissingContentTypeAndHasContent(string contentType)
+        public async void ReturnsFalseAnd422StatusForMissingContentTypeAndHasContent(string contentType)
         {
             var context = new ApiRequestContext
             {
@@ -100,7 +100,7 @@
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(415);
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(422);
             context.ResponseInfo.ResponseObject.Body.Should().BeNull();
         }
 

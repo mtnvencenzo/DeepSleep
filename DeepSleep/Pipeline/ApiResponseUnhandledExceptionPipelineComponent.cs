@@ -66,8 +66,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (exception != null)
             {
                 var code = context.HandleException(exception, responseMessageConverter);
@@ -78,8 +76,14 @@
                     {
                         await config.ExceptionHandler(context, exception).ConfigureAwait(false);
                     }
-                    catch (Exception) { }
+                    catch (Exception ex) 
+                    {
+                        logger?.LogError(ex, $"Failed calling exception handler");
+                        logger?.LogError(exception, "Recorded exception");
+                    }
                 }
+
+                logger?.LogWarning($"Excetion recorded, issueing HTTP {code}");
 
                 context.ResponseInfo.ResponseObject = new ApiResponse
                 {

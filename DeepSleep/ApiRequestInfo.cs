@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Text;
 
     /// <summary>The API request info.</summary>
     public class ApiRequestInfo
@@ -119,6 +120,27 @@
         /// <summary>Gets or sets the body.</summary>
         /// <value>The body.</value>
         public virtual Stream Body { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string Dump()
+        {
+            var builder = new StringBuilder();
+
+            builder.AppendLine(this.Path);
+
+            if (this.Headers != null)
+            {
+                foreach (var header in this.Headers)
+                {
+                    builder.AppendLine($"{header.Name}: {header.Value}");
+                }
+            }
+
+            return builder.ToString();
+        }
     }
 
     /// <summary>

@@ -52,8 +52,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpResponseDeprecated(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestConfig?.Deprecated ?? false)

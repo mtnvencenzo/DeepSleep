@@ -58,8 +58,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.ResponseInfo.ResponseObject == null)

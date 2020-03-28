@@ -53,12 +53,12 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
                 {
+                    logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
+
                     context.ResponseInfo.ResponseObject = new ApiResponse
                     {
                         StatusCode = 404

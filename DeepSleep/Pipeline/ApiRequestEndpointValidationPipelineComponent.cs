@@ -61,17 +61,17 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 context.ProcessingInfo.Validation.State = ApiValidationState.Validating;
 
-
                 if (validationProvider != null)
                 {
-                    var invokers = validationProvider.GetInvokers();
+                    var invokers = validationProvider
+                        .GetInvokers()
+                        .ToList();
 
+                    logger?.LogInformation($"Validating request using {invokers.Count} validation invokers");
 
                     foreach (var validationInvoker in invokers)
                     {
@@ -122,12 +122,20 @@
                         ? 404
                         : 400;
 
+                    
+                    foreach (var message in context.ProcessingInfo.ExtendedMessages.Where(m => m.Code.StartsWith("4") || m.Code.StartsWith("5")))
+                    {
+                        logger?.LogWarning($"Validation for request {context.RequestInfo.RequestIdentifier} failed with error: {message.Code} - {message.Message}");
+                    }
+
                     context.ResponseInfo.ResponseObject = new ApiResponse
                     {
                         StatusCode = statusCode
                     };
                     return false;
                 }
+
+                logger?.LogInformation($"Validation for request {context.RequestInfo.RequestIdentifier} succeeded.");
 
                 context.ProcessingInfo.Validation.State = ApiValidationState.Succeeded;
                 return true;

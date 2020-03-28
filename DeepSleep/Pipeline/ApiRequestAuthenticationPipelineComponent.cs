@@ -63,19 +63,19 @@
         /// No auth providers established for authenticated route</exception>
         public static async Task<bool> ProcessHttpRequestAuthentication(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false))
                 {
-                    logger?.LogInformation($"Endpoint does not allow anonymous access, preparing to authenticate request.");
+                    logger?.LogInformation($"Using authentication scheme: ${{context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}}");
+
+                    logger?.LogDebug($"Endpoint does not allow anonymous access, preparing to authenticate request.");
 
                     var providers = context.RequestServices
                         .GetServices<IAuthenticationProvider>()
                         .ToList();
 
-                    logger?.LogInformation($"Found {providers.Count} authentication providers: {string.Join(", ", providers.Select(p => p.Scheme))}");
+                    logger?.LogDebug($"Found {providers.Count} authentication providers: {string.Join(", ", providers.Select(p => p.Scheme))}");
 
                     var supportedAuthSchemes = context.RequestConfig.SupportedAuthenticationSchemes?.Count > 0
                         ? context.RequestConfig.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
@@ -83,11 +83,8 @@
 
                     if (supportedAuthSchemes.Length > 0)
                     {
-                        logger?.LogInformation($"Endpoint is configured using these supported auth schemes: {string.Join(", ", supportedAuthSchemes)}");
+                        logger?.LogDebug($"Endpoint is configured using these supported auth schemes: {string.Join(", ", supportedAuthSchemes)}");
                     }
-
-                    logger?.LogInformation($"Client request is using authentication scheme: {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}");
-
 
                     var authProvider = providers
                         .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
@@ -101,7 +98,7 @@
                     }
                     else
                     {
-                        logger?.LogInformation($"No Authentication provider was found for client request scheme {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
+                        logger?.LogWarning($"No Authentication provider was found for client request scheme {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
                     }
 
                     var result = context.RequestInfo?.ClientAuthenticationInfo?.AuthResult;
@@ -138,6 +135,10 @@
                         };
                         return false;
                     }
+                }
+                else
+                {
+                    logger?.LogDebug($"Client request is for anonymous endpoint, skipping authentication");
                 }
 
                 logger?.LogInformation($"Client request was successfully authenticated using scheme: {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");

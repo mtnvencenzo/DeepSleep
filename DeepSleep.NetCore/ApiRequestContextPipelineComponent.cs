@@ -2,13 +2,12 @@
 {
     using DeepSleep.Configuration;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
@@ -847,8 +846,9 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="requestPipeline">The request pipeline.</param>
         /// <param name="config">The config.</param>
+        /// <param name="logger">The config.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
+        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config, ILogger<ApiRequestContextPipelineComponent> logger)
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
@@ -859,6 +859,7 @@
                     var match = Regex.IsMatch(path, excludedPath);
                     if (match)
                     {
+                        logger?.LogDebug($"Request is being exlcuded from deepsleep processing: {path}");
                         await apinext.Invoke(httpcontext);
                         return;
                     }
@@ -867,9 +868,41 @@
 
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
-            
+
+            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, logger);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ApiRequestContextPipelineComponentExtensionMethods
+    {
+        /// <summary>Uses the API request context.</summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseApiRequestContext(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<ApiRequestContextPipelineComponent>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="httpcontext"></param>
+        /// <param name="contextResolver"></param>
+        /// <param name="requestPipeline"></param>
+        /// <param name="config"></param>
+        /// <param name="logger"></param>
+        /// <returns></returns>
+        public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, ILogger logger)
+        {
             if (!context.RequestAborted.IsCancellationRequested)
             {
+                logger?.LogInformation($"Processing request - {context.RequestInfo.RequestIdentifier}:  {context.RequestInfo.Path}");
+                logger?.LogDebug($"{context.RequestInfo.Dump()}");
+
                 await requestPipeline.Run(contextResolver);
 
                 httpcontext.Response.Headers.Add("Date", DateTime.UtcNow.ToString("r"));
@@ -917,21 +950,13 @@
                 {
                     httpcontext.Response.Headers.Add("Content-Length", context.ResponseInfo.ContentLength.ToString());
                 }
-            }
-        }
-    }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public static class ApiRequestContextPipelineComponentExtensionMethods
-    {
-        /// <summary>Uses the API request context.</summary>
-        /// <param name="builder">The builder.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseApiRequestContext(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<ApiRequestContextPipelineComponent>();
+
+                logger?.LogInformation($"Processing response - {context.RequestInfo.RequestIdentifier}:  {context.RequestInfo.Path}");
+                logger?.LogDebug($"{context.ResponseInfo.Dump()}");
+            }
+
+            return true;
         }
     }
 }

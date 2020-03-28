@@ -59,8 +59,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpResponseCrossOriginResourceSharing(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
                 if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))

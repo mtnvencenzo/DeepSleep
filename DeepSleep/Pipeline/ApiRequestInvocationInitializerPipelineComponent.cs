@@ -64,8 +64,6 @@
         /// </exception>
         public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RouteInfo?.RoutingItem?.EndpointLocation?.Controller == null)

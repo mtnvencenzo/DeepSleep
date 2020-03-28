@@ -54,8 +54,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiResponseMessageProcessorProvider responseMessageProcessorProvider, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if ((context.ProcessingInfo?.ExtendedMessages?.Count ?? 0) > 0)

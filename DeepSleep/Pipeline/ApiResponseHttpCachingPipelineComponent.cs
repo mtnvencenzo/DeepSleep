@@ -54,8 +54,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpResponseCaching(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var statusCode = context.ResponseInfo.ResponseObject?.StatusCode;

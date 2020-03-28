@@ -60,8 +60,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.ResourceAuthorizationConfig?.Policy))
@@ -80,12 +78,12 @@
                     }
                     catch (System.Exception ex)
                     {
-                        logger?.LogError(ex, $"Could not retrive auth providers for DI.");
+                        logger?.LogError(ex, $"Could not retrive auth providers from DI.");
                     }
 
                     if (authProvider != null)
                     {
-                        logger?.LogInformation($"Attemping authorization using policy '{authProvider.Policy}'.");
+                        logger?.LogDebug($"Attemping authorization using policy '{authProvider.Policy}'.");
 
                         await authProvider.Authorize(context, responseMessageConverter).ConfigureAwait(false);
                     }

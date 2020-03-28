@@ -61,14 +61,14 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo.Method?.In(StringComparison.InvariantCultureIgnoreCase, "post", "patch", "put") ?? false)
                 {
                     if (!context.RequestInfo.ContentLength.HasValue)
                     {
+                        logger?.LogWarning($"Request did not contain a Content-Length header for request method {context.RequestInfo.Method}, issueing HTTP 411 Length Required");
+
                         context.ResponseInfo.ResponseObject = new ApiResponse
                         {
                             StatusCode = 411
@@ -78,15 +78,19 @@
 
                     if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
+                        logger?.LogWarning($"Request did not contain a Content-Type header for request with a content length provided, issueing HTTP 422 Unprocessable Entity");
+
                         context.ResponseInfo.ResponseObject = new ApiResponse
                         {
-                            StatusCode = 415
+                            StatusCode = 422
                         };
                         return false;
                     }
 
                     if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
                     {
+                        logger?.LogWarning($"Bpdy model type not available but a body was supplied in the request, issueing HTTP 413 Payload Too Large");
+
                         context.ResponseInfo.ResponseObject = new ApiResponse
                         {
                             StatusCode = 413
@@ -102,6 +106,8 @@
 
                         if (formatter == null)
                         {
+                            logger?.LogWarning($"Could not find a formatter for the request Content-Type, issueing HTTP 415 Unsupported Media Type");
+
                             context.ResponseInfo.ResponseObject = new ApiResponse
                             {
                                 StatusCode = 415
@@ -113,9 +119,13 @@
                         {
                             context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType)
                                 .ConfigureAwait(false);
+
+                            logger?.LogInformation($"Body model type: {context.RequestInfo.InvocationContext.BodyModelType.FullName} has successfully been bound");
                         }
                         catch (System.Exception)
                         {
+                            logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
+
                             context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(ValidationErrors.RequestBodyDeserializationError));
                             context.ResponseInfo.ResponseObject = new ApiResponse
                             {

@@ -56,8 +56,6 @@
         /// <returns></returns>
         public static async Task<bool> ProcessHttpEndpointInvocation(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
@@ -94,6 +92,8 @@
                     // -----------------------------------------------------
                     // Invoke the controller method with the parameters list
                     // -----------------------------------------------------
+                    logger?.LogInformation($"Invoking controller method {context.RequestInfo.InvocationContext.Controller.GetType().FullName}::{context.RequestInfo.InvocationContext.ControllerMethod.Name}");
+
                     var endpointResponse = context.RequestInfo.InvocationContext.ControllerMethod.Invoke(
                         context.RequestInfo.InvocationContext.Controller,
                         parameters.ToArray());

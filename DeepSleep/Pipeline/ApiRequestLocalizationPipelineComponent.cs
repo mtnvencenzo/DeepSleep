@@ -59,8 +59,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var fallBackLanguage = !string.IsNullOrWhiteSpace(context.RequestConfig?.FallBackLanguage)

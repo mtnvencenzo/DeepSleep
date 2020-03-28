@@ -57,8 +57,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestUriValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 int max = 2083;
@@ -67,6 +65,8 @@
                 {
                     if (context.RequestInfo.RequestUri.Length > max)
                     {
+                        logger?.LogWarning($"Request Uri validation failed, issueing HTTP 414 URI Too Long");
+
                         context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString())));
 
                         context.ResponseInfo.ResponseObject = new ApiResponse

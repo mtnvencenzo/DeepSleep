@@ -57,8 +57,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var addedHeaderError = false;
@@ -84,6 +82,8 @@
 
                 if (addedHeaderError)
                 {
+                    logger?.LogWarning($"Header validation failed, issueing HTTP 431 Request Header Fields Too Large");
+
                     context.ResponseInfo.ResponseObject = new ApiResponse
                     {
                         StatusCode = 431

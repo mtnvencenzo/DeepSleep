@@ -57,12 +57,12 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpRequestCrossOriginResourceSharingPreflight(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.RequestInfo?.IsCorsPreflightRequest() ?? false)
                 {
+                    logger?.LogInformation($"Preflight request detected, issueing HTTP 200 OK");
+
                     var methods = (context.RouteInfo?.TemplateInfo?.EndpointLocations ?? new List<ApiEndpointLocation>())
                         .Where(r => !string.IsNullOrWhiteSpace(r.HttpMethod))
                         .Select(r => r.HttpMethod.ToUpper())

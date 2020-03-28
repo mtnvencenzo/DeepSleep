@@ -54,8 +54,6 @@
         /// <returns></returns>
         public static Task<bool> ProcessHttpConformance(this ApiRequestContext context, ILogger logger)
         {
-            logger?.LogInformation("Invoked");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var validHttpVersions = (context?.RequestConfig?.HttpConfig?.SupportedVersions ?? new string[] { "*" })
@@ -71,6 +69,8 @@
                 // Only supportting http 1.1 and http 2.0
                 if (!validHttpVersions.Contains(context?.RequestInfo?.Protocol?.ToLowerInvariant()))
                 {
+                    logger?.LogInformation($"Http version {context.RequestInfo?.Protocol} is un-supported, issueing HTTP 505 HTTP Version Not Supported");
+
                     context.ResponseInfo.ResponseObject = new ApiResponse
                     {
                         StatusCode = 505

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep
 {
     using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>The API response info.
     /// </summary>
@@ -43,6 +44,25 @@
         /// 
         /// </summary>
         public IList<ApiCookie> Cookies { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string Dump()
+        {
+            var builder = new StringBuilder();
+
+            if (this.Headers != null)
+            {
+                foreach (var header in this.Headers)
+                {
+                    builder.AppendLine($"{header.Name}: {header.Value}");
+                }
+            }
+
+            return builder.ToString();
+        }
     }
 
     /// <summary>
