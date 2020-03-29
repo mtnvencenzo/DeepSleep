@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using DeepSleep.Validation;
     using System.Collections.Generic;
+    using DeepSleep.Pipeline;
 
     /// <summary>
     /// 
@@ -55,5 +56,37 @@
         /// <summary>
         /// </summary>
         public bool UseEnvironmentEndpoint { get; set; } = true;
+
+        /// <summary>Gets the default request pipeline.</summary>
+        /// <returns></returns>
+        public static IApiRequestPipeline GetDefaultRequestPipeline()
+        {
+            return new ApiRequestPipeline()
+                .UseApiResponseUnhandledExceptionHandler()
+                .UseApiRequestCanceled()
+                .UseApiHttpComformance()
+                .UseApiResponseBodyWriter()
+                .UseApiResponseCookies()
+                .UseApiResponseMessages()
+                .UseApiResponseHttpCaching()
+                .UseApiRequestUriValidation()
+                .UseApiRequestHeaderValidation()
+                .UseApiResponseCorrelation()
+                .UseApiResponseDeprecated()
+                .UseApiRequestRouting()
+                .UseApiRequestLocalization()
+                .UseApiRequestNotFound()
+                .UseApiResponseCors()
+                .UseApiRequestCorsPreflight()
+                .UseApiRequestMethod()
+                .UseApiRequestAccept()
+                .UseApiRequestAuthentication()
+                .UseApiRequestAuthorization()
+                .UseApiRequestInvocationInitializer()
+                .UseApiRequestUriBinding()
+                .UseApiRequestBodyBinding()
+                .UseApiRequestEndpointValidation()
+                .UseApiRequestEndpointInvocation();
+        }
     }
 }

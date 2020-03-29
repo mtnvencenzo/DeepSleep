@@ -48,38 +48,6 @@
                 .Add(new XmlHttpFormatter(), new string[] { "text/xml", "application/xml" }, new string[] { "utf-32, utf-16, utf-8" });
         }
 
-        /// <summary>Gets the default request pipeline.</summary>
-        /// <returns></returns>
-        private static IApiRequestPipeline GetDefaultRequestPipeline()
-        {
-            return new ApiRequestPipeline()
-                .UseApiResponseUnhandledExceptionHandler()
-                .UseApiRequestCanceled()
-                .UseApiHttpComformance()
-                .UseApiResponseBodyWriter()
-                .UseApiResponseCookies()
-                .UseApiResponseMessages()
-                .UseApiResponseHttpCaching()
-                .UseApiRequestUriValidation()
-                .UseApiRequestHeaderValidation()
-                .UseApiResponseCorrelation()
-                .UseApiResponseDeprecated()
-                .UseApiRequestRouting()
-                .UseApiRequestLocalization()
-                .UseApiRequestNotFound()
-                .UseApiResponseCors()
-                .UseApiRequestCorsPreflight()
-                .UseApiRequestMethod()
-                .UseApiRequestAccept()
-                .UseApiRequestAuthentication()
-                .UseApiRequestAuthorization()
-                .UseApiRequestInvocationInitializer()
-                .UseApiRequestUriBinding()
-                .UseApiRequestBodyBinding()
-                .UseApiRequestEndpointValidation()
-                .UseApiRequestEndpointInvocation();
-        }
-
         /// <summary>Gets the default API response message converter.</summary>
         /// <returns></returns>
         private static IApiResponseMessageConverter GetDefaultApiResponseMessageConverter()
@@ -96,7 +64,7 @@
 
         /// <summary>Gets the default request contriguration.</summary>
         /// <returns></returns>
-        private static IApiRequestConfiguration GetDefaultRequestContriguration()
+        private static IApiRequestConfiguration GetDefaultRequestConfiguration()
         {
             return new DefaultApiRequestConfiguration
             {
@@ -233,9 +201,9 @@
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
                 .AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory ?? GetDefaultFormatterFactory())
-                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? GetDefaultRequestPipeline())
+                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestContriguration())
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
 
             services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) =>
