@@ -40,9 +40,9 @@
             var registeredPipeline = this.pipeline.RegisteredPipeline;
             var index = registeredPipeline.FirstOrDefault(p => p.Value.GetType() == this.type).Key;
 
-            var next = (index >= this.pipeline.RegisteredPipeline.Count - 1)
+            var next = (index >= registeredPipeline.Count - 1)
                 ? new ApiRequestDelegate(TaskFinisher)
-                : this.pipeline.RegisteredPipeline[index + 1].requestDelegate;
+                : registeredPipeline[index + 1].requestDelegate;
 
             var instance = Activator.CreateInstance(this.type, new object[] { next });
             var targetInvocationParameters = new List<object>();
