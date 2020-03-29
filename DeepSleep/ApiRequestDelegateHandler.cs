@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
 
@@ -13,21 +14,18 @@
         private readonly MethodInfo target;
         private readonly ApiRequestDelegate requestDelegate;
         private readonly IApiRequestPipeline pipeline;
-        private readonly int index;
         private readonly Type type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestDelegateHandler" /> class.
         /// </summary>
         /// <param name="pipeline">The pipeline.</param>
-        /// <param name="index">The index.</param>
         /// <param name="type">The type.</param>
         /// <param name="target">The target.</param>
-        public ApiRequestDelegateHandler(IApiRequestPipeline pipeline, int index, Type type, MethodInfo target)
+        public ApiRequestDelegateHandler(IApiRequestPipeline pipeline, Type type, MethodInfo target)
         {
             this.target = target;
             this.pipeline = pipeline;
-            this.index = index;
             this.requestDelegate = new ApiRequestDelegate(TaskInvoker);
             this.type = type;
         }
@@ -39,9 +37,12 @@
         {
             var context = contextResolver.GetContext();
 
-            var next = (this.index >= this.pipeline.RegisteredPipeline.Count - 1)
+            var registeredPipeline = this.pipeline.RegisteredPipeline;
+            var index = registeredPipeline.FirstOrDefault(p => p.Value.GetType() == this.type).Key;
+
+            var next = (index >= this.pipeline.RegisteredPipeline.Count - 1)
                 ? new ApiRequestDelegate(TaskFinisher)
-                : this.pipeline.RegisteredPipeline[this.index + 1].requestDelegate;
+                : this.pipeline.RegisteredPipeline[index + 1].requestDelegate;
 
             var instance = Activator.CreateInstance(this.type, new object[] { next });
             var targetInvocationParameters = new List<object>();

@@ -10,14 +10,14 @@
     /// </summary>
     public class ApiRequestPipeline : IApiRequestPipeline
     {
-        private readonly Dictionary<int, ApiRequestDelegateHandler> pipeline;
+        private readonly IList<ApiRequestDelegateHandler> pipeline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestPipeline"/> class.
         /// </summary>
         public ApiRequestPipeline()
         {
-            pipeline = new Dictionary<int, ApiRequestDelegateHandler>();
+            this.pipeline = new List<ApiRequestDelegateHandler>();
         }
 
         /// <summary>Uses the pipeline component.</summary>
@@ -40,8 +40,53 @@
                 {
                     if (parameters[0].ParameterType == typeof(IApiRequestContextResolver))
                     {
-                        var delegateHandler = new ApiRequestDelegateHandler(this, pipeline.Count, type, method);
-                        pipeline.Add(pipeline.Count, delegateHandler);
+                        var delegateHandler = new ApiRequestDelegateHandler(this, type, method);
+                        pipeline.Add(delegateHandler);
+                        break;
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        /// <summary>Uses the pipeline component.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="index">The index position to insert the component into the pipeline.</param>
+        /// <returns></returns>
+        public virtual IApiRequestPipeline UsePipelineComponent<T>(int index)
+        {
+            var type = typeof(T);
+
+            var methods = type.GetMethods()
+                .Where(m => m.Name == "Invoke")
+                .Where(m => m.ReturnType == typeof(Task));
+
+            foreach (var method in methods)
+            {
+                var parameters = method.GetParameters();
+
+                if (parameters != null && parameters.Length > 0)
+                {
+                    if (parameters[0].ParameterType == typeof(IApiRequestContextResolver))
+                    {
+                        var delegateHandler = new ApiRequestDelegateHandler(this, type, method);
+
+                        if (index > -1)
+                        {
+                            if (index >= this.pipeline.Count)
+                            {
+                                pipeline.Add(delegateHandler);
+                            }
+                            else
+                            {
+                                pipeline.Insert(index, delegateHandler);
+                            }
+                        }
+                        else
+                        {
+                            pipeline.Add(delegateHandler);
+                        }
                         break;
                     }
                 }
@@ -55,9 +100,7 @@
         /// <returns></returns>
         public virtual async Task Run(IApiRequestContextResolver contextResolver)
         {
-            var first = pipeline.Count > 0
-                ? pipeline[0]
-                : null;
+            var first = pipeline.FirstOrDefault();
 
             if (first != null)
             {
@@ -71,7 +114,7 @@
         {
             get
             {
-                return pipeline;
+                return pipeline.ToDictionary(p => this.pipeline.IndexOf(p), p => p);
             }
         }
 

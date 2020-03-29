@@ -893,7 +893,6 @@
         /// <param name="httpcontext"></param>
         /// <param name="contextResolver"></param>
         /// <param name="requestPipeline"></param>
-        /// <param name="config"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
         public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, ILogger logger)
