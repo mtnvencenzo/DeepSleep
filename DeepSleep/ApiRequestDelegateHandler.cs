@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,6 +16,7 @@
         private readonly ApiRequestDelegate requestDelegate;
         private readonly IApiRequestPipeline pipeline;
         private readonly Type type;
+        private ParameterInfo[] parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestDelegateHandler" /> class.
@@ -36,9 +38,8 @@
         public async Task TaskInvoker(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-
             var registeredPipeline = this.pipeline.RegisteredPipeline;
-            var index = registeredPipeline.FirstOrDefault(p => p.Value.GetType() == this.type).Key;
+            var index = registeredPipeline.FirstOrDefault(p => p.Value.type == this.type).Key;
 
             var next = (index >= registeredPipeline.Count - 1)
                 ? new ApiRequestDelegate(TaskFinisher)
@@ -46,9 +47,13 @@
 
             var instance = Activator.CreateInstance(this.type, new object[] { next });
             var targetInvocationParameters = new List<object>();
-            var methodParams = this.target.GetParameters();
 
-            foreach (var methodParam in methodParams)
+            if (this.parameters == null)
+            {
+                this.parameters = this.target.GetParameters();
+            }
+
+            foreach (var methodParam in this.parameters)
             {
                 if (methodParam.ParameterType == typeof(IApiRequestContextResolver))
                 {
