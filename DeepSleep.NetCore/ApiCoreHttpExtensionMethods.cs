@@ -39,15 +39,6 @@
             return provider;
         }
 
-        /// <summary>Gets the default formatter factory.</summary>
-        /// <returns></returns>
-        private static IFormatStreamReaderWriterFactory GetDefaultFormatterFactory()
-        {
-            return new HttpMediaTypeStreamWriterFactory()
-                .Add(new JsonHttpFormatter(), new string[] { "application/json", "text/json", "application/json-patch+json" }, new string[] { "utf-32, utf-16, utf-8" })
-                .Add(new XmlHttpFormatter(), new string[] { "text/xml", "application/xml" }, new string[] { "utf-32, utf-16, utf-8" });
-        }
-
         /// <summary>Gets the default API response message converter.</summary>
         /// <returns></returns>
         private static IApiResponseMessageConverter GetDefaultApiResponseMessageConverter()
@@ -200,11 +191,21 @@
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
-                .AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory ?? GetDefaultFormatterFactory())
+                .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
+                .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
+
+            if (config.FormatterFactory != null)
+            {
+                services.AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory);
+            }
+            else
+            {
+                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamWriterFactory>();
+            }
 
             services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) =>
             {

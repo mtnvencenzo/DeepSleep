@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Formatting
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -40,5 +41,15 @@
         /// </summary>
         /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
         bool SupportsPrettyPrint { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IList<string> SuuportedContentTypes { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IList<string> SuuportedCharsets { get; }
     }
 }

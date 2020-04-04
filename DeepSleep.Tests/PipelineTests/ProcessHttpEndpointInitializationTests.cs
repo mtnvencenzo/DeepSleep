@@ -1,10 +1,12 @@
 ﻿namespace DeepSleep.Tests.PipelineTests
 {
+    using DeepSleep.JsonPatch;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.TestArtifacts;
     using FluentAssertions;
     using Moq;
     using System;
+    using System.Collections.Generic;
     using Xunit;
 
     /// <summary>
@@ -359,7 +361,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndRetrivesControllerEndpoingForInternalMethod()
+        public async void ReturnsTrueAndRetrivesControllerEndpointForInternalMethod()
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
@@ -397,7 +399,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndRetrivesControllerEndpoingForPrivateMethod()
+        public async void ReturnsTrueAndRetrivesControllerEndpointForPrivateMethod()
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
@@ -435,7 +437,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndRetrivesControllerEndpoingForProtectedMethod()
+        public async void ReturnsTrueAndRetrivesControllerEndpointForProtectedMethod()
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
@@ -763,6 +765,49 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
+            controller.Logger.Should().NotBeNull();
+            controller.Logger.Should().Be(logger);
+        }
+
+        [Theory]
+        [InlineData("PATCH")]
+        public async void ReturnsTrueAndRetrivesModelsForUriAndBodyJsonPatch(string method)
+        {
+            var logger = new ListLogger();
+            var mockServiceProvider = new Mock<IServiceProvider>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new JsonPatchController(logger));
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RouteInfo = new ApiRoutingInfo
+                {
+                    RoutingItem = new ApiRoutingItem
+                    {
+                        EndpointLocation = new ApiEndpointLocation
+                        {
+                            Controller = typeof(JsonPatchController),
+                            Endpoint = nameof(JsonPatchController.Patch),
+                            HttpMethod = method
+                        }
+                    }
+                }
+            };
+
+            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
+            context.RequestInfo.InvocationContext.Controller.Should().BeOfType<JsonPatchController>();
+            context.RequestInfo.InvocationContext.UriModelType.Should().NotBeNull();
+            context.RequestInfo.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.RequestInfo.InvocationContext.UriModel.Should().BeNull();
+            context.RequestInfo.InvocationContext.BodyModelType.Should().Be(typeof(IList<JsonPatchOperation>));
+            context.RequestInfo.InvocationContext.BodyModel.Should().BeNull();
+            context.RequestInfo.InvocationContext.ControllerMethod.Should().NotBeNull();
+            context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
+
+            var controller = context.RequestInfo.InvocationContext.Controller as JsonPatchController;
             controller.Logger.Should().NotBeNull();
             controller.Logger.Should().Be(logger);
         }

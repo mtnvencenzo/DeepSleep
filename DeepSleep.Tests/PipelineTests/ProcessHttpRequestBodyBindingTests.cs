@@ -5,6 +5,8 @@
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.Pipeline;
     using FluentAssertions;
+    using Moq;
+    using System.Collections.Generic;
     using System.IO;
     using Xunit;
 
@@ -187,8 +189,8 @@
         [Fact]
         public async void ReturnsFalseAnd415StatusForNUnMatchedFormatter()
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new XmlHttpFormatter(), new string[] { "application/xml" }, null);
+            var formatter = SetupXmlFormatterMock(new string[] { "application/xml" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -205,7 +207,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(formatterFactory, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -224,8 +226,8 @@
                 await writer.FlushAsync().ConfigureAwait(false);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-                formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+                var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+                var mockFactory = SetupFormatterFactory(formatter.Object);
 
                 var context = new ApiRequestContext
                 {
@@ -243,7 +245,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(formatterFactory, null, null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null, null).ConfigureAwait(false);
                 processed.Should().BeTrue();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -266,8 +268,8 @@
                 await writer.FlushAsync().ConfigureAwait(false);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-                formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+                var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+                var mockFactory = SetupFormatterFactory(formatter.Object);
 
                 var context = new ApiRequestContext
                 {
@@ -285,7 +287,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(formatterFactory, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
                 processed.Should().BeFalse ();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -299,6 +301,41 @@
                 context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("400.000003");
                 context.ProcessingInfo.ExtendedMessages[0].Message.Should().Be("Could not deserialize request.");
             }
+        }
+
+        private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        {
+            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })
+            {
+                CallBase = true
+            };
+
+            mockFactory.Setup(m => m.GetFormatters())
+                .Returns(new List<IFormatStreamReaderWriter>(formatters));
+
+            return mockFactory;
+        }
+
+        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] contentTypes, string[] charsets)
+        {
+            var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
+            {
+                CallBase = true
+            };
+            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
+            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            return mockFormatter;
+        }
+
+        private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] contentTypes, string[] charsets)
+        {
+            var mockFormatter = new Mock<XmlHttpFormatter>(new object[] { null })
+            {
+                CallBase = true
+            };
+            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
+            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            return mockFormatter;
         }
     }
 }

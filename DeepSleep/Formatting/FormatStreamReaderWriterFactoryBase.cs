@@ -1,5 +1,7 @@
 ﻿namespace DeepSleep.Formatting
 {
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,15 +12,17 @@
     /// </summary>
     public abstract class FormatStreamReaderWriterFactoryBase : IFormatStreamReaderWriterFactory
     {
-        private readonly List<FormatterDefinition> formatters;
-        private string defaultType;
+        private readonly IServiceProvider serviceProvider;
+        private readonly ILogger logger;
+        private IList<IFormatStreamReaderWriter> availableFormatters;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="FormatStreamReaderWriterFactoryBase"/> class from being created.
         /// </summary>
-        public FormatStreamReaderWriterFactoryBase()
+        public FormatStreamReaderWriterFactoryBase(IServiceProvider serviceProvider, ILogger logger)
         {
-            formatters = new List<FormatterDefinition>();
+            this.serviceProvider = serviceProvider;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -41,149 +45,57 @@
         public virtual IFormatStreamReaderWriter Get(string type, string parameters, out string formatterType)
         {
             formatterType = string.Empty;
-            IFormatStreamReaderWriter formatter = null;
+            IFormatStreamReaderWriter foundFormatter = null;
 
+            var formatters = GetFormatters();
 
-            // Check the default first
-            if (!string.IsNullOrWhiteSpace(defaultType))
+            if (foundFormatter == null)
             {
-                if (CanHandleType(defaultType, type, parameters))
+                foreach (var formatter in formatters)
                 {
-                    formatter = formatters.FirstOrDefault(f => f.Types.Contains(defaultType))?.Formatter;
-                    formatterType = defaultType;
-                }
-            }
-
-            if (formatter == null)
-            {
-                foreach (var formatterDef in formatters)
-                {
-                    foreach (var formatterDefType in formatterDef.Types)
+                    foreach (var contentType in formatter.SuuportedContentTypes)
                     {
-                        if (CanHandleType(formatterDefType, type, parameters))
+                        if (CanHandleType(contentType, type, parameters))
                         {
-                            formatterType = formatterDefType;
-                            formatter = formatterDef.Formatter;
+                            formatterType = contentType;
+                            foundFormatter = formatter;
                             break;
                         }
                     }
 
-                    if (formatter != null)
+                    if (foundFormatter != null)
                         break;
                 }
             }
 
-            if (formatter == null)
+            if (foundFormatter == null)
             {
                 formatterType = string.Empty;
             }
 
-            return formatter;
-        }
-
-        /// <summary>Defaults the specified formatter type.</summary>
-        /// <param name="formatterType">Type of the formatter.</param>
-        /// <returns></returns>
-        public virtual IFormatStreamReaderWriter Default(out string formatterType)
-        {
-            if (!string.IsNullOrWhiteSpace(defaultType))
-            {
-                return Get(defaultType, string.Empty, out formatterType);
-            }
-
-            formatterType = string.Empty;
-            return null;
-        }
-
-        /// <summary>Adds the specified formatter.</summary>
-        /// <param name="formatter">The formatter.</param>
-        /// <param name="types">The types.</param>
-        /// <param name="charsets">The charsets.</param>
-        /// <returns></returns>
-        public virtual IFormatStreamReaderWriterFactory Add(IFormatStreamReaderWriter formatter, string[] types, string[] charsets)
-        {
-            if (types != null)
-            {
-                foreach (var type in types)
-                {
-                    if (formatters.FirstOrDefault(f => f.Types.Contains(type.ToLower())) != null)
-                    {
-                        throw new Exception($"A formatter is already registered with type '{type}'");
-                    }
-                }
-
-                formatters.Add(new FormatterDefinition
-                {
-                    Formatter = formatter,
-                    Types = types.Select(t => t.ToLower()),
-                    Charsets = charsets?.Select(c => c.ToLower()) ?? new string[] { }
-                });
-            }
-
-            return this;
-        }
-
-        /// <summary>Removes the specified types.</summary>
-        /// <param name="types">The types.</param>
-        /// <returns></returns>
-        public virtual IFormatStreamReaderWriterFactory Remove(params string[] types)
-        {
-            if (types != null)
-            {
-                foreach (var type in types)
-                {
-                    formatters.RemoveAll(f =>
-                    {
-                        foreach (var t in f.Types)
-                        {
-                            if (string.Compare(t, type, true) == 0)
-                                return true;
-                        }
-                        return false;
-                    });
-
-                    if (!string.IsNullOrWhiteSpace(defaultType) && string.Compare(defaultType, type, true) == 0)
-                    {
-                        defaultType = null;
-                    }
-                }
-            }
-
-            return this;
+            return foundFormatter;
         }
 
         /// <summary>Gets the types.</summary>
         /// <returns></returns>
         public virtual IEnumerable<string> GetTypes()
         {
+            var formatters = this.GetFormatters();
+
             foreach(var f in formatters)
             {
-                foreach (var type in f.Types)
+                foreach (var type in f.SuuportedContentTypes)
                 {
                     yield return type.ToLower();
                 }
             };
         }
 
-        /// <summary>Sets the default.</summary>
-        /// <param name="default">The default.</param>
-        /// <returns></returns>
-        public virtual IFormatStreamReaderWriterFactory SetDefault(string @default)
-        {
-            if (!string.IsNullOrWhiteSpace(@default) && formatters.FirstOrDefault(f => f.Types.Contains(@default)) == null)
-            {
-                throw new Exception($"Formater with registered type '{@default}' does not exist");
-            }
-
-            defaultType = @default?.ToLower() ?? string.Empty;
-            return this;
-        }
-
         /// <summary>Gets the acceptable formatter.</summary>
         /// <param name="mediaHeader">The media header.</param>
         /// <param name="formatterType">Type of the formatter.</param>
         /// <returns></returns>
-        public Task<IFormatStreamReaderWriter> GetAcceptableFormatter(MediaHeaderValueWithQualityString mediaHeader, out string formatterType)
+        public virtual Task<IFormatStreamReaderWriter> GetAcceptableFormatter(MediaHeaderValueWithQualityString mediaHeader, out string formatterType)
         {
             formatterType = string.Empty;
             IFormatStreamReaderWriter formatter = null;
@@ -195,11 +107,6 @@
                     break;
             }
 
-            if (formatter == null)
-            {
-                formatter = this.Default(out formatterType);
-            }
-
             return Task.FromResult(formatter);
         }
 
@@ -207,15 +114,30 @@
         /// <param name="mediaHeader">The media header.</param>
         /// <param name="formatterType">Type of the formatter.</param>
         /// <returns></returns>
-        public Task<IFormatStreamReaderWriter> GetMediaTypeFormatter(MediaHeaderValueWithParameters mediaHeader, out string formatterType)
+        public virtual Task<IFormatStreamReaderWriter> GetMediaTypeFormatter(MediaHeaderValueWithParameters mediaHeader, out string formatterType)
         {
-            formatterType = string.Empty;
-            IFormatStreamReaderWriter formatter = null;
             var mediaValue = mediaHeader.MediaValue;
 
-            formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), out formatterType);
+            var formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), out formatterType);
 
             return Task.FromResult(formatter);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual IList<IFormatStreamReaderWriter> GetFormatters()
+        {
+            if (availableFormatters == null)
+            {
+                this.availableFormatters = this.serviceProvider.GetServices(typeof(IFormatStreamReaderWriter))
+                    .Select(o => o as IFormatStreamReaderWriter)
+                    .Where(o => o != null)
+                    .ToList();
+            }
+
+            return this.availableFormatters;
         }
     }
 }

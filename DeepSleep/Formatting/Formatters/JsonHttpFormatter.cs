@@ -5,6 +5,8 @@
     using System.IO;
     using Newtonsoft.Json;
     using System.Text;
+    using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -12,11 +14,22 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class JsonHttpFormatter : IFormatStreamReaderWriter
     {
+        private readonly ILogger logger;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        public JsonHttpFormatter(ILogger<JsonHttpFormatter> logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>Reads the type.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="objType">Type of the object.</param>
         /// <returns></returns>
-        public Task<object> ReadType(Stream stream, Type objType)
+        public virtual Task<object> ReadType(Stream stream, Type objType)
         {
             return ReadType(stream, objType, new FormatterOptions());
         }
@@ -26,12 +39,14 @@
         /// <param name="objType">Type of the object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
+        public virtual async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
             object obj = null;
             string data = null;
 
             Encoding readEncoding = Encoding.Default;
+
+            this.logger?.LogInformation($"Reading data from request stream");
 
             using (var reader = new StreamReader(stream, true))
             {
@@ -46,6 +61,10 @@
                     .GetString(Encoding.Conver‌​t(readEncoding, Encoding.Default, readEncoding.GetBytes(data)));
             }
 
+            this.logger?.LogDebug($"Data read from stream:");
+            this.logger?.LogDebug(data);
+
+            this.logger?.LogDebug($"Deserializing data into type '{objType.FullName}'");
             obj = JsonConvert.DeserializeObject(data, objType);
             return obj;
         }
@@ -54,7 +73,7 @@
         /// <param name="stream">The stream.</param>
         /// <param name="obj">The object.</param>
         /// <returns></returns>
-        public Task WriteType(Stream stream, object obj)
+        public virtual Task WriteType(Stream stream, object obj)
         {
             return WriteType(stream, obj, new FormatterOptions());
         }
@@ -64,7 +83,7 @@
         /// <param name="obj">The object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public Task WriteType(Stream stream, object obj, IFormatStreamOptions options)
+        public virtual Task WriteType(Stream stream, object obj, IFormatStreamOptions options)
         {
             if (obj != null)
             {
@@ -109,5 +128,15 @@
                 StringEscapeHandling = StringEscapeHandling.Default
             };
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<string> SuuportedContentTypes => new string[] { "application/json", "text/json", "application/json-patch+json" };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<string> SuuportedCharsets  => new string[] { "utf-32, utf-16, utf-8" };
     }
 }

@@ -6,6 +6,8 @@
     using System.Xml.Serialization;
     using System.Xml;
     using System.Text;
+    using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -13,11 +15,22 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class XmlHttpFormatter : IFormatStreamReaderWriter
     {
+        private readonly ILogger logger;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        public XmlHttpFormatter(ILogger<JsonHttpFormatter> logger)
+        {
+            this.logger = logger;
+        }
+
         /// <summary>Reads the type.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="objType">Type of the object.</param>
         /// <returns></returns>
-        public Task<object> ReadType(Stream stream, Type objType)
+        public virtual Task<object> ReadType(Stream stream, Type objType)
         {
             return ReadType(stream, objType, new FormatterOptions());
         }
@@ -27,7 +40,7 @@
         /// <param name="objType">Type of the object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
+        public virtual Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
             object obj = null;
             var serializer = new XmlSerializer(objType);
@@ -55,7 +68,7 @@
         /// <param name="stream">The stream.</param>
         /// <param name="obj">The object.</param>
         /// <returns></returns>
-        public Task WriteType(Stream stream, object obj)
+        public virtual Task WriteType(Stream stream, object obj)
         {
             return WriteType(stream, obj, new FormatterOptions());
         }
@@ -65,7 +78,7 @@
         /// <param name="obj">The object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public Task WriteType(Stream stream, object obj, IFormatStreamOptions options)
+        public virtual Task WriteType(Stream stream, object obj, IFormatStreamOptions options)
         {
             if (obj != null)
             {
@@ -131,5 +144,15 @@
             source.SetResult(null);
             return source.Task;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<string> SuuportedContentTypes => new string[] { "text/xml", "application/xml" };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual IList<string> SuuportedCharsets => new string[] { "utf-32, utf-16, utf-8" };
     }
 }

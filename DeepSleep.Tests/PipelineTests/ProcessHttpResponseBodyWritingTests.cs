@@ -4,8 +4,12 @@
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.Pipeline;
     using FluentAssertions;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Moq;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     /// <summary>
@@ -111,7 +115,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesNotWriteForNullFormatter()
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
+            var mockFactory = SetupFormatterFactory(new IFormatStreamReaderWriter[] { });
 
             var context = new ApiRequestContext
             {
@@ -126,7 +130,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -141,8 +145,8 @@
         [InlineData("text/plain")]
         public async void ReturnsTrueAndDoesNotWriteForNonMatchingFormatter(string accept)
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -161,7 +165,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -175,8 +179,8 @@
         [InlineData(null)]
         public async void ReturnsTrueAndDoesWritesUsingDefaultFormatterWhenMissingRequestAccept(string accept)
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -195,7 +199,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -216,8 +220,8 @@
         [InlineData(null, "application/json")]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatter(string accept, string expectedContentType)
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -236,7 +240,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -253,8 +257,8 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndPrettyPrint()
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -274,7 +278,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -293,8 +297,8 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndNoPrettyPrintWhenOverriden()
         {
-            var formatterFactory = new HttpMediaTypeStreamWriterFactory();
-            formatterFactory.Add(new JsonHttpFormatter(), new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
             {
@@ -321,7 +325,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(formatterFactory, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -335,6 +339,30 @@
             context.ResponseInfo.ContentType.Should().Be("application/json");
             context.ResponseInfo.ContentLength.Should().Be(9);
             context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        {
+            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })
+            {
+                CallBase = true
+            };
+
+            mockFactory.Setup(m => m.GetFormatters())
+                .Returns(new List<IFormatStreamReaderWriter>(formatters));
+
+            return mockFactory;
+        }
+
+        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] contentTypes, string[] charsets)
+        {
+            var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
+            {
+                CallBase = true
+            };
+            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
+            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            return mockFormatter;
         }
     }
 }

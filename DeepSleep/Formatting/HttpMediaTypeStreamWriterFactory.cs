@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Formatting
 {
+    using Microsoft.Extensions.Logging;
     using System;
 
     /// <summary>
@@ -11,7 +12,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpMediaTypeStreamWriterFactory"/> class.
         /// </summary>
-        public HttpMediaTypeStreamWriterFactory() : base()
+        public HttpMediaTypeStreamWriterFactory(IServiceProvider serviceProvider, ILogger<HttpMediaTypeStreamWriterFactory> logger) : base(serviceProvider, logger)
         {
         }
 
