@@ -30,6 +30,14 @@ namespace DeepSleep.OpenApi.Tests
                 new DefaultApiRequestConfiguration());
 
             table.AddRoute(
+                "POST_/test/basic/EndpointNoParams/{id}",
+                "test/basic/EndpointNoParams/{id}",
+                "POST",
+                typeof(BasicController),
+                nameof(BasicController.EndpointNoParamsPatch),
+                new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
                 "/test/basic/EndpointWithRouteParam/{name}",
                 "/test/basic/EndpointWithRouteParam/{name}",
                 "GET",

@@ -77,14 +77,14 @@
         /// <param name="route">The route.</param>
         private void AddRoute(OpenApiDocument3_0 document, ApiRoutingItem route)
         {
-            var existingPath = document.paths.FirstOrDefault(p => string.Equals(p.Key, route.Template, StringComparison.OrdinalIgnoreCase));
+            var pathName = route.Template.StartsWith("/")
+                ? route.Template
+                : $"/{route.Template}";
+
+            var existingPath = document.paths.FirstOrDefault(p => string.Equals(p.Key, pathName, StringComparison.OrdinalIgnoreCase));
 
             if (existingPath.Key == null)
             {
-                var pathName = route.Template.StartsWith("/")
-                    ? route.Template
-                    : $"/{route.Template}";
-
                 existingPath = new KeyValuePair<string, OpenApiPathItem3_0>(pathName, new OpenApiPathItem3_0
                 {
                     description = route.Name,
