@@ -14,11 +14,19 @@ namespace DeepSleep.OpenApi.Tests
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(
-                "/test/basic/EndpointNoParams",
-                "/test/basic/EndpointNoParams",
+                "GET_/test/basic/EndpointNoParams/{id}",
+                "/test/basic/EndpointNoParams/{id}",
                 "GET",
                 typeof(BasicController),
                 nameof(BasicController.EndpointNoParams),
+                new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                "PATCH_/test/basic/EndpointNoParams/{id}",
+                "/test/basic/EndpointNoParams/{id}",
+                "PATCH",
+                typeof(BasicController),
+                nameof(BasicController.EndpointNoParamsPatch),
                 new DefaultApiRequestConfiguration());
 
             table.AddRoute(

@@ -13,6 +13,13 @@
             throw new NotImplementedException();
         }
 
+        [OpenApiResponse("204", typeof(void))]
+        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        public Task<ApiResponse> EndpointNoParamsPatch()
+        {
+            throw new NotImplementedException();
+        }
+
         [OpenApiResponse("200", typeof(ComplexClassModel))]
         public Task<ApiResponse> EndpointWithRouteParam([UriBound] ComplexRequest request)
         {

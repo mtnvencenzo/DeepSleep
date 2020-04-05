@@ -50,6 +50,12 @@
         /// <returns></returns>
         public IApiRoutingTable AddRoute(string name, string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
         {
+            if (this.routes.Exists(r => string.Equals(r.Template, template, StringComparison.OrdinalIgnoreCase) &&
+                 string.Equals(r.HttpMethod, httpMethod, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new Exception($"Route '{httpMethod} {template}' already has been added.");
+            }
+
             if (controller == null)
             {
                 throw new Exception("Controller must be specified");
