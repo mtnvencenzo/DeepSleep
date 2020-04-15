@@ -354,7 +354,7 @@
 
                 document.components.responses.Add(typeName, new OpenApiResponse3_0
                 {
-                    description = responseType.Name,
+                    description = typeName,
                     content = GetResponseContents(document, responseType)
                 });
             }

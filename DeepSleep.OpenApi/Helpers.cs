@@ -228,14 +228,23 @@
         internal static string GetDocumentTypeSchemaName(Type type)
         {
             var rootType = GetRootType(type);
+            string typeName;
 
-            var typeName = (DefaultOpenApiGenerator.PrefixNamesWithNamespace)
-                ? rootType.FullName
-                : rootType.Name;
 
             if (IsArrayType(rootType))
             {
+                var arrayType = GetArrayType(rootType);
+                typeName = (DefaultOpenApiGenerator.PrefixNamesWithNamespace)
+                    ? arrayType.FullName
+                    : arrayType.Name;
+
                 return $"ArrayOf{typeName}";
+            }
+            else
+            {
+                typeName = (DefaultOpenApiGenerator.PrefixNamesWithNamespace)
+                    ? rootType.FullName
+                    : rootType.Name;
             }
 
             return typeName;

@@ -67,5 +67,58 @@ namespace DeepSleep.OpenApi.Tests
 
             System.Diagnostics.Debug.Write(results);
         }
+
+        [Fact]
+        public void TestList()
+        {
+            var table = new DefaultApiRoutingTable();
+            table.AddRoute(
+                "GET_/test/list",
+                "/test/list",
+                "GET",
+                typeof(ListController),
+                nameof(ListController.List),
+                new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                "GET_/test/list1",
+                "/test/list1",
+                "GET",
+                typeof(ListController),
+                nameof(ListController.List1),
+                new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                "GET_/test/list2",
+                "/test/list2",
+                "GET",
+                typeof(ListController),
+                nameof(ListController.List2),
+                new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                "GET_/test/list/container",
+                "/test/list/container",
+                "GET",
+                typeof(ListController),
+                nameof(ListController.ListContainer),
+                new DefaultApiRequestConfiguration());
+
+            var generator = new DefaultOpenApiGenerator();
+
+            DefaultOpenApiGenerator.PrefixNamesWithNamespace = false;
+            var document = generator.Generate(OpenApiVersion.V3, table);
+
+            var results = JsonConvert.SerializeObject(
+                document,
+                new JsonSerializerSettings
+                {
+                    Formatting = Formatting.Indented,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+
+            System.Diagnostics.Debug.Write(results);
+        }
     }
 }
