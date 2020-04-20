@@ -7,6 +7,7 @@
     using System.Text;
     using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// 
@@ -65,7 +66,7 @@
             this.logger?.LogDebug(data);
 
             this.logger?.LogDebug($"Deserializing data into type '{objType.FullName}'");
-            obj = JsonConvert.DeserializeObject(data, objType);
+            obj = JsonConvert.DeserializeObject(data, objType, GetReadSettings());
             return obj;
         }
 
@@ -125,7 +126,18 @@
                 DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
                 DefaultValueHandling = DefaultValueHandling.Include,
                 NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
-                StringEscapeHandling = StringEscapeHandling.Default
+                StringEscapeHandling = StringEscapeHandling.Default,
+                ContractResolver = new DefaultContractResolver()
+            };
+        }
+
+        /// <summary>Gets the write settings.</summary>
+        /// <returns></returns>
+        private JsonSerializerSettings GetReadSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver()
             };
         }
 
