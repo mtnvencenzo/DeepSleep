@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using Newtonsoft.Json.Serialization;
+    using Newtonsoft.Json.Converters;
 
     /// <summary>
     /// 
@@ -118,7 +119,7 @@
         /// <returns></returns>
         private JsonSerializerSettings GetWriteSettings(IFormatStreamOptions options)
         {
-            return new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 Formatting = options.PrettyPrint ? Formatting.Indented : Formatting.None,
                 Culture = options.Culture,
@@ -127,18 +128,34 @@
                 DefaultValueHandling = DefaultValueHandling.Include,
                 NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
                 StringEscapeHandling = StringEscapeHandling.Default,
-                ContractResolver = new DefaultContractResolver()
+                ContractResolver = new DefaultContractResolver(),
             };
+
+            if (settings.Converters == null)
+            {
+                settings.Converters = new List<JsonConverter>();
+            }
+
+            settings.Converters.Add(new StringEnumConverter());
+            return settings;
         }
 
         /// <summary>Gets the write settings.</summary>
         /// <returns></returns>
         private JsonSerializerSettings GetReadSettings()
         {
-            return new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver()
             };
+
+            if (settings.Converters == null)
+            {
+                settings.Converters = new List<JsonConverter>();
+            }
+
+            settings.Converters.Add(new StringEnumConverter());
+            return settings;
         }
 
         /// <summary>
