@@ -786,7 +786,7 @@
             }
 
 
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "prettyprint");
+            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xprettyprint");
             if (queryString.Key != null)
             {
                 if (bool.TryParse(queryString.Value, out prettyPrint) && prettyPrint)

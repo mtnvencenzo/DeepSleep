@@ -43,7 +43,6 @@
         /// <returns></returns>
         public virtual async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
-            object obj = null;
             string data = null;
 
             Encoding readEncoding = Encoding.Default;
@@ -67,7 +66,7 @@
             this.logger?.LogDebug(data);
 
             this.logger?.LogDebug($"Deserializing data into type '{objType.FullName}'");
-            obj = JsonConvert.DeserializeObject(data, objType, GetReadSettings());
+            object obj = JsonConvert.DeserializeObject(data, objType, GetReadSettings());
             return obj;
         }
 
