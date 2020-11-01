@@ -24,8 +24,8 @@ namespace DeepSleep.Api.Harness
     /// </summary>
     public class Startup
     {
-        private IServiceProvider? serviceProvider;
-        private ILogger? logger = null;
+        private IServiceProvider serviceProvider;
+        private ILogger logger = null;
 
         /// <summary>Initializes a new instance of the <see cref="Startup" /> class.</summary>
         /// <param name="env">The env.</param>

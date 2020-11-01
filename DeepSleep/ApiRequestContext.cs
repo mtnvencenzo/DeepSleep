@@ -3,6 +3,7 @@
     using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Tracing;
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Resources;
@@ -174,6 +175,84 @@
 
             item = itemGroup.Items[key];
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, ApiResponseInfo response)
+        {
+            var etag = response?.Headers.GetValue("ETag");
+            var lastModifiedRaw = response?.Headers.GetValue("Last-Modified");
+
+            DateTimeOffset? lastModified = null;
+            if (DateTimeOffset.TryParse(lastModifiedRaw, out var parsed))
+            {
+                lastModified = parsed;
+            }
+
+            return IsConditionalRequestMatch(context, etag, lastModified);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="etag"></param>
+        /// <param name="lastModified"></param>
+        /// <returns></returns>
+        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, string etag, DateTimeOffset? lastModified)
+        {
+            var condtionalRequestETag = context.RequestInfo.IfMatch;
+            var condtionalRequestLastModfied = context.RequestInfo.IfModifiedSince;
+
+            // Conditional Get Request
+            if (!string.IsNullOrWhiteSpace(condtionalRequestETag) || condtionalRequestLastModfied != null)
+            {
+                var match = true;
+                if (!string.IsNullOrWhiteSpace(condtionalRequestETag) && condtionalRequestETag != etag)
+                {
+                    match = false;
+                }
+
+                if (condtionalRequestLastModfied != null && condtionalRequestLastModfied.Value.ToString("r") != lastModified?.ToString("r"))
+                {
+                    match = false;
+                }
+
+                if (match)
+                {
+                    return ApiCondtionalMatchType.ConditionalGetMatch;
+                }
+            }
+
+            // Concurrency Request
+            var currencyRequestETag = context.RequestInfo.IfNoneMatch;
+            var currencyRequestLastModfied = context.RequestInfo.IfUnmodifiedSince;
+
+            if (!string.IsNullOrWhiteSpace(currencyRequestETag) || currencyRequestLastModfied != null)
+            {
+                var match = true;
+                if (!string.IsNullOrWhiteSpace(currencyRequestETag) && currencyRequestETag == etag)
+                {
+                    match = false;
+                }
+
+                if (currencyRequestLastModfied != null && currencyRequestLastModfied.Value.ToString("r") == lastModified?.ToString("r"))
+                {
+                    match = false;
+                }
+
+                if (match)
+                {
+                    return ApiCondtionalMatchType.ConditionalConcurrencyNoMatch;
+                }
+            }
+
+            return ApiCondtionalMatchType.None;
         }
 
         /// <summary>Tries the get item group.</summary>

@@ -255,6 +255,353 @@
         }
 
         [Fact]
+        public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfMatchAndIfModifedSinceMatch()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag,
+                    IfModifiedSince = lastModifed
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.RawResponseObject.Should().BeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(2);
+            context.ResponseInfo.ContentType.Should().BeNull();
+            context.ResponseInfo.ContentLength.Should().Be(0);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfMatch()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.RawResponseObject.Should().BeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(1);
+            context.ResponseInfo.ContentType.Should().BeNull();
+            context.ResponseInfo.ContentLength.Should().Be(0);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfModifedSinceMatch()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfModifiedSince = lastModifed
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.RawResponseObject.Should().BeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(1);
+            context.ResponseInfo.ContentType.Should().BeNull();
+            context.ResponseInfo.ContentLength.Should().Be(0);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesWritesWithUnMatchedEtagAndIfModifiedSince()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag + "_FAIL",
+                    IfModifiedSince = lastModifed.AddSeconds(1)
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(2);
+            context.ResponseInfo.ContentType.Should().NotBeNull();
+            context.ResponseInfo.ContentType.Should().Be("application/json");
+            context.ResponseInfo.ContentLength.Should().Be(9);
+            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesWritesWithUnMatchedEtagButMatchedIfModifiedSince()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag + "_FAIL",
+                    IfModifiedSince = lastModifed
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(2);
+            context.ResponseInfo.ContentType.Should().NotBeNull();
+            context.ResponseInfo.ContentType.Should().Be("application/json");
+            context.ResponseInfo.ContentLength.Should().Be(9);
+            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesWritesWithMatchedEtagButUnMatchedIfModifiedSince()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag,
+                    IfModifiedSince = lastModifed.AddSeconds(1)
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(2);
+            context.ResponseInfo.ContentType.Should().NotBeNull();
+            context.ResponseInfo.ContentType.Should().Be("application/json");
+            context.ResponseInfo.ContentLength.Should().Be(9);
+            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesWritesWithUnMatchedEtag()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            var etag = "TEST-IF-MATCH";
+
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfMatch = etag + "_FAIL"
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(1);
+            context.ResponseInfo.ContentType.Should().NotBeNull();
+            context.ResponseInfo.ContentType.Should().Be("application/json");
+            context.ResponseInfo.ContentLength.Should().Be(9);
+            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        [Fact]
+        public async void ReturnsTrueAndDoesWritesWithUnMatchedIfModifiedSince()
+        {
+            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var mockFactory = SetupFormatterFactory(formatter.Object);
+            DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
+
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                ResponseInfo = new ApiResponseInfo
+                {
+                    ResponseObject = new ApiResponse
+                    {
+                        Body = "test",
+                        StatusCode = 201
+                    }
+                },
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "GET",
+                    Accept = "application/json",
+                    IfModifiedSince = lastModifed.AddSeconds(1)
+                }
+            };
+
+            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(1);
+            context.ResponseInfo.ContentType.Should().NotBeNull();
+            context.ResponseInfo.ContentType.Should().Be("application/json");
+            context.ResponseInfo.ContentLength.Should().Be(9);
+            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+        }
+
+        [Fact]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndPrettyPrint()
         {
             var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);

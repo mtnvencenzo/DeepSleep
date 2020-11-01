@@ -54,6 +54,22 @@
         /// <value>The type of the content.</value>
         public virtual MediaHeaderValueWithParameters ContentType { get; set; }
 
+        /// <summary>Gets or sets the If-Modified-Since conditional request header.</summary>
+        /// <value>The value of the If-Modified-Since header..</value>
+        public virtual DateTimeOffset? IfModifiedSince { get; set; }
+
+        /// <summary>Gets or sets the If-Unmodified-Since conditional request header.</summary>
+        /// <value>The value of the If-Unmodified-Since header..</value>
+        public virtual DateTimeOffset? IfUnmodifiedSince { get; set; }
+
+        /// <summary>Gets or sets the If-None-Match conditional request header.</summary>
+        /// <value>The value of the If-None-Match header..</value>
+        public virtual string IfNoneMatch { get; set; }
+
+        /// <summary>Gets or sets the If-Match conditional request header.</summary>
+        /// <value>The value of the If-Match header..</value>
+        public virtual string IfMatch { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

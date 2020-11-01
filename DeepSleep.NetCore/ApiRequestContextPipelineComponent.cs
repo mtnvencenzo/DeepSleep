@@ -76,6 +76,10 @@
                     // THIS CAN BE CHANGED VIA PROXY SERVERS BUT CLIENT APPS USE THE HOST HEADER
                     RequestUri = WebUtility.UrlDecode(context.Request.Scheme + "://" + context.Request.Host + context.Request.Path + context.Request.QueryString),
                     Headers = GetRequestHeaders(context.Request),
+                    IfMatch = GetIfMatch(context.Request),
+                    IfNoneMatch = GetIfNoneMatch(context.Request),
+                    IfModifiedSince = GetIfModifiedSince(context.Request),
+                    IfUnmodifiedSince = GetIfUnmodifiedSince(context.Request),
                     Body = context.Request.Body
                 }
             };
@@ -837,6 +841,238 @@
             }
 
             return cookies;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private string GetIfMatch(HttpRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            string returnValue = null;
+
+            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "if-match");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        returnValue = val;
+                        break;
+                    }
+                }
+            }
+
+            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-match");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        returnValue = val;
+                        break;
+                    }
+                }
+            }
+
+
+            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifmatch");
+            if (queryString.Key != null)
+            {
+                if (!string.IsNullOrWhiteSpace(queryString.Value))
+                {
+                    returnValue = queryString.Value;
+                }
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private string GetIfNoneMatch(HttpRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            string returnValue = null;
+
+            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "if-none-match");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        returnValue = val;
+                        break;
+                    }
+                }
+            }
+
+            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-none-match");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        returnValue = val;
+                        break;
+                    }
+                }
+            }
+
+
+            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifnonematch");
+            if (queryString.Key != null)
+            {
+                if (!string.IsNullOrWhiteSpace(queryString.Value))
+                {
+                    returnValue = queryString.Value;
+                }
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private DateTimeOffset? GetIfModifiedSince(HttpRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            DateTimeOffset parsed;
+            DateTimeOffset? returnValue = null;
+
+            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "if-modified-since");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        if (DateTimeOffset.TryParse(val, out parsed))
+                        {
+                            returnValue = parsed;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-modified-since");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        if (DateTimeOffset.TryParse(val, out parsed))
+                        {
+                            returnValue = parsed;
+                        }
+                        break;
+                    }
+                }
+            }
+
+
+            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifmodifiedsince");
+            if (queryString.Key != null)
+            {
+                if (!string.IsNullOrWhiteSpace(queryString.Value))
+                {
+                    if (DateTimeOffset.TryParse(queryString.Value, out parsed))
+                    {
+                        returnValue = parsed;
+                    }
+                }
+            }
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private DateTimeOffset? GetIfUnmodifiedSince(HttpRequest request)
+        {
+            if (request == null)
+            {
+                return null;
+            }
+
+            DateTimeOffset parsed;
+            DateTimeOffset? returnValue = null;
+
+            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "if-unmodified-since");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        if (DateTimeOffset.TryParse(val, out parsed))
+                        {
+                            returnValue = parsed;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-unmodified-since");
+            if (header.Key != null)
+            {
+                foreach (string val in header.Value)
+                {
+                    if (val != null)
+                    {
+                        if (DateTimeOffset.TryParse(val, out parsed))
+                        {
+                            returnValue = parsed;
+                        }
+                        break;
+                    }
+                }
+            }
+
+
+            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifunmodifiedsince");
+            if (queryString.Key != null)
+            {
+                if (!string.IsNullOrWhiteSpace(queryString.Value))
+                {
+                    if (DateTimeOffset.TryParse(queryString.Value, out parsed))
+                    {
+                        returnValue = parsed;
+                    }
+                }
+            }
+
+            return returnValue;
         }
 
         #endregion

@@ -8,6 +8,22 @@
     /// </summary>
     public class ApiHeader
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public ApiHeader() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public ApiHeader(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
         public string Name { get; set; }

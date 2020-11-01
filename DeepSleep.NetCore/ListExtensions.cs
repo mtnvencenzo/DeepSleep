@@ -1,4 +1,4 @@
-﻿namespace DeepSleep
+﻿namespace DeepSleep.NetCore
 {
     using System;
     using System.Collections.Generic;

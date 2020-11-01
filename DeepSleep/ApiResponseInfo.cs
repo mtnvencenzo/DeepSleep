@@ -38,11 +38,10 @@
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public virtual List<ApiHeader> Headers { get; set; }
+        public virtual IList<ApiHeader> Headers { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the cokkies associated with the response.</summary>
+        /// <value>The cokies.</value>
         public IList<ApiCookie> Cookies { get; set; }
 
         /// <summary>

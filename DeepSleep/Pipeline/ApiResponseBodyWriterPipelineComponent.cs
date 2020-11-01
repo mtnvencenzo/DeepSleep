@@ -75,23 +75,39 @@
 
                     if (formatter != null)
                     {
-                        var formatterOptions = (context.ProcessingInfo.OverridingFormatOptions != null)
-                            ? context.ProcessingInfo.OverridingFormatOptions
-                            : new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
+                        var isConditionalRequestMatch = ApiCondtionalMatchType.None;
 
-                        if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
+                        if (string.Equals(context.RequestInfo.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.RequestInfo.IsHeadRequest() == false)
                         {
-                            context.ResponseInfo.AddHeader("X-PrettyPrint", formatterOptions.PrettyPrint.ToString().ToLower());
+                            isConditionalRequestMatch = context.IsConditionalRequestMatch(context.ResponseInfo);
                         }
 
-                        context.ResponseInfo.ContentType = formatterType;
-
-                        using (var m = new MemoryStream())
+                        if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
                         {
-                            await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, formatterOptions).ConfigureAwait(false);
+                            var formatterOptions = (context.ProcessingInfo.OverridingFormatOptions != null)
+                                ? context.ProcessingInfo.OverridingFormatOptions
+                                : new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
 
-                            context.ResponseInfo.ContentLength = m.Length;
-                            context.ResponseInfo.RawResponseObject = m.ToArray();
+                            if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
+                            {
+                                context.ResponseInfo.AddHeader("X-PrettyPrint", formatterOptions.PrettyPrint.ToString().ToLower());
+                            }
+
+                            context.ResponseInfo.ContentType = formatterType;
+
+                            using (var m = new MemoryStream())
+                            {
+                                await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, formatterOptions).ConfigureAwait(false);
+
+                                context.ResponseInfo.ContentLength = m.Length;
+                                context.ResponseInfo.RawResponseObject = m.ToArray();
+                            }
+                        }
+                        else
+                        {
+                            context.ResponseInfo.ResponseObject.StatusCode = 304; //NotModified
+                            context.ResponseInfo.ResponseObject.Body = null;
+                            context.ResponseInfo.RawResponseObject = null;
                         }
                     }
                 }

@@ -1,11 +1,11 @@
-using Microsoft.Extensions.DependencyInjection;
-using DeepSleep.NetCore;
-using Xunit;
-using System.Linq;
-using DeepSleep.Configuration;
-
 namespace DeepSleep.NetCore.Tests
 {
+    using Microsoft.Extensions.DependencyInjection;
+    using DeepSleep.NetCore;
+    using Xunit;
+    using System.Linq;
+    using DeepSleep.Configuration;
+
     public class ApiCoreHttpExtensionMethodsTest
     {
         [Fact]
