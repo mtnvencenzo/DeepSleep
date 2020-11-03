@@ -1140,7 +1140,9 @@
 
                 await requestPipeline.Run(contextResolver);
 
-                httpcontext.Response.Headers.Add("Date", DateTime.UtcNow.ToString("r"));
+                var responseDate = DateTime.UtcNow;
+                context.ResponseInfo.Date = responseDate;
+                httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
 
                 // Merge status code to the http response

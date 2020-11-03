@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using System;
     using System.Collections.Generic;
     using System.Text;
 
@@ -43,6 +44,10 @@
         /// <summary>Gets or sets the cokkies associated with the response.</summary>
         /// <value>The cokies.</value>
         public IList<ApiCookie> Cookies { get; set; }
+
+        /// <summary>The response header date used in generating the response
+        /// </summary>
+        public virtual DateTime? Date { get; set; }
 
         /// <summary>
         /// 
