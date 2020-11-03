@@ -1144,6 +1144,10 @@
                 context.ResponseInfo.Date = responseDate;
                 httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
+                if (httpcontext.Response.Headers.ContainsKey("Expires"))
+                {
+                    httpcontext.Response.Headers[""] = responseDate.AddYears(-1).ToString("r");
+                }
 
                 // Merge status code to the http response
                 if (context.ResponseInfo.ResponseObject.StatusCode > 0)
