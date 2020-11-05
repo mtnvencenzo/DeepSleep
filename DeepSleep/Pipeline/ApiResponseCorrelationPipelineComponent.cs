@@ -26,11 +26,19 @@
         /// <returns></returns>
         public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseCorrelationPipelineComponent> logger)
         {
-            await apinext.Invoke(contextResolver).ConfigureAwait(false);
+            try
+            {
+                await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
-            var context = contextResolver.GetContext();
-
-            await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
+                var context = contextResolver.GetContext();
+                await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
+            }
+            catch
+            {
+                var context = contextResolver.GetContext();
+                await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
+                throw;
+            }
         }
     }
 
