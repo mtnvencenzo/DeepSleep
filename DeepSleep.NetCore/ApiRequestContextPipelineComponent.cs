@@ -114,7 +114,6 @@
                 }
             }
 
-
             // QUERY STRING DATES OVERRIDE ALL OTHER DATES
             // INCLUDED STANDARD 'Date' AND CUSTOM 'X-Date' HEADERS
             if (!string.IsNullOrWhiteSpace(rawEpoch) && long.TryParse(rawEpoch, NumberStyles.Any, CultureInfo.InvariantCulture, out epoch))
@@ -1146,7 +1145,7 @@
 
                 if (httpcontext.Response.Headers.ContainsKey("Expires"))
                 {
-                    httpcontext.Response.Headers[""] = responseDate.AddYears(-1).ToString("r");
+                    httpcontext.Response.Headers["Expires"] = responseDate.AddYears(-1).ToString("r");
                 }
 
                 // Merge status code to the http response
