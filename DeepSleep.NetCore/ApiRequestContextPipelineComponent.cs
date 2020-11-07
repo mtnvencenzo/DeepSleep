@@ -1140,26 +1140,16 @@
                 await requestPipeline.Run(contextResolver);
 
                 var responseDate = DateTime.UtcNow;
-                var responseDateText = responseDate.ToString("r");
                 context.ResponseInfo.Date = responseDate;
-                httpcontext.Response.Headers.Add("Date", responseDateText);
+                httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
                 // Sync up the expir header for nocache requests with the date header being used
-                if (httpcontext.Response.Headers.ContainsKey("Expires"))
+                var contextExpiresHeader = context.ResponseInfo.Headers.FirstOrDefault(h => h.Name == "Expires");
+                var cacheDirective = context.RequestConfig?.CacheDirective;
+
+                if (contextExpiresHeader != null && (cacheDirective == null || cacheDirective.Cacheability == HttpCacheType.NoCache))
                 {
-                    var directive = context.RequestConfig?.CacheDirective;
-                    if (directive == null || directive.Cacheability == HttpCacheType.NoCache)
-                    {
-                        var expireDate = responseDate.AddYears(-1).ToString("r");
-
-                        httpcontext.Response.Headers["Expires"] = expireDate;
-                        var contextHeader = context.ResponseInfo.Headers.FirstOrDefault(h => h.Name == "Expires");
-
-                        if (contextHeader != null)
-                        {
-                            contextHeader.Value = expireDate;
-                        }
-                    }
+                    contextExpiresHeader.Value = responseDate.AddYears(-1).ToString("r");
                 }
 
                 // Merge status code to the http response
