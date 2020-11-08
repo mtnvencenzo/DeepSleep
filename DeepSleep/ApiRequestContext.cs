@@ -2,6 +2,7 @@
 {
     using DeepSleep.Configuration;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics.Tracing;
     using System.Linq.Expressions;
@@ -14,7 +15,7 @@
     /// <summary>The API request context.</summary>
     public class ApiRequestContext
     {
-        static readonly Dictionary<string, ResourceManager> resxTypes = new Dictionary<string, ResourceManager>();
+        static readonly ConcurrentDictionary<string, ResourceManager> resxTypes = new ConcurrentDictionary<string, ResourceManager>();
 
         /// <summary>Initializes a new instance of the <see cref="ApiRequestContext"/> class.</summary>
         public ApiRequestContext()
@@ -78,7 +79,7 @@
                 {
                     if (!resxTypes.ContainsKey(propertyInfo.DeclaringType.FullName))
                     {
-                        resxTypes.Add(propertyInfo.DeclaringType.FullName, new ResourceManager(propertyInfo.DeclaringType));
+                        resxTypes.GetOrAdd(propertyInfo.DeclaringType.FullName, new ResourceManager(propertyInfo.DeclaringType));
                     }
 
                     var rm = resxTypes[propertyInfo.DeclaringType.FullName];
