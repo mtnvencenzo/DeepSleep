@@ -6,6 +6,7 @@
     using Moq;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using Xunit;
 
     /// <summary>
@@ -256,8 +257,8 @@
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
             model.ObjectProp.Should().Be("1");
-            model.DateTimeProp.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
@@ -433,8 +434,8 @@
             model.DoubleProp.Value.Should().Be(-8.45);
             model.FloatProp.Value.Should().Be(5.9f);
             model.DecimalProp.Value.Should().Be(3.9098m);
-            model.DateTimeProp.Value.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.Value.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.Value.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.Value.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
@@ -506,8 +507,8 @@
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
             model.ObjectProp.Should().Be("1");
-            model.DateTimeProp.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
@@ -582,8 +583,8 @@
             model.DoubleProp.Value.Should().Be(-8.45);
             model.FloatProp.Value.Should().Be(5.9f);
             model.DecimalProp.Value.Should().Be(3.9098m);
-            model.DateTimeProp.Value.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.Value.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.Value.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.Value.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.Value.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
@@ -684,8 +685,8 @@
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
             model.ObjectProp.Should().Be("1");
-            model.DateTimeProp.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
@@ -766,8 +767,8 @@
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
             model.ObjectProp.Should().Be("1");
-            model.DateTimeProp.ToLocalTime().ToString().Should().Be("4/2/2007 7:23:57 PM");
-            model.DateTimeOfsetProp.ToString().Should().Be("4/2/2007 7:23:57 PM -01:00");
+            model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
+            model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
             model.GuidProp.ToString().Should().Be("0f6ad742-3248-4229-b9a3-dc20efa074d1");
             model.EnumProp.Should().Be(StandardEnum.Item1);
