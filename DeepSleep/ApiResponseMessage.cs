@@ -28,7 +28,7 @@
                 return new ApiResponseMessage
                 {
                     Code = resourceParts[0],
-                    Message = resourceParts[1]
+                    Message = resourceParts[1]?.Trim()
                 };
             }
 
