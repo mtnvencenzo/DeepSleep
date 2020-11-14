@@ -113,6 +113,36 @@
                     context.AddException(exception);
                 }
             }
+            else if (exception is ApiBadGatewayException)
+            {
+                code = 502;
+
+                if (context != null)
+                {
+                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.BadGateway));
+                    context.AddException(exception);
+                }
+            }
+            else if (exception is ApiServiceUnavailableException)
+            {
+                code = 503;
+
+                if (context != null)
+                {
+                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.ServiceUnavailable));
+                    context.AddException(exception);
+                }
+            }
+            else if (exception is ApiGatewayTimeoutyException)
+            {
+                code = 504;
+
+                if (context != null)
+                {
+                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.GatewayTimeout));
+                    context.AddException(exception);
+                }
+            }
             else
             {
                 code = 500;

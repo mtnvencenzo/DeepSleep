@@ -19,7 +19,7 @@ namespace DeepSleep.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class UnhandledExceptionErrors {
@@ -61,11 +61,38 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 502.000001|The service you are tring to reach received an invalid response from an upstream resource..
+        /// </summary>
+        internal static string BadGateway {
+            get {
+                return ResourceManager.GetString("BadGateway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 504.000001|The service you are tring to reach timed out due to an upsteeam resource..
+        /// </summary>
+        internal static string GatewayTimeout {
+            get {
+                return ResourceManager.GetString("GatewayTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 501.000001|The resource you are trying to reach has not been implemented..
         /// </summary>
         internal static string NotImplemented {
             get {
                 return ResourceManager.GetString("NotImplemented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 503.000001|The service you are trying to reach is unavailable..
+        /// </summary>
+        internal static string ServiceUnavailable {
+            get {
+                return ResourceManager.GetString("ServiceUnavailable", resourceCulture);
             }
         }
         

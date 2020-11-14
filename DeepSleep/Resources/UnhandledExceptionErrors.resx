@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BadGateway" xml:space="preserve">
+    <value>502.000001|The service you are tring to reach received an invalid response from an upstream resource.</value>
+  </data>
+  <data name="GatewayTimeout" xml:space="preserve">
+    <value>504.000001|The service you are tring to reach timed out due to an upsteeam resource.</value>
+  </data>
   <data name="NotImplemented" xml:space="preserve">
     <value>501.000001|The resource you are trying to reach has not been implemented.</value>
+  </data>
+  <data name="ServiceUnavailable" xml:space="preserve">
+    <value>503.000001|The service you are trying to reach is unavailable.</value>
   </data>
   <data name="UnhandledException" xml:space="preserve">
     <value>500.000001|An unhandled exception has occurred.</value>
