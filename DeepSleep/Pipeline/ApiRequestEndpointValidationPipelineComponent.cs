@@ -90,10 +90,18 @@
                     {
                         if (context.RequestInfo.InvocationContext.BodyModel != null)
                         {
-                            var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.BodyModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
-                            if (!objectBodyValidationResult)
+                            try
                             {
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.BodyModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
+                                if (!objectBodyValidationResult)
+                                {
+                                    context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                }
+                            }
+                            catch
+                            {
+                                context.ProcessingInfo.Validation.State = ApiValidationState.Exception;
+                                throw;
                             }
                         }
                     }
@@ -103,10 +111,18 @@
                     {
                         if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
                         {
-                            var methodValidationResult = await validationInvoker.InvokeMethodValidation(context.RequestInfo.InvocationContext.ControllerMethod, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
-                            if (!methodValidationResult)
+                            try
                             {
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                var methodValidationResult = await validationInvoker.InvokeMethodValidation(context.RequestInfo.InvocationContext.ControllerMethod, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
+                                if (!methodValidationResult)
+                                {
+                                    context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                }
+                            }
+                            catch
+                            {
+                                context.ProcessingInfo.Validation.State = ApiValidationState.Exception;
+                                throw;
                             }
                         }
                     }

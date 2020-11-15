@@ -15,6 +15,9 @@
         Failed = 2,
 
         /// <summary>The validating</summary>
-        Validating = 3
+        Validating = 3,
+
+        /// <summary>An exception was thrown during validation</summary>
+        Exception = 4
     }
 }
