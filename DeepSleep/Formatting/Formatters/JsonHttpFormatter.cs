@@ -70,41 +70,60 @@
             return obj;
         }
 
-        /// <summary>Writes the type.</summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="obj"></param>
+        /// <param name="preWriteCallback"></param>
         /// <returns></returns>
-        public virtual Task WriteType(Stream stream, object obj)
+        public virtual async Task<long> WriteType(Stream stream, object obj, Action<long> preWriteCallback = null)
         {
-            return WriteType(stream, obj, new FormatterOptions());
+            return await WriteType(stream, obj, new FormatterOptions(), preWriteCallback).ConfigureAwait(false);
         }
 
-        /// <summary>Writes the type.</summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
-        /// <param name="options">The options.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="obj"></param>
+        /// <param name="options"></param>
+        /// <param name="preWriteCallback"></param>
         /// <returns></returns>
-        public virtual Task WriteType(Stream stream, object obj, IFormatStreamOptions options)
+        public virtual async Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null)
         {
+            long length = 0;
+
             if (obj != null)
             {
-                var data = JsonConvert.SerializeObject(obj, GetWriteSettings(options));
-
-                if (options.Encoding != Encoding.Unicode)
+                using (var ms = new MemoryStream())
+                using (var writer = new StreamWriter(ms))
                 {
-                    data = options.Encoding
-                        .GetString(Encoding.Conver‌​t(Encoding.Unicode, options.Encoding, Encoding.Unicode.GetBytes(data)));
-                }
+                    var data = JsonConvert.SerializeObject(obj, GetWriteSettings(options));
 
-                var wr = new StreamWriter(stream, options.Encoding);
-                wr.Write(data);
-                wr.Flush();
+                    if (options.Encoding != Encoding.Unicode)
+                    {
+                        data = options.Encoding
+                            .GetString(Encoding.Conver‌​t(Encoding.Unicode, options.Encoding, Encoding.Unicode.GetBytes(data)));
+                    }
+
+
+                    writer.Write(data);
+                    writer.Flush();
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    length = ms.Length;
+
+                    if (preWriteCallback != null)
+                    {
+                        preWriteCallback(length);
+                    }
+
+                    await ms.CopyToAsync(stream).ConfigureAwait(false);
+                }
             }
 
-
-            TaskCompletionSource<object> source = new TaskCompletionSource<object>();
-            source.SetResult(null);
-            return source.Task;
+            return length;
         }
 
         /// <summary>
@@ -127,7 +146,7 @@
                 DefaultValueHandling = DefaultValueHandling.Include,
                 NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
                 StringEscapeHandling = StringEscapeHandling.Default,
-                ContractResolver = new DefaultContractResolver(),
+                ContractResolver = new DefaultContractResolver()
             };
 
             if (settings.Converters == null)

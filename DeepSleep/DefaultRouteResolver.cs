@@ -107,7 +107,7 @@
 
             if (decodedUri.EndsWith("/") && !formattedRoute.EndsWith("/"))
             {
-                formattedRoute = formattedRoute + "/";
+                formattedRoute += "/";
             }
 
             var match = new RouteMatch

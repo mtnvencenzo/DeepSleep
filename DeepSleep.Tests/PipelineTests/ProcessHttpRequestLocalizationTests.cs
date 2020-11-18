@@ -27,7 +27,7 @@ namespace DeepSleep.Tests.PipelineTests
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestLocalization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -45,7 +45,7 @@ namespace DeepSleep.Tests.PipelineTests
             CultureInfo.CurrentUICulture = set;
 
             var context = new ApiRequestContext();
-            var processed = await context.ProcessHttpRequestLocalization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
 
             processed.Should().BeTrue();
             context.RequestInfo.AcceptCulture.Name.Should().Be("es");
@@ -86,7 +86,7 @@ namespace DeepSleep.Tests.PipelineTests
             };
 
 
-            var processed = await context.ProcessHttpRequestLocalization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
 
             processed.Should().BeTrue();
             context.RequestInfo.AcceptCulture.Name.Should().Be(expected);

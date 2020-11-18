@@ -11,7 +11,7 @@
     /// </summary>
     public class ApiEndpointLocation
     {
-        private static List<Type> NonBindableTypes = new List<Type>
+        private static readonly List<Type> NonBindableTypes = new List<Type>
         {
             typeof(string),
             typeof(DateTime),

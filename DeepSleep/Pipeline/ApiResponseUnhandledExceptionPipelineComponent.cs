@@ -133,7 +133,7 @@
                     context.AddException(exception);
                 }
             }
-            else if (exception is ApiGatewayTimeoutyException)
+            else if (exception is ApiGatewayTimeoutException)
             {
                 code = 504;
 

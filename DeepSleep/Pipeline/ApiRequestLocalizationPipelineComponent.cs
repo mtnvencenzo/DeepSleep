@@ -24,13 +24,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestLocalizationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestLocalization(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestLocalization().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -55,9 +54,8 @@
 
         /// <summary>Processes the HTTP request localization.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context, ILogger logger)
+        public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

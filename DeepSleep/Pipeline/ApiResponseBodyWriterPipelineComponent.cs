@@ -25,15 +25,14 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, ILogger<ApiResponseBodyWriterPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
 
-            await context.ProcessHttpResponseBodyWriting(formatterFactory, logger).ConfigureAwait(false);
+            await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
         }
     }
 
@@ -54,9 +53,8 @@
         /// <summary>Processes the HTTP response body writing.</summary>
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, ILogger logger)
+        public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -64,6 +62,8 @@
                 {
                     context.ResponseInfo.ResponseObject = new ApiResponse();
                 }
+
+                var isWriteableResponse = false;
 
                 if (context.ResponseInfo.ResponseObject?.Body != null && formatterFactory != null)
                 {
@@ -84,35 +84,27 @@
 
                         if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
                         {
-                            var formatterOptions = (context.ProcessingInfo.OverridingFormatOptions != null)
-                                ? context.ProcessingInfo.OverridingFormatOptions
-                                : new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
+                            var formatterOptions = context.ProcessingInfo.OverridingFormatOptions ?? new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
 
                             if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
                             {
                                 context.ResponseInfo.AddHeader("X-PrettyPrint", formatterOptions.PrettyPrint.ToString().ToLower());
                             }
 
+                            isWriteableResponse = true;
+                            context.ResponseInfo.ResponseWriter = formatter;
+                            context.ResponseInfo.ResponseWriterOptions = formatterOptions;
                             context.ResponseInfo.ContentType = formatterType;
-
-                            using (var m = new MemoryStream())
-                            {
-                                await formatter.WriteType(m, context.ResponseInfo.ResponseObject.Body, formatterOptions).ConfigureAwait(false);
-
-                                context.ResponseInfo.ContentLength = m.Length;
-                                context.ResponseInfo.RawResponseObject = m.ToArray();
-                            }
                         }
                         else
                         {
                             context.ResponseInfo.ResponseObject.StatusCode = 304; //NotModified
-                            context.ResponseInfo.ResponseObject.Body = null;
-                            context.ResponseInfo.RawResponseObject = null;
+                            //context.ResponseInfo.ResponseObject.Body = null;
                         }
                     }
                 }
 
-                if (context.ResponseInfo.ContentLength == 0 && context.ResponseInfo.RawResponseObject == null)
+                if (!isWriteableResponse)
                 {
                     if (context.ResponseInfo.HasSuccessStatus() && (context.ResponseInfo.ResponseObject?.StatusCode ?? 200) != 202)
                     {

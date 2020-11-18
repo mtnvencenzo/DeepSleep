@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
@@ -102,7 +103,6 @@
             
 
             DateTime? requestDate = null;
-            long epoch = 0;
             string rawEpoch = string.Empty;
 
             var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xdate");
@@ -116,7 +116,7 @@
 
             // QUERY STRING DATES OVERRIDE ALL OTHER DATES
             // INCLUDED STANDARD 'Date' AND CUSTOM 'X-Date' HEADERS
-            if (!string.IsNullOrWhiteSpace(rawEpoch) && long.TryParse(rawEpoch, NumberStyles.Any, CultureInfo.InvariantCulture, out epoch))
+            if (!string.IsNullOrWhiteSpace(rawEpoch) && long.TryParse(rawEpoch, NumberStyles.Any, CultureInfo.InvariantCulture, out var epoch))
             {
                 requestDate = epoch.ToUtcDate();
             }
@@ -218,14 +218,11 @@
                 }
             }
 
-
-            DateTimeOffset parsedOffset;
-            DateTime parsedDateTime;
-            if (DateTimeOffset.TryParse(processedVal, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedOffset))
+            if (DateTimeOffset.TryParse(processedVal, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedOffset))
             {
                 return ProcessDateHeaderValueKind(parsedOffset.DateTime, serverTime, isInUtc, hasLocalOffSet);
             }
-            else if (DateTime.TryParse(processedVal, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            else if (DateTime.TryParse(processedVal, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDateTime))
             {
                 return ProcessDateHeaderValueKind(parsedDateTime, serverTime, isInUtc, hasLocalOffSet);
             }
@@ -705,7 +702,8 @@
                 if (!string.IsNullOrWhiteSpace(rawValues))
                     return (T)Convert.ChangeType(values.ToString(), typeof(T));
             }
-            return default(T);
+
+            return default;
         }
 
         /// <summary>Splits the CSV.</summary>
@@ -1167,9 +1165,12 @@
                     }
                 });
 
-                if (context.ResponseInfo.RawResponseObject != null && context.ResponseInfo.RawResponseObject.Length > 0)
+                if (context.ResponseInfo.ResponseWriter != null && context.ResponseInfo.ResponseWriterOptions != null)
                 {
-                    httpcontext.Response.Headers.Add("Content-Length", context.ResponseInfo.ContentLength.ToString());
+                    if (context.ResponseInfo.ResponseWriter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
+                    {
+                        context.ResponseInfo.AddHeader("X-PrettyPrint", context.ResponseInfo.ResponseWriterOptions.PrettyPrint.ToString().ToLower());
+                    }
 
                     if (httpcontext.Response.Headers.FirstOrDefault(k => k.Key == "Content-Type").Key != null)
                     {
@@ -1187,12 +1188,29 @@
 
                     if (!context.RequestInfo.IsHeadRequest())
                     {
-                        await httpcontext.Response.Body.WriteAsync(context.ResponseInfo.RawResponseObject, 0, context.ResponseInfo.RawResponseObject.Length);
+                        var contentLength = await context.ResponseInfo.ResponseWriter.WriteType(
+                            httpcontext.Response.Body,
+                            context.ResponseInfo.ResponseObject.Body,
+                            context.ResponseInfo.ResponseWriterOptions,
+                            (l) => httpcontext.Response.Headers.Add("Content-Length", l.ToString())).ConfigureAwait(false);
+
+                        context.ResponseInfo.ContentLength = contentLength;
+                    }
+                    else
+                    {
+                        using var ms = new MemoryStream();
+                        await context.ResponseInfo.ResponseWriter.WriteType(
+                            ms,
+                            context.ResponseInfo.ResponseObject.Body,
+                            context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
+
+                        httpcontext.Response.Headers.Add("Content-Length", ms.Length.ToString());
+                        context.ResponseInfo.ContentLength = ms.Length;
                     }
                 }
                 else
                 {
-                    httpcontext.Response.Headers.Add("Content-Length", context.ResponseInfo.ContentLength.ToString());
+                    httpcontext.Response.Headers.Add("Content-Length", "0");
                 }
 
 

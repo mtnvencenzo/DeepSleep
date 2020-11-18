@@ -25,13 +25,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestInvocationInitializerPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointInitialization(context.RequestServices, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointInitialization(context.RequestServices).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -54,7 +53,6 @@
         /// <summary>Processes the HTTP endpoint initialization.</summary>
         /// <param name="context">The context.</param>
         /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
         /// <exception cref="Exception">
         /// Routing item's controller type is null
@@ -62,7 +60,7 @@
         /// Routing item's endpoint name is null
         /// or
         /// </exception>
-        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider, ILogger logger)
+        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -86,9 +84,8 @@
                     {
                         endpointController = serviceProvider.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
                     }
-                    catch (Exception ex) 
+                    catch
                     {
-                        throw ex;
                     }
                 }
 

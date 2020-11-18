@@ -23,18 +23,24 @@
         /// <returns></returns>
         Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options);
 
-        /// <summary>Writes the type.</summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="obj"></param>
+        /// <param name="preWriteCallback"></param>
         /// <returns></returns>
-        Task WriteType(Stream stream, object obj);
+        Task<long> WriteType(Stream stream, object obj, Action<long> preWriteCallback = null);
 
-        /// <summary>Writes the type.</summary>
-        /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
-        /// <param name="options">The options.</param>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="obj"></param>
+        /// <param name="options"></param>
+        /// <param name="preWriteCallback"></param>
         /// <returns></returns>
-        Task WriteType(Stream stream, object obj, IFormatStreamOptions options);
+        Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null);
 
         /// <summary>
         /// Gets a value indicating whether [supports pretty print].

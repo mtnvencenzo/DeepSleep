@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
     using System.Text;
@@ -20,10 +21,6 @@
         /// <summary>Gets or sets the response object.</summary>
         /// <value>The response object.</value>
         public virtual ApiResponse ResponseObject { get; set; }
-
-        /// <summary>Gets or sets the raw response object.</summary>
-        /// <value>The raw response object.</value>
-        public virtual byte[] RawResponseObject { get; set; }
 
         /// <summary>Gets or sets the content language.</summary>
         /// <value>The content language.</value>
@@ -48,6 +45,14 @@
         /// <summary>The response header date used in generating the response
         /// </summary>
         public virtual DateTime? Date { get; set; }
+
+        /// <summary>The response writer available to write the response
+        /// </summary>
+        public virtual IFormatStreamReaderWriter ResponseWriter { get; set; }
+
+        /// <summary>The response writer formatting options available to write the response
+        /// </summary>
+        public virtual IFormatStreamOptions ResponseWriterOptions { get; set; }
 
         /// <summary>
         /// 

@@ -26,7 +26,7 @@
                 ResponseInfo = null
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().BeNull();
@@ -48,7 +48,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -76,7 +76,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -104,7 +104,7 @@
                 RequestInfo = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -130,7 +130,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -165,7 +165,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
@@ -199,18 +199,16 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(0);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Theory]
@@ -240,18 +238,16 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(0);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be(expectedContentType);
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -285,12 +281,11 @@
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
-            context.ResponseInfo.RawResponseObject.Should().BeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -325,12 +320,11 @@
 
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
-            context.ResponseInfo.RawResponseObject.Should().BeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -365,12 +359,11 @@
 
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
-            context.ResponseInfo.RawResponseObject.Should().BeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -409,18 +402,16 @@
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -455,18 +446,16 @@
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -501,18 +490,16 @@
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -544,18 +531,16 @@
 
             context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -587,18 +572,16 @@
 
             context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -625,20 +608,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");
             context.ResponseInfo.Headers[0].Value.Should().Be("true");
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -672,20 +653,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
-            context.ResponseInfo.RawResponseObject.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");
             context.ResponseInfo.Headers[0].Value.Should().Be("false");
             context.ResponseInfo.ContentType.Should().NotBeNull();
             context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(9);
-            context.ResponseInfo.RawResponseObject.Length.Should().Be(9);
+            context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
         private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)

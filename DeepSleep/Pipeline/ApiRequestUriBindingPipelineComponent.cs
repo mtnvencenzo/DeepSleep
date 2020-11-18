@@ -28,13 +28,12 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestUriBindingPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestUriBinding(serviceProvider, responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -114,10 +113,9 @@
         /// <param name="context">The context.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        public static Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -148,7 +146,7 @@
 
 
                     var propertiesSet = new List<string>();
-                    Action<PropertyInfo, string> propertySetter = (p, v) =>
+                    void propertySetter(PropertyInfo p, string v)
                     {
                         if (p != null && !propertiesSet.Contains(p.Name))
                         {
@@ -167,7 +165,7 @@
                                     p.Name)));
                             }
                         }
-                    };
+                    }
 
                     var properties = context.RequestInfo.InvocationContext.UriModelType.GetProperties()
                         .Where(p => p.CanWrite)

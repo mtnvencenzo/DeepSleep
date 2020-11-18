@@ -329,7 +329,7 @@
 
         private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] contentTypes, string[] charsets)
         {
-            var mockFormatter = new Mock<XmlHttpFormatter>(new object[] { null })
+            var mockFormatter = new Mock<XmlHttpFormatter>()
             {
                 CallBase = true
             };
