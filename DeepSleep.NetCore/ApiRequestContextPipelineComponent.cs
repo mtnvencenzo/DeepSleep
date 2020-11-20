@@ -506,7 +506,12 @@
             {
                 var authParts = header.Value.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (authParts.Length == 2)
+                if (authParts.Length == 1)
+                {
+                    authScheme = authParts[0];
+                    authValue = null;
+                }
+                else if (authParts.Length == 2)
                 {
                     authScheme = authParts[0];
                     authValue = authParts[1];
@@ -518,7 +523,12 @@
             if (header.Key != null)
             {
                 var authParts = header.Value.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                if (authParts.Length == 2)
+                if (authParts.Length == 1)
+                {
+                    authScheme = authParts[0];
+                    authValue = null;
+                }
+                else if (authParts.Length == 2)
                 {
                     authScheme = authParts[0];
                     authValue = authParts[1];
@@ -530,13 +540,16 @@
             var authValueQueryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xauth");
             if (authSchemeQueryString.Key != null && authValueQueryString.Key != null)
             {
-                if (!string.IsNullOrWhiteSpace(authSchemeQueryString.Value) && !string.IsNullOrWhiteSpace(authValueQueryString.Value))
+                if (!string.IsNullOrWhiteSpace(authSchemeQueryString.Value))
                 {
                     authScheme = authSchemeQueryString.Value.ToString();
-                    authValue = authValueQueryString.Value.ToString();
+
+                    if (!string.IsNullOrWhiteSpace(authValueQueryString.Value))
+                    {
+                        authValue = authValueQueryString.Value.ToString();
+                    }
                 }
             }
-
 
 
             if (!string.IsNullOrWhiteSpace(authScheme))
