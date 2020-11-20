@@ -539,7 +539,7 @@
 
 
 
-            if (!string.IsNullOrWhiteSpace(authScheme) && !string.IsNullOrWhiteSpace(authValue))
+            if (!string.IsNullOrWhiteSpace(authScheme))
             {
                 return new ClientAuthentication
                 {
