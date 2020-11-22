@@ -36,46 +36,6 @@
         /// </returns>
         public abstract bool CanHandleType(string formatterType, string type, string parameters);
 
-        /// <summary>Gets the formatter.</summary>
-        /// <param name="type">The type.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="formatterType">Type of the formatter.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public virtual IFormatStreamReaderWriter Get(string type, string parameters, out string formatterType)
-        {
-            formatterType = string.Empty;
-            IFormatStreamReaderWriter foundFormatter = null;
-
-            var formatters = GetFormatters();
-
-            if (foundFormatter == null)
-            {
-                foreach (var formatter in formatters)
-                {
-                    foreach (var contentType in formatter.SuuportedContentTypes)
-                    {
-                        if (CanHandleType(contentType, type, parameters))
-                        {
-                            formatterType = contentType;
-                            foundFormatter = formatter;
-                            break;
-                        }
-                    }
-
-                    if (foundFormatter != null)
-                        break;
-                }
-            }
-
-            if (foundFormatter == null)
-            {
-                formatterType = string.Empty;
-            }
-
-            return foundFormatter;
-        }
-
         /// <summary>Gets the types.</summary>
         /// <returns></returns>
         public virtual IEnumerable<string> GetTypes()
@@ -102,7 +62,7 @@
 
             foreach (var mediaValue in mediaHeader.Values.Where(m => m.Quality > 0))
             {
-                formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), out formatterType);
+                formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), true, out formatterType);
                 if (formatter != null)
                     break;
             }
@@ -118,7 +78,7 @@
         {
             var mediaValue = mediaHeader.MediaValue;
 
-            var formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), out formatterType);
+            var formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), false, out formatterType);
 
             return Task.FromResult(formatter);
         }
@@ -138,6 +98,49 @@
             }
 
             return this.availableFormatters;
+        }
+
+        /// <summary>Gets the formatter.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="forRead">true if for reading false for writing.</param>
+        /// <param name="formatterType">Type of the formatter.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        protected virtual IFormatStreamReaderWriter Get(string type, string parameters, bool forRead, out string formatterType)
+        {
+            formatterType = string.Empty;
+            IFormatStreamReaderWriter foundFormatter = null;
+
+            var formatters = GetFormatters()
+                .Where(f => (forRead && f.SupportsRead) || (!forRead && f.SupportsWrite))
+                .ToList();
+
+            if (foundFormatter == null)
+            {
+                foreach (var formatter in formatters)
+                {
+                    foreach (var contentType in formatter.SuuportedContentTypes)
+                    {
+                        if (CanHandleType(contentType, type, parameters))
+                        {
+                            formatterType = contentType;
+                            foundFormatter = formatter;
+                            break;
+                        }
+                    }
+
+                    if (foundFormatter != null)
+                        break;
+                }
+            }
+
+            if (foundFormatter == null)
+            {
+                formatterType = string.Empty;
+            }
+
+            return foundFormatter;
         }
     }
 }

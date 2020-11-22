@@ -198,7 +198,7 @@
             };
 
             newitem.RouteVariables = new Dictionary<string, string>();
-            newitem.VariablesList.AddRange(item.VariablesList);
+            item.VariablesList.ForEach(v => newitem.VariablesList.Add(v));
             return newitem;
         }
 

@@ -1,4 +1,6 @@
-﻿namespace DeepSleep
+﻿using System.Diagnostics;
+
+namespace DeepSleep
 {
     /// <summary>Defines how a particular HTTP resource should be handled within HTTp Cacheing.</summary>
     public class HttpCacheDirective

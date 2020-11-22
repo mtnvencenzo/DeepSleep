@@ -48,6 +48,14 @@
         /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
         bool SupportsPrettyPrint { get; }
 
+        /// <summary>Whether the formatter can read content
+        /// </summary>
+        bool SupportsRead { get; }
+
+        /// <summary>Whether the formatter can write content
+        /// </summary>
+        bool SupportsWrite { get; }
+
         /// <summary>
         /// 
         /// </summary>

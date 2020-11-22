@@ -22,7 +22,7 @@
 
         /// <summary>Gets the routes.</summary>
         /// <returns></returns>
-        public IEnumerable<ApiRoutingItem> GetRoutes()
+        public IList<ApiRoutingItem> GetRoutes()
         {
             return routes;
         }
@@ -95,7 +95,7 @@
         /// <summary>Gets the template variables.</summary>
         /// <param name="template">The template.</param>
         /// <returns></returns>
-        private List<string> GetTemplateVariables(string template)
+        private IList<string> GetTemplateVariables(string template)
         {
             List<string> vars = new List<string>();
 
@@ -111,6 +111,5 @@
 
             return vars;
         }
-
     }
 }

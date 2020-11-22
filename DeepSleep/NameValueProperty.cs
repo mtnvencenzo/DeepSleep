@@ -1,8 +1,11 @@
-﻿namespace DeepSleep
+﻿using System.Diagnostics;
+
+namespace DeepSleep
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("Name = {Name} Value = {Value}")]
     public class NameValueProperty
     {
         /// <summary>Gets or sets the name.</summary>

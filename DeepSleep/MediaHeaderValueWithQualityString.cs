@@ -1,10 +1,12 @@
 ﻿namespace DeepSleep
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{ToString()}")]
     public class MediaHeaderValueWithQualityString
     {
         #region Constructors & Initialization

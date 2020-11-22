@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Tests.PipelineTests
+﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.TestArtifacts;

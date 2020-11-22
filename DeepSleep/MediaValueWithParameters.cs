@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{ToString(true)}")]
     public class MediaValueWithParameters
     {
         #region Constructors & Initialization

@@ -41,10 +41,10 @@
 
         /// <summary>Gets or sets the template variables.</summary>
         /// <value>The template variables.</value>
-        public List<string> VariablesList { get; set; }
+        public IList<string> VariablesList { get; set; }
 
         /// <summary>Gets or sets the route variables.</summary>
         /// <value>The route variables.</value>
-        public Dictionary<string, string> RouteVariables { get; set; }
+        public IDictionary<string, string> RouteVariables { get; set; }
     }
 }

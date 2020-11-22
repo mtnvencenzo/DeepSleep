@@ -9,13 +9,6 @@
     /// </summary>
     public interface IFormatStreamReaderWriterFactory
     {
-        /// <summary>Gets the formatter.</summary>
-        /// <param name="type">The type.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <param name="formatterType">Type of the formatter.</param>
-        /// <returns></returns>
-        IFormatStreamReaderWriter Get(string type, string parameters, out string formatterType);
-
         /// <summary>Gets the types.</summary>
         /// <returns></returns>
         IEnumerable<string> GetTypes();

@@ -1,10 +1,12 @@
 ﻿namespace DeepSleep
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("IsMatch = {IsMatch}")]
     public class RouteMatch
     {
         /// <summary>

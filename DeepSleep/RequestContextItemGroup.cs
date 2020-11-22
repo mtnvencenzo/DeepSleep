@@ -1,10 +1,12 @@
 ﻿namespace DeepSleep
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary></summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TItem">The type of the item.</typeparam>
+    [DebuggerDisplay("Items Count = {Items?.Count}")]
     public class RequestContextItemGroup<TKey, TItem>
     {
         /// <summary>Initializes a new instance of the <see cref="RequestContextItemGroup{TKey,TItem}"/> class. 

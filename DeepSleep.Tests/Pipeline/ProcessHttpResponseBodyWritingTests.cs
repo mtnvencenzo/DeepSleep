@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Tests.PipelineTests
+﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Formatting;
     using DeepSleep.Formatting.Formatters;

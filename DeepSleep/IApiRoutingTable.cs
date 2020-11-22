@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// 
@@ -12,7 +11,7 @@
     {
         /// <summary>Gets the routes.</summary>
         /// <returns></returns>
-        IEnumerable<ApiRoutingItem> GetRoutes();
+        IList<ApiRoutingItem> GetRoutes();
 
         /// <summary>Adds the route.</summary>
         /// <param name="name">The name.</param>

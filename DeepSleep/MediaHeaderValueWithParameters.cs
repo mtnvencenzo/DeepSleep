@@ -1,8 +1,11 @@
-﻿namespace DeepSleep
+﻿using System.Diagnostics;
+
+namespace DeepSleep
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{ToString()}")]
     public class MediaHeaderValueWithParameters
     {
         #region Constructors & Initialization

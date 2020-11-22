@@ -117,6 +117,14 @@
         /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
         public virtual bool SupportsPrettyPrint => true;
 
+        /// <summary>Whether the formatter can read content
+        /// </summary>
+        public virtual bool SupportsRead => true;
+
+        /// <summary>Whether the formatter can write content
+        /// </summary>
+        public virtual bool SupportsWrite => true;
+
         /// <summary>
         /// 
         /// </summary>

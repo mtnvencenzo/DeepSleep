@@ -9,13 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.NetCore", "DeepSl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Validation.DataAnnotations", "DeepSleep.Validation.DataAnnotations\DeepSleep.Validation.DataAnnotations.csproj", "{E8F6A3C0-26E8-4DD6-AAC2-4AC35059B118}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".pack", ".pack", "{1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E223CE9B-84FB-4758-B81A-BC96C15C8143}"
-	ProjectSection(SolutionItems) = preProject
-		DeepSleep.Nuget.pack-all.ps1 = DeepSleep.Nuget.pack-all.ps1
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".test", ".test", "{DFEBD416-C35F-45CF-89E8-29BD52268577}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Tests", "DeepSleep.Tests\DeepSleep.Tests.csproj", "{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF}"
@@ -28,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.OpenApi.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.OpenApi.NetCore", "DeepSleep.OpenApi.NetCore\DeepSleep.OpenApi.NetCore.csproj", "{7BC79193-61C6-46D5-A860-0A519164BB02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.Api.Harness", "DeepSleep.Api.Harness\DeepSleep.Api.Harness.csproj", "{98F9C366-3540-46AE-B084-0400A427D0D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Api.Harness", "DeepSleep.Api.Harness\DeepSleep.Api.Harness.csproj", "{98F9C366-3540-46AE-B084-0400A427D0D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,7 +70,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E223CE9B-84FB-4758-B81A-BC96C15C8143} = {1AF0AEF5-5C5B-42ED-A2DF-F4A41263A536}
 		{5C136477-19DD-4640-BC4E-ED5EFFAC1CBF} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{5861B333-819A-41C0-B897-174548293205} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{2097B1BC-C3B0-49CB-91EB-893E911ED586} = {DFEBD416-C35F-45CF-89E8-29BD52268577}

@@ -186,13 +186,13 @@
         {
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
-                .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
-                .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
+                .AddTransient<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
+                .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
