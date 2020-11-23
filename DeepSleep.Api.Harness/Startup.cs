@@ -153,6 +153,19 @@ namespace DeepSleep.Api.Harness
                     ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration()
                 });
 
+            table.AddRoute(
+                template: $"test",
+                httpMethod: "POST",
+                name: $"POST_test",
+                controller: typeof(TestController),
+                endpoint: nameof(TestController.Post),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = true,
+                    ResourceId = "134C800C-71D8-4203-AAFF-B8E9E462663E",
+                    ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration()
+                });
+
             return table;
         }
     }

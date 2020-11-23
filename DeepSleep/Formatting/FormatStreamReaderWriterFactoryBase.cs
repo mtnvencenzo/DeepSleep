@@ -62,7 +62,7 @@
 
             foreach (var mediaValue in mediaHeader.Values.Where(m => m.Quality > 0))
             {
-                formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), true, out formatterType);
+                formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), false, out formatterType);
                 if (formatter != null)
                     break;
             }
@@ -78,7 +78,7 @@
         {
             var mediaValue = mediaHeader.MediaValue;
 
-            var formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), false, out formatterType);
+            var formatter = this.Get($"{mediaValue.Type}/{mediaValue.SubType}", mediaValue.ParameterString(), true, out formatterType);
 
             return Task.FromResult(formatter);
         }
