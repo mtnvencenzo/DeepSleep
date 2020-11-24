@@ -84,24 +84,37 @@
                 .Select(s => s.Split('='))
                 .Select(s =>
                 {
+                    var isRoot = !s[0].Contains('.');
                     var parts = s[0].Trim().Split('.', StringSplitOptions.RemoveEmptyEntries);
-                    var parent = parts.Length == 1
+
+                    var parent = isRoot
                         ? "__root__"
                         : "__root__." + parts[..(parts.Length - 1)].Concatenate(".").Trim().TrimEnd('.');
 
+                    var name = s[0].Trim()[(s[0].LastIndexOf('.') + 1)..].Trim();
+
+                    if (parts[^1] == name && name.EndsWith(']'))
+                    {
+                        name = string.Empty;
+                        parent = parent + "." + parts[^1];
+                    }
+
                     return (
-                        name: s[0].Trim()[(s[0].LastIndexOf('.') + 1)..],
+                        name: name,
                         value: s[1].Trim(),
                         parent: parent,
                         parentIsArray: parent.EndsWith(']'),
+                        parentIsPrimitiveArray: parent.EndsWith(']') && name == string.Empty,
+                        isPrimitiveArrayItem: parent.EndsWith(']') && name == string.Empty,
                         parentArrayIndex: (parent.EndsWith(']'))
                             ? Convert.ToInt32(parent[(parent.LastIndexOf('[') + 1)..^1])
                             : -1
                     );
                 })
-                .Where(s => !string.IsNullOrWhiteSpace(s.name))
+                .Where(s => s.parentIsPrimitiveArray || !string.IsNullOrWhiteSpace(s.name))
                 .Where(s => !string.IsNullOrWhiteSpace(s.value))
-                .OrderBy(s => s.name)
+                .OrderBy(s => s.parent)
+                .ThenByDescending(s => s.name)
                 .ToList();
 
             var allParents = elements.SelectMany(e =>
@@ -109,11 +122,14 @@
                 var items = new List<(string parent, bool isArray, int arrayCount)>();
                 if (string.IsNullOrWhiteSpace(e.parent))
                 {
-                    items.Add((parent: e.parent, isArray: false, arrayCount: 0));
+                    items.Add((
+                        parent: e.parent,
+                        isArray: false,
+                        arrayCount: 0)
+                    );
                 }
                 else
                 {
-
                     var parts = e.parent.Split('.', StringSplitOptions.RemoveEmptyEntries);
 
                     for (int i = parts.Length - 1; i >= 0; i--)
@@ -172,6 +188,8 @@
                 json = Encoding.UTF8.GetString(ms.ToArray());
             }
 
+            // System.Diagnostics.Debug.Write(json);
+
             var obj = JsonSerializer.Deserialize(json, objType, readerOptions);
             return obj;
         }
@@ -180,7 +198,7 @@
             Utf8JsonWriter writer,
             string parentPath,
             string propertyName,
-            IEnumerable<(string name, string value, string parent, bool parentIsArray, int parentArrayIndex)> elementPool,
+            IEnumerable<(string name, string value, string parent, bool parentIsArray, bool parentIsPrimitiveArray, bool isPrimitiveArrayItem, int parentArrayIndex)> elementPool,
             IEnumerable<(string parent, bool isArray, int arrayCount)> parentPool)
         {
             bool wroteStart = false;
@@ -230,20 +248,46 @@
             {
                 var arrayParent = parentPath + '.' + childArray.parent[(childArray.parent.LastIndexOf('.') + 1)..];
 
-                var hasElements = elementPool
-                    .Any(e => e.parent.StartsWith($"{parentPath}."));
+                var elements = elementPool
+                    .Where(e => e.parentIsArray)
+                    .Where(e => e.parentArrayIndex >= 0)
+                    .Where(e => e.parent.StartsWith($"{arrayParent}"));
 
-                if (hasElements)
+                var primitiveElements = elementPool
+                    .Where(e => e.parentIsArray)
+                    .Where(e => e.parentArrayIndex >= 0)
+                    .Where(e => e.isPrimitiveArrayItem)
+                    .Where(e => e.parentIsPrimitiveArray)
+                    .Where(e => e.parent[..(e.parent.LastIndexOf('['))] == arrayParent);
+
+                if (elements.Any() || primitiveElements.Any())
                 {
-                    writeStart();
+                    var arrayPropertyName = childArray.parent[(childArray.parent.LastIndexOf('.') + 1)..];
 
-                    this.WriteArray(
-                        writer,
-                        arrayParent,
-                        childArray.parent[(childArray.parent.LastIndexOf('.') + 1)..],
-                        childArray.arrayCount,
-                        elementPool,
-                        parentPool);
+                    if (primitiveElements.Any())
+                    {
+                        writeStart();
+
+                        this.WritePrimitiveArray(
+                            writer,
+                            arrayParent,
+                            arrayPropertyName,
+                            childArray.arrayCount,
+                            primitiveElements,
+                            parentPool);
+                    }
+                    else if(elements.Any())
+                    {
+                        writeStart();
+
+                        this.WriteArray(
+                            writer,
+                            arrayParent,
+                            arrayPropertyName,
+                            childArray.arrayCount,
+                            elementPool,
+                            parentPool);
+                    }
                 }
             }
 
@@ -258,7 +302,7 @@
             string parentPath,
             string propertyName,
             int arrayCount,
-            IEnumerable<(string name, string value, string parent, bool parentIsArray, int parentArrayIndex)> elementPool,
+            IEnumerable<(string name, string value, string parent, bool parentIsArray, bool parentIsPrimitiveArray, bool isPrimitiveArrayItem, int parentArrayIndex)> elementPool,
             IEnumerable<(string parent, bool isArray, int arrayCount)> parentPool)
         {
             writer.WriteStartArray(propertyName);
@@ -271,6 +315,24 @@
                     string.Empty,
                     elementPool,
                     parentPool);
+            }
+
+            writer.WriteEndArray();
+        }
+
+        private void WritePrimitiveArray(
+            Utf8JsonWriter writer,
+            string parentPath,
+            string propertyName,
+            int arrayCount,
+            IEnumerable<(string name, string value, string parent, bool parentIsArray, bool parentIsPrimitiveArray, bool isPrimitiveArrayItem, int parentArrayIndex)> elementPool,
+            IEnumerable<(string parent, bool isArray, int arrayCount)> parentPool)
+        {
+            writer.WriteStartArray(propertyName);
+
+            foreach (var element in elementPool)
+            {
+                writer.WriteStringValue(element.value);
             }
 
             writer.WriteEndArray();

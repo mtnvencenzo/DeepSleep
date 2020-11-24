@@ -22,6 +22,7 @@
             public bool? MyBool { get; set; }
             public DateTimeOffset? MyDateTimeOffset { get; set; }
             public decimal MyDecimal { get; set; }
+            public IList<string> PrimitiveItems { get; set; }
         }
 
         [Fact]
@@ -38,6 +39,8 @@
             var data =
                 "Name=roottest" +
                 "&Value=rootvalue" +
+                "&PrimitiveItems[0]=prim0" +
+                "&PrimitiveItems[1]=prim1" +
                 "&MyBool=True" +
                 "&Item.Name=itemObjName" +
                 "&Item.Value=itemObjValue" +
@@ -57,7 +60,11 @@
                 "&Items[0].Items[1].Items[0].Items[0].MyBool=true" +
                 "&Items[0].Items[1].Items[0].Items[0].MyDecimal=293839298.2212343" +
                 $"&Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset={offset}" +
-                "&Items[0].Items[1].Items[0].Items[0].MyBool=true";
+                "&Items[0].Items[1].Items[0].Items[0].MyBool=true" +
+                "&Items[0].Items[1].Items[0].Items[0].PrimitiveItems[0]=0" +
+                "&Items[0].Items[1].Items[0].Items[0].PrimitiveItems[1]=1" +
+                "&Items[0].Items[1].Items[0].Items[0].PrimitiveItems[2]=2" +
+                "&PrimitiveItems[2]=prim2";
 
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(data)))
             {
@@ -72,23 +79,35 @@
                 var o = obj as MyType;
                 o.Name.Should().Be("roottest");
                 o.Value.Should().Be("rootvalue");
+
+                o.PrimitiveItems.Should().NotBeNull();
+                o.PrimitiveItems.Should().HaveCount(3);
+                o.PrimitiveItems[0].Should().Be("prim0");
+                o.PrimitiveItems[1].Should().Be("prim1");
+                o.PrimitiveItems[2].Should().Be("prim2");
+
+
                 o.Item.Should().NotBeNull();
                 o.Item.Name.Should().Be("itemObjName");
                 o.Item.Value.Should().Be("itemObjValue");
+                o.Item.PrimitiveItems.Should().BeNull();
                 o.Item.Items.Should().BeNull();
                 o.Item.Item.Should().NotBeNull();
                 o.Item.Item.Name.Should().Be("itemItemObjName");
                 o.Item.Item.Value.Should().Be("itemItemObjValue");
+                o.Item.Item.PrimitiveItems.Should().BeNull();
                 o.Item.Item.Items.Should().BeNull();
                 o.Item.Item.Item.Should().NotBeNull();
                 o.Item.Item.Item.Name.Should().Be("itemItemItemObjName");
                 o.Item.Item.Item.Value.Should().Be("itemItemItemObjValue");
+                o.Item.Item.Item.PrimitiveItems.Should().BeNull();
                 o.Item.Item.Item.Items.Should().BeNull();
 
                 o.Items.Should().NotBeNull();
                 o.Items.Should().HaveCount(3);
                 o.Items[0].Name.Should().Be("item0Name");
                 o.Items[0].Value.Should().Be("item0Value");
+                o.Items[0].PrimitiveItems.Should().BeNull();
                 o.Items[0].Items.Should().NotBeNull();
                 o.Items[0].Items.Should().HaveCount(2);
                 o.Items[0].MyBool.Should().BeNull();
@@ -96,6 +115,7 @@
                 o.Items[0].MyDateTimeOffset.Should().BeNull();
                 o.Items[0].Items[0].Name.Should().Be("item1item0Name");
                 o.Items[0].Items[0].Value.Should().Be("item1item0Value");
+                o.Items[0].Items[0].PrimitiveItems.Should().BeNull();
                 o.Items[0].Items[0].Item.Should().BeNull();
                 o.Items[0].Items[0].Items.Should().BeNull();
                 o.Items[0].Items[0].MyBool.Should().BeNull();
@@ -103,6 +123,7 @@
                 o.Items[0].Items[0].MyDateTimeOffset.Should().BeNull();
                 o.Items[0].Items[1].Name.Should().Be("item1item1Name");
                 o.Items[0].Items[1].Value.Should().Be("item1item1Value");
+                o.Items[0].Items[1].PrimitiveItems.Should().BeNull();
                 o.Items[0].Items[1].MyBool.Should().BeNull();
                 o.Items[0].Items[1].MyDecimal.Should().Be(0);
                 o.Items[0].Items[1].MyDateTimeOffset.Should().BeNull();
@@ -110,6 +131,7 @@
                 o.Items[0].Items[1].Items.Should().NotBeNull();
                 o.Items[0].Items[1].Items.Should().HaveCount(1);
                 o.Items[0].Items[1].Items[0].Name.Should().BeNull();
+                o.Items[0].Items[1].Items[0].PrimitiveItems.Should().BeNull();
                 o.Items[0].Items[1].Items[0].Value.Should().BeNull();
                 o.Items[0].Items[1].Items[0].MyBool.Should().BeNull();
                 o.Items[0].Items[1].Items[0].MyDecimal.Should().Be(0);
@@ -120,6 +142,12 @@
                 o.Items[0].Items[1].Items[0].Items[0].MyDecimal.Should().Be(293839298.2212343m);
                 o.Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset.ToString().Should().Be(offset);
 
+                o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems.Should().NotBeNull();
+                o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems.Should().HaveCount(3);
+                o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems[0].Should().Be("0");
+                o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems[1].Should().Be("1");
+                o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems[2].Should().Be("2");
+
 
                 o.Items[1].Name.Should().Be("item1Name");
                 o.Items[1].Value.Should().Be("item1Value");
@@ -127,10 +155,12 @@
                 o.Items[1].MyDecimal.Should().Be(0);
                 o.Items[1].MyDateTimeOffset.Should().BeNull();
                 o.Items[1].Items.Should().BeNull();
+                o.Items[1].PrimitiveItems.Should().BeNull();
 
 
                 o.Items[2].Name.Should().BeNull();
                 o.Items[2].Value.Should().BeNull();
+                o.Items[2].PrimitiveItems.Should().BeNull();
                 o.Items[2].MyBool.Should().BeNull();
                 o.Items[2].MyDecimal.Should().Be(0);
                 o.Items[2].MyDateTimeOffset.Should().BeNull();
@@ -138,6 +168,7 @@
                 o.Items[2].Items.Should().HaveCount(1);
                 o.Items[2].Items[0].Name.Should().BeNull();
                 o.Items[2].Items[0].Value.Should().Be("item2item0Value");
+                o.Items[2].Items[0].PrimitiveItems.Should().BeNull();
                 o.Items[2].Items[0].Item.Should().BeNull();
                 o.Items[2].Items[0].Items.Should().BeNull();
                 o.Items[2].Items[0].MyBool.Should().BeNull();
