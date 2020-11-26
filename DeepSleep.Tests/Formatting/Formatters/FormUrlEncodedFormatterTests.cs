@@ -48,7 +48,7 @@
                 "&Item.Value=itemObjValue" +
                 "&Item.Item.Name=itemItemObjName" +
                 "&Item.Item.Value=itemItemObjValue" +
-                "&Items[0].Name=item0Name" +
+                "&Items[0].Name=" + HttpUtility.UrlEncode("4f8QBJIA+KbUqHBgGJz62FoG8iXauLCD8UFMr+YXh5w=") +
                 "&Items[0].Value=item0Value" +
                 "&Items[1].Name=item1Name" +
                 "&Items[1].Value=item1Value" +
@@ -107,7 +107,7 @@
 
                 o.Items.Should().NotBeNull();
                 o.Items.Should().HaveCount(3);
-                o.Items[0].Name.Should().Be("item0Name");
+                o.Items[0].Name.Should().Be("4f8QBJIA+KbUqHBgGJz62FoG8iXauLCD8UFMr+YXh5w=");
                 o.Items[0].Value.Should().Be("item0Value");
                 o.Items[0].PrimitiveItems.Should().BeNull();
                 o.Items[0].Items.Should().NotBeNull();
