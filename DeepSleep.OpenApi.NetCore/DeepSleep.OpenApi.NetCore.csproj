@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>./bin/Debug/netcoreapp2.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/net5.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>./bin/DRelease/netcoreapp2.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/net5.0/DeepSleep.OpenApi.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

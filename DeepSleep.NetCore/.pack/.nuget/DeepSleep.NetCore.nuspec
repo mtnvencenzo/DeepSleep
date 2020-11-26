@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.2-beta.30</version>
+    <version>0.0.2-beta.31</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -13,15 +13,15 @@
     <copyright>Copyright 2019</copyright>
     <tags>deepsleep</tags>
     <dependencies>
-      <group targetFramework="netcoreapp3.1">
+      <group targetFramework=".NETStandard2.1">
         <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <file src="..\..\..\LICENSE" target="LICENSE" />
-    <file src="..\..\bin\Release\netcoreapp3.1\DeepSleep.NetCore.deps.json" target="lib\netcoreapp3.1" />
-    <file src="..\..\bin\Release\netcoreapp3.1\DeepSleep.NetCore.dll" target="lib\netcoreapp3.1" />
-    <file src="..\..\bin\Release\netcoreapp3.1\DeepSleep.NetCore.xml" target="lib\netcoreapp3.1" />
+    <file src="..\..\bin\Release\net5.0\DeepSleep.NetCore.deps.json" target="lib\net5.0" />
+    <file src="..\..\bin\Release\net5.0\DeepSleep.NetCore.dll" target="lib\net5.0" />
+    <file src="..\..\bin\Release\net5.0\DeepSleep.NetCore.xml" target="lib\net5.0" />
   </files>
 </package>

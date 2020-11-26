@@ -5,8 +5,6 @@
     using System.IO;
     using System.Xml.Serialization;
     using System.Xml;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
 
     /// <summary>
@@ -41,16 +39,12 @@
                 ValidationType = ValidationType.None
             };
 
-
             using (XmlReader reader = XmlReader.Create(stream, settings))
             {
                 obj = serializer.Deserialize(reader);
             }
 
-
-            TaskCompletionSource<object> source = new TaskCompletionSource<object>();
-            source.SetResult(obj);
-            return source.Task;
+            return Task.FromResult(obj);
         }
 
         /// <summary>

@@ -6,9 +6,11 @@
     using Moq;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
     using Xunit;
 
     public class FormUrlEncodedFormatterTests
@@ -34,7 +36,7 @@
                 new FormUrlEncodedObjectSerializer(),
                 loggerMock.Object);
 
-            string offset = $"{DateTimeOffset.Now}";
+            string offset = DateTimeOffset.Now.ToString("o", CultureInfo.InvariantCulture);
 
             var data =
                 "Name=roottest" +
@@ -59,7 +61,7 @@
                 "&Item.Item.Item.Value=itemItemItemObjValue" +
                 "&Items[0].Items[1].Items[0].Items[0].MyBool=true" +
                 "&Items[0].Items[1].Items[0].Items[0].MyDecimal=293839298.2212343" +
-                $"&Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset={offset}" +
+                $"&Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset={HttpUtility.UrlEncode(offset)}" +
                 "&Items[0].Items[1].Items[0].Items[0].MyBool=true" +
                 "&Items[0].Items[1].Items[0].Items[0].PrimitiveItems[0]=0" +
                 "&Items[0].Items[1].Items[0].Items[0].PrimitiveItems[1]=1" +
@@ -140,7 +142,7 @@
                 o.Items[0].Items[1].Items[0].Items[0].Value.Should().BeNull();
                 o.Items[0].Items[1].Items[0].Items[0].MyBool.Should().BeTrue();
                 o.Items[0].Items[1].Items[0].Items[0].MyDecimal.Should().Be(293839298.2212343m);
-                o.Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset.ToString().Should().Be(offset);
+                o.Items[0].Items[1].Items[0].Items[0].MyDateTimeOffset.Value.ToString("o", CultureInfo.InvariantCulture).Should().Be(offset);
 
                 o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems.Should().NotBeNull();
                 o.Items[0].Items[1].Items[0].Items[0].PrimitiveItems.Should().HaveCount(3);
@@ -174,7 +176,6 @@
                 o.Items[2].Items[0].MyBool.Should().BeNull();
                 o.Items[2].Items[0].MyDecimal.Should().Be(0);
                 o.Items[2].Items[0].MyDateTimeOffset.Should().BeNull();
-
             }
         }
     }

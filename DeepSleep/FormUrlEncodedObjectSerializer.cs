@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -9,6 +10,7 @@
     using System.Text.Json.Serialization;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Web;
 
     /// <summary>
     /// 
@@ -36,16 +38,12 @@
                 IncludeFields = false,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
                 PropertyNameCaseInsensitive = true,
-                ReadCommentHandling = JsonCommentHandling.Skip,
+                ReadCommentHandling = JsonCommentHandling.Skip
             };
 
             readerOptions.Converters.Add(new NullableBooleanConverter());
             readerOptions.Converters.Add(new BooleanConverter());
             readerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
-            readerOptions.Converters.Add(new NullableDateTimeConverter());
-            readerOptions.Converters.Add(new DateTimeConverter());
-            readerOptions.Converters.Add(new NullableDateTimeOffsetConverter());
-            readerOptions.Converters.Add(new DateTimeOffsetConverter());
         }
 
         /// <summary>
@@ -84,14 +82,22 @@
                 .Select(s => s.Split('='))
                 .Select(s =>
                 {
-                    var isRoot = !s[0].Contains('.');
-                    var parts = s[0].Trim().Split('.', StringSplitOptions.RemoveEmptyEntries);
+                    string sName = s.Length > 0
+                        ? HttpUtility.UrlDecode(s[0])
+                        : string.Empty;
+
+                    string sValue = s.Length > 1
+                        ? HttpUtility.UrlDecode(s[1])
+                        : string.Empty;
+
+                    var isRoot = !sName.Contains('.');
+                    var parts = sName.Trim().Split('.', StringSplitOptions.RemoveEmptyEntries);
 
                     var parent = isRoot
                         ? "__root__"
                         : "__root__." + parts[..(parts.Length - 1)].Concatenate(".").Trim().TrimEnd('.');
 
-                    var name = s[0].Trim()[(s[0].LastIndexOf('.') + 1)..].Trim();
+                    var name = sName.Trim()[(sName.LastIndexOf('.') + 1)..].Trim();
 
                     if (parts[^1] == name && name.EndsWith(']'))
                     {
@@ -101,7 +107,7 @@
 
                     return (
                         name: name,
-                        value: s[1].Trim(),
+                        value: sValue,
                         parent: parent,
                         parentIsArray: parent.EndsWith(']'),
                         parentIsPrimitiveArray: parent.EndsWith(']') && name == string.Empty,
@@ -391,106 +397,6 @@
                 throw new JsonException($"Value '{value}' cannot be converted to a boolean value");
             }
             public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class NullableDateTimeConverter : JsonConverter<DateTime?>
-        {
-            public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                string value = reader.GetString();
-
-                if (value == null)
-                {
-                    return null;
-                }
-
-                if (DateTime.TryParse(value, out var result))
-                {
-                    return result;
-                }
-
-
-                throw new JsonException($"Value '{value}' cannot be converted to a datetime value");
-            }
-            public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class DateTimeConverter : JsonConverter<DateTime>
-        {
-            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                string value = reader.GetString();
-
-                if (value == null)
-                {
-                    return DateTime.MinValue;
-                }
-
-                if (DateTime.TryParse(value, out var result))
-                {
-                    return result;
-                }
-
-
-                throw new JsonException($"Value '{value}' cannot be converted to a datetime value");
-            }
-            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class NullableDateTimeOffsetConverter : JsonConverter<DateTimeOffset?>
-        {
-            public override DateTimeOffset? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                string value = reader.GetString();
-
-                if (value == null)
-                {
-                    return null;
-                }
-
-                if (DateTimeOffset.TryParse(value, out var result))
-                {
-                    return result;
-                }
-
-
-                throw new JsonException($"Value '{value}' cannot be converted to a datetime offset value");
-            }
-            public override void Write(Utf8JsonWriter writer, DateTimeOffset? value, JsonSerializerOptions options)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
-        {
-            public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-            {
-                string value = reader.GetString();
-
-                if (value == null)
-                {
-                    return DateTimeOffset.MinValue;
-                }
-
-                if (DateTime.TryParse(value, out var result))
-                {
-                    return result;
-                }
-
-
-                throw new JsonException($"Value '{value}' cannot be converted to a datetime offset value");
-            }
-            public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
             {
                 throw new NotImplementedException();
             }
