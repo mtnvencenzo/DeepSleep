@@ -2,10 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.Validation.DataAnnotations</id>
-    <version>0.0.8</version>
+    <version>0.0.9</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <iconUrl>https://cezzi.azureedge.net/nuget/deepsleep_validation_dataannotations.png</iconUrl>
     <icon>images\deepsleep_validation_dataannotations.png</icon>
     <description>DeepSleep Data Annotations</description>
     <releaseNotes>Release of the DeepSleep.Validation.DataAnnotations package</releaseNotes>

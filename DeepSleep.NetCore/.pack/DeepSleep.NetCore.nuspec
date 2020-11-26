@@ -2,10 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.2-beta.32</version>
+    <version>0.0.2-beta.33</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <iconUrl>https://cezzi.azureedge.net/nuget/deepsleep_netcore.png</iconUrl>
     <icon>images\deepsleep_netcore.png</icon>
     <description>DeepSleep NetCore Shim</description>
     <releaseNotes>Release of the DeepSleep.NetCore package</releaseNotes>
