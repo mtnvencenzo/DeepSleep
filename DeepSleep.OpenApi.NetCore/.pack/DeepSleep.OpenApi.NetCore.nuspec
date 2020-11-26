@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.OpenApi.NetCore</id>
-    <version>0.0.2-beta.12</version>
+    <version>0.0.2-beta.13</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -15,8 +15,8 @@
     <tags>deepsleep api openapi rest</tags>
     <dependencies>
       <group targetFramework="net5.0">
-        <dependency id="DeepSleep" version="0.0.2" exclude="Build,Analyzers" />
-        <dependency id="DeepSleep.OpenApi" version="0.0.2" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.2.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
