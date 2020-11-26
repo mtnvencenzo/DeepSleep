@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>DeepSleep.NetCore</id>
+    <version>0.0.2-beta.32</version>
+    <authors>Ronaldo Vecchi</authors>
+    <owners>Ronaldo Vecchi</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <icon>images\deepsleep_netcore.png</icon>
+    <description>DeepSleep NetCore Shim</description>
+    <releaseNotes>Release of the DeepSleep.NetCore package</releaseNotes>
+    <license type="expression">MIT</license>
+    <copyright>Copyright 2020</copyright>
+    <tags>deepsleep api rest</tags>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="DeepSleep" version="0.0.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.2.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.deps.json" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.dll" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.xml" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.pdb" target="lib\net5.0" />
+    <file src="..\.pack\deepsleep_netcore.png" target="images\" />
+  </files>
+</package>

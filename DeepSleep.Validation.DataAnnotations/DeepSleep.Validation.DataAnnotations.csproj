@@ -12,15 +12,17 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>./bin/Debug/netstandard2.0/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netstandard2.1/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>./bin/Release/netstandard2.0/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netstandard2.1/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".pack\.nuget\deepsleep_validation_dataannotations.png" />
+    <None Include=".pack\deepsleep_validation_dataannotations.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -32,9 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.nuspec" />
-    <None Include=".pack\.nuget\DeepSleep.Validation.DataAnnotations.pack.ps1" />
-    <None Include=".pack\.nuget\deepsleep_validation_dataannotations.pdn" />
+    <None Include=".pack\DeepSleep.Validation.DataAnnotations.nuspec" />
+    <None Include=".pack\deepsleep_validation_dataannotations.pdn" />
   </ItemGroup>
 
 </Project>

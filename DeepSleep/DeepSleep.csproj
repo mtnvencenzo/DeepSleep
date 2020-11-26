@@ -10,15 +10,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Ronaldo Vecchi</Authors>
-    <Company />
-    <Version>0.0.1</Version>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <FileVersion>0.0.1.0</FileVersion>
-    <Product>Deep Sleep RESTful API Framework</Product>
-    <Description>Deep Sleep RESTful API Framework</Description>
-    <PackageReleaseNotes>Inital stable releast of the Deep Sleep RESTful API Framework</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -33,9 +24,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include=".pack\.nuget\DeepSleep.nuspec" />
-    <None Include=".pack\.nuget\DeepSleep.pack.ps1" />
-    <None Include=".pack\.nuget\deepsleep.png" />
+    <None Include=".pack\DeepSleep.nuspec" />
+    <None Include=".pack\deepsleep.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

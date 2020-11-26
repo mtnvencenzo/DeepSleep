@@ -1,25 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>./bin/Debug/netstandard2.0/DeepSleep.OpenApi.xml</DocumentationFile>
+    <DocumentationFile>./bin/Debug/netstandard2.1/DeepSleep.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>./bin/Release/netstandard2.0/DeepSleep.OpenApi.xml</DocumentationFile>
+    <DocumentationFile>./bin/Release/netstandard2.1/DeepSleep.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".pack\.nuget\deepsleep_openapi.png" />
+    <None Include=".pack\deepsleep_openapi.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".pack\.nuget\DeepSleep.OpenApi.nuspec" />
-    <None Include=".pack\.nuget\DeepSleep.OpenApi.pack.ps1" />
-    <None Include=".pack\.nuget\deepsleep_netcore.pdn" />
+    <None Include=".pack\DeepSleep.OpenApi.nuspec" />
+    <None Include=".pack\deepsleep_netcore.pdn" />
   </ItemGroup>
 
   <ItemGroup>

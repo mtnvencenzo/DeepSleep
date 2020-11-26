@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>DeepSleep.OpenApi.NetCore</id>
+    <version>0.0.2-beta.11</version>
+    <authors>Ronaldo Vecchi</authors>
+    <owners>Ronaldo Vecchi</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <icon>images\deepsleep_openapi.png</icon>
+    <description>DeepSleep.OpenApi.NetCore</description>
+    <releaseNotes>Release of the DeepSleep.OpenApi.NetCore package</releaseNotes>
+    <license type="expression">MIT</license>
+    <copyright>Copyright 2020</copyright>
+    <tags>deepsleep api openapi rest</tags>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="DeepSleep" version="0.0.2" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.2.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\bin\Release\net5.0\DeepSleep.OpenApi.NetCore.deps.json" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.OpenApi.NetCore.dll" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.OpenApi.NetCore.xml" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\DeepSleep.OpenApi.NetCore.pdb" target="lib\net5.0" />
+    <file src="..\.pack\deepsleep_openapi.png" target="images\" />
+  </files>
+</package>

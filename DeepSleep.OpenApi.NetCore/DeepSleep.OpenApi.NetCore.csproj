@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -13,7 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".pack\.nuget\deepsleep_openapi.png" />
+    <None Include=".pack\deepsleep_openapi.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".pack\.nuget\DeepSleep.OpenApi.NetCore.nuspec" />
-    <None Include=".pack\.nuget\DeepSleep.OpenApi.NetCore.pack.ps1" />
-    <None Include=".pack\.nuget\deepsleep_netcore.pdn" />
+    <None Include=".pack\DeepSleep.OpenApi.NetCore.nuspec" />
+    <None Include=".pack\deepsleep_netcore.pdn" />
   </ItemGroup>
 
 </Project>
