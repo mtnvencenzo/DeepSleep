@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.v3_0
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 

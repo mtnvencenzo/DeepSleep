@@ -10,14 +10,15 @@
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <AssemblyName>deepsleep.netcore</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>./bin/Debug/net5.0/DeepSleep.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>./bin/Release/net5.0/DeepSleep.NetCore.xml</DocumentationFile>
+    <DocumentationFile>./bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

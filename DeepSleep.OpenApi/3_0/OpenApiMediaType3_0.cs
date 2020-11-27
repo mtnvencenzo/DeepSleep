@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.v3_0
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -10,12 +10,12 @@
     {
         /// <summary>Gets or sets the schema.</summary>
         /// <value>The schema.</value>
-        [JsonProperty("schema")]
+        [JsonPropertyName("schema")]
         public OpenApiSchema3_0 schema { get; set; }
 
         /// <summary>Gets or sets the example.</summary>
         /// <value>The example.</value>
-        [JsonProperty("example")]
+        [JsonPropertyName("example")]
         public object example { get; set; }
 
         /// <summary>Gets or sets the examples.</summary>

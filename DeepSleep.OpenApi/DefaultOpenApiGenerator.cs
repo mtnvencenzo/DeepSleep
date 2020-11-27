@@ -2,7 +2,6 @@
 {
     using DeepSleep.OpenApi.Decorators;
     using DeepSleep.OpenApi.v3_0;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;

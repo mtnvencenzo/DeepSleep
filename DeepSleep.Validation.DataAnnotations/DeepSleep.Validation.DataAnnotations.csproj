@@ -9,14 +9,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>deepsleep.validation.dataannotations</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>./bin/Debug/netstandard2.1/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>./bin/Release/netstandard2.1/DeepSleep.Validation.DataAnnotations.xml</DocumentationFile>
+    <DocumentationFile>./bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

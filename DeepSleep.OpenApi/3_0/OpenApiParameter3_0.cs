@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.v3_0
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -10,37 +10,37 @@
     {
         /// <summary>Gets or sets the reference.</summary>
         /// <value>The reference.</value>
-        [JsonProperty("$ref")]
+        [JsonPropertyName("$ref")]
         public string @ref { get; set; }
 
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
-        [JsonProperty("name")]
+        [JsonPropertyName("name")]
         public string name { get; set; }
 
         /// <summary>Gets or sets the in.</summary>
         /// <value>The in.</value>
-        [JsonProperty("in")]
+        [JsonPropertyName("in")]
         public string @in { get; set; }
 
         /// <summary>Gets or sets the description.</summary>
         /// <value>The description.</value>
-        [JsonProperty("description")]
+        [JsonPropertyName("description")]
         public string description { get; set; }
 
         /// <summary>Gets or sets the required.</summary>
         /// <value>The required.</value>
-        [JsonProperty("required")]
+        [JsonPropertyName("required")]
         public bool? required { get; set; }
 
         /// <summary>Gets or sets the deprecated.</summary>
         /// <value>The deprecated.</value>
-        [JsonProperty("deprecated")]
+        [JsonPropertyName("deprecated")]
         public bool? deprecated { get; set; }
 
         /// <summary>Gets or sets the allow empty value.</summary>
         /// <value>The allow empty value.</value>
-        [JsonProperty("allowEmptyValue")]
+        [JsonPropertyName("allowEmptyValue")]
         public bool? allowEmptyValue { get; set; }
 
         /// <summary>Gets or sets the style.</summary>
@@ -49,12 +49,12 @@
 
         /// <summary>Gets or sets the explode.</summary>
         /// <value>The explode.</value>
-        [JsonProperty("explode")]
+        [JsonPropertyName("explode")]
         public bool? explode { get; set; }
 
         /// <summary>Gets or sets the allow reserved.</summary>
         /// <value>The allow reserved.</value>
-        [JsonProperty("allowReserved")]
+        [JsonPropertyName("allowReserved")]
         public bool? allowReserved { get; set; }
 
         /// <summary>Gets or sets the schema.</summary>
@@ -63,7 +63,7 @@
 
         /// <summary>Gets or sets the example.</summary>
         /// <value>The example.</value>
-        [JsonProperty("example")]
+        [JsonPropertyName("example")]
         public object example { get; set; }
 
         /// <summary>Gets or sets the examples.</summary>

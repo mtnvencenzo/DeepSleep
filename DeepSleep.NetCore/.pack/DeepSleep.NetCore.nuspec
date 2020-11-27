@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.2-beta.35</version>
+    <version>0.0.2-beta.36</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -21,9 +21,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.dll" target="lib\net5.0" />
-    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.xml" target="lib\net5.0" />
-    <file src="..\bin\Release\net5.0\DeepSleep.NetCore.pdb" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.netcore.dll" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.netcore.xml" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.netcore.pdb" target="lib\net5.0" />
     <file src="..\.pack\deepsleep_netcore.png" target="images\" />
   </files>
 </package>

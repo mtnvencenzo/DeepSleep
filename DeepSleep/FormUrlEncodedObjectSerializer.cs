@@ -44,6 +44,12 @@
             readerOptions.Converters.Add(new NullableBooleanConverter());
             readerOptions.Converters.Add(new BooleanConverter());
             readerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+            readerOptions.Converters.Add(new NullableTimeSpanConverter());
+            readerOptions.Converters.Add(new TimeSpanConverter());
+            readerOptions.Converters.Add(new NullableDateTimeConverter());
+            readerOptions.Converters.Add(new DateTimeConverter());
+            readerOptions.Converters.Add(new NullableDateTimeOffsetConverter());
+            readerOptions.Converters.Add(new DateTimeOffsetConverter());
         }
 
         /// <summary>
@@ -196,6 +202,12 @@
 
             // System.Diagnostics.Debug.Write(json);
 
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                json = "{}";
+            }
+
+
             var obj = JsonSerializer.Deserialize(json, objType, readerOptions);
             return obj;
         }
@@ -276,9 +288,7 @@
 
                         this.WritePrimitiveArray(
                             writer,
-                            arrayParent,
                             arrayPropertyName,
-                            childArray.arrayCount,
                             primitiveElements,
                             parentPool);
                     }
@@ -328,9 +338,7 @@
 
         private void WritePrimitiveArray(
             Utf8JsonWriter writer,
-            string parentPath,
             string propertyName,
-            int arrayCount,
             IEnumerable<(string name, string value, string parent, bool parentIsArray, bool parentIsPrimitiveArray, bool isPrimitiveArrayItem, int parentArrayIndex)> elementPool,
             IEnumerable<(string parent, bool isArray, int arrayCount)> parentPool)
         {
@@ -393,10 +401,133 @@
                 {
                     return false;
                 }
+                if (chkValue.Equals("0"))
+                {
+                    return false;
+                }
+                if (chkValue.Equals("1"))
+                {
+                    return true;
+                }
 
                 throw new JsonException($"Value '{value}' cannot be converted to a boolean value");
             }
             public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class NullableTimeSpanConverter : JsonConverter<TimeSpan?>
+        {
+            public override TimeSpan? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+   
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+
+                return TimeSpan.Parse(value);
+            }
+            public override void Write(Utf8JsonWriter writer, TimeSpan? value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class TimeSpanConverter : JsonConverter<TimeSpan>
+        {
+            public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return default;
+                }
+
+                return TimeSpan.Parse(value);
+            }
+            public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class NullableDateTimeConverter : JsonConverter<DateTime?>
+        {
+            public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+
+                return DateTimeOffset.Parse(value).UtcDateTime;
+            }
+            public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class DateTimeConverter : JsonConverter<DateTime>
+        {
+            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return DateTime.MinValue;
+                }
+
+                return DateTimeOffset.Parse(value).UtcDateTime;
+            }
+            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class NullableDateTimeOffsetConverter : JsonConverter<DateTimeOffset?>
+        {
+            public override DateTimeOffset? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+
+                return DateTimeOffset.Parse(value);
+            }
+            public override void Write(Utf8JsonWriter writer, DateTimeOffset? value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
+        {
+            public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return DateTimeOffset.MinValue;
+                }
+
+                return DateTimeOffset.Parse(value);
+
+            }
+            public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
             {
                 throw new NotImplementedException();
             }

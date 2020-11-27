@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.v3_0
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -10,12 +10,12 @@
     {
         /// <summary>Gets or sets the enum.</summary>
         /// <value>The enum.</value>
-        [JsonProperty("enum")]
+        [JsonPropertyName("enum")]
         public List<string> @enum { get; set; } = new List<string>();
 
         /// <summary>Gets or sets the default.</summary>
         /// <value>The default.</value>
-        [JsonProperty("default")]
+        [JsonPropertyName("default")]
         public string @default { get; set; }
 
         /// <summary>Gets or sets the description.</summary>

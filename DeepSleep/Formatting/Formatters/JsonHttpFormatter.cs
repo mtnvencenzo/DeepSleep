@@ -3,12 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using System.IO;
-    using Newtonsoft.Json;
     using System.Text;
     using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
-    using Newtonsoft.Json.Serialization;
-    using Newtonsoft.Json.Converters;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -43,30 +42,13 @@
         /// <returns></returns>
         public virtual async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
-            string data = null;
-
-            Encoding readEncoding = Encoding.Default;
-
-            this.logger?.LogInformation($"Reading data from request stream");
+            object obj = null;
 
             using (var reader = new StreamReader(stream, true))
             {
-                data = await reader.ReadToEndAsync().ConfigureAwait(false);
-                readEncoding = reader.CurrentEncoding;
+                obj = await JsonSerializer.DeserializeAsync(stream, objType, GetReadSettings()).ConfigureAwait(false);
             }
 
-
-            if (readEncoding.EncodingName != Encoding.Default.EncodingName)
-            {
-                data = Encoding.Default
-                    .GetString(Encoding.Conver‌​t(readEncoding, Encoding.Default, readEncoding.GetBytes(data)));
-            }
-
-            this.logger?.LogDebug($"Data read from stream:");
-            this.logger?.LogDebug(data);
-
-            this.logger?.LogDebug($"Deserializing data into type '{objType.FullName}'");
-            object obj = JsonConvert.DeserializeObject(data, objType, GetReadSettings());
             return obj;
         }
 
@@ -97,19 +79,9 @@
             if (obj != null)
             {
                 using (var ms = new MemoryStream())
-                using (var writer = new StreamWriter(ms))
                 {
-                    var data = JsonConvert.SerializeObject(obj, GetWriteSettings(options));
-
-                    if (options.Encoding != Encoding.Unicode)
-                    {
-                        data = options.Encoding
-                            .GetString(Encoding.Conver‌​t(Encoding.Unicode, options.Encoding, Encoding.Unicode.GetBytes(data)));
-                    }
-
-
-                    writer.Write(data);
-                    writer.Flush();
+                    await JsonSerializer.SerializeAsync(stream, obj, GetWriteSettings(options)).ConfigureAwait(false);
+                    await ms.FlushAsync().ConfigureAwait(false);
                     ms.Seek(0, SeekOrigin.Begin);
 
                     length = ms.Length;
@@ -143,44 +115,35 @@
         /// <summary>Gets the write settings.</summary>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        private JsonSerializerSettings GetWriteSettings(IFormatStreamOptions options)
+        private JsonSerializerOptions GetWriteSettings(IFormatStreamOptions options)
         {
-            var settings = new JsonSerializerSettings
+            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
-                Formatting = options.PrettyPrint ? Formatting.Indented : Formatting.None,
-                Culture = options.Culture,
-                DateFormatHandling = DateFormatHandling.IsoDateFormat,
-                DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
-                DefaultValueHandling = DefaultValueHandling.Include,
-                NullValueHandling = options.NullValuesExcluded ? NullValueHandling.Ignore : NullValueHandling.Include,
-                StringEscapeHandling = StringEscapeHandling.Default,
-                ContractResolver = new DefaultContractResolver()
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition =  JsonIgnoreCondition.WhenWritingNull,
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                IgnoreReadOnlyFields = false,
+                IgnoreReadOnlyProperties = false,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.Strict,
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                WriteIndented = options.PrettyPrint
             };
 
-            if (settings.Converters == null)
-            {
-                settings.Converters = new List<JsonConverter>();
-            }
 
-            settings.Converters.Add(new StringEnumConverter());
+            settings.Converters.Add(new JsonStringEnumConverter());
+
             return settings;
         }
 
         /// <summary>Gets the write settings.</summary>
         /// <returns></returns>
-        private JsonSerializerSettings GetReadSettings()
+        private JsonSerializerOptions GetReadSettings()
         {
-            var settings = new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver()
-            };
-
-            if (settings.Converters == null)
-            {
-                settings.Converters = new List<JsonConverter>();
-            }
-
-            settings.Converters.Add(new StringEnumConverter());
+            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+            settings.Converters.Add(new JsonStringEnumConverter());
             return settings;
         }
 

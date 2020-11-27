@@ -88,7 +88,16 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 400.000002|Could not bind the query value &apos;{0}&apos; to property &apos;{1}&apos;..
+        ///   Looks up a localized string similar to 400.000004|&apos;{0}&apos; Is in an incorrect format and could not be bound..
+        /// </summary>
+        internal static string UriBindingError {
+            get {
+                return ResourceManager.GetString("UriBindingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 400.000002|Duplicate query variable path &apos;{0}&apos;..
         /// </summary>
         internal static string UriQueryBindingError {
             get {
@@ -97,7 +106,7 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 400.000001|Could not bind the route value &apos;{0}&apos; to property &apos;{1}&apos;..
+        ///   Looks up a localized string similar to 400.000001|Duplicate route variable path &apos;{0}&apos;..
         /// </summary>
         internal static string UriRouteBindingError {
             get {

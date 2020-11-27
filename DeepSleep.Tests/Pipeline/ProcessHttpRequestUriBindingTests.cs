@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Web;
     using Xunit;
 
     /// <summary>
@@ -22,7 +23,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -41,7 +42,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -63,7 +64,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -88,7 +89,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -116,7 +117,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -144,7 +145,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -155,7 +156,7 @@
         }
 
         [Fact]
-        public async void ThrowExceptionForNonDefaultConstructorType()
+        public async void DoesNotThrowExceptionForNonDefaultConstructorType()
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
@@ -172,17 +173,9 @@
                 }
             };
 
-            try
-            {
-                var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                Assert.Contains($"Unable to instantiate UriModel '{typeof(NonDefaultConstructorModel).FullName}'", ex.Message);
-                return;
-            }
-
-            Assert.False(true);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            processed.Should().Be(true);
+            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
         }
 
         [Fact]
@@ -218,21 +211,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", "-8.45" },
-                            { "FloatProp", "5.9" },
-                            { "DecimalProp", "3.9098" },
+                            { "DoubleProp", UrlEncode("-8.45") },
+                            { "FloatProp", UrlEncode("5.9") },
+                            { "DecimalProp", UrlEncode("3.9098") },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                            { "TimeSpanProp", "10:00:00" },
-                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                            { "TimeSpanProp", UrlEncode("10:00:00") },
+                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -256,7 +249,7 @@
             model.DoubleProp.Should().Be(-8.45);
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
-            model.ObjectProp.Should().Be("1");
+            model.ObjectProp.ToString().Should().Be("1");
             model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
             model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
@@ -289,13 +282,13 @@
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
-                            { "DateTimeProp", date }
+                            { "DateTimeProp", UrlEncode(date) }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -344,7 +337,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -397,21 +390,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", "-8.45" },
-                            { "FloatProp", "5.9" },
-                            { "DecimalProp", "3.9098" },
+                            { "DoubleProp", UrlEncode("-8.45") },
+                            { "FloatProp", UrlEncode("5.9") },
+                            { "DecimalProp", UrlEncode("3.9098") },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                            { "TimeSpanProp", "10:00:00" },
-                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                            { "TimeSpanProp", UrlEncode("10:00:00") },
+                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -463,26 +456,26 @@
                         { "ByteProp", "1" },
                         { "SByteProp", "1" },
                         { "BoolProp", "true" },
-                        { "IntProp", "-23" },
+                        { "IntProp", UrlEncode("-23") },
                         { "UIntProp", "23" },
                         { "ShortProp", "-2" },
                         { "UShortProp", "2" },
                         { "LongProp", "-4" },
                         { "ULongProp", "34" },
-                        { "DoubleProp", "-8.45" },
-                        { "FloatProp", "5.9" },
-                        { "DecimalProp", "3.9098" },
+                        { "DoubleProp", UrlEncode("-8.45") },
+                        { "FloatProp", UrlEncode("5.9") },
+                        { "DecimalProp", UrlEncode("3.9098") },
                         { "ObjectProp", "1" },
-                        { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                        { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                        { "TimeSpanProp", "10:00:00" },
-                        { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                        { "TimeSpanProp", UrlEncode("10:00:00") },
+                        { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                         { "EnumProp", "Item1" }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -506,7 +499,7 @@
             model.DoubleProp.Should().Be(-8.45);
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
-            model.ObjectProp.Should().Be("1");
+            model.ObjectProp.ToString().Should().Be("1");
             model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
             model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
@@ -546,21 +539,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", "-8.45" },
-                            { "FloatProp", "5.9" },
-                            { "DecimalProp", "3.9098" },
+                            { "DoubleProp", UrlEncode("-8.45") },
+                            { "FloatProp", UrlEncode("5.9") },
+                            { "DecimalProp", UrlEncode("3.9098") },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                            { "TimeSpanProp", "10:00:00" },
-                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                            { "TimeSpanProp", UrlEncode("10:00:00") },
+                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -618,14 +611,14 @@
                         { "UShortProp", "3" },
                         { "LongProp", "-3" },
                         { "ULongProp", "33" },
-                        { "DoubleProp", "-8.43" },
-                        { "FloatProp", "5.3" },
-                        { "DecimalProp", "3.9093" },
+                        { "DoubleProp", UrlEncode("-8.43") },
+                        { "FloatProp", UrlEncode("5.3") },
+                        { "DecimalProp", UrlEncode("3.9093") },
                         { "ObjectProp", "3" },
-                        { "DateTimeProp", "4/2/2007 7:23:53 PM" },
-                        { "DateTimeOfsetProp", "4/2/2007 7:23:53 PM -01:00" },
-                        { "TimeSpanProp", "30:00:00" },
-                        { "GuidProp", "3F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:53 PM") },
+                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:53 PM -01:00") },
+                        { "TimeSpanProp", UrlEncode("30:00:00") },
+                        { "GuidProp", UrlEncode("3F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                         { "EnumProp", "Item2" }
                     }
                 },
@@ -646,21 +639,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", "-8.45" },
-                            { "FloatProp", "5.9" },
-                            { "DecimalProp", "3.9098" },
+                            { "DoubleProp", UrlEncode("-8.45") },
+                            { "FloatProp", UrlEncode("5.9") },
+                            { "DecimalProp", UrlEncode("3.9098") },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                            { "TimeSpanProp", "10:00:00" },
-                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                            { "TimeSpanProp", UrlEncode("10:00:00") },
+                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -684,7 +677,7 @@
             model.DoubleProp.Should().Be(-8.45);
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
-            model.ObjectProp.Should().Be("1");
+            model.ObjectProp.ToString().Should().Be("1");
             model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
             model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
@@ -711,14 +704,14 @@
                     {
                         { "LongProp", "-4" },
                         { "ULongProp", "34" },
-                        { "DoubleProp", "-8.45" },
-                        { "FloatProp", "5.9" },
-                        { "DecimalProp", "3.9098" },
+                        { "DoubleProp", UrlEncode("-8.45") },
+                        { "FloatProp", UrlEncode("5.9") },
+                        { "DecimalProp", UrlEncode("3.9098") },
                         { "ObjectProp", "1" },
-                        { "DateTimeProp", "4/2/2007 7:23:57 PM" },
-                        { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
-                        { "TimeSpanProp", "10:00:00" },
-                        { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
+                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
+                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
+                        { "TimeSpanProp", UrlEncode("10:00:00") },
+                        { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
                         { "EnumProp", "Item1" }
                     }
                 },
@@ -742,7 +735,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -766,7 +759,7 @@
             model.DoubleProp.Should().Be(-8.45);
             model.FloatProp.Should().Be(5.9f);
             model.DecimalProp.Should().Be(3.9098m);
-            model.ObjectProp.Should().Be("1");
+            model.ObjectProp.ToString().Should().Be("1");
             model.DateTimeProp.ToLocalTime().ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57");
             model.DateTimeOfsetProp.ToString(CultureInfo.InvariantCulture).Should().Be("04/02/2007 19:23:57 -01:00");
             model.TimeSpanProp.ToString().Should().Be("10:00:00");
@@ -806,7 +799,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -817,11 +810,11 @@
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(2);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("400.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().StartWith("Could not bind the route value 'abc'");
-            context.ProcessingInfo.ExtendedMessages[1].Code.Should().Be("400.000001");
-            context.ProcessingInfo.ExtendedMessages[1].Message.Should().StartWith("Could not bind the route value 'def'");
+            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
+            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("400.000004");
+            context.ProcessingInfo.ExtendedMessages[0].Message.Should().Be("'LongProp' Is in an incorrect format and could not be bound.");
         }
+
+        private string UrlEncode(string val) => HttpUtility.UrlEncode(val);
     }
 }

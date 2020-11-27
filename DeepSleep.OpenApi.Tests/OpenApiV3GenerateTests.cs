@@ -2,9 +2,8 @@ namespace DeepSleep.OpenApi.Tests
 {
     using DeepSleep.Configuration;
     using DeepSleep.OpenApi.Tests.TestSetup;
-    using Newtonsoft.Json;
-    using System;
-    using System.Threading.Tasks;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using Xunit;
 
     public class OpenApiV3GenerateTests
@@ -57,13 +56,11 @@ namespace DeepSleep.OpenApi.Tests
 
             var document = generator.Generate(OpenApiVersion.V3, table);
 
-            var results = JsonConvert.SerializeObject(
-                document,
-                new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Ignore
-                });
+            var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            });
 
             System.Diagnostics.Debug.Write(results);
         }
@@ -109,14 +106,11 @@ namespace DeepSleep.OpenApi.Tests
             DefaultOpenApiGenerator.PrefixNamesWithNamespace = false;
             var document = generator.Generate(OpenApiVersion.V3, table);
 
-            var results = JsonConvert.SerializeObject(
-                document,
-                new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Ignore
-                });
-
+            var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            });
 
             System.Diagnostics.Debug.Write(results);
         }

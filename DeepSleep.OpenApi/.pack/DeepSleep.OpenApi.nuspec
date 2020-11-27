@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.OpenApi</id>
-    <version>0.0.2-beta.24</version>
+    <version>0.0.2-beta.25</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -20,9 +20,9 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\Release\netstandard2.1\DeepSleep.OpenApi.dll" target="lib\netstandard2.1" />
-    <file src="..\bin\Release\netstandard2.1\DeepSleep.OpenApi.xml" target="lib\netstandard2.1" />
-    <file src="..\bin\Release\netstandard2.1\DeepSleep.OpenApi.pdb" target="lib\netstandard2.1" />
+    <file src="..\bin\Release\netstandard2.1\deepsleep.openapi.dll" target="lib\netstandard2.1" />
+    <file src="..\bin\Release\netstandard2.1\deepsleep.openapi.xml" target="lib\netstandard2.1" />
+    <file src="..\bin\Release\netstandard2.1\deepsleep.openapi.pdb" target="lib\netstandard2.1" />
     <file src="..\.pack\deepsleep_openapi.png" target="images\" />
   </files>
 </package>

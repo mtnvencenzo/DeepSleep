@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep.OpenApi.v3_0
 {
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -23,7 +23,7 @@
 
         /// <summary>Gets or sets the reference.</summary>
         /// <value>The reference.</value>
-        [JsonProperty("$ref")]
+        [JsonPropertyName("$ref")]
         public string @ref { get; set; }
 
         /// <summary>Gets or sets the link.</summary>

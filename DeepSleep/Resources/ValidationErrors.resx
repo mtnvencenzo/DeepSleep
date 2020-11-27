@@ -126,10 +126,13 @@
   <data name="RequestUriLengthExceeded" xml:space="preserve">
     <value>414.000001|Request uri cannot exceed {0} characters in length.</value>
   </data>
+  <data name="UriBindingError" xml:space="preserve">
+    <value>400.000004|'{0}' Is in an incorrect format and could not be bound.</value>
+  </data>
   <data name="UriQueryBindingError" xml:space="preserve">
-    <value>400.000002|Could not bind the query value '{0}' to property '{1}'.</value>
+    <value>400.000002|Duplicate query variable path '{0}'.</value>
   </data>
   <data name="UriRouteBindingError" xml:space="preserve">
-    <value>400.000001|Could not bind the route value '{0}' to property '{1}'.</value>
+    <value>400.000001|Duplicate route variable path '{0}'.</value>
   </data>
 </root>
