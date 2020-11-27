@@ -81,10 +81,8 @@
                 using (var ms = new MemoryStream())
                 {
                     await JsonSerializer.SerializeAsync(stream, obj, GetWriteSettings(options)).ConfigureAwait(false);
-                    await ms.FlushAsync().ConfigureAwait(false);
-                    ms.Seek(0, SeekOrigin.Begin);
-
                     length = ms.Length;
+                    ms.Seek(0, SeekOrigin.Begin);
 
                     if (preWriteCallback != null)
                     {
