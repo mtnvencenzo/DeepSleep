@@ -117,13 +117,13 @@
             {
                 AllowTrailingCommas = false,
                 DefaultIgnoreCondition =  JsonIgnoreCondition.WhenWritingNull,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                 IgnoreReadOnlyFields = false,
                 IgnoreReadOnlyProperties = false,
                 IncludeFields = false,
                 NumberHandling = JsonNumberHandling.Strict,
                 PropertyNameCaseInsensitive = true,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                //PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                //DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 WriteIndented = options.PrettyPrint
             };
