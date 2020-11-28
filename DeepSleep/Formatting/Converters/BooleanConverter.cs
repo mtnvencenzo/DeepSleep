@@ -8,6 +8,20 @@
     {
         public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            try
+            {
+                var val = reader.GetBoolean();
+                return val;
+            }
+            catch { }
+
+            try
+            {
+                var val = reader.GetInt32();
+                return val == 1;
+            }
+            catch { }
+
             string value = reader.GetString();
             string chkValue = value?.ToLower();
 

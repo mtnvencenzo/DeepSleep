@@ -38,6 +38,13 @@
             public DateTimeOffset? CreatedOn { get; set; }
         }
 
+        public class UserAccountLoginBodyRq
+        {
+            public string EmailAddress { get; set; }
+            public string Password { get; set; }
+            public bool? Persist { get; set; }
+        }
+
         [Fact]
         public async Task WritesObjectCorretly()
         {
@@ -79,6 +86,65 @@
             var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
             var formatter = new JsonHttpFormatter(loggerMock.Object);
             await formatter.ReadType(ms, typeof(UserAccountRegisterBodyRq)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task ReadsJsonCorrectly2()
+        {
+            var json = @"{
+    ""EmailAddress"": ""rvecchi+unittest@gmail.com"",
+    ""Password"": ""my-ut-password"",
+    ""Persist"": true
+}";
+            using var ms = new MemoryStream();
+            using var writer = new StreamWriter(ms);
+
+            await writer.WriteAsync(json).ConfigureAwait(false);
+            writer.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
+            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task ReadsJsonCorrectly3()
+        {
+            var json = @"{
+    ""EmailAddress"": ""rvecchi+unittest@gmail.com"",
+    ""Password"": ""my-ut-password"",
+    ""Persist"": ""True""
+}";
+            using var ms = new MemoryStream();
+            using var writer = new StreamWriter(ms);
+
+            await writer.WriteAsync(json).ConfigureAwait(false);
+            writer.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
+            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task ReadsJsonCorrectly4()
+        {
+            var json = @"{
+    ""EmailAddress"": ""rvecchi+unittest@gmail.com"",
+    ""Password"": ""my-ut-password""
+}";
+            using var ms = new MemoryStream();
+            using var writer = new StreamWriter(ms);
+
+            await writer.WriteAsync(json).ConfigureAwait(false);
+            writer.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
+            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
         }
     }
 }
