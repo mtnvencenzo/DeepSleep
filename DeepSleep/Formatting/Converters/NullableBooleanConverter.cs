@@ -8,12 +8,20 @@
     {
         public override bool? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            try
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                var val = reader.GetBoolean();
-                return val;
+                return null;
             }
-            catch { }
+
+            if (reader.TokenType == JsonTokenType.True)
+            {
+                return true;
+            }
+
+            if (reader.TokenType == JsonTokenType.False)
+            {
+                return false;
+            }
 
             try
             {

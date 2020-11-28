@@ -141,28 +141,7 @@
         /// <returns></returns>
         private JsonSerializerOptions GetReadSettings()
         {
-            var settings = new JsonSerializerOptions
-            {
-                AllowTrailingCommas = true,
-                IgnoreReadOnlyFields = true,
-                IgnoreReadOnlyProperties = true,
-                IncludeFields = false,
-                NumberHandling = JsonNumberHandling.AllowReadingFromString,
-                PropertyNameCaseInsensitive = true,
-                ReadCommentHandling = JsonCommentHandling.Skip
-            };
-
-            settings.Converters.Add(new NullableBooleanConverter());
-            settings.Converters.Add(new BooleanConverter());
-            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
-            settings.Converters.Add(new NullableTimeSpanConverter());
-            settings.Converters.Add(new TimeSpanConverter());
-            settings.Converters.Add(new NullableDateTimeConverter());
-            settings.Converters.Add(new DateTimeConverter());
-            settings.Converters.Add(new NullableDateTimeOffsetConverter());
-            settings.Converters.Add(new DateTimeOffsetConverter());
-
-            return settings;
+            return JsonReaderSerializationOptions.ReaderOptions;
         }
 
         /// <summary>

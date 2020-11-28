@@ -45,6 +45,14 @@
             public bool? Persist { get; set; }
         }
 
+        public class Operation
+        {
+            public string path { get; set; }
+            public string op { get; set; }
+            public string from { get; set; }
+            public object value { get; set; }
+        }
+
         [Fact]
         public async Task WritesObjectCorretly()
         {
@@ -145,6 +153,31 @@
             var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
             var formatter = new JsonHttpFormatter(loggerMock.Object);
             await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
+        }
+
+        [Fact]
+        public async Task ReadsJsonCorrectly5()
+        {
+            var json = @"[
+    { ""op"": ""replace"", ""path"": ""/Name"", ""value"": ""My Super Duper DUper Trip"" }
+]";
+            using var ms = new MemoryStream();
+            using var writer = new StreamWriter(ms);
+
+            await writer.WriteAsync(json).ConfigureAwait(false);
+            writer.Flush();
+            ms.Seek(0, SeekOrigin.Begin);
+
+            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
+            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var ops = await formatter.ReadType(ms, typeof(IList<Operation>)).ConfigureAwait(false) as IList<Operation>;
+
+            ops.Should().NotBeNull();
+            ops.Should().HaveCount(1);
+            ops[0].op.Should().Be("replace");
+            ops[0].path.Should().Be("/Name");
+            ops[0].from.Should().BeNull();
+            ops[0].value.Should().Be("My Super Duper DUper Trip");
         }
     }
 }
