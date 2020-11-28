@@ -218,7 +218,6 @@
             requestConfig.MaxRequestLength = endpointConfig?.MaxRequestLength ?? defaultConfig.MaxRequestLength;
             requestConfig.MaxRequestUriLength = endpointConfig?.MaxRequestUriLength ?? defaultConfig.MaxRequestUriLength;
             requestConfig.MinRequestLength = endpointConfig?.MinRequestLength ?? defaultConfig.MinRequestLength;
-            requestConfig.ResourceId = endpointConfig?.ResourceId ?? defaultConfig.ResourceId;
             requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
             requestConfig.SupportedAuthenticationSchemes = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
 

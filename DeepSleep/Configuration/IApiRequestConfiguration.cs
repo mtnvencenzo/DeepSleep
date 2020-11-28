@@ -7,10 +7,6 @@
     /// </summary>
     public interface IApiRequestConfiguration
     {
-        /// <summary>Gets or sets the identity.</summary>
-        /// <value>The identity.</value>
-        string ResourceId { get; set; }
-
         /// <summary>Gets or sets the HTTP configuration.</summary>
         /// <value>The HTTP configuration.</value>
         ApiHttpConfiguration HttpConfig { get; set; }

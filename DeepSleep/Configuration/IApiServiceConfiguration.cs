@@ -43,6 +43,10 @@
         /// <value>The exception handler.</value>
         Func<ApiRequestContext, Exception, Task<long>> ExceptionHandler { get; set; }
 
+        /// <summary>Gets or sets the default json formatting configuration
+        /// </summary>
+        IJsonFormattingConfiguration JsonConfiguration { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

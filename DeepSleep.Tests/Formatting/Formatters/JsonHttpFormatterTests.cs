@@ -56,8 +56,7 @@
         [Fact]
         public async Task WritesObjectCorretly()
         {
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             long length = 0;
 
             var obj = new MyType
@@ -91,8 +90,7 @@
             writer.Flush();
             ms.Seek(0, SeekOrigin.Begin);
 
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             await formatter.ReadType(ms, typeof(UserAccountRegisterBodyRq)).ConfigureAwait(false);
         }
 
@@ -111,8 +109,7 @@
             writer.Flush();
             ms.Seek(0, SeekOrigin.Begin);
 
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
         }
 
@@ -131,8 +128,7 @@
             writer.Flush();
             ms.Seek(0, SeekOrigin.Begin);
 
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
         }
 
@@ -150,8 +146,7 @@
             writer.Flush();
             ms.Seek(0, SeekOrigin.Begin);
 
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             await formatter.ReadType(ms, typeof(UserAccountLoginBodyRq)).ConfigureAwait(false);
         }
 
@@ -168,8 +163,7 @@
             writer.Flush();
             ms.Seek(0, SeekOrigin.Begin);
 
-            var loggerMock = new Mock<ILogger<JsonHttpFormatter>>();
-            var formatter = new JsonHttpFormatter(loggerMock.Object);
+            var formatter = new JsonHttpFormatter(null);
             var ops = await formatter.ReadType(ms, typeof(IList<Operation>)).ConfigureAwait(false) as IList<Operation>;
 
             ops.Should().NotBeNull();

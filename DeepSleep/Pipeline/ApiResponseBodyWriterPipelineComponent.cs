@@ -79,7 +79,10 @@
 
                         if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
                         {
-                            var formatterOptions = context.ProcessingInfo.OverridingFormatOptions ?? new FormatterOptions { PrettyPrint = context.RequestInfo.PrettyPrint };
+                            var formatterOptions = new FormatterOptions 
+                            { 
+                                PrettyPrint = context.RequestInfo.PrettyPrint
+                            };
 
                             if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
                             {

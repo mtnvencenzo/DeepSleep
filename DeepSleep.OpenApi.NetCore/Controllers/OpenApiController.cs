@@ -35,15 +35,6 @@
             // Force json serialization since the standard demands it
             context.RequestInfo.Accept = new MediaHeaderValueWithQualityString("application/json");
 
-            if (context.ProcessingInfo.OverridingFormatOptions == null)
-            {
-                context.ProcessingInfo.OverridingFormatOptions = new Formatting.FormatterOptions
-                {
-                    PrettyPrint = context.RequestInfo.PrettyPrint,
-                    NullValuesExcluded = true
-                };
-            }
-
             return Task.FromResult(document);
         }
     }

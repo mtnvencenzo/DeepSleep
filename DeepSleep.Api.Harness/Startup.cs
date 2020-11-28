@@ -149,7 +149,6 @@ namespace DeepSleep.Api.Harness
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = true,
-                    ResourceId = "464AA6A7-6F6A-4BB9-A941-07BB7748EB48",
                     ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration()
                 });
 
@@ -162,7 +161,6 @@ namespace DeepSleep.Api.Harness
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = true,
-                    ResourceId = "134C800C-71D8-4203-AAFF-B8E9E462663E",
                     ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration()
                 });
 

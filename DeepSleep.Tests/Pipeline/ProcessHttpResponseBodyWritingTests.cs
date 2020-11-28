@@ -574,48 +574,6 @@
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
-        [Fact]
-        public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndNoPrettyPrintWhenOverriden()
-        {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
-            var mockFactory = SetupFormatterFactory(formatter.Object);
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
-                {
-                    StatusCode = 201,
-                    ResponseObject = "test"
-                },
-                RequestInfo = new ApiRequestInfo
-                {
-                    Accept = "application/json",
-                    PrettyPrint = true
-                },
-                ProcessingInfo = new ApiProcessingInfo
-                {
-                    OverridingFormatOptions = new FormatterOptions
-                    {
-                        PrettyPrint = false
-                    }
-                }
-            };
-
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");
-            context.ResponseInfo.Headers[0].Value.Should().Be("false");
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
-        }
-
         private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
             var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })

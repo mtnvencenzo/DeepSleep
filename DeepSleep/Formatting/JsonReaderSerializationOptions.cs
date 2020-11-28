@@ -1,8 +1,6 @@
-﻿using DeepSleep.Formatting.Converters;
-using System;
-using System.Collections.Generic;
-namespace DeepSleep.Formatting
+﻿namespace DeepSleep.Formatting
 {
+    using DeepSleep.Formatting.Converters;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 

@@ -3,12 +3,9 @@
     using System;
     using System.Threading.Tasks;
     using System.IO;
-    using System.Text;
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Text.Json;
     using System.Text.Json.Serialization;
-    using DeepSleep.Formatting.Converters;
 
     /// <summary>
     /// 
@@ -16,15 +13,15 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class JsonHttpFormatter : IFormatStreamReaderWriter
     {
-        private readonly ILogger logger;
+        private readonly IJsonFormattingConfiguration jsonFormattingConfiguration;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="logger"></param>
-        public JsonHttpFormatter(ILogger<JsonHttpFormatter> logger)
+        /// <param name="jsonFormattingConfiguration"></param>
+        public JsonHttpFormatter(IJsonFormattingConfiguration jsonFormattingConfiguration)
         {
-            this.logger = logger;
+            this.jsonFormattingConfiguration = jsonFormattingConfiguration;
         }
 
         /// <summary>Reads the type.</summary>
@@ -113,23 +110,29 @@
         /// <returns></returns>
         private JsonSerializerOptions GetWriteSettings(IFormatStreamOptions options)
         {
+            JsonNamingPolicy jsonNamingPolicy = null;
+            var casing = this.jsonFormattingConfiguration?.CasingStyle ?? FormatCasingStyle.CamelCase;
+            var nullValuesExcluded = this.jsonFormattingConfiguration?.NullValuesExcluded ?? true;
+
+            if (casing == FormatCasingStyle.CamelCase)
+            {
+                jsonNamingPolicy = JsonNamingPolicy.CamelCase;
+            }
+
             var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 AllowTrailingCommas = false,
-                DefaultIgnoreCondition =  JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyFields = false,
+                DefaultIgnoreCondition = nullValuesExcluded == true ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never,
                 IgnoreReadOnlyProperties = false,
                 IncludeFields = false,
                 NumberHandling = JsonNumberHandling.Strict,
                 PropertyNameCaseInsensitive = true,
-                //PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                //DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNamingPolicy = jsonNamingPolicy,
                 ReadCommentHandling = JsonCommentHandling.Skip,
-                WriteIndented = options.PrettyPrint
+                WriteIndented = options?.PrettyPrint ?? false
             };
 
-
-            settings.Converters.Add(new JsonStringEnumConverter());
+            settings.Converters.Add(new JsonStringEnumConverter(jsonNamingPolicy, false));
 
             return settings;
         }

@@ -102,7 +102,6 @@
                 MaxRequestLength = int.MaxValue,
                 MaxRequestUriLength = int.MaxValue,
                 MinRequestLength = 0,
-                ResourceId = Guid.Empty.ToString(),
                 SupportedLanguages = new string[] { }
             };
         }
@@ -132,8 +131,7 @@
                        AllowCredentials = false,
                        AllowedOrigins = new string[] { "*" }
                    },
-                   Deprecated = false,
-                   ResourceId = $"{Guid.Empty}_Ping"
+                   Deprecated = false
                });
         }
 
@@ -162,9 +160,20 @@
                        AllowCredentials = false,
                        AllowedOrigins = new string[] { "*" }
                    },
-                   Deprecated = false,
-                   ResourceId = $"{Guid.Empty}_Environment"
+                   Deprecated = false
                });
+        }
+
+        /// <summary>Gets the default json formatting configuration
+        /// </summary>
+        /// <returns></returns>
+        private static IJsonFormattingConfiguration GetDefaultJsonFormattingConfiguration()
+        {
+            return new JsonFormattingConfiguration
+            {
+                CasingStyle = FormatCasingStyle.CamelCase,
+                NullValuesExcluded = true
+            };
         }
 
         #endregion
@@ -190,6 +199,7 @@
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
+                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()

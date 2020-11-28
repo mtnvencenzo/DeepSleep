@@ -43,8 +43,7 @@
                        CacheLocation = HttpCacheLocation.Private,
                        ExpirationSeconds = -5
                    },
-                   Deprecated = false,
-                   ResourceId = $"{Guid.Empty}_OpenApi"
+                   Deprecated = false
                });
 
             return builder;
