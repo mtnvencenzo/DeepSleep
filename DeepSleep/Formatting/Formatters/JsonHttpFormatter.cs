@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using DeepSleep.Formatting.Converters;
 
     /// <summary>
     /// 
@@ -140,8 +141,27 @@
         /// <returns></returns>
         private JsonSerializerOptions GetReadSettings()
         {
-            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            settings.Converters.Add(new JsonStringEnumConverter());
+            var settings = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+
+            settings.Converters.Add(new NullableBooleanConverter());
+            settings.Converters.Add(new BooleanConverter());
+            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+            settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableDateTimeConverter());
+            settings.Converters.Add(new DateTimeConverter());
+            settings.Converters.Add(new NullableDateTimeOffsetConverter());
+            settings.Converters.Add(new DateTimeOffsetConverter());
+
             return settings;
         }
 
