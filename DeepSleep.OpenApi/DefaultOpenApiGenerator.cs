@@ -261,7 +261,7 @@
                 }
             }
 
-            if (returnType == typeof(ApiResponse) && responseTypes.Count == 0)
+            if (responseTypes.Count == 0)
             {
                 var typeDescriptorMethod = route.EndpointLocation.Controller.GetMethod($"{methodInfo.Name}TypeDescriptor", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -275,7 +275,7 @@
                 }
             }
 
-            if (returnType != typeof(ApiResponse) && responseTypes.Keys.FirstOrDefault(f => f.StartsWith("2")) == null)
+            if (responseTypes.Keys.FirstOrDefault(f => f.StartsWith("2")) == null)
             {
                 if (returnType == typeof(void))
                 {

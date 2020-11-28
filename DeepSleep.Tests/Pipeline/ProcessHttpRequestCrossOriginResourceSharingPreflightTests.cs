@@ -150,8 +150,8 @@
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(200);
 
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
@@ -190,8 +190,8 @@
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(200);
 
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);

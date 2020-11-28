@@ -34,8 +34,8 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(501);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(501);
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
@@ -65,8 +65,8 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(501);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(501);
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
@@ -97,8 +97,8 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(500);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(500);
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();

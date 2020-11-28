@@ -85,10 +85,7 @@
 
                 logger?.LogWarning($"Excetion recorded, issueing HTTP {code}");
 
-                context.ResponseInfo.ResponseObject = new ApiResponse
-                {
-                    StatusCode = code
-                };
+                context.ResponseInfo.StatusCode = code;
             }
 
             return true;

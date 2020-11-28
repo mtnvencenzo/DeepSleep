@@ -106,10 +106,8 @@
                             throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig?.ResourceAuthorizationConfig?.Policy}'");
                         }
 
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 403
-                        };
+                        context.ResponseInfo.StatusCode = 403;
+
                         return false;
                     }
                 }

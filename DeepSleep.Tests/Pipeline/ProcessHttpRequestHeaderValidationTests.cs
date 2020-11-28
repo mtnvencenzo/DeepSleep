@@ -144,8 +144,8 @@
             var processed = await context.ProcessHttpRequestHeaderValidation(new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(431);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(431);
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();

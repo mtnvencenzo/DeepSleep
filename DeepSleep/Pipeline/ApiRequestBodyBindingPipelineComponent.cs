@@ -69,10 +69,8 @@
                     {
                         logger?.LogWarning($"Request did not contain a Content-Length header for request method {context.RequestInfo.Method}, issueing HTTP 411 Length Required");
 
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 411
-                        };
+                        context.ResponseInfo.StatusCode = 411;
+
                         return false;
                     }
 
@@ -80,10 +78,8 @@
                     {
                         logger?.LogWarning($"Request did not contain a Content-Type header for request with a content length provided, issueing HTTP 422 Unprocessable Entity");
 
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 422
-                        };
+                        context.ResponseInfo.StatusCode = 422;
+
                         return false;
                     }
 
@@ -91,10 +87,8 @@
                     {
                         logger?.LogWarning($"Bpdy model type not available but a body was supplied in the request, issueing HTTP 413 Payload Too Large");
 
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 413
-                        };
+                        context.ResponseInfo.StatusCode = 413;
+
                         return false;
                     }
 
@@ -108,10 +102,8 @@
                         {
                             logger?.LogWarning($"Could not find a formatter for the request Content-Type, issueing HTTP 415 Unsupported Media Type");
 
-                            context.ResponseInfo.ResponseObject = new ApiResponse
-                            {
-                                StatusCode = 415
-                            };
+                            context.ResponseInfo.StatusCode = 415;
+
                             return false;
                         }
 
@@ -127,10 +119,9 @@
                             logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
 
                             context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(ValidationErrors.RequestBodyDeserializationError));
-                            context.ResponseInfo.ResponseObject = new ApiResponse
-                            {
-                                StatusCode = 400
-                            };
+
+                            context.ResponseInfo.StatusCode = 400;
+
                             return false;
                         }
                     }

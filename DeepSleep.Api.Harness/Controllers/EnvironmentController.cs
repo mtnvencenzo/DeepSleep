@@ -17,7 +17,7 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        internal Task<ApiResponse> Env()
+        internal Task<dynamic> Env()
         {
             var environmentModelType = EnvTypeDescriptor();
 
@@ -32,11 +32,7 @@
             environmentModel.ClrVersion = Environment.Version.ToString();
             environmentModel.WorkingSet = Environment.WorkingSet;
 
-            return Task.FromResult(new ApiResponse
-            {
-                StatusCode = 200,
-                Body = environmentModel
-            });
+            return Task.FromResult(environmentModel);
         }
 
         private static Type EnvTypeDescriptor()

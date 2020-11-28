@@ -14,13 +14,18 @@
         /// </summary>
         public ApiResponseInfo()
         {
+            this.StatusCode = 200;
             this.Headers = new List<ApiHeader>();
             this.Cookies = new List<ApiCookie>();
         }
 
+        /// <summary>Gets or sets the status code.</summary>
+        /// <value>The status code.</value>
+        public int StatusCode { get; set; }
+
         /// <summary>Gets or sets the response object.</summary>
         /// <value>The response object.</value>
-        public virtual ApiResponse ResponseObject { get; set; }
+        public virtual object ResponseObject { get; set; }
 
         /// <summary>Gets or sets the content language.</summary>
         /// <value>The content language.</value>
@@ -88,7 +93,7 @@
         /// </returns>
         public static bool HasSuccessStatus(this ApiResponseInfo response)
         {
-            return (response?.ResponseObject?.StatusCode).IsBetween(200, 299);
+            return (response?.StatusCode).IsBetween(200, 299);
         }
 
         /// <summary>Adds the header.</summary>
@@ -121,6 +126,50 @@
             });
 
             return values.ToArray();
+        }
+
+        /// <summary>
+        /// Optionally adds the entity tag (ETag) and last modifed date (Last-Modified) to the response headers.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="etag"></param>
+        /// <param name="lastModified"></param>
+        /// <returns></returns>
+        public static ApiResponseInfo AddEntityCaching(this ApiResponseInfo response, string etag = null, DateTimeOffset? lastModified = null)
+        {
+            if (!string.IsNullOrWhiteSpace(etag))
+            {
+                if (response.Headers.HasHeader("ETag"))
+                {
+                    response.Headers.SetValue("ETag", etag);
+                }
+                else
+                {
+                    response.Headers.Add(new ApiHeader
+                    {
+                        Name = "ETag",
+                        Value = etag
+                    });
+                }
+            }
+
+            if (lastModified != null)
+            {
+                if (response.Headers.HasHeader("Last-Modified"))
+                {
+                    response.Headers.SetValue("Last-Modified", lastModified.Value.ToString("r"));
+                }
+                else
+                {
+                    response.Headers.Add(new ApiHeader
+                    {
+                        Name = "Last-Modified",
+                        Value = lastModified.Value.ToString("r")
+                    });
+                }
+            }
+
+            return response;
         }
     }
 }

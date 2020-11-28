@@ -57,8 +57,8 @@
             var processed = await context.ProcessHttpRequestAccept(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(406);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(406);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-Allow-Accept");
@@ -83,8 +83,8 @@
             var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(406);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(406);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-Allow-Accept");

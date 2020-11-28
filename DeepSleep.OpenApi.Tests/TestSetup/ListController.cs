@@ -18,7 +18,7 @@
         }
 
         [OpenApiResponse("200", typeof(IList<ListObj2>))]
-        public Task<ApiResponse> List2()
+        public Task<IList<ListObj2>> List2()
         {
             throw new NotImplementedException();
         }

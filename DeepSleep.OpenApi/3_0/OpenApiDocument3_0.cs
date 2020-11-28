@@ -21,7 +21,7 @@
         public List<OpenApiServer3_0> servers { get; set; } = new List<OpenApiServer3_0>();
 
         /// <summary>The paths</summary>
-        public Dictionary<string, OpenApiPathItem3_0> paths = new Dictionary<string, OpenApiPathItem3_0>();
+        public Dictionary<string, OpenApiPathItem3_0> paths { get; set; } = new Dictionary<string, OpenApiPathItem3_0>();
 
         /// <summary>Gets or sets the components.</summary>
         /// <value>The components.</value>

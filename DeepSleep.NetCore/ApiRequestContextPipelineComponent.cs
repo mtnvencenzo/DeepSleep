@@ -1164,10 +1164,7 @@
                 }
 
                 // Merge status code to the http response
-                if (context.ResponseInfo.ResponseObject.StatusCode > 0)
-                {
-                    httpcontext.Response.StatusCode = context.ResponseInfo.ResponseObject.StatusCode;
-                }
+                httpcontext.Response.StatusCode = context.ResponseInfo.StatusCode;
 
                 // Add any headers to the http context
                 context.ResponseInfo.Headers.ForEach(h =>
@@ -1203,7 +1200,7 @@
                     {
                         var contentLength = await context.ResponseInfo.ResponseWriter.WriteType(
                             httpcontext.Response.Body,
-                            context.ResponseInfo.ResponseObject.Body,
+                            context.ResponseInfo.ResponseObject,
                             context.ResponseInfo.ResponseWriterOptions,
                             (l) => httpcontext.Response.Headers.Add("Content-Length", l.ToString())).ConfigureAwait(false);
 
@@ -1214,7 +1211,7 @@
                         using var ms = new MemoryStream();
                         await context.ResponseInfo.ResponseWriter.WriteType(
                             ms,
-                            context.ResponseInfo.ResponseObject.Body,
+                            context.ResponseInfo.ResponseObject,
                             context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
 
                         httpcontext.Response.Headers.Add("Content-Length", ms.Length.ToString());

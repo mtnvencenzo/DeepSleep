@@ -84,10 +84,8 @@
                 {
                     logger?.LogWarning($"Header validation failed, issueing HTTP 431 Request Header Fields Too Large");
 
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 431
-                    };
+                    context.ResponseInfo.StatusCode = 431;
+
                     return Task.FromResult(false);
                 }
 

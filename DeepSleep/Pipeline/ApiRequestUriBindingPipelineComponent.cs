@@ -121,10 +121,7 @@
 
                 if (addedBindingError)
                 {
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 400
-                    };
+                    context.ResponseInfo.StatusCode = 400;
                     return false;
                 }
 

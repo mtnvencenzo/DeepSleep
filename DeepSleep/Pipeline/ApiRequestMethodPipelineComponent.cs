@@ -77,10 +77,7 @@
                         
                         logger?.LogWarning($"Request method {context.RequestInfo.Method} could be not matched with template {context.RouteInfo.TemplateInfo}.  Available methods are {string.Join(", ", methods)}, issueing HTTP 405 Method Not Allowed");
 
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 405
-                        };
+                        context.ResponseInfo.StatusCode = 405;
 
                         return Task.FromResult(false);
                     }

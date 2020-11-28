@@ -81,10 +81,7 @@
                             : string.Empty;
 
                         context.ResponseInfo.AddHeader("X-Allow-Accept", acceptable);
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 406
-                        };
+                        context.ResponseInfo.StatusCode = 406;
                         return false;
                     }
                 }

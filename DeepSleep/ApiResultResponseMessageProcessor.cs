@@ -17,11 +17,11 @@
             {
                 if (context.ProcessingInfo?.ExtendedMessages != null && context.ProcessingInfo.ExtendedMessages.Count > 0)
                 {
-                    if (context.ResponseInfo.ResponseObject?.Body == null)
+                    if (context.ResponseInfo.ResponseObject == null)
                     {
-                        context.ResponseInfo.ResponseObject.Body = new ApiResult
+                        context.ResponseInfo.ResponseObject = new ApiResult
                         {
-                            StatusCode = context.ResponseInfo.ResponseObject?.StatusCode ?? 0,
+                            StatusCode = context.ResponseInfo.StatusCode,
                             Messages = context.ProcessingInfo.ExtendedMessages
                         };
                     }

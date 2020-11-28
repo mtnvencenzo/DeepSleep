@@ -68,11 +68,7 @@
                         logger?.LogWarning($"Request Uri validation failed, issueing HTTP 414 URI Too Long");
 
                         context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString())));
-
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 414
-                        };
+                        context.ResponseInfo.StatusCode = 414;
 
                         return Task.FromResult(false);
                     }

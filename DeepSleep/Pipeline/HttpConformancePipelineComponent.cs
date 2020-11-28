@@ -71,10 +71,7 @@
                 {
                     logger?.LogInformation($"Http version {context.RequestInfo?.Protocol} is un-supported, issueing HTTP 505 HTTP Version Not Supported");
 
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 505
-                    };
+                    context.ResponseInfo.StatusCode = 505;
 
                     return Task.FromResult(false);
                 }

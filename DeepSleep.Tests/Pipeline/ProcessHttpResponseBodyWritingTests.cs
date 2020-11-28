@@ -51,8 +51,8 @@
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(204);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(204);
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
@@ -67,11 +67,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = null,
-                        StatusCode = 200
-                    }
+                    ResponseObject = null
                 },
                 RequestInfo = mockRequestInfo.Object
             };
@@ -79,8 +75,8 @@
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(204);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(204);
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
@@ -95,11 +91,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 200
-                    }
+                    ResponseObject = "test"
                 },
                 RequestInfo = mockRequestInfo.Object
             };
@@ -108,7 +100,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(204);
+            context.ResponseInfo.StatusCode.Should().Be(204);
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
@@ -122,11 +114,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 200
-                    }
+                    ResponseObject = "test"
                 }
             };
 
@@ -134,7 +122,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(204);
+            context.ResponseInfo.StatusCode.Should().Be(204);
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
@@ -153,11 +141,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -169,7 +154,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(204);
+            context.ResponseInfo.StatusCode.Should().Be(204);
             context.ResponseInfo.ContentLength.Should().Be(0);
         }
 
@@ -187,11 +172,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -203,7 +185,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(0);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -226,11 +208,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -242,7 +221,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(0);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -263,11 +242,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -285,7 +261,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.StatusCode.Should().Be(304);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -304,11 +280,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -324,7 +297,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.StatusCode.Should().Be(304);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -343,11 +316,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -363,7 +333,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(304);
+            context.ResponseInfo.StatusCode.Should().Be(304);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().BeNull();
@@ -384,11 +354,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -406,7 +373,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -428,11 +395,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -450,7 +414,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -472,11 +436,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -494,7 +455,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(2);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -515,11 +476,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -535,7 +493,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -556,11 +514,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -576,7 +531,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.ContentType.Should().NotBeNull();
@@ -595,11 +550,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -612,7 +564,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");
@@ -633,11 +585,8 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        Body = "test",
-                        StatusCode = 201
-                    }
+                    StatusCode = 201,
+                    ResponseObject = "test"
                 },
                 RequestInfo = new ApiRequestInfo
                 {
@@ -657,7 +606,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(201);
+            context.ResponseInfo.StatusCode.Should().Be(201);
             context.ResponseInfo.Headers.Should().NotBeNull();
             context.ResponseInfo.Headers.Should().HaveCount(1);
             context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");

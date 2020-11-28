@@ -119,35 +119,7 @@
                         }
                     }
 
-                    // ---------------------------------------------------------------------------
-                    // The api context framework uses a custom response object to handle wrting 
-                    // to the response stream as well as containing any overrides to aspects of 
-                    // the response. If the response is not the custom type then build the custom
-                    // type and assign the original response object to the custom response
-                    // ---------------------------------------------------------------------------
-                    if (endpointResponse as ApiResponse == null)
-                    {
-                        endpointResponse = new ApiResponse
-                        {
-                            Body = endpointResponse
-                        };
-                    }
-                    else
-                    {
-                        var rs = endpointResponse as ApiResponse;
-                        if (rs.Headers != null)
-                        {
-                            rs.Headers.ForEach(h =>
-                            {
-                                if (h != null)
-                                {
-                                    context.ResponseInfo.AddHeader(h.Name, h.Value);
-                                }
-                            });
-                        }
-                    }
-
-                    context.ResponseInfo.ResponseObject = endpointResponse as ApiResponse;
+                    context.ResponseInfo.ResponseObject = endpointResponse;
                 }
 
                 return true;

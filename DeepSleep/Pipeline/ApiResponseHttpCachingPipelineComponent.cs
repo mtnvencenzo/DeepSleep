@@ -56,7 +56,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var statusCode = context.ResponseInfo.ResponseObject?.StatusCode;
+                var statusCode = context.ResponseInfo.StatusCode;
 
                 if (statusCode >= 200 && statusCode <= 299 && statusCode != 204)
                 {
@@ -68,7 +68,7 @@
                         return Task.FromResult(true);
                     }
 
-                    var method = context.RequestInfo.Method?.ToLower();
+                    var method = context.RequestInfo?.Method?.ToLower() ?? string.Empty;
 
                     if (method.In(StringComparison.InvariantCultureIgnoreCase, "get", "put", "options", "head"))
                     {

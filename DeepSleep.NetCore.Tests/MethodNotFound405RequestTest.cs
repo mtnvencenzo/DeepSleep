@@ -46,10 +46,10 @@ X-CorrelationId: {correlationId}";
 
                 Assert.Equal(0, this.endpointInvocationCount);
                 Assert.NotNull(response);
-                Assert.NotNull(apiContext?.ResponseInfo?.ResponseObject);
+                Assert.Null(apiContext?.ResponseInfo?.ResponseObject);
 
                 Assert.Equal(405, response.StatusCode);
-                Assert.Equal(405, apiContext.ResponseInfo.ResponseObject.StatusCode);
+                Assert.Equal(405, apiContext.ResponseInfo.StatusCode);
                 Assert.Equal(ApiValidationState.NotAttempted, apiContext.ValidationState());
 
                 // Check for headers
@@ -66,26 +66,11 @@ X-CorrelationId: {correlationId}";
             }
         }
 
-        private Task<ApiResponse> GetWidgetEndpoint()
+        private Task<int> GetWidgetEndpoint()
         {
             this.endpointInvocationCount++;
 
-            return Task.FromResult(new ApiResponse
-            {
-                StatusCode = 200,
-                Body = new ApiResult
-                {
-                    StatusCode = 200,
-                    Messages = new List<ApiResponseMessage>
-                    {
-                        new ApiResponseMessage
-                        {
-                            Code = "200",
-                            Message = "Success"
-                        }
-                    }
-                }
-            });
+            return Task.FromResult(1);
         }
     }
 }

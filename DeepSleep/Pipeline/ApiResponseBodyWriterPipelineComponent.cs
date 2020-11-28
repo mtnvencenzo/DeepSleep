@@ -58,14 +58,9 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.ResponseInfo.ResponseObject == null)
-                {
-                    context.ResponseInfo.ResponseObject = new ApiResponse();
-                }
-
                 var isWriteableResponse = false;
 
-                if (context.ResponseInfo.ResponseObject?.Body != null && formatterFactory != null)
+                if (context.ResponseInfo.ResponseObject != null && formatterFactory != null)
                 {
                     var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
                         ? context.RequestInfo.Accept
@@ -98,17 +93,16 @@
                         }
                         else
                         {
-                            context.ResponseInfo.ResponseObject.StatusCode = 304; //NotModified
-                            //context.ResponseInfo.ResponseObject.Body = null;
+                            context.ResponseInfo.StatusCode = 304;
                         }
                     }
                 }
 
                 if (!isWriteableResponse)
                 {
-                    if (context.ResponseInfo.HasSuccessStatus() && (context.ResponseInfo.ResponseObject?.StatusCode ?? 200) != 202)
+                    if (context.ResponseInfo.HasSuccessStatus() && context.ResponseInfo.StatusCode != 202)
                     {
-                        context.ResponseInfo.ResponseObject.StatusCode = 204;
+                        context.ResponseInfo.StatusCode = 204;
                     }
                 }
             }

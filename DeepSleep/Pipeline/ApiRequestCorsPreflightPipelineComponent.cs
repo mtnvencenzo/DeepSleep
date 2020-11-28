@@ -69,10 +69,7 @@
                         .Distinct()
                         .ToArray();
 
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    };
+                    context.ResponseInfo.StatusCode = 200;
 
                     context.ResponseInfo.AddHeader("Access-Control-Allow-Methods", string.Join(", ", methods).Trim());
 

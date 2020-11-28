@@ -129,10 +129,9 @@
                         };
 
                         challenges.ForEach(c => context.ResponseInfo.AddHeader("WWW-Authenticate", c));
-                        context.ResponseInfo.ResponseObject = new ApiResponse
-                        {
-                            StatusCode = 401
-                        };
+
+                        context.ResponseInfo.StatusCode = 401;
+
                         return false;
                     }
                 }

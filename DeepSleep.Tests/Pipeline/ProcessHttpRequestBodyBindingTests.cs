@@ -75,9 +75,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(411);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(411);
         }
 
         [Theory]
@@ -101,13 +100,12 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(422);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(422);
         }
 
         [Fact]
-        public async void ReturnsFalseAnd411StatusForCOntentLengthSuppliedButNullInvocationContext()
+        public async void ReturnsFalseAnd411StatusForContentLengthSuppliedButNullInvocationContext()
         {
             var context = new ApiRequestContext
             {
@@ -126,9 +124,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(413);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(413);
         }
 
         [Fact]
@@ -154,9 +151,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(413);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(413);
         }
 
         [Fact]
@@ -181,9 +177,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(415);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -211,9 +206,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(415);
-            context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -291,9 +285,8 @@
                 processed.Should().BeFalse ();
 
                 context.ResponseInfo.Should().NotBeNull();
-                context.ResponseInfo.ResponseObject.Should().NotBeNull();
-                context.ResponseInfo.ResponseObject.StatusCode.Should().Be(400);
-                context.ResponseInfo.ResponseObject.Body.Should().BeNull();
+                context.ResponseInfo.ResponseObject.Should().BeNull();
+                context.ResponseInfo.StatusCode.Should().Be(400);
 
                 context.ProcessingInfo.Should().NotBeNull();
                 context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();

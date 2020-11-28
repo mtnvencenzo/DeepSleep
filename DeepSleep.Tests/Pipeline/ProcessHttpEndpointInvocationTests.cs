@@ -90,11 +90,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -119,11 +115,7 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().BeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -149,11 +141,8 @@
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(100);
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(100);
         }
 
         [Fact]
@@ -178,17 +167,9 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(100);
-            response.StatusCode.Should().Be(201);
-            response.Headers.Should().NotBeNull();
-            response.Headers.Should().HaveCount(1);
-            response.Headers[0].Name.Should().Be("X-MyHeader1");
-            response.Headers[0].Value.Should().Be("MyHeaderValue1");
+            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(100);
         }
 
         [Fact]
@@ -214,16 +195,8 @@
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(200);
-            response.StatusCode.Should().Be(201);
-            response.Headers.Should().NotBeNull();
-            response.Headers.Should().HaveCount(1);
-            response.Headers[0].Name.Should().Be("X-MyHeader2");
-            response.Headers[0].Value.Should().Be("MyHeaderValue2");
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(200);
         }
 
         [Fact]
@@ -256,17 +229,9 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(300);
-            response.StatusCode.Should().Be(202);
-            response.Headers.Should().NotBeNull();
-            response.Headers.Should().HaveCount(1);
-            response.Headers[0].Name.Should().Be("X-MyHeader2");
-            response.Headers[0].Value.Should().Be("MyHeaderValue2");
+            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(300);
         }
 
         [Fact]
@@ -299,17 +264,9 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(301);
-            response.StatusCode.Should().Be(204);
-            response.Headers.Should().NotBeNull();
-            response.Headers.Should().HaveCount(1);
-            response.Headers[0].Name.Should().Be("X-MyHeader2");
-            response.Headers[0].Value.Should().Be("MyHeaderValue2");
+            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(301);
         }
 
         [Fact]
@@ -342,17 +299,9 @@
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeOfType<ApiResponse>();
-
-            var response = context.ResponseInfo.ResponseObject as ApiResponse;
-            response.Body.Should().NotBeNull();
-            response.Body.Should().Be(301);
-            response.StatusCode.Should().Be(204);
-            response.Headers.Should().NotBeNull();
-            response.Headers.Should().HaveCount(1);
-            response.Headers[0].Name.Should().Be("X-MyHeader2");
-            response.Headers[0].Value.Should().Be("MyHeaderValue2");
+            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.ResponseInfo.ResponseObject.Should().BeOfType<int>();
+            context.ResponseInfo.ResponseObject.Should().Be(301);
         }
     }
 }

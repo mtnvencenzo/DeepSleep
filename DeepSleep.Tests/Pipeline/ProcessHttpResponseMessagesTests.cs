@@ -57,12 +57,7 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 400,
-                        Headers = new List<ApiHeader>(),
-                        Body = null
-                    }
+                    StatusCode = 400
                 }
             };
 
@@ -75,10 +70,10 @@
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Body.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Body.Should().BeAssignableTo<ApiResult>();
+            context.ResponseInfo.ResponseObject.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeAssignableTo<ApiResult>();
 
-            var apiResult = context.ResponseInfo.ResponseObject.Body as ApiResult;
+            var apiResult = context.ResponseInfo.ResponseObject as ApiResult;
             apiResult.Should().NotBeNull();
             apiResult.Messages.Should().NotBeNull();
             apiResult.Messages.Should().HaveCount(4);

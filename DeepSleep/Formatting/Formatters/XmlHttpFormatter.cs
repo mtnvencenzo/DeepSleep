@@ -94,10 +94,8 @@
                     length = ms.Length;
                     ms.Seek(0, SeekOrigin.Begin);
 
-                    if (preWriteCallback != null)
-                    {
-                        preWriteCallback(length);
-                    }
+                    preWriteCallback?.Invoke(length);
+
                     await ms.CopyToAsync(stream).ConfigureAwait(false);
                 }
             }

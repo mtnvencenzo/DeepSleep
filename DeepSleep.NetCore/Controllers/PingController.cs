@@ -16,18 +16,14 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        internal Task<ApiResponse> Ping()
+        internal Task<dynamic> Ping()
         {
             var pingModelType = PingTypeDescriptor();
 
             dynamic pingModel = Activator.CreateInstance(pingModelType);
             pingModel.Ping = "Pong";
 
-            return Task.FromResult(new ApiResponse
-            {
-                StatusCode = 200,
-                Body = pingModel
-            });
+            return Task.FromResult(pingModel);
         }
 
         private static Type PingTypeDescriptor()

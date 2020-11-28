@@ -100,8 +100,8 @@
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.StatusCode.Should().Be(414);
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(414);
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();

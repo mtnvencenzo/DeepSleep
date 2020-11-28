@@ -58,11 +58,8 @@
                 if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
                 {
                     logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
-
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 404
-                    };
+                    
+                    context.ResponseInfo.StatusCode = 404;
 
                     return Task.FromResult(false);
                 }

@@ -144,10 +144,8 @@
                         logger?.LogWarning($"Validation for request {context.RequestInfo.RequestIdentifier} failed with error: {message.Code} - {message.Message}");
                     }
 
-                    context.ResponseInfo.ResponseObject = new ApiResponse
-                    {
-                        StatusCode = statusCode
-                    };
+                    context.ResponseInfo.StatusCode = statusCode;
+
                     return false;
                 }
 

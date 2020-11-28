@@ -76,10 +76,8 @@
                 RequestInfo = null,
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = statusCode
-                    }
+                    StatusCode = statusCode,
+                    ResponseObject = null
                 }
             };
 
@@ -119,10 +117,7 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = statusCode
-                    }
+                    StatusCode = statusCode
                 }
             };
 
@@ -156,10 +151,7 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200
                 },
                 RouteInfo = mockRouteInfo.Object
             };
@@ -194,10 +186,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RouteInfo = null
             };
@@ -232,10 +222,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RouteInfo = new ApiRoutingInfo
                 {
@@ -273,10 +261,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RequestConfig = null
             };
@@ -311,10 +297,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
                 {
@@ -352,10 +336,7 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
                 {
@@ -397,10 +378,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
                 {
@@ -451,10 +430,8 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200,
+                    ResponseObject = null
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
                 {
@@ -503,10 +480,7 @@
                 },
                 ResponseInfo = new ApiResponseInfo
                 {
-                    ResponseObject = new ApiResponse
-                    {
-                        StatusCode = 200
-                    }
+                    StatusCode = 200
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
                 {
