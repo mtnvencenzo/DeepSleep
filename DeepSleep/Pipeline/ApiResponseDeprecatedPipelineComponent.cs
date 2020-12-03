@@ -1,8 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Resources;
-    using Microsoft.Extensions.Logging;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -21,15 +18,14 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseDeprecatedPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
             
-            await context.ProcessHttpResponseDeprecated(logger).ConfigureAwait(false);
+            await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
         }
     }
 
@@ -48,9 +44,8 @@
 
         /// <summary>Processes the HTTP response deprecated.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpResponseDeprecated(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpResponseDeprecated(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

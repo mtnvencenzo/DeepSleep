@@ -2,9 +2,7 @@
 {
     using DeepSleep.Configuration;
     using DeepSleep.Resources;
-    using Microsoft.Extensions.Logging;
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -27,9 +25,8 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="config">The configuration.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiResponseUnhandledExceptionPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
         {
             try
             {
@@ -39,7 +36,7 @@
             {
                 var context = contextResolver.GetContext();
 
-                await context.ProcessHttpResponseUnhandledException(ex, config, responseMessageConverter, logger).ConfigureAwait(false);
+                await context.ProcessHttpResponseUnhandledException(ex, config, responseMessageConverter).ConfigureAwait(false);
             }
         }
     }
@@ -62,9 +59,8 @@
         /// <param name="exception">The exception.</param>
         /// <param name="config">The configuration.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
         {
             if (exception != null)
             {
@@ -76,14 +72,14 @@
                     {
                         await config.ExceptionHandler(context, exception).ConfigureAwait(false);
                     }
-                    catch (Exception ex) 
+                    catch (Exception) 
                     {
-                        logger?.LogError(ex, $"Failed calling exception handler");
-                        logger?.LogError(exception, "Recorded exception");
+                        //logger?.LogError(ex, $"Failed calling exception handler");
+                        //logger?.LogError(exception, "Recorded exception");
                     }
                 }
 
-                logger?.LogWarning($"Excetion recorded, issueing HTTP {code}");
+                //logger?.LogWarning($"Excetion recorded, issueing HTTP {code}");
 
                 context.ResponseInfo.StatusCode = code;
             }
@@ -96,7 +92,7 @@
         /// <param name="exception">The exception.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        private static int HandleException(this ApiRequestContext context, Exception exception, IApiResponseMessageConverter responseMessageConverter)
+        internal static int HandleException(this ApiRequestContext context, Exception exception, IApiResponseMessageConverter responseMessageConverter)
         {
             int code;
 

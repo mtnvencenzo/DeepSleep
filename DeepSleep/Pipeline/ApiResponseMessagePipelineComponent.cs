@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,15 +21,14 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageProcessorProvider responseMessageProcessorProvider, ILogger<ApiResponseMessagePipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
 
-            await context.ProcessHttpResponseMessages(responseMessageProcessorProvider, logger).ConfigureAwait(false);
+            await context.ProcessHttpResponseMessages(responseMessageProcessorProvider).ConfigureAwait(false);
         }
     }
 
@@ -50,9 +48,8 @@
         /// <summary>Processes the HTTP response messages.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiResponseMessageProcessorProvider responseMessageProcessorProvider, ILogger logger)
+        internal static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

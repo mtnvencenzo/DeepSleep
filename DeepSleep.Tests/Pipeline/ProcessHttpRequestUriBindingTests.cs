@@ -23,7 +23,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -42,7 +42,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -64,7 +64,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -74,9 +74,6 @@
         [Fact]
         public async void ReturnsTrueForUriModelTypeFoundInServiceProvider()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -89,7 +86,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -102,9 +99,6 @@
         [Fact]
         public async void ReturnsTrueForUriModelTypeActivatedWhenNotExistsInServiceProvider()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -117,7 +111,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -130,9 +124,6 @@
         [Fact]
         public async void ReturnsTrueForUriModelTypeActivatedWhenServiceProviderThrowsException()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Throws(new Exception("test"));
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -145,7 +136,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -158,9 +149,6 @@
         [Fact]
         public async void DoesNotThrowExceptionForNonDefaultConstructorType()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -173,7 +161,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().Be(true);
             context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
         }
@@ -181,9 +169,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsRouteVariables()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -211,21 +196,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", UrlEncode("-8.45") },
-                            { "FloatProp", UrlEncode("5.9") },
-                            { "DecimalProp", UrlEncode("3.9098") },
+                            { "DoubleProp", "-8.45" },
+                            { "FloatProp", "5.9" },
+                            { "DecimalProp", "3.9098" },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                            { "TimeSpanProp", UrlEncode("10:00:00") },
-                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                            { "TimeSpanProp", "10:00:00" },
+                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -263,9 +248,6 @@
         [InlineData("2009-06-15T20:45:30.0000000-00:00")]
         public async void ReturnsTrueAndCorrectlyBindsUtcDateTimeRouteVariables(string date)
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -282,13 +264,13 @@
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
-                            { "DateTimeProp", UrlEncode(date) }
+                            { "DateTimeProp", date }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -312,9 +294,6 @@
         [InlineData("0")]
         public async void ReturnsTrueAndCorrectlyBindsBoolRouteVariables(string boolValue)
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -337,7 +316,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -361,9 +340,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsNullableRouteVariables()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardNullableModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -390,21 +366,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", UrlEncode("-8.45") },
-                            { "FloatProp", UrlEncode("5.9") },
-                            { "DecimalProp", UrlEncode("3.9098") },
+                            { "DoubleProp", "-8.45" },
+                            { "FloatProp", "5.9" },
+                            { "DecimalProp", "3.9098" },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                            { "TimeSpanProp", UrlEncode("10:00:00") },
-                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                            { "TimeSpanProp", "10:00:00" },
+                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -437,9 +413,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsQueryVariables()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -456,26 +429,26 @@
                         { "ByteProp", "1" },
                         { "SByteProp", "1" },
                         { "BoolProp", "true" },
-                        { "IntProp", UrlEncode("-23") },
+                        { "IntProp", "-23" },
                         { "UIntProp", "23" },
                         { "ShortProp", "-2" },
                         { "UShortProp", "2" },
                         { "LongProp", "-4" },
                         { "ULongProp", "34" },
-                        { "DoubleProp", UrlEncode("-8.45") },
-                        { "FloatProp", UrlEncode("5.9") },
-                        { "DecimalProp", UrlEncode("3.9098") },
+                        { "DoubleProp", "-8.45" },
+                        { "FloatProp", "5.9" },
+                        { "DecimalProp", "3.9098" },
                         { "ObjectProp", "1" },
-                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                        { "TimeSpanProp", UrlEncode("10:00:00") },
-                        { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                        { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                        { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                        { "TimeSpanProp", "10:00:00" },
+                        { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                         { "EnumProp", "Item1" }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -510,9 +483,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsNullableQueryVariables()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardNullableModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -539,21 +509,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", UrlEncode("-8.45") },
-                            { "FloatProp", UrlEncode("5.9") },
-                            { "DecimalProp", UrlEncode("3.9098") },
+                            { "DoubleProp", "-8.45" },
+                            { "FloatProp", "5.9" },
+                            { "DecimalProp", "3.9098" },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                            { "TimeSpanProp", UrlEncode("10:00:00") },
-                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                            { "TimeSpanProp", "10:00:00" },
+                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -586,9 +556,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsRouteVariablesAndDoesntOverwriteRouteVariableBindings()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -611,14 +578,14 @@
                         { "UShortProp", "3" },
                         { "LongProp", "-3" },
                         { "ULongProp", "33" },
-                        { "DoubleProp", UrlEncode("-8.43") },
-                        { "FloatProp", UrlEncode("5.3") },
-                        { "DecimalProp", UrlEncode("3.9093") },
+                        { "DoubleProp", "-8.43" },
+                        { "FloatProp", "5.3" },
+                        { "DecimalProp", "3.9093" },
                         { "ObjectProp", "3" },
-                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:53 PM") },
-                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:53 PM -01:00") },
-                        { "TimeSpanProp", UrlEncode("30:00:00") },
-                        { "GuidProp", UrlEncode("3F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                        { "DateTimeProp", "4/2/2007 7:23:53 PM" },
+                        { "DateTimeOfsetProp", "4/2/2007 7:23:53 PM -01:00" },
+                        { "TimeSpanProp", "30:00:00" },
+                        { "GuidProp", "3F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                         { "EnumProp", "Item2" }
                     }
                 },
@@ -639,21 +606,21 @@
                             { "UShortProp", "2" },
                             { "LongProp", "-4" },
                             { "ULongProp", "34" },
-                            { "DoubleProp", UrlEncode("-8.45") },
-                            { "FloatProp", UrlEncode("5.9") },
-                            { "DecimalProp", UrlEncode("3.9098") },
+                            { "DoubleProp", "-8.45" },
+                            { "FloatProp", "5.9" },
+                            { "DecimalProp", "3.9098" },
                             { "ObjectProp", "1" },
-                            { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                            { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                            { "TimeSpanProp", UrlEncode("10:00:00") },
-                            { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                            { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                            { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                            { "TimeSpanProp", "10:00:00" },
+                            { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
                         }
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -688,9 +655,6 @@
         [Fact]
         public async void ReturnsTrueAndCorrectlyBindsRouteAndQueryVariables()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -704,14 +668,14 @@
                     {
                         { "LongProp", "-4" },
                         { "ULongProp", "34" },
-                        { "DoubleProp", UrlEncode("-8.45") },
-                        { "FloatProp", UrlEncode("5.9") },
-                        { "DecimalProp", UrlEncode("3.9098") },
+                        { "DoubleProp", "-8.45" },
+                        { "FloatProp", "5.9" },
+                        { "DecimalProp", "3.9098" },
                         { "ObjectProp", "1" },
-                        { "DateTimeProp", UrlEncode("4/2/2007 7:23:57 PM") },
-                        { "DateTimeOfsetProp", UrlEncode("4/2/2007 7:23:57 PM -01:00") },
-                        { "TimeSpanProp", UrlEncode("10:00:00") },
-                        { "GuidProp", UrlEncode("0F6AD742-3248-4229-B9A3-DC20EFA074D1") },
+                        { "DateTimeProp", "4/2/2007 7:23:57 PM" },
+                        { "DateTimeOfsetProp", "4/2/2007 7:23:57 PM -01:00" },
+                        { "TimeSpanProp", "10:00:00" },
+                        { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                         { "EnumProp", "Item1" }
                     }
                 },
@@ -735,7 +699,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -770,9 +734,6 @@
         [Fact]
         public async void ReturnsFalseAndErrorsWhenBindingFails()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new StandardModel());
-
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
@@ -799,7 +760,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(mockServiceProvider.Object, new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();

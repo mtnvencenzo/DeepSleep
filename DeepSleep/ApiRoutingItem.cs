@@ -45,6 +45,6 @@
 
         /// <summary>Gets or sets the route variables.</summary>
         /// <value>The route variables.</value>
-        public IDictionary<string, string> RouteVariables { get; set; }
+        public IDictionary<string, string> RouteVariables { get; set; } = new Dictionary<string, string>();
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -21,13 +20,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestNotFoundPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestNotFound(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestNotFound().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             } 
@@ -49,15 +47,14 @@
 
         /// <summary>Processes the HTTP request not found.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpRequestNotFound(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
                 {
-                    logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
+                    //logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
                     
                     context.ResponseInfo.StatusCode = 404;
 

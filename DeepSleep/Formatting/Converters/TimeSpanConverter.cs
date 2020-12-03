@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Formatting.Converters
 {
     using System;
+    using System.Globalization;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -15,11 +16,18 @@
                 return default;
             }
 
-            return TimeSpan.Parse(value);
+            return TimeSpan.Parse(value, CultureInfo.CurrentCulture);
         }
         public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                writer.WriteNullValue();
+            }
+            else
+            {
+                writer.WriteStringValue(value.ToString());
+            }
         }
     }
 }

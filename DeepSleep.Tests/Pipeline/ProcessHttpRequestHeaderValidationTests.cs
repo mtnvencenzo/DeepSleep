@@ -16,7 +16,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -35,7 +35,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -53,7 +53,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -79,7 +79,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -111,7 +111,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -141,7 +141,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation(new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();

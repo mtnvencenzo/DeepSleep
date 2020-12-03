@@ -5,6 +5,7 @@
     using System.Text;
     using System.Security.Cryptography;
     using System.Net;
+    using System.Globalization;
 
     /// <summary></summary>
     public class HMACSHA256SharedKeyAuthenticationProvider : IAuthenticationProvider
@@ -133,7 +134,7 @@
             string toSign = string.Format("{0}\n{1}\n{2}\n{3}",
                 publicKey ?? string.Empty,
                 verb ?? string.Empty,
-                requestDate.GetValueOrDefault().ToUnixTime().ToString(),
+                requestDate.GetValueOrDefault().ToUnixTime().ToString(CultureInfo.InvariantCulture),
                 encodedUri);
 
 

@@ -33,10 +33,11 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
+        /// <param name="urlDecoded"></param>
         /// <returns></returns>
-        public virtual async Task<T> Deserialize<T>(string data)
+        public virtual async Task<T> Deserialize<T>(string data, bool urlDecoded = false)
         {
-            var obj = await this.Deserialize(data, typeof(T)).ConfigureAwait(false);
+            var obj = await this.Deserialize(data, typeof(T), urlDecoded).ConfigureAwait(false);
 
             if (obj == null)
             {
@@ -51,8 +52,9 @@
         /// </summary>
         /// <param name="data"></param>
         /// <param name="objType"></param>
+        /// <param name="urlDecode"></param>
         /// <returns></returns>
-        public virtual async Task<object> Deserialize(string data, Type objType)
+        public virtual async Task<object> Deserialize(string data, Type objType, bool urlDecode = false)
         {
             if (data == null)
             {
@@ -65,11 +67,11 @@
                 .Select(s =>
                 {
                     string sName = s.Length > 0
-                        ? HttpUtility.UrlDecode(s[0])
+                        ? urlDecode ? s[0] : HttpUtility.UrlDecode(s[0])
                         : string.Empty;
 
                     string sValue = s.Length > 1
-                        ? HttpUtility.UrlDecode(s[1])
+                        ? urlDecode ? s[1] : HttpUtility.UrlDecode(s[1])
                         : string.Empty;
 
                     var isRoot = !sName.Contains('.');

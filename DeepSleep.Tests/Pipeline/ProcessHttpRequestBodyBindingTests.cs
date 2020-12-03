@@ -24,7 +24,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -48,7 +48,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -71,7 +71,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -96,7 +96,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -120,7 +120,7 @@
                 
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -147,7 +147,7 @@
 
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -173,7 +173,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -202,7 +202,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -239,7 +239,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null, null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null).ConfigureAwait(false);
                 processed.Should().BeTrue();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -281,7 +281,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
                 processed.Should().BeFalse ();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -298,7 +298,7 @@
 
         private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })
+            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };

@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Validation
 {
-    using System;
     using System.Reflection;
     using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter);
+        Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter);
 
         /// <summary>Invokes the object validation.</summary>
         /// <param name="obj">The object.</param>
@@ -23,6 +22,6 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter);
+        Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter);
     }
 }

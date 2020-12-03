@@ -22,7 +22,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -38,7 +38,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -54,7 +54,7 @@
                 RequestInfo = new ApiRequestInfo()
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -80,7 +80,7 @@
                 .Setup(m => m.GetTypes())
                 .Returns(new string[] { "application/json", "text/xml", "text/plain" });
 
-            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -109,7 +109,7 @@
                 .Setup(m => m.GetAcceptableFormatter(It.IsAny<MediaHeaderValueWithQualityString>(), out formatterType))
                 .Returns(Task.FromResult(mockFormatter.Object));
 
-            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -136,7 +136,7 @@
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
 
-            var processed = await context.ProcessHttpRequestAccept(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -146,7 +146,7 @@
 
         private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })
+            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };

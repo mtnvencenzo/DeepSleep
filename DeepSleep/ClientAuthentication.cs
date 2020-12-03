@@ -19,6 +19,11 @@ namespace DeepSleep
         /// </summary>
         public AuthenticationResult AuthResult { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public AuthenticationType AuthenticatedBy { get; set; }
+
         /// <summary>Gets or sets the authenticated security principal.
         /// </summary>
         public IPrincipal Principal { get; set; }

@@ -2,15 +2,10 @@
 {
     using DeepSleep.Formatting.Formatters;
     using FluentAssertions;
-    using Microsoft.Extensions.Logging;
-    using Moq;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
-    using System.Web;
     using Xunit;
 
     public class JsonHttpFormatterTests

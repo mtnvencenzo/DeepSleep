@@ -97,6 +97,15 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 400.000005|Uri type conversion for &apos;{0}&apos; with value &apos;{1}&apos; could not be converted to type {2}..
+        /// </summary>
+        internal static string UriBindingValueError {
+            get {
+                return ResourceManager.GetString("UriBindingValueError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 400.000002|Duplicate query variable path &apos;{0}&apos;..
         /// </summary>
         internal static string UriQueryBindingError {

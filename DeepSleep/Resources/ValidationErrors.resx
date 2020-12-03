@@ -129,6 +129,9 @@
   <data name="UriBindingError" xml:space="preserve">
     <value>400.000004|'{0}' Is in an incorrect format and could not be bound.</value>
   </data>
+  <data name="UriBindingValueError" xml:space="preserve">
+    <value>400.000005|Uri type conversion for '{0}' with value '{1}' could not be converted to type {2}.</value>
+  </data>
   <data name="UriQueryBindingError" xml:space="preserve">
     <value>400.000002|Duplicate query variable path '{0}'.</value>
   </data>

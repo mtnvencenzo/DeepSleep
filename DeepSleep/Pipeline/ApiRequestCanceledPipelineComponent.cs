@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -21,13 +20,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestCanceledPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestCanceled(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestCanceled().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -49,13 +47,12 @@
 
         /// <summary>Processes the HTTP request canceled.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestCanceled(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpRequestCanceled(this ApiRequestContext context)
         {
             if (context.RequestAborted.IsCancellationRequested)
             {
-                logger?.LogInformation($"Request has been cancelled by client, issuing HTTP 408 Request Timeout");
+                //logger?.LogInformation($"Request has been cancelled by client, issuing HTTP 408 Request Timeout");
 
                 context.ResponseInfo.StatusCode = 408;
 

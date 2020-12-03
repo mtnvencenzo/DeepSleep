@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.Formatting
 {
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -12,17 +10,15 @@
     /// </summary>
     public abstract class FormatStreamReaderWriterFactoryBase : IFormatStreamReaderWriterFactory
     {
-        private readonly IServiceProvider serviceProvider;
-        private readonly ILogger logger;
+        private readonly IServiceResolver serviceProvider;
         private IList<IFormatStreamReaderWriter> availableFormatters;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="FormatStreamReaderWriterFactoryBase"/> class from being created.
         /// </summary>
-        public FormatStreamReaderWriterFactoryBase(IServiceProvider serviceProvider, ILogger logger)
+        public FormatStreamReaderWriterFactoryBase(IServiceResolver serviceProvider)
         {
             this.serviceProvider = serviceProvider;
-            this.logger = logger;
         }
 
         /// <summary>

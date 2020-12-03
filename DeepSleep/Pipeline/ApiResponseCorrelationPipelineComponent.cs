@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,21 +20,20 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseCorrelationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
                 var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
+                await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             }
             catch
             {
                 var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseCorrelation(logger).ConfigureAwait(false);
+                await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
                 throw;
             }
         }
@@ -57,9 +54,8 @@
 
         /// <summary>Processes the HTTP response correlation.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

@@ -17,7 +17,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(null, null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -32,7 +32,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -50,7 +50,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(null, new DefaultRouteResolver(), null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(null, new DefaultRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -68,7 +68,7 @@
                 RequestAborted = new System.Threading.CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), new DefaultRouteResolver(), null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), new DefaultRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

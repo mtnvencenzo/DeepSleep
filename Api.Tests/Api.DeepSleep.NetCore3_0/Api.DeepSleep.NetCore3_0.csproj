@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;NETSDK1138</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DeepSleep.NetCore\DeepSleep.NetCore.csproj" />
+    <ProjectReference Include="..\..\DeepSleep\DeepSleep.csproj" />
+    <ProjectReference Include="..\Api.DeepSleep.Controllers\Api.DeepSleep.Controllers.csproj" />
+    <ProjectReference Include="..\Api.DeepSleep.Models\Api.DeepSleep.Models.csproj" />
+  </ItemGroup>
+
+</Project>

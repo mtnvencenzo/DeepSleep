@@ -1,14 +1,11 @@
 ﻿namespace DeepSleep.NetCore
 {
     using DeepSleep.Formatting;
-    using DeepSleep.Auth;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
     using DeepSleep.Validation;
     using System;
-    using DeepSleep.Pipeline;
     using DeepSleep.Formatting.Formatters;
-    using DeepSleep.Auth.Providers;
     using DeepSleep.NetCore.Controllers;
     using DeepSleep.Configuration;
 
@@ -17,6 +14,67 @@
     /// </summary>
     public static class ApiCoreHttpExtensionMethods
     {
+        /// <summary>Uses the API request context.</summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseApiCoreHttp(this IApplicationBuilder builder)
+        {
+            return builder
+                .UseApiRequestContext();
+        }
+
+        /// <summary>Uses the API core services.</summary>
+        /// <param name="services">The services.</param>
+        /// <param name="config">The configuration.</param>
+        /// <returns></returns>
+        public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
+        {
+            services
+                .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
+                .AddTransient<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
+                .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
+                .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
+                .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
+                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
+                .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
+                .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
+                .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
+                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
+                .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
+                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
+                .AddScoped<IServiceResolver, ServiceProviderServiceResolver>((p) => new ServiceProviderServiceResolver(p));
+
+            if (config.FormatterFactory != null)
+            {
+                services.AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory);
+            }
+            else
+            {
+                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamWriterFactory>();
+            }
+
+            services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) =>
+            {
+                var routingTable = config.RoutingTable ?? GetDefaultRoutingTable();
+
+                if (config.UsePingEndpoint)
+                {
+                    AddPingEndpoint(routingTable, config);
+                }
+
+                if (config.UseEnvironmentEndpoint)
+                {
+                    AddEnvironmentEndpoint(routingTable, config);
+                }
+
+                return routingTable;
+            });
+
+
+            return services;
+        }
+
         #region Helper Methods
 
         /// <summary>Gets the default validation provider.</summary>
@@ -70,7 +128,7 @@
                 {
                     AllowCredentials = false,
                     AllowedOrigins = new string[] { "*" },
-                    ExposeHeaders = new string[] {      
+                    ExposeHeaders = new string[] {
                         "X-CorrelationId",
                         "X-Deprecated",
                         "X-Api-Message",
@@ -79,7 +137,7 @@
                         "X-Allow-Accept",
                         "X-Allow-Accept-Charset",
                         "X-PrettyPrint",
-                        "Location" 
+                        "Location"
                     }
                 },
                 Deprecated = false,
@@ -91,7 +149,7 @@
                 HttpConfig = new ApiHttpConfiguration
                 {
                     RequireSSL = false,
-                    SupportedVersions = new string[] {       
+                    SupportedVersions = new string[] {
                         "http/1.1",
                         "http/1.2",
                         "http/2",
@@ -177,65 +235,5 @@
         }
 
         #endregion
-
-        /// <summary>Uses the API request context.</summary>
-        /// <param name="builder">The builder.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseApiCoreHttp(this IApplicationBuilder builder)
-        {
-            return builder
-                .UseApiRequestContext();
-        }
-
-        /// <summary>Uses the API core services.</summary>
-        /// <param name="services">The services.</param>
-        /// <param name="config">The configuration.</param>
-        /// <returns></returns>
-        public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
-        {
-            services
-                .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
-                .AddTransient<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
-                .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
-                .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
-                .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
-                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
-                .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
-                .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
-                .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
-                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
-                .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
-                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
-
-            if (config.FormatterFactory != null)
-            {
-                services.AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory);
-            }
-            else
-            {
-                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamWriterFactory>();
-            }
-
-            services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) =>
-            {
-                var routingTable = config.RoutingTable ?? GetDefaultRoutingTable();
-
-                if (config.UsePingEndpoint)
-                {
-                    AddPingEndpoint(routingTable, config);
-                }
-
-                if (config.UseEnvironmentEndpoint)
-                {
-                    AddEnvironmentEndpoint(routingTable, config);
-                }
-
-                return routingTable;
-            });
-
-
-            return services;
-        }
     }
 }

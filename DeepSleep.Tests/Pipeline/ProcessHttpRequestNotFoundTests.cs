@@ -18,7 +18,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -34,7 +34,7 @@
                 RouteInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -54,7 +54,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -77,7 +77,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -100,7 +100,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -126,7 +126,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -152,7 +152,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestNotFound(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

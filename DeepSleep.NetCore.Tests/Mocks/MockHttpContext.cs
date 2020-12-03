@@ -1,19 +1,13 @@
 ﻿namespace DeepSleep.NetCore.Tests.Mocks
 {
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Http.Authentication;
-    using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Http.Internal;
-    using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Net;
     using System.Security.Claims;
-    using System.Text;
     using System.Threading;
-    using System.Web;
 
     /// <summary>
     /// 

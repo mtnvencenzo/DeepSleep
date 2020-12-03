@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Formatting.Converters
 {
     using System;
+    using System.Globalization;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -15,7 +16,7 @@
                 return null;
             }
 
-            return DateTimeOffset.Parse(value).UtcDateTime;
+            return DateTimeOffset.Parse(value, CultureInfo.CurrentCulture).UtcDateTime;
         }
         public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
         {

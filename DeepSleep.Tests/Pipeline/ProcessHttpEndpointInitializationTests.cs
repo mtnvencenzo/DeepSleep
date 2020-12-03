@@ -248,9 +248,8 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerFromServiceProvider()
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -281,8 +280,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Fact]
@@ -317,13 +314,12 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().BeNull();
         }
 
         [Fact]
         public async void ReturnsTrueAndRetrivesActivatesControlleWhenServiceProviderDoesntContainController()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceResolver>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -355,13 +351,12 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().BeNull();
         }
 
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForInternalMethod()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceResolver>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -393,13 +388,12 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().BeNull();
         }
 
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForPrivateMethod()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceResolver>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -431,13 +425,12 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().BeNull();
         }
 
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForProtectedMethod()
         {
-            var mockServiceProvider = new Mock<IServiceProvider>();
+            var mockServiceProvider = new Mock<IServiceResolver>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -469,7 +462,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().BeNull();
         }
 
         [Theory]
@@ -488,9 +480,8 @@
         [InlineData("options")]
         public async void ReturnsTrueAndRetrivesUriModelForOnlyUriParameter(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -523,8 +514,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Theory]
@@ -536,9 +525,8 @@
         [InlineData("pUt")]
         public async void ReturnsTrueAndRetrivesUriModelForOnlyBodyParameter(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -571,8 +559,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Theory]
@@ -584,9 +570,8 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameter(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -619,8 +604,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Theory]
@@ -632,9 +615,8 @@
         [InlineData("options")]
         public async void ReturnsTrueAndRetrivesUriModelForUriAndBodyParameterAndNoneBodyMethod(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -667,8 +649,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Theory]
@@ -680,9 +660,8 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameterWhenEndpointHasExtraParametersBefore(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -715,8 +694,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
 
         [Theory]
@@ -728,9 +705,8 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameterWhenEndpointHasExtraParametersAfter(string method)
         {
-            var logger = new ListLogger();
-            var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController(logger));
+            var mockServiceProvider = new Mock<IServiceResolver>();
+            mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
             {
@@ -763,8 +739,6 @@
             context.RequestInfo.InvocationContext.ControllerMethod.Name.Should().Be(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint);
 
             var controller = context.RequestInfo.InvocationContext.Controller as InjectionController;
-            controller.Logger.Should().NotBeNull();
-            controller.Logger.Should().Be(logger);
         }
     }
 }

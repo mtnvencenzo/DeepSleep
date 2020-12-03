@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Collections.Generic;
@@ -13,6 +12,7 @@
     using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Web;
 
     /// <summary>
     /// 
@@ -43,12 +43,12 @@
             {
                 PathBase = context.Request.PathBase,
                 RequestAborted = context.RequestAborted,
-                RequestServices = context.RequestServices,
+                RequestServices = new ServiceProviderServiceResolver(context.RequestServices),
                 ProcessingInfo = new ApiProcessingInfo
                 {
                     UTCRequestDuration = new ApiRequestDuration
                     {
-                        ServerTime = serverTime
+                        StartDate = serverTime
                     }
                 },
                 RequestInfo = new ApiRequestInfo
@@ -85,9 +85,7 @@
                 }
             };
 
-            TaskCompletionSource<ApiRequestContext> source = new TaskCompletionSource<ApiRequestContext>();
-            source.SetResult(apiContext);
-            return source.Task;
+            return Task.FromResult(apiContext);
         }
 
         /// <summary>Gets the request date.</summary>
@@ -474,7 +472,6 @@
                 }
             }
 
-
             var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xacceptcharset");
             if (queryString.Key != null)
             {
@@ -691,7 +688,7 @@
 
             // RemoteIpAddress is always null in DNX RC1 Update1 (bug).
             if (string.IsNullOrWhiteSpace(port) && context?.Connection?.RemotePort != null)
-                port = context.Connection.RemotePort.ToString();
+                port = context.Connection.RemotePort.ToString(CultureInfo.InvariantCulture);
 
             if (string.IsNullOrWhiteSpace(port))
                 port = GetHeaderValueAs<string>(context, "REMOTE_PORT");
@@ -823,7 +820,7 @@
             {
                 foreach (var q in context.Request.Query)
                 {
-                    qvars.Add(q.Key, WebUtility.UrlDecode(q.Value));
+                    qvars.Add(q.Key, q.Value);
                 }
             }
 
@@ -1092,9 +1089,8 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="requestPipeline">The request pipeline.</param>
         /// <param name="config">The config.</param>
-        /// <param name="logger">The config.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config, ILogger<ApiRequestContextPipelineComponent> logger)
+        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
@@ -1105,7 +1101,6 @@
                     var match = Regex.IsMatch(path, excludedPath);
                     if (match)
                     {
-                        logger?.LogDebug($"Request is being exlcuded from deepsleep processing: {path}");
                         await apinext.Invoke(httpcontext);
                         return;
                     }
@@ -1115,7 +1110,7 @@
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
 
-            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, logger);
+            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
         }
     }
 
@@ -1139,19 +1134,17 @@
         /// <param name="httpcontext"></param>
         /// <param name="contextResolver"></param>
         /// <param name="requestPipeline"></param>
-        /// <param name="logger"></param>
         /// <returns></returns>
-        public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, ILogger logger)
+        public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                logger?.LogInformation($"Processing request - {context.RequestInfo.RequestIdentifier}:  {context.RequestInfo.Path}");
-                logger?.LogDebug($"{context.RequestInfo.Dump()}");
-
                 await requestPipeline.Run(contextResolver);
 
                 var responseDate = DateTime.UtcNow;
                 context.ResponseInfo.Date = responseDate;
+
+                context.ResponseInfo.AddHeader("Date", responseDate.ToString("r"));
                 httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
                 // Sync up the expir header for nocache requests with the date header being used
@@ -1167,7 +1160,7 @@
                 httpcontext.Response.StatusCode = context.ResponseInfo.StatusCode;
 
                 // Add any headers to the http context
-                context.ResponseInfo.Headers.ForEach(h =>
+                void addHeadersToResponse() => context.ResponseInfo.Headers.ForEach(h =>
                 {
                     if (!httpcontext.Response.Headers.ContainsKey(h.Name))
                     {
@@ -1179,21 +1172,15 @@
                 {
                     if (context.ResponseInfo.ResponseWriter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
                     {
-                        context.ResponseInfo.AddHeader("X-PrettyPrint", context.ResponseInfo.ResponseWriterOptions.PrettyPrint.ToString().ToLower());
+                        context.ResponseInfo.AddHeader("X-PrettyPrint", context.ResponseInfo.ResponseWriterOptions.PrettyPrint.ToString().ToLowerInvariant());
                     }
 
-                    if (httpcontext.Response.Headers.FirstOrDefault(k => k.Key == "Content-Type").Key != null)
-                    {
-                        httpcontext.Response.ContentType = context.ResponseInfo.ContentType.ToString();
-                    }
-                    else
-                    {
-                        httpcontext.Response.Headers.Add("Content-Type", context.ResponseInfo.ContentType.ToString());
-                    }
+                    context.ResponseInfo.AddHeader("Content-Type", context.ResponseInfo.ContentType.ToString());
+
 
                     if (!string.IsNullOrWhiteSpace(context.ResponseInfo.ContentLanguage))
                     {
-                        httpcontext.Response.Headers.Add("Content-Language", context.ResponseInfo.ContentLanguage);
+                        context.ResponseInfo.AddHeader("Content-Language", context.ResponseInfo.ContentLanguage);
                     }
 
                     if (!context.RequestInfo.IsHeadRequest())
@@ -1202,7 +1189,12 @@
                             httpcontext.Response.Body,
                             context.ResponseInfo.ResponseObject,
                             context.ResponseInfo.ResponseWriterOptions,
-                            (l) => httpcontext.Response.Headers.Add("Content-Length", l.ToString())).ConfigureAwait(false);
+                            (l) =>
+                            {
+                                context.ResponseInfo.ContentLength = l;
+                                context.ResponseInfo.AddHeader("Content-Length", l.ToString(CultureInfo.InvariantCulture));
+                                addHeadersToResponse();
+                            }).ConfigureAwait(false);
 
                         context.ResponseInfo.ContentLength = contentLength;
                     }
@@ -1214,20 +1206,20 @@
                             context.ResponseInfo.ResponseObject,
                             context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
 
-                        httpcontext.Response.Headers.Add("Content-Length", ms.Length.ToString());
                         context.ResponseInfo.ContentLength = ms.Length;
+                        context.ResponseInfo.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
+                        addHeadersToResponse();
                     }
                 }
                 else
                 {
-                    httpcontext.Response.Headers.Add("Content-Length", "0");
+                    context.ResponseInfo.ContentLength = 0;
+                    context.ResponseInfo.AddHeader("Content-Length", "0");
+                    addHeadersToResponse();
                 }
-
-
-                logger?.LogInformation($"Processing response - {context.RequestInfo.RequestIdentifier}:  {context.RequestInfo.Path}");
-                logger?.LogDebug($"{context.ResponseInfo.Dump()}");
             }
 
+            context.ProcessingInfo.UTCRequestDuration.EndDate = DateTime.UtcNow;
             return true;
         }
     }

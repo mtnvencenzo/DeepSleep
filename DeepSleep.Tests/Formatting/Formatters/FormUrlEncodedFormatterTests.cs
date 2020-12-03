@@ -2,7 +2,6 @@
 {
     using DeepSleep.Formatting.Formatters;
     using FluentAssertions;
-    using Microsoft.Extensions.Logging;
     using Moq;
     using System;
     using System.Collections.Generic;
@@ -30,11 +29,7 @@
         [Fact]
         public async Task BuildsJsonCorrectly()
         {
-            var loggerMock = new Mock<ILogger<FormUrlEncodedFormatter>>();
-
-            var formatter = new FormUrlEncodedFormatter(
-                new FormUrlEncodedObjectSerializer(),
-                loggerMock.Object);
+            var formatter = new FormUrlEncodedFormatter(new FormUrlEncodedObjectSerializer());
 
             string offset = DateTimeOffset.Now.ToString("o", CultureInfo.InvariantCulture);
 

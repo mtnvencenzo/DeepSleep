@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,9 +23,8 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiResponseCorsPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
@@ -35,7 +33,7 @@
             finally
             {
                 var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseCrossOriginResourceSharing(logger).ConfigureAwait(false);
+                await context.ProcessHttpResponseCrossOriginResourceSharing().ConfigureAwait(false);
             }
         }
     }
@@ -55,9 +53,8 @@
 
         /// <summary>Processes the HTTP response cross origin resource sharing.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpResponseCrossOriginResourceSharing(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpResponseCrossOriginResourceSharing(this ApiRequestContext context)
         {
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {

@@ -1,6 +1,5 @@
-﻿namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation.DataAmmotations
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
@@ -17,7 +16,7 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             var source = new TaskCompletionSource<bool>();
             source.SetResult(true);
@@ -30,7 +29,7 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             var source = new TaskCompletionSource<bool>();
             if (obj == null)
@@ -39,8 +38,11 @@
                 return source.Task;
             }
 
+            var validationContext = new ValidationContext(
+                obj, 
+                serviceProvider: serviceProvider, 
+                items: null);
             
-            var validationContext = new ValidationContext(obj, serviceProvider: serviceProvider, items: null);
             var results = new List<ValidationResult>();
 
             var isValid = Validator.TryValidateObject(obj, validationContext, results, true);

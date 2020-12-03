@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using System.IO;
     using System.Text;
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
 
     /// <summary>
@@ -14,16 +13,13 @@
     public class FormUrlEncodedFormatter : IFormatStreamReaderWriter
     {
         private readonly IFormUrlEncodedObjectSerializer serializer;
-        private readonly ILogger logger;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="serializer"></param>
-        /// <param name="logger"></param>
-        public FormUrlEncodedFormatter(IFormUrlEncodedObjectSerializer serializer, ILogger<FormUrlEncodedFormatter> logger)
+        public FormUrlEncodedFormatter(IFormUrlEncodedObjectSerializer serializer)
         {
-            this.logger = logger;
             this.serializer = serializer;
         }
 
@@ -45,7 +41,7 @@
         {
             string data = null;
             Encoding readEncoding = Encoding.Default;
-            this.logger?.LogInformation($"Reading data from request stream");
+            //this.logger?.LogInformation($"Reading data from request stream");
 
             using (var reader = new StreamReader(stream, true))
             {

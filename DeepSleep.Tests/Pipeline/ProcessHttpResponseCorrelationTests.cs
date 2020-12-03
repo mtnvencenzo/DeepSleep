@@ -18,7 +18,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpResponseCorrelation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -36,7 +36,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpResponseCorrelation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -57,7 +57,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCorrelation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -81,7 +81,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCorrelation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

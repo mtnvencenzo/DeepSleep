@@ -20,7 +20,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -32,14 +32,14 @@
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestAborted = new CancellationToken(false),
                 RequestInfo = new ApiRequestInfo
                 {
                     InvocationContext = null
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -61,7 +61,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -86,7 +86,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -111,7 +111,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -136,7 +136,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -163,7 +163,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -190,7 +190,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -225,7 +225,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -260,7 +260,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -295,7 +295,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInvocation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInvocation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

@@ -63,7 +63,7 @@
 
         /// <summary>Gets or sets the request services.</summary>
         /// <value>The request services.</value>
-        public virtual IServiceProvider RequestServices { get; set; }
+        public virtual IServiceResolver RequestServices { get; set; }
 
         /// <summary>Gets the resource.</summary>
         /// <param name="expression">The expression.</param>
@@ -254,6 +254,39 @@
             }
 
             return ApiCondtionalMatchType.None;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static ApiRequestContext SetHttpStatus(this ApiRequestContext context, int status)
+        {
+            if (context?.ResponseInfo != null)
+            {
+                context.ResponseInfo.StatusCode = status;
+            }
+
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static ApiRequestContext SetHttpHeader(this ApiRequestContext context, string name, string value)
+        {
+            if (context?.ResponseInfo != null)
+            {
+                context.ResponseInfo.AddHeader(name, value);
+            }
+
+            return context;
         }
 
         /// <summary>Tries the get item group.</summary>

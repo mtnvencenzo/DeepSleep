@@ -25,6 +25,10 @@
         /// <value>The URI model.</value>
         public object UriModel { get; set; }
 
+        /// <summary>Represents simple parameters on the endpoint method.
+        /// </summary>
+        public IDictionary<ParameterInfo, object> SimpleParameters { get; set; } = new Dictionary<ParameterInfo, object>();
+
         /// <summary>Gets or sets the body model.</summary>
         /// <value>The body model.</value>
         public Type BodyModelType { get; set; }

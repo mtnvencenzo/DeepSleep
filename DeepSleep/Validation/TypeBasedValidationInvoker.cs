@@ -16,7 +16,7 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             bool isValid = true;
 
@@ -72,7 +72,7 @@
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceProvider serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
             var source = new TaskCompletionSource<bool>();
             source.SetResult(true);

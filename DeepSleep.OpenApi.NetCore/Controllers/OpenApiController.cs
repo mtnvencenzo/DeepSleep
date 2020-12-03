@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.OpenApi.NetCore.Controllers
 {
     using System.Threading.Tasks;
-    using System.Collections.Generic;
     using DeepSleep.OpenApi.v3_0;
 
     /// <summary>

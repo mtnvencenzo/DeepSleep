@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -24,13 +23,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestEndpointInvocationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointInvocation(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointInvocation().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -52,9 +50,8 @@
 
         /// <summary>Processes the HTTP endpoint invocation.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpEndpointInvocation(this ApiRequestContext context, ILogger logger)
+        internal static async Task<bool> ProcessHttpEndpointInvocation(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -85,14 +82,25 @@
                         }
                         else
                         {
-                            parameters.Add(param.ParameterType.GetDefaultValue());
+                            var simpleParameter = context.RequestInfo.InvocationContext.SimpleParameters
+                                .Where(p => p.Key.Name == param.Name && p.Key.ParameterType == param.ParameterType)
+                                .FirstOrDefault();
+
+                            if (simpleParameter.Value != null)
+                            {
+                                parameters.Add(simpleParameter.Value);
+                            }
+                            else
+                            {
+                                parameters.Add(param.ParameterType.GetDefaultValue());
+                            }
                         }
                     }
 
                     // -----------------------------------------------------
                     // Invoke the controller method with the parameters list
                     // -----------------------------------------------------
-                    logger?.LogInformation($"Invoking controller method {context.RequestInfo.InvocationContext.Controller.GetType().FullName}::{context.RequestInfo.InvocationContext.ControllerMethod.Name}");
+                    //logger?.LogInformation($"Invoking controller method {context.RequestInfo.InvocationContext.Controller.GetType().FullName}::{context.RequestInfo.InvocationContext.ControllerMethod.Name}");
 
                     var endpointResponse = context.RequestInfo.InvocationContext.ControllerMethod.Invoke(
                         context.RequestInfo.InvocationContext.Controller,

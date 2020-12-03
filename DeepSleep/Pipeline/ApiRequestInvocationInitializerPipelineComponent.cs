@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -60,7 +59,7 @@
         /// Routing item's endpoint name is null
         /// or
         /// </exception>
-        public static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceProvider serviceProvider)
+        internal static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceResolver serviceProvider)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -113,15 +112,17 @@
                     }
                 }
 
-                ParameterInfo uriParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetUriParameter();
-                ParameterInfo bodyParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetBodyParameter();
+                var uriParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetUriParameter();
+                var bodyParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetBodyParameter();
+                var simpleParameters = context.RouteInfo.RoutingItem.EndpointLocation.GetSimpleParameters();
 
                 context.RequestInfo.InvocationContext = new ApiInvocationContext
                 {
                     Controller = endpointController,
                     ControllerMethod = method,
                     UriModelType = uriParameter?.ParameterType,
-                    BodyModelType = bodyParameter?.ParameterType
+                    BodyModelType = bodyParameter?.ParameterType,
+                    SimpleParameters = simpleParameters
                 };
 
                 return Task.FromResult(true);

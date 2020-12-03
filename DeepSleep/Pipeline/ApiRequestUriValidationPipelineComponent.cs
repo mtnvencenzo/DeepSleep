@@ -1,8 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Resources;
-    using Microsoft.Extensions.Logging;
-    using System.Linq;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -24,13 +23,12 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestUriValidationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestUriValidation(responseMessageConverter, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestUriValidation(responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,9 +51,8 @@
         /// <summary>Processes the HTTP request URI validation.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestUriValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        internal static Task<bool> ProcessHttpRequestUriValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -65,9 +62,9 @@
                 {
                     if (context.RequestInfo.RequestUri.Length > max)
                     {
-                        logger?.LogWarning($"Request Uri validation failed, issueing HTTP 414 URI Too Long");
+                        //logger?.LogWarning($"Request Uri validation failed, issueing HTTP 414 URI Too Long");
 
-                        context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString())));
+                        context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString(CultureInfo.InvariantCulture))));
                         context.ResponseInfo.StatusCode = 414;
 
                         return Task.FromResult(false);

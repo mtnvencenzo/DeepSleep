@@ -27,7 +27,7 @@
             var contextResolver = this.serviceProvider.GetService<IApiRequestContextResolver>();
             var requestPipeline = this.serviceProvider.GetService<IApiRequestPipeline>();
 
-            await contextPipeline.Invoke(httpContext, contextResolver, requestPipeline, this.serviceConfiguration, null);
+            await contextPipeline.Invoke(httpContext, contextResolver, requestPipeline, this.serviceConfiguration);
             return contextResolver.GetContext();
         }
     }

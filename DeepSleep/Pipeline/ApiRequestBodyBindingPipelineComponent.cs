@@ -2,9 +2,7 @@
 {
     using DeepSleep.Formatting;
     using DeepSleep.Resources;
-    using Microsoft.Extensions.Logging;
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -27,13 +25,12 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestBodyBindingPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestBodyBinding(formatterFactory, responseMessageConverter, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestBodyBinding(formatterFactory, responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -57,9 +54,8 @@
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -67,7 +63,7 @@
                 {
                     if (!context.RequestInfo.ContentLength.HasValue)
                     {
-                        logger?.LogWarning($"Request did not contain a Content-Length header for request method {context.RequestInfo.Method}, issueing HTTP 411 Length Required");
+                        //logger?.LogWarning($"Request did not contain a Content-Length header for request method {context.RequestInfo.Method}, issueing HTTP 411 Length Required");
 
                         context.ResponseInfo.StatusCode = 411;
 
@@ -76,7 +72,7 @@
 
                     if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
-                        logger?.LogWarning($"Request did not contain a Content-Type header for request with a content length provided, issueing HTTP 422 Unprocessable Entity");
+                        //logger?.LogWarning($"Request did not contain a Content-Type header for request with a content length provided, issueing HTTP 422 Unprocessable Entity");
 
                         context.ResponseInfo.StatusCode = 422;
 
@@ -85,7 +81,7 @@
 
                     if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
                     {
-                        logger?.LogWarning($"Bpdy model type not available but a body was supplied in the request, issueing HTTP 413 Payload Too Large");
+                        //logger?.LogWarning($"Bpdy model type not available but a body was supplied in the request, issueing HTTP 413 Payload Too Large");
 
                         context.ResponseInfo.StatusCode = 413;
 
@@ -100,7 +96,7 @@
 
                         if (formatter == null)
                         {
-                            logger?.LogWarning($"Could not find a formatter for the request Content-Type, issueing HTTP 415 Unsupported Media Type");
+                            //logger?.LogWarning($"Could not find a formatter for the request Content-Type, issueing HTTP 415 Unsupported Media Type");
 
                             context.ResponseInfo.StatusCode = 415;
 
@@ -112,11 +108,11 @@
                             context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType)
                                 .ConfigureAwait(false);
 
-                            logger?.LogInformation($"Body model type: {context.RequestInfo.InvocationContext.BodyModelType.FullName} has successfully been bound");
+                            //logger?.LogInformation($"Body model type: {context.RequestInfo.InvocationContext.BodyModelType.FullName} has successfully been bound");
                         }
                         catch (System.Exception)
                         {
-                            logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
+                            //logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
 
                             context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(ValidationErrors.RequestBodyDeserializationError));
 

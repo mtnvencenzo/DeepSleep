@@ -18,7 +18,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -36,7 +36,7 @@
                 RouteInfo = null
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -54,7 +54,7 @@
                 RequestConfig = null
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -75,7 +75,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -96,7 +96,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -117,7 +117,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseDeprecated(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using DeepSleep.NetCore.Tests.Mocks;
     using System;
-    using System.Collections.Generic;
 
     public class NotFound404RequestTest : PipelineTestBase
     {

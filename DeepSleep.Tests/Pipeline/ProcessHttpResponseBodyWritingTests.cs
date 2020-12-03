@@ -4,12 +4,9 @@
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.Pipeline;
     using FluentAssertions;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Moq;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Xunit;
 
     /// <summary>
@@ -576,7 +573,7 @@
 
         private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null, null })
+            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };

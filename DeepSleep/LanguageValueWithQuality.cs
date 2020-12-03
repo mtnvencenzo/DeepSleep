@@ -61,7 +61,7 @@
             if (Quality == 1)
                 return "1";
 
-            return _qual.ToString(".###").TrimEnd(new char[] { '0' });
+            return _qual.ToString(".###", CultureInfo.InvariantCulture).TrimEnd(new char[] { '0' });
         }
 
         /// <summary>Parameters the string.</summary>

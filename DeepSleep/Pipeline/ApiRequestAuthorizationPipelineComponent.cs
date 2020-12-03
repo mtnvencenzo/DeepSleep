@@ -1,10 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Auth;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -27,13 +24,12 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The responseMessageConverter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestAuthorizationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -56,16 +52,13 @@
         /// <summary>Processes the HTTP request authorization.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The responseMessageConverter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        internal static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.ResourceAuthorizationConfig?.Policy))
                 {
-                    logger?.LogInformation($"Using authorization policy ${context.RequestConfig.ResourceAuthorizationConfig.Policy}");
-
                     var providers = context.RequestServices
                         .GetServices<IAuthorizationProvider>()
                         .ToList();
@@ -76,15 +69,12 @@
                     {
                         authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig?.ResourceAuthorizationConfig?.Policy));
                     }
-                    catch (System.Exception ex)
+                    catch (Exception)
                     {
-                        logger?.LogError(ex, $"Could not retrive auth providers from DI.");
                     }
 
                     if (authProvider != null)
                     {
-                        logger?.LogDebug($"Attemping authorization using policy '{authProvider.Policy}'.");
-
                         await authProvider.Authorize(context, responseMessageConverter).ConfigureAwait(false);
                     }
 
@@ -94,11 +84,11 @@
                     {
                         if (result == null)
                         {
-                            logger?.LogWarning($"Invalid authorization, null result returned.");
+                            //logger?.LogWarning($"Invalid authorization, null result returned.");
                         }
                         else
                         {
-                            logger?.LogWarning($"Request failed authorization with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
+                            //logger?.LogWarning($"Request failed authorization with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
                         }
 
                         if (authProvider == null)
@@ -111,8 +101,6 @@
                         return false;
                     }
                 }
-
-                logger?.LogInformation($"Client request was successfully authorized using policy: {context.RequestConfig?.ResourceAuthorizationConfig?.Policy}.");
 
                 return true;
             }

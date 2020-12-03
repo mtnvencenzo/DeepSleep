@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Configuration;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,12 +27,11 @@
         /// <param name="routes">The routes.</param>
         /// <param name="resolver">The resolver.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
-        /// <param name="logger">The logger.</param>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig, ILogger<ApiRequestRoutingPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestRouting(routes, resolver, defaultRequestConfig, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestRouting(routes, resolver, defaultRequestConfig).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -58,12 +56,9 @@
         /// <param name="routes">The routes.</param>
         /// <param name="resolver">The resolver.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig, ILogger logger)
+        internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig)
         {
-            logger?.LogInformation("LogDebug");
-
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (routes != null && resolver != null)

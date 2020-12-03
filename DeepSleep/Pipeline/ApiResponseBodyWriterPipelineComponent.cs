@@ -1,9 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
-    using Microsoft.Extensions.Logging;
-    using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -54,7 +51,7 @@
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

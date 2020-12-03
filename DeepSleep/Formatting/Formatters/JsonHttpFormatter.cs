@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using DeepSleep.Formatting.Converters;
 
     /// <summary>
     /// 
@@ -133,6 +134,8 @@
             };
 
             settings.Converters.Add(new JsonStringEnumConverter(jsonNamingPolicy, false));
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableTimeSpanConverter());
 
             return settings;
         }

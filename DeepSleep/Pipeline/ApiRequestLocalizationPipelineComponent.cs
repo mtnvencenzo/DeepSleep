@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -55,7 +54,7 @@
         /// <summary>Processes the HTTP request localization.</summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context)
+        internal static Task<bool> ProcessHttpRequestLocalization(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -121,7 +120,7 @@
         /// <param name="supportedLanguages">The supported languages.</param>
         /// <param name="acceptLanguages">The accept languages.</param>
         /// <returns></returns>
-        private static string GetAcceptedSupportedLanguage(IEnumerable<string> supportedLanguages, IEnumerable<LanguageValueWithQuality> acceptLanguages)
+        internal static string GetAcceptedSupportedLanguage(IEnumerable<string> supportedLanguages, IEnumerable<LanguageValueWithQuality> acceptLanguages)
         {
             if (supportedLanguages == null)
                 return string.Empty;
@@ -161,7 +160,7 @@
         /// <summary>Prepares the culture code as neutral culture.</summary>
         /// <param name="code">The code.</param>
         /// <returns></returns>
-        private static string PrepareCultureCodeAsNeutralCulture(string code)
+        internal static string PrepareCultureCodeAsNeutralCulture(string code)
         {
             var cd = code?.Trim();
 

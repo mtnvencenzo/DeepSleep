@@ -1,8 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Resources;
-    using Microsoft.Extensions.Logging;
-    using System.Linq;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -24,13 +23,12 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, ILogger<ApiRequestHeaderValidationPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter, logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,9 +51,8 @@
         /// <summary>Processes the HTTP request header validation.</summary>
         /// <param name="context">The context.</param>
         /// <param name="responseMessageConverter">The response message converter.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, ILogger logger)
+        internal static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -74,7 +71,7 @@
                                 addedHeaderError = true;
                                 context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.HeaderLengthExceeded,
                                     header.Name,
-                                    maxHeaderLength.ToString())));
+                                    maxHeaderLength.ToString(CultureInfo.InvariantCulture))));
                             }
                         }
                     }
@@ -82,7 +79,7 @@
 
                 if (addedHeaderError)
                 {
-                    logger?.LogWarning($"Header validation failed, issueing HTTP 431 Request Header Fields Too Large");
+                    //logger?.LogWarning($"Header validation failed, issueing HTTP 431 Request Header Fields Too Large");
 
                     context.ResponseInfo.StatusCode = 431;
 

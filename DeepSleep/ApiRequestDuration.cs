@@ -14,7 +14,7 @@
         /// </summary>
         public ApiRequestDuration()
         {
-            ServerTime = DateTime.UtcNow;
+            StartDate = DateTime.UtcNow;
             EndDate = DateTime.MaxValue.ChangeKind(DateTimeKind.Utc);
         }
 
@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
-        public DateTime ServerTime { get; set; }
+        public DateTime StartDate { get; set; }
 
         /// <summary>Gets or sets the duration.</summary>
         /// <value>The duration.</value>
@@ -36,7 +36,7 @@
         {
             get
             {
-                return (int)(EndDate - ServerTime).TotalMilliseconds;
+                return (int)(EndDate - StartDate).TotalMilliseconds;
             }
         }
     }

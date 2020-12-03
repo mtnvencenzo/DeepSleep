@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using Microsoft.Extensions.Logging;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -22,13 +21,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<ApiRequestMethodPipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestMethod(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestMethod().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +48,8 @@
 
         /// <summary>Processes the HTTP request method.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -75,7 +72,7 @@
 
                         context.ResponseInfo.AddHeader("Allow", string.Join(", ", methods));
                         
-                        logger?.LogWarning($"Request method {context.RequestInfo.Method} could be not matched with template {context.RouteInfo.TemplateInfo}.  Available methods are {string.Join(", ", methods)}, issueing HTTP 405 Method Not Allowed");
+                        //logger?.LogWarning($"Request method {context.RequestInfo.Method} could be not matched with template {context.RouteInfo.TemplateInfo}.  Available methods are {string.Join(", ", methods)}, issueing HTTP 405 Method Not Allowed");
 
                         context.ResponseInfo.StatusCode = 405;
 

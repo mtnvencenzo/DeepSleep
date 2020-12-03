@@ -16,7 +16,7 @@
         {
             var context = new ApiRequestContext();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(null, null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -30,7 +30,7 @@
 
             var exception = new ApiNotImplementedException("Not Implmented");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, null, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, null, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -61,7 +61,7 @@
 
             var exception = new ApiNotImplementedException("Not Implmented");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -93,7 +93,7 @@
 
             var exception = new Exception("ex");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();

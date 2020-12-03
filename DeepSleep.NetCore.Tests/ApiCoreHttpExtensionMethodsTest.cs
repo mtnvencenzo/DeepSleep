@@ -53,8 +53,10 @@ namespace DeepSleep.NetCore.Tests
         {
             IServiceCollection services = new ServiceCollection();
 
-            var config = new DefaultApiServiceConfiguration();
-            config.UsePingEndpoint = false;
+            var config = new DefaultApiServiceConfiguration
+            {
+                UsePingEndpoint = false
+            };
 
             services.UseApiCoreServices(config);
 
@@ -75,8 +77,10 @@ namespace DeepSleep.NetCore.Tests
         {
             IServiceCollection services = new ServiceCollection();
 
-            var config = new DefaultApiServiceConfiguration();
-            config.UseEnvironmentEndpoint = false;
+            var config = new DefaultApiServiceConfiguration
+            {
+                UseEnvironmentEndpoint = false
+            };
 
             services.UseApiCoreServices(config);
 

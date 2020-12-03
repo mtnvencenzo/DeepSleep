@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using System.Linq;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// 
@@ -22,13 +21,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, ILogger<HttpConformancePipelineComponent> logger)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpConformance(logger).ConfigureAwait(false))
+            if (await context.ProcessHttpConformance().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +48,8 @@
 
         /// <summary>Processes the HTTP conformance.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="logger">The logger.</param>
         /// <returns></returns>
-        public static Task<bool> ProcessHttpConformance(this ApiRequestContext context, ILogger logger)
+        internal static Task<bool> ProcessHttpConformance(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -69,7 +66,7 @@
                 // Only supportting http 1.1 and http 2.0
                 if (!validHttpVersions.Contains(context?.RequestInfo?.Protocol?.ToLowerInvariant()))
                 {
-                    logger?.LogInformation($"Http version {context.RequestInfo?.Protocol} is un-supported, issueing HTTP 505 HTTP Version Not Supported");
+                    //logger?.LogInformation($"Http version {context.RequestInfo?.Protocol} is un-supported, issueing HTTP 505 HTTP Version Not Supported");
 
                     context.ResponseInfo.StatusCode = 505;
 

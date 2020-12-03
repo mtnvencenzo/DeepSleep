@@ -1,18 +1,13 @@
 ﻿namespace DeepSleep.Tests.TestArtifacts
 {
-    using Microsoft.Extensions.Logging;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class InjectionController
     {
-        private readonly ILogger logger;
-
         /// <summary>Injections the controller.</summary>
         /// <param name="logger">The logger.</param>
-        public InjectionController(ILogger logger)
+        public InjectionController()
         {
-            this.logger = logger;
         }
 
         public void DefaultEndpoint()
@@ -55,7 +50,5 @@
         public void DefaultEndpointWithUriAndBodyAndOthersAfter([UriBound] StandardModel requestUri, [BodyBound] StandardNullableModel requestBody, string uri, string body)
         {
         }
-
-        public ILogger Logger => logger;
     }
 }

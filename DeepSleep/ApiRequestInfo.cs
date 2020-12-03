@@ -119,7 +119,7 @@
 
         /// <summary>Gets or sets the query variables.</summary>
         /// <value>The query variables.</value>
-        public virtual Dictionary<string, string> QueryVariables { get; set; }
+        public virtual Dictionary<string, string> QueryVariables { get; set; } = new Dictionary<string, string>();
 
         /// <summary>Gets or sets the protocol.</summary>
         /// <value>The protocol.</value>
@@ -131,7 +131,7 @@
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public virtual List<ApiHeader> Headers { get; set; }
+        public virtual List<ApiHeader> Headers { get; set; } = new List<ApiHeader>();
 
         /// <summary>Gets or sets the body.</summary>
         /// <value>The body.</value>
