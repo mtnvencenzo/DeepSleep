@@ -18,9 +18,7 @@
         /// <returns></returns>
         public Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
         {
-            var source = new TaskCompletionSource<bool>();
-            source.SetResult(true);
-            return source.Task;
+            return Task.FromResult(true);
         }
 
         /// <summary>Invokes the object validation.</summary>

@@ -74,11 +74,15 @@
                     {
                         foreach (var routeVar in context.RouteInfo.RoutingItem.RouteVariables.Keys)
                         {
-                            if (!nameValues.TryAdd(routeVar, context.RouteInfo.RoutingItem.RouteVariables[routeVar]))
+                            if (nameValues.ContainsKey(routeVar))
                             {
                                 addedBindingError = true;
                                 context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.UriRouteBindingError,
                                     routeVar)));
+                            }
+                            else
+                            {
+                                nameValues.Add(routeVar, context.RouteInfo.RoutingItem.RouteVariables[routeVar]);
                             }
                         }
                     }
@@ -89,7 +93,7 @@
                         {
                             if (!nameValues.ContainsKey(qvar))
                             {
-                                nameValues.TryAdd(qvar, context.RequestInfo.QueryVariables[qvar]);
+                                nameValues.Add(qvar, context.RequestInfo.QueryVariables[qvar]);
                             }
                         }
                     }
@@ -104,7 +108,7 @@
                             var bindingValues = nameValues
                                 .Select(kv => $"{kv.Key}={kv.Value}");
 
-                            var formUrlEncoded = string.Join('&', bindingValues);
+                            var formUrlEncoded = string.Join("&", bindingValues);
 
                             try
                             {

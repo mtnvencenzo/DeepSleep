@@ -61,10 +61,11 @@
                 return null;
             }
 
-            var elements = (data.TrimStart('?').Split("&", StringSplitOptions.RemoveEmptyEntries) ?? new string[] { })
-                .Where(s => s.Contains("="))
-                .Select(s => s.Split('='))
-                .Select(s =>
+            var elements = (data.TrimStart('?')
+                 .Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[] { })
+                 .Where(s => s.Contains("="))
+                 .Select(s => s.Split('='))
+                 .Select(s =>
                 {
                     string sName = s.Length > 0
                         ? urlDecode ? s[0] : HttpUtility.UrlDecode(s[0])
@@ -75,29 +76,31 @@
                         : string.Empty;
 
                     var isRoot = !sName.Contains('.');
-                    var parts = sName.Trim().Split('.', StringSplitOptions.RemoveEmptyEntries);
+                    var parts = sName
+                        .Trim()
+                        .Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
                     var parent = isRoot
                         ? "__root__"
-                        : "__root__." + parts[..(parts.Length - 1)].Concatenate(".").Trim().TrimEnd('.');
+                        : "__root__." + parts.Take(parts.Length - 1).ToArray().Concatenate(".").Trim().TrimEnd('.');
 
-                    var name = sName.Trim()[(sName.LastIndexOf('.') + 1)..].Trim();
+                    var name = sName.Trim().Substring(sName.LastIndexOf('.') + 1).Trim();
 
-                    if (parts[^1] == name && name.EndsWith(']'))
+                    if (parts.Last() == name && name.EndsWith("]"))
                     {
                         name = string.Empty;
-                        parent = parent + "." + parts[^1];
+                        parent = parent + "." + parts.Last();
                     }
 
                     return (
                         name: name,
                         value: sValue,
                         parent: parent,
-                        parentIsArray: parent.EndsWith(']'),
-                        parentIsPrimitiveArray: parent.EndsWith(']') && name == string.Empty,
-                        isPrimitiveArrayItem: parent.EndsWith(']') && name == string.Empty,
-                        parentArrayIndex: (parent.EndsWith(']'))
-                            ? Convert.ToInt32(parent[(parent.LastIndexOf('[') + 1)..^1])
+                        parentIsArray: parent.EndsWith("]"),
+                        parentIsPrimitiveArray: parent.EndsWith("]") && name == string.Empty,
+                        isPrimitiveArrayItem: parent.EndsWith("]") && name == string.Empty,
+                        parentArrayIndex: (parent.EndsWith("]"))
+                            ? Convert.ToInt32(parent.Substring(0, parent.Length - 1).Substring(parent.LastIndexOf('[') + 1))
                             : -1
                     );
                 })
@@ -120,19 +123,19 @@
                 }
                 else
                 {
-                    var parts = e.parent.Split('.', StringSplitOptions.RemoveEmptyEntries);
+                    var parts = e.parent.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    for (int i = parts.Length - 1; i >= 0; i--)
+                    for (int i = 1; i <= parts.Length; i++)
                     {
-                        var parent = parts[..^i].Concatenate(".").Trim().TrimEnd('.');
+                        var parent = parts.Take(i).ToArray().Concatenate(".").Trim().TrimEnd('.');
 
                         items.Add((
-                            parent: regexArrayReplace.Replace((parent.EndsWith(']')
-                                ? parent[..(parent.LastIndexOf('['))].Trim().TrimEnd('.')
+                            parent: regexArrayReplace.Replace((parent.EndsWith("]")
+                                ? parent.Substring(0, parent.LastIndexOf('[')).Trim().TrimEnd('.')
                                 : parent.Trim().TrimEnd('.')), string.Empty),
-                            isArray: parent.EndsWith(']'),
-                            arrayCount: (parent.EndsWith(']'))
-                                ? Convert.ToInt32(parent[(parent.LastIndexOf('[') + 1)..^1]) + 1
+                            isArray: parent.EndsWith("]"),
+                            arrayCount: (parent.EndsWith("]"))
+                                ? Convert.ToInt32(parent.Substring(0, parent.Length - 1).Substring(parent.LastIndexOf('[') + 1)) + 1
                                 : 0
                         ));
                     }
@@ -235,14 +238,14 @@
                 this.WriteObject(
                     writer,
                     childObject.parent,
-                    childObject.parent[(childObject.parent.LastIndexOf('.') + 1)..],
+                    childObject.parent.Substring(childObject.parent.LastIndexOf('.') + 1),
                     elementPool,
                     parentPool);
             }
 
             foreach (var childArray in parentPool.Where(p => p.isArray && pathMatch.IsMatch(p.parent)))
             {
-                var arrayParent = parentPath + '.' + childArray.parent[(childArray.parent.LastIndexOf('.') + 1)..];
+                var arrayParent = parentPath + '.' + childArray.parent.Substring(childArray.parent.LastIndexOf('.') + 1);
 
                 var elements = elementPool
                     .Where(e => e.parentIsArray)
@@ -254,11 +257,12 @@
                     .Where(e => e.parentArrayIndex >= 0)
                     .Where(e => e.isPrimitiveArrayItem)
                     .Where(e => e.parentIsPrimitiveArray)
-                    .Where(e => e.parent[..(e.parent.LastIndexOf('['))] == arrayParent);
+                    .Where(e => e.parent.Substring(0, e.parent.LastIndexOf('[')) == arrayParent);
 
                 if (elements.Any() || primitiveElements.Any())
                 {
-                    var arrayPropertyName = childArray.parent[(childArray.parent.LastIndexOf('.') + 1)..];
+                    int arrayPropertyNameStart = childArray.parent.LastIndexOf('.') + 1;
+                    var arrayPropertyName = childArray.parent.Substring(arrayPropertyNameStart);
 
                     if (primitiveElements.Any())
                     {
