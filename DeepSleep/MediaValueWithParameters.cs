@@ -8,7 +8,7 @@
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{ToString(true)}")]
+    [DebuggerDisplay("{ToString(true, true)}")]
     public class MediaValueWithParameters
     {
         #region Constructors & Initialization
@@ -34,6 +34,10 @@
         /// <summary>Gets or sets the charset.</summary>
         /// <value>The charset.</value>
         public string Charset { get; set; }
+
+        /// <summary>Gets or sets the boundary.</summary>
+        /// <value>The boundary.</value>
+        public string Boundary { get; set; }
 
         /// <summary>Gets the type of the media.</summary>
         /// <value>The type of the media.</value>
@@ -62,6 +66,16 @@
             return $"; charset={Charset}";
         }
 
+        /// <summary>Boundaries the string.</summary>
+        /// <returns></returns>
+        internal string BoundaryString()
+        {
+            if (string.IsNullOrWhiteSpace(Boundary))
+                return string.Empty;
+
+            return $"; boundary={Boundary}";
+        }
+
         /// <summary>Parameters the string.</summary>
         /// <returns></returns>
         internal string ParameterString()
@@ -85,21 +99,24 @@
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return ToString(true);
+            return ToString(true, true);
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
+        /// <summary>Converts to string.</summary>
         /// <param name="includeCharset">if set to <c>true</c> [include charset].</param>
+        /// <param name="includeBoundary">if set to <c>true</c> [include boundary].</param>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public virtual string ToString(bool includeCharset)
+        public virtual string ToString(bool includeCharset, bool includeBoundary)
         {
             string charsetString = (includeCharset)
                 ? CharsetString()
                 : string.Empty;
 
-            return $"{Type}/{SubType}{charsetString}{ParameterString()}";
+            string boundaryString = (includeBoundary)
+                ? BoundaryString()
+                : string.Empty;
+
+            return $"{Type}/{SubType}{charsetString}{boundaryString}{ParameterString()}";
         }
     }
 
@@ -143,7 +160,10 @@
                     Type = type,
                     SubType = subType,
                     Charset = parts.FirstOrDefault(p => p.Trim().ToLower().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase))?.ToLower()?.Replace("charset=",string.Empty) ?? string.Empty,
-                    Parameters = parts.ToList().FindAll(p => !p.Trim().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase) && p != parts[0])
+                    Boundary = (parts.FirstOrDefault(p => p.Trim().ToLower().StartsWith("boundary=", StringComparison.InvariantCultureIgnoreCase))?.Replace("boundary=", string.Empty) ?? string.Empty).Trim(),
+                    Parameters = parts
+                        .ToList()
+                        .FindAll(p => !p.Trim().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase) && !p.Trim().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase) && p != parts[0])
                 };
             }
         }

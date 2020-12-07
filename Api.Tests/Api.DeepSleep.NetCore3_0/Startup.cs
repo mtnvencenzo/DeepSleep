@@ -1,6 +1,7 @@
 namespace Api.DeepSleep.NetCore3_0
 {
     using Api.DeepSleep.Controllers.Binding;
+    using Api.DeepSleep.Controllers.Formatters;
     using global::DeepSleep;
     using global::DeepSleep.Configuration;
     using global::DeepSleep.Formatting;
@@ -55,6 +56,7 @@ namespace Api.DeepSleep.NetCore3_0
         {
             // Controlllers
             services.AddTransient<SimpleUrlBindingController>();
+            services.AddTransient<MultipartController>();
 
             services
                 .AddLogging()
@@ -126,6 +128,22 @@ namespace Api.DeepSleep.NetCore3_0
                 name: "GET_binding/simple/url/{stringVar}/mixed",
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithMixed),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "formatters/multipart/formdata",
+                httpMethod: "POST",
+                name: "POST_formatters/multipart/formdata",
+                controller: typeof(MultipartController),
+                endpoint: nameof(MultipartController.Post),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "formatters/multipart/formdata/custom",
+                httpMethod: "POST",
+                name: "POST_formatters/multipart/formdata/custom",
+                controller: typeof(MultipartController),
+                endpoint: nameof(MultipartController.PostCustom),
                 config: new DefaultApiRequestConfiguration());
 
             return table;

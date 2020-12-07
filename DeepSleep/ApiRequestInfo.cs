@@ -137,6 +137,10 @@
         /// <value>The body.</value>
         public virtual Stream Body { get; set; }
 
+        ///// <summary>Gets or sets the multipart content of the form
+        ///// </summary>
+        //public virtual MultipartFormData Multipart { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

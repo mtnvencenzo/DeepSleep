@@ -39,11 +39,13 @@
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
+                .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
-                .AddScoped<IServiceResolver, ServiceProviderServiceResolver>((p) => new ServiceProviderServiceResolver(p));
+                .AddScoped<IServiceResolver, ServiceProviderServiceResolver>((p) => new ServiceProviderServiceResolver(p))
+                .AddScoped<IMultipartStreamReader, MultipartStreamReader>();
 
             if (config.FormatterFactory != null)
             {

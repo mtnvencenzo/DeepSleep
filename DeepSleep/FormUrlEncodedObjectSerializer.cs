@@ -181,14 +181,16 @@
                 json = Encoding.UTF8.GetString(ms.ToArray());
             }
 
-            // System.Diagnostics.Debug.Write(json);
+            //System.Diagnostics.Debug.Write(json);
 
             if (string.IsNullOrWhiteSpace(json))
             {
-                json = "{}";
+                json = typeof(System.Collections.IEnumerable).IsAssignableFrom(objType)
+                    ? "[]"
+                    : "{}";
             }
 
-
+  
             var obj = JsonSerializer.Deserialize(json, objType, JsonReaderSerializationOptions.ReaderOptions);
             return obj;
         }

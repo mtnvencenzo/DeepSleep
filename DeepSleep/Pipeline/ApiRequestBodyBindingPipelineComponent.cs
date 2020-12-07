@@ -110,8 +110,11 @@
 
                             //logger?.LogInformation($"Body model type: {context.RequestInfo.InvocationContext.BodyModelType.FullName} has successfully been bound");
                         }
-                        catch (System.Exception)
+                        catch (System.Exception ex)
                         {
+                            if (ex == null)
+                            {
+                            }
                             //logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
 
                             context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(ValidationErrors.RequestBodyDeserializationError));

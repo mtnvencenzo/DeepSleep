@@ -41,7 +41,6 @@
         {
             string data = null;
             Encoding readEncoding = Encoding.Default;
-            //this.logger?.LogInformation($"Reading data from request stream");
 
             using (var reader = new StreamReader(stream, true))
             {

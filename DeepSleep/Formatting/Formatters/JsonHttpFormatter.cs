@@ -136,6 +136,8 @@
             settings.Converters.Add(new JsonStringEnumConverter(jsonNamingPolicy, false));
             settings.Converters.Add(new TimeSpanConverter());
             settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new ContentDispositionConverter());
+            settings.Converters.Add(new MediaHeaderValueWithParametersConverter());
 
             return settings;
         }

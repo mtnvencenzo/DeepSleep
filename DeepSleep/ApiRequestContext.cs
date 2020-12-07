@@ -100,6 +100,10 @@
             this.ResponseInfo.Cookies.Add(cookie);
             return this;
         }
+
+        /// <summary>Gets or sets the register for dispose.</summary>
+        /// <value>The register for dispose.</value>
+        public Action<IDisposable> RegisterForDispose { get; set; }
     }
 
     /// <summary>

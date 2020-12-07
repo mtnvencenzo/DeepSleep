@@ -3,16 +3,15 @@
     using DeepSleep.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using System.Web;
 
     /// <summary>
     /// 
@@ -30,7 +29,34 @@
             apinext = next;
         }
 
-        #region Helper Methods and Fields
+        /// <summary>Invokes the specified httpcontext.</summary>
+        /// <param name="httpcontext">The httpcontext.</param>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="requestPipeline">The request pipeline.</param>
+        /// <param name="config">The config.</param>
+        /// <returns></returns>
+        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
+        {
+            var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
+
+            if (config?.ExcludePaths != null)
+            {
+                foreach (var excludedPath in config.ExcludePaths)
+                {
+                    var match = Regex.IsMatch(path, excludedPath);
+                    if (match)
+                    {
+                        await apinext.Invoke(httpcontext);
+                        return;
+                    }
+                }
+            }
+
+            contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
+            var context = contextResolver.GetContext();
+
+            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
+        }
 
         /// <summary>Builds the API request context.</summary>
         /// <param name="context">The context.</param>
@@ -38,12 +64,13 @@
         private Task<ApiRequestContext> BuildApiRequestContext(HttpContext context)
         {
             DateTime serverTime = DateTime.UtcNow;
-            
+
             var apiContext = new ApiRequestContext
             {
                 PathBase = context.Request.PathBase,
                 RequestAborted = context.RequestAborted,
                 RequestServices = new ServiceProviderServiceResolver(context.RequestServices),
+                RegisterForDispose = (disposable) => context.Response.RegisterForDispose(disposable),
                 ProcessingInfo = new ApiProcessingInfo
                 {
                     UTCRequestDuration = new ApiRequestDuration
@@ -75,13 +102,13 @@
                     Cookies = GetRequestCookies(context.Request),
                     // GETTING FULL URI BASED ON HEADER HOST AND NOT DIRECTLY FROM RequestURI.
                     // THIS CAN BE CHANGED VIA PROXY SERVERS BUT CLIENT APPS USE THE HOST HEADER
-                    RequestUri = WebUtility.UrlDecode(context.Request.Scheme + "://" + context.Request.Host + context.Request.Path + context.Request.QueryString),
+                    RequestUri = context.Request.GetEncodedUrl(),
                     Headers = GetRequestHeaders(context.Request),
                     IfMatch = GetIfMatch(context.Request),
                     IfNoneMatch = GetIfNoneMatch(context.Request),
                     IfModifiedSince = GetIfModifiedSince(context.Request),
                     IfUnmodifiedSince = GetIfUnmodifiedSince(context.Request),
-                    Body = context.Request.Body
+                    Body = context.Request.Body,
                 }
             };
 
@@ -98,7 +125,7 @@
             {
                 return null;
             }
-            
+
 
             DateTime? requestDate = null;
             string rawEpoch = string.Empty;
@@ -452,14 +479,14 @@
             }
 
 
-            string accept = null;
+            string charset = null;
 
             var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "accept-charset");
             if (header.Key != null)
             {
                 if (!string.IsNullOrWhiteSpace(header.Value))
                 {
-                    accept = header.Value;
+                    charset = header.Value;
                 }
             }
 
@@ -468,7 +495,7 @@
             {
                 if (!string.IsNullOrWhiteSpace(header.Value))
                 {
-                    accept = header.Value;
+                    charset = header.Value;
                 }
             }
 
@@ -477,11 +504,11 @@
             {
                 if (!string.IsNullOrWhiteSpace(queryString.Value))
                 {
-                    accept = queryString.Value;
+                    charset = queryString.Value;
                 }
             }
 
-            return accept;
+            return charset;
         }
 
         /// <summary>Gets the client authentication information.</summary>
@@ -651,7 +678,7 @@
             if (tryUseXForwardHeader)
                 ip = SplitCsv(GetHeaderValueAs<string>(context, "X-Forwarded-For")).FirstOrDefault();
 
-            if(tryUseXForwardHeader && string.IsNullOrWhiteSpace(ip))
+            if (tryUseXForwardHeader && string.IsNullOrWhiteSpace(ip))
                 ip = SplitCsv(GetHeaderValueAs<string>(context, "X-Original-For")).FirstOrDefault();
 
 
@@ -661,7 +688,7 @@
 
             if (string.IsNullOrWhiteSpace(ip))
                 ip = GetHeaderValueAs<string>(context, "REMOTE_ADDR");
-  
+
             return ip;
         }
 
@@ -827,10 +854,8 @@
             return qvars;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <summary>Gets the request cookies.</summary>
+        /// <param name="request">The request.</param>
         /// <returns></returns>
         private Dictionary<string, string> GetRequestCookies(HttpRequest request)
         {
@@ -850,10 +875,8 @@
             return cookies;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <summary>Gets if match.</summary>
+        /// <param name="request">The request.</param>
         /// <returns></returns>
         private string GetIfMatch(HttpRequest request)
         {
@@ -903,10 +926,8 @@
             return returnValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <summary>Gets if none match.</summary>
+        /// <param name="request">The request.</param>
         /// <returns></returns>
         private string GetIfNoneMatch(HttpRequest request)
         {
@@ -956,10 +977,8 @@
             return returnValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <summary>Gets if modified since.</summary>
+        /// <param name="request">The request.</param>
         /// <returns></returns>
         private DateTimeOffset? GetIfModifiedSince(HttpRequest request)
         {
@@ -1019,10 +1038,8 @@
             return returnValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <summary>Gets if unmodified since.</summary>
+        /// <param name="request">The request.</param>
         /// <returns></returns>
         private DateTimeOffset? GetIfUnmodifiedSince(HttpRequest request)
         {
@@ -1081,37 +1098,6 @@
 
             return returnValue;
         }
-
-        #endregion
-
-        /// <summary>Invokes the specified httpcontext.</summary>
-        /// <param name="httpcontext">The httpcontext.</param>
-        /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="requestPipeline">The request pipeline.</param>
-        /// <param name="config">The config.</param>
-        /// <returns></returns>
-        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
-        {
-            var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
-
-            if (config?.ExcludePaths != null)
-            {
-                foreach (var excludedPath in config.ExcludePaths)
-                {
-                    var match = Regex.IsMatch(path, excludedPath);
-                    if (match)
-                    {
-                        await apinext.Invoke(httpcontext);
-                        return;
-                    }
-                }
-            }
-
-            contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
-            var context = contextResolver.GetContext();
-
-            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
-        }
     }
 
     /// <summary>
@@ -1127,13 +1113,11 @@
             return builder.UseMiddleware<ApiRequestContextPipelineComponent>();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="httpcontext"></param>
-        /// <param name="contextResolver"></param>
-        /// <param name="requestPipeline"></param>
+        /// <summary>Processes the API request.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="httpcontext">The httpcontext.</param>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <param name="requestPipeline">The request pipeline.</param>
         /// <returns></returns>
         public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
         {
@@ -1200,15 +1184,17 @@
                     }
                     else
                     {
-                        using var ms = new MemoryStream();
-                        await context.ResponseInfo.ResponseWriter.WriteType(
-                            ms,
-                            context.ResponseInfo.ResponseObject,
-                            context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
+                        using (var ms = new MemoryStream())
+                        {
+                            await context.ResponseInfo.ResponseWriter.WriteType(
+                                ms,
+                                context.ResponseInfo.ResponseObject,
+                                context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
 
-                        context.ResponseInfo.ContentLength = ms.Length;
-                        context.ResponseInfo.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
-                        addHeadersToResponse();
+                            context.ResponseInfo.ContentLength = ms.Length;
+                            context.ResponseInfo.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
+                            addHeadersToResponse();
+                        }
                     }
                 }
                 else
