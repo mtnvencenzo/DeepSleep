@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Validation
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -17,6 +18,13 @@
         public async Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context)
         {
             bool isValid = true;
+
+            var statusCodePrecedence = new List<int>
+            {
+                401,
+                403,
+                404,
+            };
 
             var attributes = method
                 .GetCustomAttributes<TypeBasedValidatorAttribute>(true)
@@ -48,13 +56,39 @@
                         {
                             if (!result.IsValid)
                             {
+                                if (!string.IsNullOrWhiteSpace(result.Message))
+                                {
+                                    context.ErrorMessages.Add(result.Message);
+                                }
+
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
                                 isValid = false;
-                            }
 
-                            if (result.Message != null)
-                            {
-                                context.ErrorMessages.Add(result.Message);
+                                // Update the suggested status if it applies
+                                var suggestedStatus = result.SuggestedHttpStatusCode;
+                                var currentStatus = context.ProcessingInfo.Validation.SuggestedErrorStatusCode;
+
+                                if (suggestedStatus != currentStatus)
+                                {
+                                    if (statusCodePrecedence?.Contains(suggestedStatus) == true && statusCodePrecedence?.Contains(currentStatus) == false)
+                                    {
+                                        context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                    }
+                                    else if (statusCodePrecedence?.Contains(suggestedStatus) == true && statusCodePrecedence?.Contains(currentStatus) == true)
+                                    {
+                                        if (statusCodePrecedence.IndexOf(suggestedStatus) < statusCodePrecedence.IndexOf(currentStatus))
+                                        {
+                                            context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                        }
+                                    }
+                                    else if (statusCodePrecedence?.Contains(suggestedStatus) == false && statusCodePrecedence?.Contains(currentStatus) == false)
+                                    {
+                                        if (suggestedStatus > currentStatus)
+                                        {
+                                            context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

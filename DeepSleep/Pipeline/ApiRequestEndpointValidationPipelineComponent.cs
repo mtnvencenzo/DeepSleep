@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Validation;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 

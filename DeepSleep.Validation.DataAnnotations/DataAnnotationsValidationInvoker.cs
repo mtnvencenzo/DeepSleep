@@ -25,11 +25,9 @@
         /// <returns></returns>
         public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context)
         {
-            var source = new TaskCompletionSource<bool>();
             if (obj == null)
             {
-                source.SetResult(true);
-                return source.Task;
+                return Task.FromResult(true);
             }
 
             var validationContext = new ValidationContext(
@@ -39,9 +37,13 @@
             
             var results = new List<ValidationResult>();
 
+
+            // TODO: configure the true parameter here
             var isValid = Validator.TryValidateObject(obj, validationContext, results, true);
             if (!isValid)
             {
+                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+
                 foreach (var validationResult in results)
                 {
                     var message = validationResult.ErrorMessage;
@@ -50,8 +52,7 @@
             }
 
 
-            source.SetResult(isValid);
-            return source.Task;
+            return Task.FromResult(isValid);
         }
     }
 }
