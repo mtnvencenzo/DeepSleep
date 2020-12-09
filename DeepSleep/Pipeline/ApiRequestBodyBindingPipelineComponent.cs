@@ -24,13 +24,12 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestBodyBinding(formatterFactory, responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestBodyBinding(formatterFactory).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,9 +52,8 @@
         /// <summary>Processes the HTTP request body binding.</summary>
         /// <param name="context">The context.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory, IApiResponseMessageConverter responseMessageConverter)
+        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -63,8 +61,6 @@
                 {
                     if (!context.RequestInfo.ContentLength.HasValue)
                     {
-                        //logger?.LogWarning($"Request did not contain a Content-Length header for request method {context.RequestInfo.Method}, issueing HTTP 411 Length Required");
-
                         context.ResponseInfo.StatusCode = 411;
 
                         return false;
@@ -72,8 +68,6 @@
 
                     if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
-                        //logger?.LogWarning($"Request did not contain a Content-Type header for request with a content length provided, issueing HTTP 422 Unprocessable Entity");
-
                         context.ResponseInfo.StatusCode = 422;
 
                         return false;
@@ -81,8 +75,6 @@
 
                     if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
                     {
-                        //logger?.LogWarning($"Bpdy model type not available but a body was supplied in the request, issueing HTTP 413 Payload Too Large");
-
                         context.ResponseInfo.StatusCode = 413;
 
                         return false;
@@ -96,8 +88,6 @@
 
                         if (formatter == null)
                         {
-                            //logger?.LogWarning($"Could not find a formatter for the request Content-Type, issueing HTTP 415 Unsupported Media Type");
-
                             context.ResponseInfo.StatusCode = 415;
 
                             return false;
@@ -107,17 +97,10 @@
                         {
                             context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType)
                                 .ConfigureAwait(false);
-
-                            //logger?.LogInformation($"Body model type: {context.RequestInfo.InvocationContext.BodyModelType.FullName} has successfully been bound");
                         }
-                        catch (System.Exception ex)
+                        catch
                         {
-                            if (ex == null)
-                            {
-                            }
-                            //logger?.LogWarning($"Could not deserialize the request body using Content-Type: {context.RequestInfo.ContentType} and formatter {formatter.GetType().Name}, issueing HTTP 400 Bad Request");
-
-                            context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(ValidationErrors.RequestBodyDeserializationError));
+                            context.ErrorMessages.Add(ValidationErrors.RequestBodyDeserializationError);
 
                             context.ResponseInfo.StatusCode = 400;
 

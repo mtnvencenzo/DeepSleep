@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Configuration
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -22,6 +23,10 @@
         /// <summary>Gets or sets the authorization configuration
         /// </summary>
         ResourceAuthorizationConfiguration ResourceAuthorizationConfig { get; set; }
+
+        /// <summary>Gets or sets the API error response provider.</summary>
+        /// <value>The API error response provider.</value>
+        Func<IServiceProvider, IApiErrorResponseProvider> ApiErrorResponseProvider { get; set; }
 
         /// <summary>Gets or sets a value indicating whether [allow anonymous].</summary>
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
@@ -58,10 +63,5 @@
         /// <summary>Gets or sets the supported authentication schemes.  If not provided all available schemes are supported.</summary>
         /// <value>The supported authentication schemes.</value>
         IList<string> SupportedAuthenticationSchemes { get; set; }
-
-        /// <summary>I
-        /// nitializes this instance.</summary>
-        /// <returns></returns>
-        IApiRequestConfiguration Init();
     }
 }

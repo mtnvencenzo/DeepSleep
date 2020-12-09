@@ -87,9 +87,9 @@
                     ex.ToString().Should().BeNull();
                 });
 
-                apiContext.ProcessingInfo.ExtendedMessages.ForEach(m =>
+                apiContext.ErrorMessages.ForEach(m =>
                 {
-                    m.Message.Should().BeNull();
+                    m.Should().BeNull();
                 });
             }
 

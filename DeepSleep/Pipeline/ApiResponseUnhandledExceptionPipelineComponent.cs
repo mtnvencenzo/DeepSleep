@@ -24,9 +24,8 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="config">The configuration.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
         {
             try
             {
@@ -36,7 +35,7 @@
             {
                 var context = contextResolver.GetContext();
 
-                await context.ProcessHttpResponseUnhandledException(ex, config, responseMessageConverter).ConfigureAwait(false);
+                await context.ProcessHttpResponseUnhandledException(ex, config).ConfigureAwait(false);
             }
         }
     }
@@ -58,13 +57,12 @@
         /// <param name="context">The context.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="config">The configuration.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config, IApiResponseMessageConverter responseMessageConverter)
+        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config)
         {
             if (exception != null)
             {
-                var code = context.HandleException(exception, responseMessageConverter);
+                var code = context.HandleException(exception);
 
                 if (config?.ExceptionHandler != null && exception as ApiNotImplementedException == null)
                 {
@@ -90,9 +88,8 @@
         /// <summary>Handles the exception.</summary>
         /// <param name="context">The context.</param>
         /// <param name="exception">The exception.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        internal static int HandleException(this ApiRequestContext context, Exception exception, IApiResponseMessageConverter responseMessageConverter)
+        internal static int HandleException(this ApiRequestContext context, Exception exception)
         {
             int code;
 
@@ -102,7 +99,7 @@
 
                 if (context != null)
                 {
-                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.NotImplemented));
+                    context.ErrorMessages.Add(UnhandledExceptionErrors.NotImplemented);
                     context.AddException(exception);
                 }
             }
@@ -112,7 +109,7 @@
 
                 if (context != null)
                 {
-                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.BadGateway));
+                    context.ErrorMessages.Add(UnhandledExceptionErrors.BadGateway);
                     context.AddException(exception);
                 }
             }
@@ -122,7 +119,7 @@
 
                 if (context != null)
                 {
-                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.ServiceUnavailable));
+                    context.ErrorMessages.Add(UnhandledExceptionErrors.ServiceUnavailable);
                     context.AddException(exception);
                 }
             }
@@ -132,7 +129,7 @@
 
                 if (context != null)
                 {
-                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.GatewayTimeout));
+                    context.ErrorMessages.Add(UnhandledExceptionErrors.GatewayTimeout);
                     context.AddException(exception);
                 }
             }
@@ -142,7 +139,7 @@
 
                 if (context != null)
                 {
-                    context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(UnhandledExceptionErrors.UnhandledException));
+                    context.ErrorMessages.Add(UnhandledExceptionErrors.UnhandledException);
                     context.AddException(exception);
                 }
             }

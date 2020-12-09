@@ -34,17 +34,14 @@
                 .AddTransient<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
-                .AddScoped<IApiResponseMessageConverter, IApiResponseMessageConverter>((p) => config.ApiResponseMessageConverter ?? GetDefaultApiResponseMessageConverter())
                 .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
-                .AddScoped<IApiResponseMessageProcessorProvider, IApiResponseMessageProcessorProvider>((p) => config.ApiResponseMessageProcessorProvider ?? GetDefaultResponseMessageProcessorProvider(p))
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
-                .AddScoped<IServiceResolver, ServiceProviderServiceResolver>((p) => new ServiceProviderServiceResolver(p))
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>();
 
             if (config.FormatterFactory != null)
@@ -77,8 +74,6 @@
             return services;
         }
 
-        #region Helper Methods
-
         /// <summary>Gets the default validation provider.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
@@ -86,24 +81,6 @@
         {
             return new DefaultApiValidationProvider(serviceProvider)
                 .RegisterInvoker<TypeBasedValidationInvoker>();
-        }
-
-        /// <summary>Gets the default response message processor provider.</summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
-        private static IApiResponseMessageProcessorProvider GetDefaultResponseMessageProcessorProvider(IServiceProvider serviceProvider)
-        {
-            var provider = new DefaultApiResponseMessageProcessorProvider(serviceProvider)
-                .RegisterProcessor<ApiResultResponseMessageProcessor>();
-
-            return provider;
-        }
-
-        /// <summary>Gets the default API response message converter.</summary>
-        /// <returns></returns>
-        private static IApiResponseMessageConverter GetDefaultApiResponseMessageConverter()
-        {
-            return new DefaultApiResponseMessageConverter();
         }
 
         /// <summary>Gets the default routing table.</summary>
@@ -120,6 +97,11 @@
             return new DefaultApiRequestConfiguration
             {
                 AllowAnonymous = false,
+                ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider
+                {
+                    WriteToBody = true,
+                    WriteToHeaders = false
+                },
                 CacheDirective = new HttpCacheDirective
                 {
                     Cacheability = HttpCacheType.NoCache,
@@ -235,7 +217,5 @@
                 NullValuesExcluded = true
             };
         }
-
-        #endregion
     }
 }

@@ -7,28 +7,17 @@
     /// <summary>The API processing info.</summary>
     public class ApiProcessingInfo
     {
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiProcessingInfo"/> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ApiProcessingInfo"/> class.</summary>
         public ApiProcessingInfo()
         {
-            ExtendedMessages = new List<ApiResponseMessage>();
             Exceptions = new List<Exception>();
             UTCRequestDuration = new ApiRequestDuration();
             Validation = new ApiValidationInfo();
         }
 
-        #endregion
-
         /// <summary>Gets or sets the exception.</summary>
         /// <value>The exception.</value>
         public List<Exception> Exceptions { get; set; }
-
-        /// <summary>Gets or sets the extended messages.</summary>
-        /// <value>The extended messages.</value>
-        public List<ApiResponseMessage> ExtendedMessages { get; set; }
 
         /// <summary>Gets or sets the duration of the request.</summary>
         /// <value>The duration of the request.</value>

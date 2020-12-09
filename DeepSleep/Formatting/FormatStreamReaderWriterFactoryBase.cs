@@ -10,13 +10,13 @@
     /// </summary>
     public abstract class FormatStreamReaderWriterFactoryBase : IFormatStreamReaderWriterFactory
     {
-        private readonly IServiceResolver serviceProvider;
+        private readonly IServiceProvider serviceProvider;
         private IList<IFormatStreamReaderWriter> availableFormatters;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="FormatStreamReaderWriterFactoryBase"/> class from being created.
         /// </summary>
-        public FormatStreamReaderWriterFactoryBase(IServiceResolver serviceProvider)
+        public FormatStreamReaderWriterFactoryBase(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

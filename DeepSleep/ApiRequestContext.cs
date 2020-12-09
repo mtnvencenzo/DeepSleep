@@ -53,6 +53,10 @@
         /// <value>The response information.</value>
         public virtual ApiProcessingInfo ProcessingInfo { get; set; }
 
+        /// <summary>Gets or sets the extended messages.</summary>
+        /// <value>The extended messages.</value>
+        public virtual List<string> ErrorMessages { get; set; } = new List<string>();
+
         /// <summary>Gets or sets the path base.</summary>
         /// <value>The path base.</value>
         public virtual string PathBase { get; set; }
@@ -63,7 +67,7 @@
 
         /// <summary>Gets or sets the request services.</summary>
         /// <value>The request services.</value>
-        public virtual IServiceResolver RequestServices { get; set; }
+        public virtual IServiceProvider RequestServices { get; set; }
 
         /// <summary>Gets the resource.</summary>
         /// <param name="expression">The expression.</param>

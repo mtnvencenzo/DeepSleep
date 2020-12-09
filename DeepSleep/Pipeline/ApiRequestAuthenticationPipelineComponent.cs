@@ -24,13 +24,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthentication(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAuthentication().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -52,35 +51,23 @@
 
         /// <summary>Processes the HTTP request authentication.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
         /// <exception cref="Exception">No auth factory established for authenticated route
         /// or
         /// No auth providers established for authenticated route</exception>
-        internal static async Task<bool> ProcessHttpRequestAuthentication(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        internal static async Task<bool> ProcessHttpRequestAuthentication(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (!(context.RequestConfig?.AllowAnonymous ?? false))
                 {
-                    //logger?.LogInformation($"Using authentication scheme: ${{context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}}");
-
-                    //logger?.LogDebug($"Endpoint does not allow anonymous access, preparing to authenticate request.");
-
                     var providers = context.RequestServices
                         .GetServices<IAuthenticationProvider>()
                         .ToList();
 
-                    //logger?.LogDebug($"Found {providers.Count} authentication providers: {string.Join(", ", providers.Select(p => p.Scheme))}");
-
                     var supportedAuthSchemes = context.RequestConfig.SupportedAuthenticationSchemes?.Count > 0
                         ? context.RequestConfig.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
                         : new string[] { };
-
-                    if (supportedAuthSchemes.Length > 0)
-                    {
-                        //logger?.LogDebug($"Endpoint is configured using these supported auth schemes: {string.Join(", ", supportedAuthSchemes)}");
-                    }
 
                     var authProvider = providers
                         .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
@@ -100,9 +87,7 @@
                             context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Provider;
                         }
 
-                        //logger?.LogInformation($"Authentication provider using scheme {authProvider.Scheme} was match and will authenticate the request.");
-
-                        await authProvider.Authenticate(context, responseMessageConverter).ConfigureAwait(false);
+                        await authProvider.Authenticate(context).ConfigureAwait(false);
                     }
                     else
                     {
@@ -117,21 +102,12 @@
                         {
                             context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.None;
                         }
-                        //logger?.LogWarning($"No Authentication provider was found for client request scheme {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
                     }
 
                     var result = context.RequestInfo.ClientAuthenticationInfo.AuthResult;
 
                     if (result == null || !result.IsAuthenticated)
                     {
-                        if (result == null)
-                        {
-                            //logger?.LogWarning($"Request failed authentication,  auth result is null");
-                        }
-                        else
-                        {
-                            //logger?.LogWarning($"Request failed authentication with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
-                        }
 
                         if (providers.FirstOrDefault() == null)
                         {
@@ -169,10 +145,7 @@
                         context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Anonymous;
                         context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
                     }
-                    //logger?.LogDebug($"Client request is for anonymous endpoint, skipping authentication");
                 }
-
-                //logger?.LogInformation($"Client request was successfully authenticated using scheme: {context.RequestInfo?.ClientAuthenticationInfo?.AuthScheme}.");
 
                 return true;
             }

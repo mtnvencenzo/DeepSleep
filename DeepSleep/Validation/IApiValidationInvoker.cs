@@ -11,17 +11,13 @@
         /// <summary>Invokes the method validation.</summary>
         /// <param name="method">The method.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter);
+        Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context);
 
         /// <summary>Invokes the object validation.</summary>
         /// <param name="obj">The object.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter);
+        Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context);
     }
 }

@@ -13,10 +13,8 @@
         /// <summary>Invokes the method validation.</summary>
         /// <param name="method">The method.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context)
         {
             return Task.FromResult(true);
         }
@@ -24,10 +22,8 @@
         /// <summary>Invokes the object validation.</summary>
         /// <param name="obj">The object.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context)
         {
             var source = new TaskCompletionSource<bool>();
             if (obj == null)
@@ -38,7 +34,7 @@
 
             var validationContext = new ValidationContext(
                 obj, 
-                serviceProvider: serviceProvider, 
+                serviceProvider: context.RequestServices, 
                 items: null);
             
             var results = new List<ValidationResult>();
@@ -48,8 +44,8 @@
             {
                 foreach (var validationResult in results)
                 {
-                    var message = responseMessageConverter.Convert(validationResult.ErrorMessage);
-                    context.ProcessingInfo.ExtendedMessages.Add(message);
+                    var message = validationResult.ErrorMessage;
+                    context.ErrorMessages.Add(message);
                 }
             }
 

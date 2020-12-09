@@ -17,7 +17,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -33,7 +33,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -55,7 +55,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -76,7 +76,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -96,7 +96,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriValidation(new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -104,10 +104,10 @@
             context.ResponseInfo.StatusCode.Should().Be(414);
 
             context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("414.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().Contain("exceed 2083 characters");
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(1);
+            context.ErrorMessages[0].Should().StartWith("414.000001|");
+            context.ErrorMessages[0].Should().Contain("exceed 2083 characters");
         }
     }
 }

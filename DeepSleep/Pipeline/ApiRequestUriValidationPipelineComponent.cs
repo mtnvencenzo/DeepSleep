@@ -22,13 +22,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestUriValidation(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestUriValidation().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +49,8 @@
 
         /// <summary>Processes the HTTP request URI validation.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpRequestUriValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        internal static Task<bool> ProcessHttpRequestUriValidation(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -62,9 +60,7 @@
                 {
                     if (context.RequestInfo.RequestUri.Length > max)
                     {
-                        //logger?.LogWarning($"Request Uri validation failed, issueing HTTP 414 URI Too Long");
-
-                        context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString(CultureInfo.InvariantCulture))));
+                        context.ErrorMessages.Add(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString(CultureInfo.InvariantCulture)));
                         context.ResponseInfo.StatusCode = 414;
 
                         return Task.FromResult(false);

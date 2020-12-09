@@ -24,7 +24,7 @@
                 RequestInfo = null
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -48,7 +48,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -71,7 +71,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -96,7 +96,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -120,7 +120,7 @@
                 
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -147,7 +147,7 @@
 
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -173,7 +173,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -202,7 +202,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -239,7 +239,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeTrue();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -281,7 +281,7 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeFalse ();
 
                 context.ResponseInfo.Should().NotBeNull();
@@ -289,10 +289,10 @@
                 context.ResponseInfo.StatusCode.Should().Be(400);
 
                 context.ProcessingInfo.Should().NotBeNull();
-                context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-                context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-                context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("400.000003");
-                context.ProcessingInfo.ExtendedMessages[0].Message.Should().Be("Could not deserialize request.");
+                context.ErrorMessages.Should().NotBeNull();
+                context.ErrorMessages.Should().HaveCount(1);
+                context.ErrorMessages[0].Should().StartWith("400.000003|");
+                context.ErrorMessages[0].Should().Be("400.000003|Could not deserialize request.");
             }
         }
 

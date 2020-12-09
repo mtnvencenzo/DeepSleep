@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -20,15 +21,14 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
 
-            await context.ProcessHttpResponseMessages(responseMessageProcessorProvider).ConfigureAwait(false);
+            await context.ProcessHttpResponseMessages().ConfigureAwait(false);
         }
     }
 
@@ -47,22 +47,24 @@
 
         /// <summary>Processes the HTTP response messages.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageProcessorProvider">The response message processor provider.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiResponseMessageProcessorProvider responseMessageProcessorProvider)
+        internal static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if ((context.ProcessingInfo?.ExtendedMessages?.Count ?? 0) > 0)
+                if ((context.ErrorMessages?.Count ?? 0) > 0)
                 {
-                    context.ProcessingInfo.ExtendedMessages.ClearDuplicates();
-                    context.ProcessingInfo.ExtendedMessages.SortMessagesByCode();
+                    context.ErrorMessages = context.ErrorMessages
+                        .Distinct()
+                        .ToList();
 
-                    if (responseMessageProcessorProvider != null)
+                    if (context.RequestConfig?.ApiErrorResponseProvider != null)
                     {
-                        foreach (var processor in responseMessageProcessorProvider.GetProcessors())
+                        var provider = context.RequestConfig.ApiErrorResponseProvider(context.RequestServices);
+
+                        if (provider != null)
                         {
-                            await processor.Process(context).ConfigureAwait(false);
+                            await provider.Process(context).ConfigureAwait(false);
                         }
                     }
                 }

@@ -23,13 +23,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageConverter">The responseMessageConverter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestAuthorization(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAuthorization().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -51,9 +50,8 @@
 
         /// <summary>Processes the HTTP request authorization.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The responseMessageConverter.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        internal static async Task<bool> ProcessHttpRequestAuthorization(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -75,22 +73,13 @@
 
                     if (authProvider != null)
                     {
-                        await authProvider.Authorize(context, responseMessageConverter).ConfigureAwait(false);
+                        await authProvider.Authorize(context).ConfigureAwait(false);
                     }
 
                     var result = context.RequestInfo?.ClientAuthorizationInfo?.AuthResult;
 
                     if (result == null || !result.IsAuthorized)
                     {
-                        if (result == null)
-                        {
-                            //logger?.LogWarning($"Invalid authorization, null result returned.");
-                        }
-                        else
-                        {
-                            //logger?.LogWarning($"Request failed authorization with errors {string.Join(", ", result.Errors ?? new List<ApiResponseMessage>())}");
-                        }
-
                         if (authProvider == null)
                         {
                             throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig?.ResourceAuthorizationConfig?.Policy}'");

@@ -16,7 +16,7 @@
         {
             var context = new ApiRequestContext();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(null, null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -30,7 +30,7 @@
 
             var exception = new ApiNotImplementedException("Not Implmented");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, null, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -38,10 +38,10 @@
             context.ResponseInfo.StatusCode.Should().Be(501);
 
             context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("501.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().NotBeNullOrEmpty();
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(1);
+            context.ErrorMessages[0].Should().StartWith("501.000001|");
+            context.ErrorMessages[0].Should().NotBe("501.000001|");
             context.ProcessingInfo.Exceptions.Should().NotBeNull();
             context.ProcessingInfo.Exceptions.Should().HaveCount(1);
             context.ProcessingInfo.Exceptions[0].Should().Be(exception);
@@ -61,18 +61,17 @@
 
             var exception = new ApiNotImplementedException("Not Implmented");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
             context.ResponseInfo.StatusCode.Should().Be(501);
 
-            context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("501.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().NotBeNullOrEmpty();
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(1);
+            context.ErrorMessages[0].Should().StartWith("501.000001|");
+            context.ErrorMessages[0].Should().NotBe("501.000001|");
             exHandled.Should().Be(false);
             context.ProcessingInfo.Exceptions.Should().NotBeNull();
             context.ProcessingInfo.Exceptions.Should().HaveCount(1);
@@ -93,7 +92,7 @@
 
             var exception = new Exception("ex");
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config, new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -101,10 +100,10 @@
             context.ResponseInfo.StatusCode.Should().Be(500);
 
             context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("500.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().NotBeNullOrEmpty();
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(1);
+            context.ErrorMessages[0].Should().StartWith("500.000001|");
+            context.ErrorMessages[0].Should().NotBe("500.000001|");
             exHandled.Should().Be(true);
             context.ProcessingInfo.Exceptions.Should().NotBeNull();
             context.ProcessingInfo.Exceptions.Should().HaveCount(1);

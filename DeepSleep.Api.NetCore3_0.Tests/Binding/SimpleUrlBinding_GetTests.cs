@@ -3,6 +3,7 @@
     using DeepSleep.Api.NetCore3_0.Tests.Mocks;
     using FluentAssertions;
     using global::Api.DeepSleep.Controllers.Binding;
+    using global::Api.DeepSleep.Models;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -1625,13 +1626,12 @@ X-CorrelationId: {correlationId}";
                     { "X-CorrelationId", $"{correlationId}"}
                 });
 
-            var data = await base.GetResponseData<ApiResult>(response).ConfigureAwait(false);
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].Code.Should().Be("400.000005");
-            data.Messages[0].Message.Should().Be($"Uri type conversion for '{expectedVarName}' with value '{value}' could not be converted to type {expectedType.Name}.");
-
+            data.Messages[0].ErrorCode.Should().Be("400.000005");
+            data.Messages[0].ErrorMessageStr.Should().Be($"Uri type conversion for '{expectedVarName}' with value '{value}' could not be converted to type {expectedType.Name}.");
         }
     }
 }

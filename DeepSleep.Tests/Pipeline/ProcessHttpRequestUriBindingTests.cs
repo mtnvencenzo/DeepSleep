@@ -23,7 +23,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -42,7 +42,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -64,7 +64,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -86,7 +86,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -111,7 +111,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -136,7 +136,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -161,7 +161,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(null, new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().Be(true);
             context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
         }
@@ -210,7 +210,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -270,7 +270,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -316,7 +316,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -380,7 +380,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -448,7 +448,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -523,7 +523,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -620,7 +620,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -699,7 +699,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -760,7 +760,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestUriBinding(new DefaultApiResponseMessageConverter(), new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -770,10 +770,10 @@
             context.RequestInfo.InvocationContext.UriModel.Should().BeNull();
 
             context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(1);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("400.000004");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().Be("'LongProp' Is in an incorrect format and could not be bound.");
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(1);
+            context.ErrorMessages[0].Should().StartWith("400.000004|");
+            context.ErrorMessages[0].Should().Be("400.000004|'LongProp' Is in an incorrect format and could not be bound.");
         }
 
         private string UrlEncode(string val) => HttpUtility.UrlEncode(val);

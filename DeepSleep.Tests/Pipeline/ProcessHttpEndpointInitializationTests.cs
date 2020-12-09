@@ -20,7 +20,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -39,7 +39,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -199,7 +199,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@
 
             try
             {
-                var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -248,7 +248,7 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerFromServiceProvider()
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -264,10 +264,11 @@
                             Endpoint = nameof(InjectionController.DefaultEndpoint)
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
             
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -301,7 +302,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -319,7 +320,7 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesActivatesControlleWhenServiceProviderDoesntContainController()
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -335,10 +336,11 @@
                             Endpoint = nameof(InjectionController.DefaultEndpoint)
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -356,7 +358,7 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForInternalMethod()
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -372,10 +374,11 @@
                             Endpoint = nameof(InjectionController.DefaultEndpointInternal)
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -393,7 +396,7 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForPrivateMethod()
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -409,10 +412,11 @@
                             Endpoint = "DefaultEndpointPrivate"
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -430,7 +434,7 @@
         [Fact]
         public async void ReturnsTrueAndRetrivesControllerEndpointForProtectedMethod()
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(null);
 
             var context = new ApiRequestContext
@@ -446,10 +450,11 @@
                             Endpoint = "DefaultEndpointProtected"
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -480,7 +485,7 @@
         [InlineData("options")]
         public async void ReturnsTrueAndRetrivesUriModelForOnlyUriParameter(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -497,10 +502,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -525,7 +531,7 @@
         [InlineData("pUt")]
         public async void ReturnsTrueAndRetrivesUriModelForOnlyBodyParameter(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -542,10 +548,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -570,7 +577,7 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameter(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -587,10 +594,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -615,7 +623,7 @@
         [InlineData("options")]
         public async void ReturnsTrueAndRetrivesUriModelForUriAndBodyParameterAndNoneBodyMethod(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -632,10 +640,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -660,7 +669,7 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameterWhenEndpointHasExtraParametersBefore(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -677,10 +686,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();
@@ -705,7 +715,7 @@
         [InlineData("patch")]
         public async void ReturnsTrueAndRetrivesModelsForUriAndBodyParameterWhenEndpointHasExtraParametersAfter(string method)
         {
-            var mockServiceProvider = new Mock<IServiceResolver>();
+            var mockServiceProvider = new Mock<IServiceProvider>();
             mockServiceProvider.Setup(m => m.GetService(It.IsAny<Type>())).Returns(new InjectionController());
 
             var context = new ApiRequestContext
@@ -722,10 +732,11 @@
                             HttpMethod = method
                         }
                     }
-                }
+                },
+                RequestServices = mockServiceProvider.Object
             };
 
-            var processed = await context.ProcessHttpEndpointInitialization(mockServiceProvider.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.RequestInfo.InvocationContext.Controller.Should().NotBeNull();

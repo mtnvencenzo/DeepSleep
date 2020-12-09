@@ -24,13 +24,12 @@
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="validationProvider">The validation provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiValidationProvider validationProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiValidationProvider validationProvider)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointValidation(validationProvider, context.RequestServices, responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointValidation(validationProvider).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -53,10 +52,8 @@
         /// <summary>Processes the HTTP endpoint validation.</summary>
         /// <param name="context">The context.</param>
         /// <param name="validationProvider">The validation provider.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        internal static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -68,13 +65,14 @@
                         .GetInvokers()
                         .ToList();
 
-                    //logger?.LogInformation($"Validating request using {invokers.Count} validation invokers");
-
                     foreach (var validationInvoker in invokers)
                     {
                         if (context.RequestInfo.InvocationContext.UriModel != null)
                         {
-                            var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.UriModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
+                            var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(
+                                context.RequestInfo.InvocationContext.UriModel, 
+                                context).ConfigureAwait(false);
+                            
                             if (!objectUriValidationResult)
                             {
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -89,7 +87,10 @@
                         {
                             try
                             {
-                                var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(context.RequestInfo.InvocationContext.BodyModel, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
+                                var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(
+                                    context.RequestInfo.InvocationContext.BodyModel, 
+                                    context).ConfigureAwait(false);
+                                
                                 if (!objectBodyValidationResult)
                                 {
                                     context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -110,7 +111,10 @@
                         {
                             try
                             {
-                                var methodValidationResult = await validationInvoker.InvokeMethodValidation(context.RequestInfo.InvocationContext.ControllerMethod, context, serviceProvider, responseMessageConverter).ConfigureAwait(false);
+                                var methodValidationResult = await validationInvoker.InvokeMethodValidation(
+                                    context.RequestInfo.InvocationContext.ControllerMethod, 
+                                    context).ConfigureAwait(false);
+
                                 if (!methodValidationResult)
                                 {
                                     context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -128,25 +132,9 @@
 
                 if (context.ProcessingInfo.Validation.State == ApiValidationState.Failed)
                 {
-                    bool has400 = context.ProcessingInfo.ExtendedMessages.Exists(m => m != null && m.Code.StartsWith("400"));
-                    bool has404 = context.ProcessingInfo.ExtendedMessages.Exists(m => m != null && m.Code.StartsWith("404"));
-
-                    var statusCode = (has404 && !has400)
-                        ? 404
-                        : 400;
-
-                    
-                    foreach (var message in context.ProcessingInfo.ExtendedMessages.Where(m => m.Code.StartsWith("4") || m.Code.StartsWith("5")))
-                    {
-                        //logger?.LogWarning($"Validation for request {context.RequestInfo.RequestIdentifier} failed with error: {message.Code} - {message.Message}");
-                    }
-
-                    context.ResponseInfo.StatusCode = statusCode;
-
+                    context.ResponseInfo.StatusCode = context.ProcessingInfo.Validation.SuggestedErrorStatusCode;
                     return false;
                 }
-
-                //logger?.LogInformation($"Validation for request {context.RequestInfo.RequestIdentifier} succeeded.");
 
                 context.ProcessingInfo.Validation.State = ApiValidationState.Succeeded;
                 return true;

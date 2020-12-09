@@ -29,7 +29,7 @@
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpEndpointInitialization(context.RequestServices).ConfigureAwait(false))
+            if (await context.ProcessHttpEndpointInitialization().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -51,7 +51,6 @@
 
         /// <summary>Processes the HTTP endpoint initialization.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
         /// <exception cref="Exception">
         /// Routing item's controller type is null
@@ -59,7 +58,7 @@
         /// Routing item's endpoint name is null
         /// or
         /// </exception>
-        internal static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context, IServiceResolver serviceProvider)
+        internal static Task<bool> ProcessHttpEndpointInitialization(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -77,11 +76,11 @@
                 object endpointController = null;
 
 
-                if (serviceProvider != null)
+                if (context.RequestServices != null)
                 {
                     try
                     {
-                        endpointController = serviceProvider.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
+                        endpointController = context.RequestServices.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
                     }
                     catch
                     {

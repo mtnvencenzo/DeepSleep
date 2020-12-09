@@ -1,11 +1,19 @@
 ﻿namespace Api.DeepSleep.Controllers.Binding
 {
     using global::DeepSleep;
+    using global::DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
 
     public class SimpleUrlBindingController
     {
+        private IApiRequestContextResolver apiRequestContextResolver;
+
+        public SimpleUrlBindingController(IApiRequestContextResolver apiRequestContextResolver)
+        {
+            this.apiRequestContextResolver = apiRequestContextResolver;
+        }
+
         public SimpleUrlBindingRs GetWithQuery(
             string stringVar, 
             char charVar,
@@ -45,6 +53,10 @@
             SimpleUrlBindingEnum enumVar,
             SimpleUrlBindingEnum? nullEnumVar)
         {
+            //var context = this.apiRequestContextResolver.GetContext();
+
+            //var i = context.RequestServices.GetServices(typeof(IFormatStreamReaderWriter));
+
             return new SimpleUrlBindingRs
             {
                 StringVar = stringVar,

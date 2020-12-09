@@ -13,10 +13,8 @@
         /// <summary>Invokes the method validation.</summary>
         /// <param name="method">The method.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public async Task<bool> InvokeMethodValidation(MethodInfo method, ApiRequestContext context)
         {
             bool isValid = true;
 
@@ -26,8 +24,8 @@
 
             foreach (var attribute in attributes)
             {
-                IApiValidator validator = (serviceProvider != null)
-                    ? serviceProvider.GetService(attribute.ValidatorType) as IApiValidator
+                IApiValidator validator = (context.RequestServices != null)
+                    ? context.RequestServices.GetService(attribute.ValidatorType) as IApiValidator
                     : null;
 
                 if (validator == null)
@@ -56,7 +54,7 @@
 
                             if (result.Message != null)
                             {
-                                context.ProcessingInfo.ExtendedMessages.Add(result.Message);
+                                context.ErrorMessages.Add(result.Message);
                             }
                         }
                     }
@@ -69,14 +67,10 @@
         /// <summary>Invokes the object validation.</summary>
         /// <param name="obj">The object.</param>
         /// <param name="context">The context.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context, IServiceResolver serviceProvider, IApiResponseMessageConverter responseMessageConverter)
+        public Task<bool> InvokeObjectValidation(object obj, ApiRequestContext context)
         {
-            var source = new TaskCompletionSource<bool>();
-            source.SetResult(true);
-            return source.Task;
+            return Task.FromResult(true);
         }
     }
 }

@@ -29,14 +29,6 @@
         /// <value>The API validation provider.</value>
         public IApiValidationProvider ApiValidationProvider { get; set; }
 
-        /// <summary>Gets or sets the API response message processor provider.</summary>
-        /// <value>The API response message processor provider.</value>
-        public IApiResponseMessageProcessorProvider ApiResponseMessageProcessorProvider { get; set; }
-
-        /// <summary>Gets or sets the API response message converter.</summary>
-        /// <value>The API response message converter.</value>
-        public IApiResponseMessageConverter ApiResponseMessageConverter { get; set; }
-
         /// <summary>Gets or sets the default request configuration.</summary>
         /// <value>The default request configuration.</value>
         public IApiRequestConfiguration DefaultRequestConfiguration { get; set; }

@@ -16,7 +16,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.ResponseInfo.Should().NotBeNull();
@@ -35,7 +35,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -53,7 +53,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -79,7 +79,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -111,7 +111,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
@@ -141,21 +141,21 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestHeaderValidation(new DefaultApiResponseMessageConverter()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
             context.ResponseInfo.StatusCode.Should().Be(431);
 
             context.ProcessingInfo.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().NotBeNull();
-            context.ProcessingInfo.ExtendedMessages.Should().HaveCount(2);
-            context.ProcessingInfo.ExtendedMessages[0].Code.Should().Be("431.000001");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().Contain("'X-Header1'");
-            context.ProcessingInfo.ExtendedMessages[0].Message.Should().Contain(" exceed 10 ");
-            context.ProcessingInfo.ExtendedMessages[1].Code.Should().Be("431.000001");
-            context.ProcessingInfo.ExtendedMessages[1].Message.Should().Contain("'X-Header2'");
-            context.ProcessingInfo.ExtendedMessages[1].Message.Should().Contain(" exceed 10 ");
+            context.ErrorMessages.Should().NotBeNull();
+            context.ErrorMessages.Should().HaveCount(2);
+            context.ErrorMessages[0].Should().StartWith("431.000001|");
+            context.ErrorMessages[0].Should().Contain("'X-Header1'");
+            context.ErrorMessages[0].Should().Contain(" exceed 10 ");
+            context.ErrorMessages[1].Should().StartWith("431.000001|");
+            context.ErrorMessages[1].Should().Contain("'X-Header2'");
+            context.ErrorMessages[1].Should().Contain(" exceed 10 ");
         }
     }
 }

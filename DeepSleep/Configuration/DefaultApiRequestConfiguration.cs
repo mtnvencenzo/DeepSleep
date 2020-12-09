@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
 
     /// <summary>
     /// 
@@ -25,6 +24,10 @@
         /// <summary>Gets or sets the authorization configuration
         /// </summary>
         public ResourceAuthorizationConfiguration ResourceAuthorizationConfig { get; set; }
+
+        /// <summary>Gets or sets the API error response provider.</summary>
+        /// <value>The API error response provider.</value>
+        public Func<IServiceProvider, IApiErrorResponseProvider> ApiErrorResponseProvider { get; set; }
 
         /// <summary>Gets or sets a value indicating whether [allow anonymous].</summary>
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
@@ -61,12 +64,5 @@
         /// <summary>Gets or sets the supported authentication schemes.  If not provided all available schemes are supported.</summary>
         /// <value>The supported authentication schemes.</value>
         public IList<string> SupportedAuthenticationSchemes { get; set; }
-
-        /// <summary>Initializes this instance.</summary>
-        /// <returns></returns>
-        public IApiRequestConfiguration Init()
-        {
-            return new DefaultApiRequestConfiguration();
-        }
     }
 }

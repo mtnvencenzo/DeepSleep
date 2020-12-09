@@ -69,7 +69,7 @@
             {
                 PathBase = context.Request.PathBase,
                 RequestAborted = context.RequestAborted,
-                RequestServices = new ServiceProviderServiceResolver(context.RequestServices),
+                RequestServices = context.RequestServices,
                 RegisterForDispose = (disposable) => context.Response.RegisterForDispose(disposable),
                 ProcessingInfo = new ApiProcessingInfo
                 {

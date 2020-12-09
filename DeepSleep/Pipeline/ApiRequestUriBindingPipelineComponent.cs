@@ -27,14 +27,13 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <param name="formUrlEncodedObjectSerializer">The form url serializer.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
+        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestUriBinding(responseMessageConverter, formUrlEncodedObjectSerializer).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestUriBinding(formUrlEncodedObjectSerializer).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -56,11 +55,10 @@
 
         /// <summary>Processes the HTTP request URI binding.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <param name="formUrlEncodedObjectSerializer">The form url serializer.</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        internal static async Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
+        internal static async Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -77,8 +75,7 @@
                             if (nameValues.ContainsKey(routeVar))
                             {
                                 addedBindingError = true;
-                                context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.UriRouteBindingError,
-                                    routeVar)));
+                                context.ErrorMessages.Add(string.Format(ValidationErrors.UriRouteBindingError, routeVar));
                             }
                             else
                             {
@@ -122,8 +119,7 @@
                             catch (JsonException ex)
                             {
                                 addedBindingError = true;
-                                context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.UriBindingError,
-                                    ex.Path.TrimStart('$', '.'))));
+                                context.ErrorMessages.Add(string.Format(ValidationErrors.UriBindingError, ex.Path.TrimStart('$', '.')));
                             }
                         }
 
@@ -155,9 +151,8 @@
                                     catch
                                     {
                                         addedBindingError = true;
-                                        context.ProcessingInfo.ExtendedMessages.Add(
-                                            responseMessageConverter.Convert(string.Format(ValidationErrors.UriBindingValueError,
-                                            simpleParameter.Name, nameValue.Value, simpleParameter.ParameterType.Name)));
+                                        context.ErrorMessages.Add(
+                                            string.Format(ValidationErrors.UriBindingValueError, simpleParameter.Name, nameValue.Value, simpleParameter.ParameterType.Name));
                                     }
                                 }
                             }

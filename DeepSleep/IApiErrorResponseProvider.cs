@@ -5,11 +5,11 @@
     /// <summary>
     /// 
     /// </summary>
-    public interface IApiResponseMessageProcessor
+    public interface IApiErrorResponseProvider
     {
         /// <summary>Processes the specified context.</summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        Task Process(ApiRequestContext context); 
+        Task Process(ApiRequestContext context);
     }
 }

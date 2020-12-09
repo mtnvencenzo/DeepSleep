@@ -22,13 +22,12 @@
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiResponseMessageConverter responseMessageConverter)
+        public async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestHeaderValidation(responseMessageConverter).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +49,8 @@
 
         /// <summary>Processes the HTTP request header validation.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter)
+        internal static Task<bool> ProcessHttpRequestHeaderValidation(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -69,9 +67,8 @@
                             if (header.Value.Length > maxHeaderLength)
                             {
                                 addedHeaderError = true;
-                                context.ProcessingInfo.ExtendedMessages.Add(responseMessageConverter.Convert(string.Format(ValidationErrors.HeaderLengthExceeded,
-                                    header.Name,
-                                    maxHeaderLength.ToString(CultureInfo.InvariantCulture))));
+                                context.ErrorMessages.Add(
+                                    string.Format(ValidationErrors.HeaderLengthExceeded, header.Name, maxHeaderLength.ToString(CultureInfo.InvariantCulture)));
                             }
                         }
                     }
@@ -79,8 +76,6 @@
 
                 if (addedHeaderError)
                 {
-                    //logger?.LogWarning($"Header validation failed, issueing HTTP 431 Request Header Fields Too Large");
-
                     context.ResponseInfo.StatusCode = 431;
 
                     return Task.FromResult(false);

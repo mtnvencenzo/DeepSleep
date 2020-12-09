@@ -57,6 +57,7 @@ namespace Api.DeepSleep.NetCore3_0
             // Controlllers
             services.AddTransient<SimpleUrlBindingController>();
             services.AddTransient<MultipartController>();
+            services.AddTransient<CommonErrorResponseProvider>();
 
             services
                 .AddLogging()
@@ -66,7 +67,8 @@ namespace Api.DeepSleep.NetCore3_0
                     ApiValidationProvider = new DefaultApiValidationProvider(serviceProvider).RegisterInvoker<TypeBasedValidationInvoker>(),
                     DefaultRequestConfiguration = new DefaultApiRequestConfiguration
                     {
-                        AllowAnonymous = true
+                        AllowAnonymous = true,
+                        ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>()
                     }
                 });
 

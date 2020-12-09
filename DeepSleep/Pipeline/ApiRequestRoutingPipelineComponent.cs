@@ -128,7 +128,7 @@
 
             if (routeInfo != null)
             {
-                context.RequestConfig = MergeConfigurations(defaultRequestConfig, routeInfo.Config);
+                context.RequestConfig = MergeConfigurations(context, defaultRequestConfig, routeInfo.Config);
             }
 
             return routeInfo;
@@ -198,15 +198,20 @@
         }
 
         /// <summary>Merges the configurations.</summary>
+        /// <param name="context">The context.</param>
         /// <param name="defaultConfig">The default configuration.</param>
         /// <param name="endpointConfig">The endpoint configuration.</param>
         /// <returns></returns>
-        private static IApiRequestConfiguration MergeConfigurations(IApiRequestConfiguration defaultConfig, IApiRequestConfiguration endpointConfig)
+        private static IApiRequestConfiguration MergeConfigurations(ApiRequestContext context, IApiRequestConfiguration defaultConfig, IApiRequestConfiguration endpointConfig)
         {
             IApiRequestConfiguration requestConfig = (endpointConfig != null)
-                ? endpointConfig.Init()
-                : defaultConfig.Init();
+                ? ResolveConfiguration(context, endpointConfig)
+                : ResolveConfiguration(context, defaultConfig);
 
+            requestConfig.ApiErrorResponseProvider = endpointConfig?.ApiErrorResponseProvider 
+                ?? defaultConfig.ApiErrorResponseProvider 
+                ?? ((p) => new ApiResultErrorResponseProvider());
+            
             requestConfig.AllowAnonymous = endpointConfig?.AllowAnonymous ?? defaultConfig.AllowAnonymous;
             requestConfig.Deprecated = endpointConfig?.Deprecated ?? defaultConfig.Deprecated;
             requestConfig.FallBackLanguage = endpointConfig?.FallBackLanguage ?? defaultConfig.FallBackLanguage;
@@ -262,7 +267,7 @@
             {
                 requestConfig.ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration
                 {
-                    Policy = endpointConfig?.ResourceAuthorizationConfig?.Policy ?? defaultConfig?.ResourceAuthorizationConfig?.Policy
+                    Policy = endpointConfig?.ResourceAuthorizationConfig?.Policy ?? defaultConfig?.ResourceAuthorizationConfig?.Policy,
                 };
 
                 if (endpointConfig?.ResourceAuthorizationConfig != null)
@@ -300,6 +305,33 @@
             }
 
             return requestConfig;
+        }
+
+        /// <summary>Resolves the configuration.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="config">The configuration.</param>
+        /// <returns></returns>
+        private static IApiRequestConfiguration ResolveConfiguration(ApiRequestContext context, IApiRequestConfiguration config)
+        {
+            IApiRequestConfiguration init = null;
+
+            if (context?.RequestServices != null)
+            {
+                try
+                {
+                    init = context.RequestServices.GetService(config.GetType()) as IApiRequestConfiguration;
+                }
+                catch
+                {
+                }
+            }
+
+            if (init == null)
+            {
+                init = Activator.CreateInstance(config.GetType()) as IApiRequestConfiguration;
+            }
+
+            return init;
         }
     }
 }

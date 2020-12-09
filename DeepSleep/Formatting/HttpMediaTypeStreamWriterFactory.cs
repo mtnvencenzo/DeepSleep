@@ -11,7 +11,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpMediaTypeStreamWriterFactory"/> class.
         /// </summary>
-        public HttpMediaTypeStreamWriterFactory(IServiceResolver serviceProvider) : base(serviceProvider)
+        public HttpMediaTypeStreamWriterFactory(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

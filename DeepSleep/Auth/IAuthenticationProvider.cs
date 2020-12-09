@@ -7,9 +7,8 @@
     {
         /// <summary>Authenticates the specified context.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="responseMessageConverter">The response message converter.</param>
         /// <returns>The <see cref="Task" />.</returns>
-        Task Authenticate(ApiRequestContext context, IApiResponseMessageConverter responseMessageConverter);
+        Task Authenticate(ApiRequestContext context);
 
         /// <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
         /// <param name="scheme">The scheme.</param>
