@@ -1,4 +1,4 @@
-namespace Api.DeepSleep.NetCore3_0
+namespace Api.DeepSleep.NetCore3_1
 {
     using Api.DeepSleep.Controllers.Binding;
     using Api.DeepSleep.Controllers.Formatters;

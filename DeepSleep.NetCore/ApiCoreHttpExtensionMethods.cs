@@ -11,6 +11,7 @@
     using System.Reflection;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Versioning;
 
     /// <summary>
     /// 
@@ -226,7 +227,35 @@
         /// <param name="config">The configuration.</param>
         private static void WriteDeepsleepToConsole(IApiServiceConfiguration config)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var deepSleepNetCoreAssembly = Assembly.GetExecutingAssembly();
+
+            var deepSleepNetCoreTargetFrameworkAttribute = deepSleepNetCoreAssembly
+                .GetCustomAttributes(true)
+                .OfType<TargetFrameworkAttribute>()
+                .FirstOrDefault();
+
+            var deepSleepNetCoreTargetDisplay = !string.IsNullOrWhiteSpace(deepSleepNetCoreTargetFrameworkAttribute?.FrameworkName)
+                ? deepSleepNetCoreTargetFrameworkAttribute.FrameworkName
+                : deepSleepNetCoreTargetFrameworkAttribute?.FrameworkDisplayName;
+
+            var deepSleepNetCoreAssemblyName = deepSleepNetCoreAssembly.GetName();
+            var deepSleepNetCoreVersion = deepSleepNetCoreAssemblyName.Version;
+
+
+            var deepSleepAssembly = Assembly.GetAssembly(typeof(ApiRequestContext));
+
+            var deepSleepTargetFrameworkAttribute = deepSleepAssembly
+                .GetCustomAttributes(true)
+                .OfType<TargetFrameworkAttribute>()
+                .FirstOrDefault();
+
+            var deepSleepTargetDisplay = !string.IsNullOrWhiteSpace(deepSleepTargetFrameworkAttribute?.FrameworkName)
+                ? deepSleepTargetFrameworkAttribute.FrameworkName
+                : deepSleepTargetFrameworkAttribute?.FrameworkDisplayName;
+
+            var deepSleepAssemblyName = deepSleepAssembly.GetName();
+            var deepSleepVersion = deepSleepAssemblyName.Version;
+
             var existingColor = Console.ForegroundColor;
 
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -238,15 +267,27 @@
             Console.Write($@"              |_|               |_|  ");
             Console.ForegroundColor = existingColor;
 
-            Console.WriteLine($"   v{version}");
+            Console.WriteLine($"   v{deepSleepVersion}");
             Console.WriteLine($"");
-            Console.WriteLine($"------------------------------------------------");
+
+            if (!string.IsNullOrWhiteSpace(deepSleepNetCoreTargetDisplay))
+            {
+                Console.WriteLine($"");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Target(s): ");
+                Console.ForegroundColor = existingColor;
+                Console.WriteLine($"------------------------------------------------");
+                Console.ForegroundColor = existingColor;
+                Console.WriteLine($"           {deepSleepAssemblyName.Name}, {deepSleepAssemblyName.Version}, {deepSleepTargetDisplay}");
+                Console.WriteLine($"           {deepSleepNetCoreAssemblyName.Name}, {deepSleepNetCoreAssemblyName.Version}, {deepSleepNetCoreTargetDisplay}");
+                Console.WriteLine($"");
+            }
+
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"Endpoints: ");
             Console.ForegroundColor = existingColor;
             Console.WriteLine($"{config?.RoutingTable?.GetRoutes()?.Count ?? 0}");
-
             Console.WriteLine($"------------------------------------------------");
             Console.WriteLine($"");
 
@@ -260,7 +301,8 @@
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write($"  {r.HttpMethod.ToUpper().PadRight(9, ' ')}");
                 Console.ForegroundColor = existingColor;
-                Console.WriteLine($"{r.Template}");
+
+                WriteEndpointTemplate(r.Template);
             });
 
             Console.WriteLine("");
@@ -268,6 +310,28 @@
             MayTheFourth();
 
             Console.WriteLine();
+        }
+
+        private static void WriteEndpointTemplate(string template)
+        {
+            var existingColor = Console.ForegroundColor;
+
+            foreach (var c in template.ToCharArray())
+            {
+                if (c == '{')
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                }
+
+                Console.Write(c);
+
+                if (c == '}')
+                {
+                    Console.ForegroundColor = existingColor;
+                }
+            }
+
+            Console.WriteLine("");
         }
 
         /// <summary>Mays the fourth.</summary>
