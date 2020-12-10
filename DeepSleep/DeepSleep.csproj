@@ -25,6 +25,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include=".pack\deepsleep-original-mod-medium.png" />
+    <Content Include=".pack\deepsleep-original-mod.png" />
+    <Content Include=".pack\deepsleep-original.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include=".pack\DeepSleep.nuspec" />
     <None Include=".pack\deepsleep.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

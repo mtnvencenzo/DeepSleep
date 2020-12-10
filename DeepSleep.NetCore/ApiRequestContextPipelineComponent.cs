@@ -55,6 +55,12 @@
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
 
+            var previousForeColor = Console.ForegroundColor;
+            Console.Write($"{context.ProcessingInfo.UTCRequestDuration.StartDate.ToString("yyyy-MM-ddT HH:mm:ss.fffzzz", CultureInfo.CurrentCulture)} ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"{context.RequestInfo.Method.ToUpper()} {context.RequestInfo.RequestUri} {context.RequestInfo.Protocol}");
+            Console.ForegroundColor = previousForeColor;
+
             await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
         }
 
@@ -1098,6 +1104,8 @@
 
             return returnValue;
         }
+
+
     }
 
     /// <summary>

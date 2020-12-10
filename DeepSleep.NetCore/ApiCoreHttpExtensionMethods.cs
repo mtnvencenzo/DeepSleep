@@ -8,6 +8,9 @@
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.NetCore.Controllers;
     using DeepSleep.Configuration;
+    using System.Reflection;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// 
@@ -53,23 +56,26 @@
                 services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamWriterFactory>();
             }
 
-            services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) =>
+            config.RoutingTable ??= GetDefaultRoutingTable();
+
+            if (config.UsePingEndpoint)
             {
-                var routingTable = config.RoutingTable ?? GetDefaultRoutingTable();
+                AddPingEndpoint(config.RoutingTable);
+            }
 
-                if (config.UsePingEndpoint)
-                {
-                    AddPingEndpoint(routingTable, config);
-                }
+            if (config.UseEnvironmentEndpoint)
+            {
+                AddEnvironmentEndpoint(config.RoutingTable);
+            }
 
-                if (config.UseEnvironmentEndpoint)
-                {
-                    AddEnvironmentEndpoint(routingTable, config);
-                }
+            services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTable);
 
-                return routingTable;
-            });
 
+            try
+            {
+                WriteDeepsleepToConsole(config);
+            }
+            catch { }
 
             return services;
         }
@@ -150,8 +156,7 @@
 
         /// <summary>Adds the ping endpoint.</summary>
         /// <param name="table">The table.</param>
-        /// <param name="config">The configuration.</param>
-        private static void AddPingEndpoint(IApiRoutingTable table, IApiServiceConfiguration config)
+        private static void AddPingEndpoint(IApiRoutingTable table)
         {
             table.AddRoute(
                template: $"ping",
@@ -177,10 +182,9 @@
                });
         }
 
-        /// <summary>Adds the ping endpoint.</summary>
+        /// <summary>Adds the environment endpoint.</summary>
         /// <param name="table">The table.</param>
-        /// <param name="config">The configuration.</param>
-        private static void AddEnvironmentEndpoint(IApiRoutingTable table, IApiServiceConfiguration config)
+        private static void AddEnvironmentEndpoint(IApiRoutingTable table)
         {
             table.AddRoute(
                template: $"env",
@@ -216,6 +220,87 @@
                 CasingStyle = FormatCasingStyle.CamelCase,
                 NullValuesExcluded = true
             };
+        }
+
+        /// <summary>Writes the deepsleep to console.</summary>
+        /// <param name="config">The configuration.</param>
+        private static void WriteDeepsleepToConsole(IApiServiceConfiguration config)
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            var existingColor = Console.ForegroundColor;
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($@"");
+            Console.WriteLine($@" ____                  _             ");
+            Console.WriteLine($@"|    \ ___ ___ ___ ___| |___ ___ ___ ");
+            Console.WriteLine($@"|  |  | -_| -_| . |_ -| | -_| -_| . |");
+            Console.WriteLine($@"|____/|___|___|  _|___|_|___|___|  _|");
+            Console.Write($@"              |_|               |_|  ");
+            Console.ForegroundColor = existingColor;
+
+            Console.WriteLine($"   v{version}");
+            Console.WriteLine($"");
+            Console.WriteLine($"------------------------------------------------");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write($"Endpoints: ");
+            Console.ForegroundColor = existingColor;
+            Console.WriteLine($"{config?.RoutingTable?.GetRoutes()?.Count ?? 0}");
+
+            Console.WriteLine($"------------------------------------------------");
+            Console.WriteLine($"");
+
+            var routes = (config?.RoutingTable?.GetRoutes() ?? new List<ApiRoutingItem>())
+                .OrderBy(r => r.Template)
+                .ToList();
+
+            routes.ForEach(r =>
+            {
+                existingColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"  {r.HttpMethod.ToUpper().PadRight(9, ' ')}");
+                Console.ForegroundColor = existingColor;
+                Console.WriteLine($"{r.Template}");
+            });
+
+            Console.WriteLine("");
+
+            MayTheFourth();
+
+            Console.WriteLine();
+        }
+
+        /// <summary>Mays the fourth.</summary>
+        private static void MayTheFourth()
+        {
+            var now = DateTime.Now;
+
+            if (now.Month == 5 && now.Day == 4)
+            {
+                var existingColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+
+                Console.WriteLine(@"                       _.-'~~~~~~`-._");
+                Console.WriteLine(@"                      /      ||      \");
+                Console.WriteLine(@"                     /       ||       \");
+                Console.WriteLine(@"                    |        ||        |");
+                Console.WriteLine(@"                    | _______||_______ |");
+                Console.WriteLine(@"                    |/ ----- \/ ----- \|");
+                Console.WriteLine(@"                   /  (     )  (     )  \");
+                Console.WriteLine(@"                  / \  ----- () -----  / \");
+                Console.WriteLine(@"                 /   \      /||\      /   \");
+                Console.WriteLine(@"                /     \    /||||\    /     \");
+                Console.WriteLine(@"               /       \  /||||||\  /       \");
+                Console.WriteLine(@"              /_        \o========o/        _\");
+                Console.WriteLine(@"                `--...__|`-._  _.-'|__...--'");
+                Console.WriteLine(@"                        |    `'    |");
+
+                
+                Console.WriteLine("");
+                Console.WriteLine(@"                  May the 4th be with you!");
+                Console.WriteLine("");
+                Console.ForegroundColor = existingColor;
+            }
         }
     }
 }

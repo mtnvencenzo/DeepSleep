@@ -70,9 +70,8 @@
         /// <value>The value of the If-Match header..</value>
         public virtual string IfMatch { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the cookies.</summary>
+        /// <value>The cookies.</value>
         public Dictionary<string, string> Cookies { get; set; }
 
         /// <summary>Gets or sets the length of the content.</summary>
@@ -137,19 +136,14 @@
         /// <value>The body.</value>
         public virtual Stream Body { get; set; }
 
-        ///// <summary>Gets or sets the multipart content of the form
-        ///// </summary>
-        //public virtual MultipartFormData Multipart { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Dumps this instance.</summary>
         /// <returns></returns>
         public string Dump()
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine(this.Path);
+            builder.AppendLine($"{this.Method.ToUpper()} {this.RequestUri} {this.Protocol}");
+            builder.AppendLine("");
 
             if (this.Headers != null)
             {

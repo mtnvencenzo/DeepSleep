@@ -14,8 +14,8 @@
         /// </summary>
         public ApiRequestDuration()
         {
-            StartDate = DateTime.UtcNow;
-            EndDate = DateTime.MaxValue.ChangeKind(DateTimeKind.Utc);
+            StartDate = DateTimeOffset.UtcNow;
+            EndDate = DateTimeOffset.UtcNow;
         }
 
         #endregion
@@ -23,12 +23,12 @@
         /// <summary>
         /// Gets or sets the end date.
         /// </summary>
-        public DateTime EndDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
 
         /// <summary>
         /// Gets or sets the start date.
         /// </summary>
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         /// <summary>Gets or sets the duration.</summary>
         /// <value>The duration.</value>
