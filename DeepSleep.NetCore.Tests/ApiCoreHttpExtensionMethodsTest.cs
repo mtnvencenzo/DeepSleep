@@ -4,7 +4,6 @@ namespace DeepSleep.NetCore.Tests
     using DeepSleep.NetCore;
     using Xunit;
     using System.Linq;
-    using DeepSleep.Configuration;
 
     public class ApiCoreHttpExtensionMethodsTest
     {

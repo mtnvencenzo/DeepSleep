@@ -36,7 +36,7 @@ X-CorrelationId: {correlationId}";
 
 
             var routingTable = this.serviceProvider.GetService<IApiRoutingTable>();
-            routingTable.AddRoute("GET_test/widget", "test/widget", "GET", this.GetType(), nameof(GetWidgetEndpoint));
+            routingTable.AddRoute("test/widget", "GET", this.GetType(), nameof(GetWidgetEndpoint));
 
             using (var httpContext = new MockHttpContext(this.serviceProvider, request))
             {

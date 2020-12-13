@@ -2,21 +2,12 @@
 {
     using DeepSleep.Configuration;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics.Tracing;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Resources;
-    using System.Text;
     using System.Threading;
-
 
     /// <summary>The API request context.</summary>
     public class ApiRequestContext
     {
-        static readonly ConcurrentDictionary<string, ResourceManager> resxTypes = new ConcurrentDictionary<string, ResourceManager>();
-
         /// <summary>Initializes a new instance of the <see cref="ApiRequestContext"/> class.</summary>
         public ApiRequestContext()
         {
@@ -69,35 +60,8 @@
         /// <value>The request services.</value>
         public virtual IServiceProvider RequestServices { get; set; }
 
-        /// <summary>Gets the resource.</summary>
-        /// <param name="expression">The expression.</param>
-        /// <returns></returns>
-        public virtual string GetAcceptLanguageResource(Expression<Func<string>> expression)
-        {
-            string resx = null;
-
-            if (expression.Body is MemberExpression expr)
-            {
-                var propertyInfo = expr.Member as PropertyInfo;
-                if (propertyInfo != null)
-                {
-                    if (!resxTypes.ContainsKey(propertyInfo.DeclaringType.FullName))
-                    {
-                        resxTypes.GetOrAdd(propertyInfo.DeclaringType.FullName, new ResourceManager(propertyInfo.DeclaringType));
-                    }
-
-                    var rm = resxTypes[propertyInfo.DeclaringType.FullName];
-                    resx = rm.GetString(propertyInfo.Name, RequestInfo?.AcceptCulture);
-                }
-            }
-
-            return resx;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cookie"></param>
+        /// <summary>Adds the response cookie.</summary>
+        /// <param name="cookie">The cookie.</param>
         /// <returns></returns>
         public ApiRequestContext AddResponseCookie(ApiCookie cookie)
         {
@@ -239,11 +203,9 @@
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="response"></param>
+        /// <summary>Determines whether [is conditional request match] [the specified response].</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="response">The response.</param>
         /// <returns></returns>
         public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, ApiResponseInfo response)
         {
@@ -259,12 +221,10 @@
             return IsConditionalRequestMatch(context, etag, lastModified);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="etag"></param>
-        /// <param name="lastModified"></param>
+        /// <summary>Determines whether [is conditional request match] [the specified etag].</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="etag">The etag.</param>
+        /// <param name="lastModified">The last modified.</param>
         /// <returns></returns>
         public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, string etag, DateTimeOffset? lastModified)
         {
@@ -317,11 +277,9 @@
             return ApiCondtionalMatchType.None;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="status"></param>
+        /// <summary>Sets the HTTP status.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="status">The status.</param>
         /// <returns></returns>
         public static ApiRequestContext SetHttpStatus(this ApiRequestContext context, int status)
         {
@@ -333,12 +291,10 @@
             return context;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
+        /// <summary>Sets the HTTP header.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
         /// <returns></returns>
         public static ApiRequestContext SetHttpHeader(this ApiRequestContext context, string name, string value)
         {

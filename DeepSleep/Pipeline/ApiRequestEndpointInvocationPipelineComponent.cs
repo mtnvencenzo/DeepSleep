@@ -98,9 +98,25 @@
                     // -----------------------------------------------------
                     //logger?.LogInformation($"Invoking controller method {context.RequestInfo.InvocationContext.Controller.GetType().FullName}::{context.RequestInfo.InvocationContext.ControllerMethod.Name}");
 
-                    var endpointResponse = context.RequestInfo.InvocationContext.ControllerMethod.Invoke(
-                        context.RequestInfo.InvocationContext.Controller,
-                        parameters.ToArray());
+                    object endpointResponse;
+
+                    try
+                    {
+                        endpointResponse = context.RequestInfo.InvocationContext.ControllerMethod.Invoke(
+                            context.RequestInfo.InvocationContext.Controller,
+                            parameters.ToArray());
+                    }
+                    catch (TargetInvocationException ex)
+                    {
+                        if (ex.InnerException != null)
+                        {
+                            throw ex.InnerException;
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
 
                     // -----------------------------------------------------
                     // If the response is awaitable then handle

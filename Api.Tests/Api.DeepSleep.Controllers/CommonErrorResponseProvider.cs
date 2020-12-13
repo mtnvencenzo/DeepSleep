@@ -1,4 +1,4 @@
-﻿namespace Api.DeepSleep.NetCore3_1
+﻿namespace Api.DeepSleep.Controllers
 {
     using Api.DeepSleep.Models;
     using global::DeepSleep;

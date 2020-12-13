@@ -13,44 +13,39 @@ namespace DeepSleep.OpenApi.Tests
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(
-                "GET_/test/basic/EndpointNoParams/{id}",
-                "/test/basic/EndpointNoParams/{id}",
-                "GET",
-                typeof(BasicController),
-                nameof(BasicController.EndpointNoParams),
-                new DefaultApiRequestConfiguration());
+                template: "/test/basic/EndpointNoParams/{id}",
+                httpMethod: "GET",
+                controller: typeof(BasicController),
+                endpoint: nameof(BasicController.EndpointNoParams),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "PATCH_/test/basic/EndpointNoParams/{id}",
-                "/test/basic/EndpointNoParams/{id}",
-                "PATCH",
-                typeof(BasicController),
-                nameof(BasicController.EndpointNoParamsPatch),
-                new DefaultApiRequestConfiguration());
+                template: "/test/basic/EndpointNoParams/{id}",
+                httpMethod: "PATCH",
+                controller: typeof(BasicController),
+                endpoint: nameof(BasicController.EndpointNoParamsPatch),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "POST_/test/basic/EndpointNoParams/{id}",
-                "test/basic/EndpointNoParams/{id}",
-                "POST",
-                typeof(BasicController),
-                nameof(BasicController.EndpointNoParamsPatch),
-                new DefaultApiRequestConfiguration());
+                template: "test/basic/EndpointNoParams/{id}",
+                httpMethod: "POST",
+                controller: typeof(BasicController),
+                endpoint: nameof(BasicController.EndpointNoParamsPatch),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "/test/basic/EndpointWithRouteParam/{name}",
-                "/test/basic/EndpointWithRouteParam/{name}",
-                "GET",
-                typeof(BasicController),
-                nameof(BasicController.EndpointWithRouteParam),
-                new DefaultApiRequestConfiguration());
+                template: "/test/basic/EndpointWithRouteParam/{name}",
+                httpMethod: "GET",
+                controller: typeof(BasicController),
+                endpoint: nameof(BasicController.EndpointWithRouteParam),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "/test/basic/EndpointWithBodyParam",
-                "/test/basic/EndpointWithBodyParam",
-                "POST",
-                typeof(BasicController),
-                nameof(BasicController.EndpointWithBodyParam),
-                new DefaultApiRequestConfiguration());
+                template: "/test/basic/EndpointWithBodyParam",
+                httpMethod: "POST",
+                controller: typeof(BasicController),
+                endpoint: nameof(BasicController.EndpointWithBodyParam),
+                config: new DefaultApiRequestConfiguration());
 
             var generator = new DefaultOpenApiGenerator();
 
@@ -70,36 +65,32 @@ namespace DeepSleep.OpenApi.Tests
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(
-                "GET_/test/list",
-                "/test/list",
-                "GET",
-                typeof(ListController),
-                nameof(ListController.List),
-                new DefaultApiRequestConfiguration());
+                template: "/test/list",
+                httpMethod: "GET",
+                controller: typeof(ListController),
+                endpoint: nameof(ListController.List),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "GET_/test/list1",
-                "/test/list1",
-                "GET",
-                typeof(ListController),
-                nameof(ListController.List1),
-                new DefaultApiRequestConfiguration());
+                template: "/test/list1",
+                httpMethod: "GET",
+                controller: typeof(ListController),
+                endpoint: nameof(ListController.List1),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "GET_/test/list2",
-                "/test/list2",
-                "GET",
-                typeof(ListController),
-                nameof(ListController.List2),
-                new DefaultApiRequestConfiguration());
+                template: "/test/list2",
+                httpMethod: "GET",
+                controller: typeof(ListController),
+                endpoint: nameof(ListController.List2),
+                config: new DefaultApiRequestConfiguration());
 
             table.AddRoute(
-                "GET_/test/list/container",
-                "/test/list/container",
-                "GET",
-                typeof(ListController),
-                nameof(ListController.ListContainer),
-                new DefaultApiRequestConfiguration());
+                template: "/test/list/container",
+                httpMethod: "GET",
+                controller: typeof(ListController),
+                endpoint: nameof(ListController.ListContainer),
+                config: new DefaultApiRequestConfiguration());
 
             var generator = new DefaultOpenApiGenerator();
 

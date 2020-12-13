@@ -31,19 +31,11 @@
             table.AddRoute(
                template: routeTemplate,
                httpMethod: "GET",
-               name: $"GET_openapi",
                controller: typeof(OpenApiController),
                endpoint: nameof(OpenApiController.Doc),
                config: new DefaultApiRequestConfiguration
                {
-                   AllowAnonymous = true,
-                   CacheDirective = new HttpCacheDirective
-                   {
-                       Cacheability = HttpCacheType.NoCache,
-                       CacheLocation = HttpCacheLocation.Private,
-                       ExpirationSeconds = -5
-                   },
-                   Deprecated = false
+                   AllowAnonymous = true
                });
 
             return builder;

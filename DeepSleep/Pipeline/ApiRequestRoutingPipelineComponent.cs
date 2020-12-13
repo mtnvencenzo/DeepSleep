@@ -189,7 +189,6 @@
                     Endpoint = item.EndpointLocation?.Endpoint,
                     HttpMethod = item.EndpointLocation.HttpMethod
                 },
-                Name = item.Name,
                 Template = item.Template,
                 Config = item.Config,
                 HttpMethod = item.HttpMethod,

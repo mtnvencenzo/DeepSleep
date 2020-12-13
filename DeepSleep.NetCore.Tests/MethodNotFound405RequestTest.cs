@@ -35,8 +35,8 @@ Accept-Language: en-US,en;q=0.9
 X-CorrelationId: {correlationId}";
 
             var routingTable = this.serviceProvider.GetService<IApiRoutingTable>();
-            routingTable.AddRoute("GET_test/widget", "test/widget", "GET", this.GetType(), nameof(GetWidgetEndpoint));
-            routingTable.AddRoute("PUT_test/widget", "test/widget", "PUT", this.GetType(), nameof(GetWidgetEndpoint));
+            routingTable.AddRoute("test/widget", "GET", this.GetType(), nameof(GetWidgetEndpoint));
+            routingTable.AddRoute("test/widget", "PUT", this.GetType(), nameof(GetWidgetEndpoint));
 
             using (var httpContext = new MockHttpContext(this.serviceProvider, request))
             {

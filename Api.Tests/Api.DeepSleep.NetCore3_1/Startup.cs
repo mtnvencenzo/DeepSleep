@@ -1,11 +1,7 @@
 namespace Api.DeepSleep.NetCore3_1
 {
-    using Api.DeepSleep.Controllers.Binding;
-    using Api.DeepSleep.Controllers.Formatters;
-    using global::DeepSleep;
-    using global::DeepSleep.Configuration;
+    using Api.DeepSleep.Controllers;
     using global::DeepSleep.NetCore;
-    using global::DeepSleep.Validation;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -49,22 +45,16 @@ namespace Api.DeepSleep.NetCore3_1
         /// <param name="services">The services.</param>
         public void ConfigureDependentServices(IServiceCollection services)
         {
-            // Controlllers
-            services.AddTransient<SimpleUrlBindingController>();
-            services.AddTransient<MultipartController>();
-            services.AddTransient<CommonErrorResponseProvider>();
+            ServiceStartup.RegisterServices(services);
 
             services
                 .AddLogging()
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
-                    RoutingTable = GetRoutes(this.serviceProvider),
-                    ApiValidationProvider = new DefaultApiValidationProvider(serviceProvider).RegisterInvoker<TypeBasedValidationInvoker>(),
-                    DefaultRequestConfiguration = new DefaultApiRequestConfiguration
-                    {
-                        AllowAnonymous = true,
-                        ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>()
-                    }
+                    RoutingTable = ServiceStartup.InitialzeRoutes(),
+                    ApiValidationProvider = ServiceStartup.DefaultValidationProvider(this.serviceProvider),
+                    DefaultRequestConfiguration = ServiceStartup.DefaultRequestConfiguration(),
+                    UsePingEndpoint = true
                 });
 
 
@@ -95,55 +85,5 @@ namespace Api.DeepSleep.NetCore3_1
         /// 
         /// </summary>
         public Action<IServiceCollection> ServicePreprocessor { get; set; }
-
-        /// <summary>Gets the routes.</summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
-        private static IApiRoutingTable GetRoutes(IServiceProvider serviceProvider)
-        {
-            var table = new DefaultApiRoutingTable();
-
-            table.AddRoute(
-                template: $"binding/simple/url",
-                httpMethod: "GET",
-                name: $"GET_binding/simple/url",
-                controller: typeof(SimpleUrlBindingController),
-                endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
-                config: new DefaultApiRequestConfiguration());
-
-            table.AddRoute(
-                template: "binding/simple/url/{stringVar}/resource",
-                httpMethod: "GET",
-                name: "GET_binding/simple/url/{stringVar}/resource",
-                controller: typeof(SimpleUrlBindingController),
-                endpoint: nameof(SimpleUrlBindingController.GetWithRoute),
-                config: new DefaultApiRequestConfiguration());
-
-            table.AddRoute(
-                template: "binding/simple/url/{stringVar}/mixed",
-                httpMethod: "GET",
-                name: "GET_binding/simple/url/{stringVar}/mixed",
-                controller: typeof(SimpleUrlBindingController),
-                endpoint: nameof(SimpleUrlBindingController.GetWithMixed),
-                config: new DefaultApiRequestConfiguration());
-
-            table.AddRoute(
-                template: "formatters/multipart/formdata",
-                httpMethod: "POST",
-                name: "POST_formatters/multipart/formdata",
-                controller: typeof(MultipartController),
-                endpoint: nameof(MultipartController.Post),
-                config: new DefaultApiRequestConfiguration());
-
-            table.AddRoute(
-                template: "formatters/multipart/formdata/custom",
-                httpMethod: "POST",
-                name: "POST_formatters/multipart/formdata/custom",
-                controller: typeof(MultipartController),
-                endpoint: nameof(MultipartController.PostCustom),
-                config: new DefaultApiRequestConfiguration());
-
-            return table;
-        }
     }
 }

@@ -18,37 +18,6 @@
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        /// <summary>Gets the custom attributes.</summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        internal static Collection<T> GetCustomAttributes<T>(this Type type) where T : class
-        {
-            return type.GetCustomAttributes<T>(false);
-        }
-
-        /// <summary>Gets the custom attributes.</summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="type">The type.</param>
-        /// <param name="inherit">if set to <c>true</c> [inherit].</param>
-        /// <returns></returns>
-        internal static Collection<T> GetCustomAttributes<T>(this Type type, bool inherit) where T : class
-        {
-            Collection<T> col = new Collection<T>();
-
-            var attributes = type.GetCustomAttributes<T>(inherit);
-
-            if (attributes != null)
-            {
-                foreach (var attr in attributes)
-                {
-                    col.Add(attr as T);
-                }
-            }
-
-            return col;
-        }
-
         /// <summary>Gets the default value.</summary>
         /// <param name="type">The type. <see cref="System.Type"/></param>
         /// <returns>The <see cref="object"/>.</returns>

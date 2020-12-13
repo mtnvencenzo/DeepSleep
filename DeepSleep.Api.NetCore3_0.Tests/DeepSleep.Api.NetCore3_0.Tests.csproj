@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>DeepSleep.Api.NetCore.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,10 +2,12 @@
 {
     using DeepSleep.Configuration;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("[{HttpMethod}] {Template}")]
     public class ApiRoutingItem
     {
         private string method;
@@ -37,7 +39,7 @@
 
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>
-        public string Name { get; set; }
+        public string Name => $"{HttpMethod}_{Template}";
 
         /// <summary>Gets or sets the template variables.</summary>
         /// <value>The template variables.</value>

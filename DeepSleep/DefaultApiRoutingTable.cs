@@ -28,27 +28,31 @@
         }
 
         /// <summary>Adds the route.</summary>
-        /// <param name="name">The name.</param>
         /// <param name="template">The template.</param>
         /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="controller">The controller.</param>
         /// <param name="endpoint">The endpoint.</param>
         /// <returns></returns>
-        /// <exception cref="System.MissingMethodException"></exception>
-        public IApiRoutingTable AddRoute(string name, string template, string httpMethod, Type controller, string endpoint)
+        public IApiRoutingTable AddRoute(string template, string httpMethod, Type controller, string endpoint)
         {
-            return AddRoute(name, template, httpMethod, controller, endpoint, null);
+            return AddRoute(template, httpMethod, controller, endpoint, null);
         }
 
         /// <summary>Adds the route.</summary>
-        /// <param name="name">The name.</param>
         /// <param name="template">The template.</param>
         /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="controller">The controller.</param>
         /// <param name="endpoint">The endpoint.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public IApiRoutingTable AddRoute(string name, string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
+        /// <exception cref="Exception">
+        /// Route '{httpMethod} {template}' already has been added.
+        /// or
+        /// Controller must be specified
+        /// or
+        /// </exception>
+        /// <exception cref="MissingMethodException"></exception>
+        public IApiRoutingTable AddRoute(string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
         {
             if (this.routes.Exists(r => string.Equals(r.Template, template, StringComparison.OrdinalIgnoreCase) &&
                  string.Equals(r.HttpMethod, httpMethod, StringComparison.OrdinalIgnoreCase)))
@@ -76,7 +80,6 @@
             var item = new ApiRoutingItem
             {
                 Template = template,
-                Name = name,
                 HttpMethod = httpMethod.ToUpper(),
                 VariablesList = GetTemplateVariables(template),
                 Config = config,

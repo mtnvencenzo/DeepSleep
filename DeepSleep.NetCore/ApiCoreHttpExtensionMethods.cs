@@ -105,7 +105,6 @@
             table.AddRoute(
                template: $"ping",
                httpMethod: "GET",
-               name: $"GET_ping",
                controller: typeof(PingController),
                endpoint: nameof(PingController.Ping),
                config: new DefaultApiRequestConfiguration

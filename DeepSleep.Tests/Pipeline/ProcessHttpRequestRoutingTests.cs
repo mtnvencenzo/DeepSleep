@@ -138,7 +138,6 @@
             var routingTable = GetRoutingTable(null);
 
             routingTable = routingTable.AddRoute(
-                name: "HEAD_test/{id}/name",
                 template: "test/{id}/name",
                 httpMethod: head,
                 controller: typeof(MockController),
@@ -736,7 +735,7 @@
         [InlineData("endpoint", "default", "endpoint")]
         [InlineData("default", "default", null)]
         [InlineData("endpoint", null, "endpoint")]
-        public async void request_config___authconfig_policy_returns_expected(string expected, string? def, string? endpoint)
+        public async void request_config___authconfig_policy_returns_expected(string expected, string def, string endpoint)
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2001,7 +2000,6 @@
             var routingTable = new DefaultApiRoutingTable();
 
             return routingTable.AddRoute(
-                name: "GET_test/{id}/name",
                 template: "test/{id}/name",
                 httpMethod: "GET",
                 controller: typeof(MockController),

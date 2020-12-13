@@ -22,6 +22,6 @@
 
         /// <summary>Gets the HTTP status.</summary>
         /// <value>The HTTP status.</value>
-        public override int HttpStatus { get; } = 501;
+        public override int HttpStatus => 501;
     }
 }

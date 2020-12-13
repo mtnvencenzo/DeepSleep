@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Api.NetCore3_0.Tests
+﻿namespace DeepSleep.Api.NetCore.Tests
 {
     using DeepSleep;
     using DeepSleep.Configuration;
@@ -73,7 +73,8 @@
             ApiValidationState expectedValidationState = ApiValidationState.Succeeded,
             Dictionary<string, string> extendedHeaders = null,
             bool shouldBeCancelledReuqest = false,
-            string expectedProtocol = "HTTP/1.1")
+            string expectedProtocol = "HTTP/1.1",
+            bool? expectedAuthenticationResult = null)
         {
             apiContext.Should().NotBeNull();
             response.Should().NotBeNull();
@@ -107,7 +108,9 @@
             apiContext.PathBase.Should().Be(apiContext.RequestInfo.Path);
             response.StatusCode.Should().Be(expectedHttpStatus);
 
-            var expectedHeaderCount = 5 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1);
+            var expectedHeaderCount = (response.StatusCode >= 500) 
+                ? 3 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1)
+                : 5 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1);
 
             // Check for headers
             apiContext.ResponseInfo.Headers.Should().HaveCount(expectedHeaderCount);
@@ -118,21 +121,24 @@
             apiContext.ResponseInfo.Headers.HasHeader("Date").Should().BeTrue();
             apiContext.ResponseInfo.Headers.GetHeader("Date").Value.Should().Be(apiContext.ResponseInfo.Date?.ToString("r"));
 
-            response.Headers.Should().ContainKey("Cache-Control");
-            response.Headers["Cache-Control"].Should().Equal(this.cacheControlNoCache);
-            apiContext.ResponseInfo.Headers.HasHeader("Cache-Control").Should().BeTrue();
-            apiContext.ResponseInfo.Headers.GetHeader("Cache-Control").Value.Should().Be(this.cacheControlNoCache);
-
-            response.Headers.Should().ContainKey("Expires");
-            response.Headers["Expires"].Should().Equal(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
-            apiContext.ResponseInfo.Headers.HasHeader("Expires").Should().BeTrue();
-            apiContext.ResponseInfo.Headers.GetHeader("Expires").Value.Should().Be(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
-
             response.Headers.Should().ContainKey("Content-Length");
             response.Headers["Content-Length"].Should().Equal(response.Body.Length.ToString());
             apiContext.ResponseInfo.Headers.HasHeader("Content-Length").Should().BeTrue();
             apiContext.ResponseInfo.Headers.GetHeader("Content-Length").Value.Should().Be(response.Body.Length.ToString());
             apiContext.ResponseInfo.ContentLength.Should().Be(response.Body.Length);
+
+            if (response.StatusCode < 500)
+            {
+                response.Headers.Should().ContainKey("Cache-Control");
+                response.Headers["Cache-Control"].Should().Equal(this.cacheControlNoCache);
+                apiContext.ResponseInfo.Headers.HasHeader("Cache-Control").Should().BeTrue();
+                apiContext.ResponseInfo.Headers.GetHeader("Cache-Control").Value.Should().Be(this.cacheControlNoCache);
+
+                response.Headers.Should().ContainKey("Expires");
+                response.Headers["Expires"].Should().Equal(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
+                apiContext.ResponseInfo.Headers.HasHeader("Expires").Should().BeTrue();
+                apiContext.ResponseInfo.Headers.GetHeader("Expires").Value.Should().Be(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
+            }
 
             if (shouldHaveResponse)
             {
@@ -162,19 +168,29 @@
                 (int)(apiContext.ProcessingInfo.UTCRequestDuration.EndDate - apiContext.ProcessingInfo.UTCRequestDuration.StartDate).TotalMilliseconds);
 
             apiContext.RequestAborted.IsCancellationRequested.Should().Be(shouldBeCancelledReuqest);
-            apiContext.ResponseInfo.ResponseWriter.Should().NotBeNull();
-            apiContext.ResponseInfo.ResponseWriterOptions.Should().NotBeNull();
             apiContext.RequestInfo.Protocol.Should().Be(expectedProtocol);
             apiContext.RequestInfo.RequestIdentifier.Should().NotBeNull();
 
+            if (response.StatusCode < 500)
+            {
+                apiContext.ResponseInfo.ResponseWriter.Should().NotBeNull();
+                apiContext.ResponseInfo.ResponseWriterOptions.Should().NotBeNull();
 
-            if (apiContext.RequestInfo.PrettyPrint && apiContext.ResponseInfo.ResponseWriter.SupportsPrettyPrint)
-            {
-                apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeTrue();
+                if (apiContext.RequestInfo.PrettyPrint && apiContext.ResponseInfo.ResponseWriter.SupportsPrettyPrint)
+                {
+                    apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeTrue();
+                }
+                else
+                {
+                    apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeFalse();
+                }
             }
-            else
+
+            if (expectedAuthenticationResult.HasValue)
             {
-                apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeFalse();
+                apiContext.RequestInfo.ClientAuthenticationInfo.Should().NotBeNull();
+                apiContext.RequestInfo.ClientAuthenticationInfo.AuthResult.Should().NotBeNull();
+                apiContext.RequestInfo.ClientAuthenticationInfo.AuthResult.IsAuthenticated.Should().Be(expectedAuthenticationResult.Value);
             }
         }
 
