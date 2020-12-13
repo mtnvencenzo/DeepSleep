@@ -93,19 +93,16 @@
         /// <value>The size.</value>
         public long? Size { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the creation date.</summary>
+        /// <value>The creation date.</value>
         public DateTimeOffset? CreationDate { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the modification date.</summary>
+        /// <value>The modification date.</value>
         public DateTimeOffset? ModificationDate { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the read date.</summary>
+        /// <value>The read date.</value>
         public DateTimeOffset? ReadDate { get; set; }
     }
 }

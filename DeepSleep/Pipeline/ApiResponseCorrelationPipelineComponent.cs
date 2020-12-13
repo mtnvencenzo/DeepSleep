@@ -7,34 +7,26 @@
     /// </summary>
     public class ApiResponseCorrelationPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseCorrelationPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiResponseCorrelationPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
-
-                var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             }
-            catch
+            finally
             {
                 var context = contextResolver.GetContext();
                 await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
-                throw;
             }
         }
     }

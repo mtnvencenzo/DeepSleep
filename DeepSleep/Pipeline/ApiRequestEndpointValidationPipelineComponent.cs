@@ -9,24 +9,21 @@
     /// </summary>
     public class ApiRequestEndpointValidationPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestEndpointValidationPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestEndpointValidationPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="validationProvider">The validation provider.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiValidationProvider validationProvider)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
+
+            var validationProvider = context?.RequestServices?.GetService<IApiValidationProvider>();
 
             if (await context.ProcessHttpEndpointValidation(validationProvider).ConfigureAwait(false))
             {

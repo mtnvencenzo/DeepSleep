@@ -9,21 +9,17 @@
     /// </summary>
     public class ApiRequestHeaderValidationPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestHeaderValidationPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestHeaderValidationPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
@@ -54,8 +50,6 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var addedHeaderError = false;
-
                 if (context.RequestInfo.Headers != null)
                 {
                     var maxHeaderLength = context.RequestConfig?.HeaderValidationConfig?.MaxHeaderLength ?? 0;
@@ -64,21 +58,13 @@
                     {
                         foreach (var header in context.RequestInfo.Headers)
                         {
-                            if (header.Value.Length > maxHeaderLength)
+                            if (header.Value?.Length > maxHeaderLength)
                             {
-                                addedHeaderError = true;
-                                context.ErrorMessages.Add(
-                                    string.Format(ValidationErrors.HeaderLengthExceeded, header.Name, maxHeaderLength.ToString(CultureInfo.InvariantCulture)));
+                                context.ResponseInfo.StatusCode = 431;
+                                return Task.FromResult(false);
                             }
                         }
                     }
-                }
-
-                if (addedHeaderError)
-                {
-                    context.ResponseInfo.StatusCode = 431;
-
-                    return Task.FromResult(false);
                 }
 
                 return Task.FromResult(true);

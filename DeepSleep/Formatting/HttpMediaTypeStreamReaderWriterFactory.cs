@@ -6,12 +6,12 @@
     /// 
     /// </summary>
     /// <seealso cref="DeepSleep.Formatting.FormatStreamReaderWriterFactoryBase" />
-    public class HttpMediaTypeStreamWriterFactory : FormatStreamReaderWriterFactoryBase
+    public class HttpMediaTypeStreamReaderWriterFactory : FormatStreamReaderWriterFactoryBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpMediaTypeStreamWriterFactory"/> class.
+        /// Initializes a new instance of the <see cref="HttpMediaTypeStreamReaderWriterFactory"/> class.
         /// </summary>
-        public HttpMediaTypeStreamWriterFactory(IServiceProvider serviceProvider) : base(serviceProvider)
+        public HttpMediaTypeStreamReaderWriterFactory(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

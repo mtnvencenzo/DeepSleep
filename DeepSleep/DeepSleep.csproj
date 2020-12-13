@@ -42,21 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Auth\AuthenticationErrors.Designer.cs">
-      <DependentUpon>AuthenticationErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Resources\InfoMessages.Designer.cs">
-      <DependentUpon>InfoMessages.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Resources\UnhandledExceptionErrors.Designer.cs">
-      <DependentUpon>UnhandledExceptionErrors.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="Resources\ValidationErrors.Designer.cs">
       <DependentUpon>ValidationErrors.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -65,18 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Auth\AuthenticationErrors.resx">
-      <LastGenOutput>AuthenticationErrors.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\InfoMessages.resx">
-      <LastGenOutput>InfoMessages.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\UnhandledExceptionErrors.resx">
-      <LastGenOutput>UnhandledExceptionErrors.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\ValidationErrors.resx">
       <LastGenOutput>ValidationErrors.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>

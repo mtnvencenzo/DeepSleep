@@ -1,9 +1,8 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Pipeline;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -11,21 +10,15 @@
     /// </summary>
     public class ApiRequestDelegateHandler
     {
-        private readonly MethodInfo target;
         private readonly ApiRequestDelegate requestDelegate;
         private readonly IApiRequestPipeline pipeline;
         private readonly Type type;
-        private ParameterInfo[] parameters;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiRequestDelegateHandler" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ApiRequestDelegateHandler"/> class.</summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="type">The type.</param>
-        /// <param name="target">The target.</param>
-        public ApiRequestDelegateHandler(IApiRequestPipeline pipeline, Type type, MethodInfo target)
+        public ApiRequestDelegateHandler(IApiRequestPipeline pipeline, Type type)
         {
-            this.target = target;
             this.pipeline = pipeline;
             this.requestDelegate = new ApiRequestDelegate(TaskInvoker);
             this.type = type;
@@ -44,43 +37,9 @@
                 ? new ApiRequestDelegate(TaskFinisher)
                 : registeredPipeline[index + 1].requestDelegate;
 
-            var instance = Activator.CreateInstance(this.type, new object[] { next });
-            var targetInvocationParameters = new List<object>();
+            var instance = Activator.CreateInstance(this.type, new object[] { next }) as IPipelineComponent;
 
-            if (this.parameters == null)
-            {
-                this.parameters = this.target.GetParameters();
-            }
-
-            foreach (var methodParam in this.parameters)
-            {
-                if (methodParam.ParameterType == typeof(IApiRequestContextResolver))
-                {
-                    targetInvocationParameters.Add(contextResolver);
-                }
-                else
-                {
-                    if (context?.RequestServices != null)
-                    {
-                        try
-                        {
-                            var service = context.RequestServices.GetService(methodParam.ParameterType);
-                            targetInvocationParameters.Add(service);
-                        }
-                        catch (System.Exception)
-                        {
-                            targetInvocationParameters.Add(null);
-                        }
-                    }
-                    else
-                    {
-                        targetInvocationParameters.Add(null);
-                    }
-                }
-            }
-
-            var task = (Task)this.target.Invoke(instance, targetInvocationParameters.ToArray());
-            await task.ConfigureAwait(false);
+            await instance.Invoke(contextResolver).ConfigureAwait(false);
         }
 
         /// <summary>Tasks the finisher.</summary>

@@ -3,7 +3,9 @@ using System.Security.Principal;
 
 namespace DeepSleep
 {
-    /// <summary></summary>
+    /// <summary>
+    /// 
+    /// </summary>
     public class ClientAuthentication
     {
         /// <summary>Gets or sets the authentication value.</summary>
@@ -14,18 +16,16 @@ namespace DeepSleep
         /// <value>The authentication scheme.</value>
         public string AuthScheme { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the authentication result.</summary>
+        /// <value>The authentication result.</value>
         public AuthenticationResult AuthResult { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the authenticated by.</summary>
+        /// <value>The authenticated by.</value>
         public AuthenticationType AuthenticatedBy { get; set; }
 
-        /// <summary>Gets or sets the authenticated security principal.
-        /// </summary>
+        /// <summary>Gets or sets the principal.</summary>
+        /// <value>The principal.</value>
         public IPrincipal Principal { get; set; }
     }
 }

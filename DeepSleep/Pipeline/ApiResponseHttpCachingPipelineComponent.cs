@@ -8,21 +8,17 @@
     /// </summary>
     public class ApiResponseHttpCachingPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseHttpCachingPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiResponseHttpCachingPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+             : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 

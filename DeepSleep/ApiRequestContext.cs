@@ -108,6 +108,59 @@
         /// <summary>Gets or sets the register for dispose.</summary>
         /// <value>The register for dispose.</value>
         public Action<IDisposable> RegisterForDispose { get; set; }
+
+        /// <summary>Gets the default request configuration.</summary>
+        /// <returns></returns>
+        public static IApiRequestConfiguration GetDefaultRequestConfiguration()
+        {
+            return new DefaultApiRequestConfiguration
+            {
+                AllowAnonymous = false,
+                ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider(),
+                CacheDirective = new HttpCacheDirective
+                {
+                    Cacheability = HttpCacheType.NoCache,
+                    CacheLocation = HttpCacheLocation.Private,
+                    ExpirationSeconds = -1
+                },
+                CrossOriginConfig = new CrossOriginConfiguration
+                {
+                    AllowCredentials = true,
+                    AllowedOrigins = new List<string> { "*" },
+                    AllowedHeaders = new List<string> { "*" },
+                    ExposeHeaders = new List<string>()
+                },
+                Deprecated = false,
+                FallBackLanguage = null,
+                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                {
+                    MaxHeaderLength = 0
+                },
+                HttpConfig = new ApiHttpConfiguration
+                {
+                    RequireSSL = false,
+                    SupportedVersions = new List<string>
+                    {
+                        "http/1.1",
+                        "http/1.2",
+                        "http/2",
+                        "http/2.0",
+                        "http/2.1"
+                    }
+                },
+                AllowRequestBodyWhenNoModelDefined = false,
+                RequireContentLengthOnRequestBodyRequests = true,
+                MaxRequestLength = 0,
+                MaxRequestUriLength = 0,
+                MinRequestLength = 0,
+                SupportedLanguages = new List<string>(),
+                SupportedAuthenticationSchemes = new List<string>(),
+                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                {
+                    Policy = null
+                }
+            };
+        }
     }
 
     /// <summary>

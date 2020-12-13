@@ -35,7 +35,7 @@
         {
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
-                .AddTransient<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
+                .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
                 .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
@@ -43,40 +43,41 @@
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
+                .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? GetDefaultRequestConfiguration())
-                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
-                .AddScoped<IMultipartStreamReader, MultipartStreamReader>();
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
+                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
 
+            
             if (config.FormatterFactory != null)
             {
                 services.AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory);
             }
             else
             {
-                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamWriterFactory>();
+                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>();
             }
 
-            config.RoutingTable ??= GetDefaultRoutingTable();
+            config.RoutingTable = config.RoutingTable ?? GetDefaultRoutingTable();
 
-            if (config.UsePingEndpoint)
+            if (config as DefaultApiServiceConfiguration != null)
             {
-                AddPingEndpoint(config.RoutingTable);
-            }
-
-            if (config.UseEnvironmentEndpoint)
-            {
-                AddEnvironmentEndpoint(config.RoutingTable);
+                if (((DefaultApiServiceConfiguration)config).UsePingEndpoint)
+                {
+                    AddPingEndpoint(config.RoutingTable);
+                }
             }
 
             services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTable);
 
+#if DEBUG
 
             try
             {
                 WriteDeepsleepToConsole(config);
             }
             catch { }
+#endif
 
             return services;
         }
@@ -97,64 +98,6 @@
             return new DefaultApiRoutingTable();
         }
 
-        /// <summary>Gets the default request contriguration.</summary>
-        /// <returns></returns>
-        private static IApiRequestConfiguration GetDefaultRequestConfiguration()
-        {
-            return new DefaultApiRequestConfiguration
-            {
-                AllowAnonymous = false,
-                ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider
-                {
-                    WriteToBody = true,
-                    WriteToHeaders = false
-                },
-                CacheDirective = new HttpCacheDirective
-                {
-                    Cacheability = HttpCacheType.NoCache,
-                    CacheLocation = HttpCacheLocation.Private,
-                    ExpirationSeconds = -1
-                },
-                CrossOriginConfig = new CrossOriginConfiguration
-                {
-                    AllowCredentials = false,
-                    AllowedOrigins = new string[] { "*" },
-                    ExposeHeaders = new string[] {
-                        "X-CorrelationId",
-                        "X-Deprecated",
-                        "X-Api-Message",
-                        "X-Api-Version",
-                        "X-Api-RequestId",
-                        "X-Allow-Accept",
-                        "X-Allow-Accept-Charset",
-                        "X-PrettyPrint",
-                        "Location"
-                    }
-                },
-                Deprecated = false,
-                FallBackLanguage = null,
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
-                {
-                    MaxHeaderLength = int.MaxValue
-                },
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = false,
-                    SupportedVersions = new string[] {
-                        "http/1.1",
-                        "http/1.2",
-                        "http/2",
-                        "http/2.0",
-                        "http/2.1"
-                    }
-                },
-                MaxRequestLength = int.MaxValue,
-                MaxRequestUriLength = int.MaxValue,
-                MinRequestLength = 0,
-                SupportedLanguages = new string[] { }
-            };
-        }
-
         /// <summary>Adds the ping endpoint.</summary>
         /// <param name="table">The table.</param>
         private static void AddPingEndpoint(IApiRoutingTable table)
@@ -165,34 +108,6 @@
                name: $"GET_ping",
                controller: typeof(PingController),
                endpoint: nameof(PingController.Ping),
-               config: new DefaultApiRequestConfiguration
-               {
-                   AllowAnonymous = true,
-                   CacheDirective = new HttpCacheDirective
-                   {
-                       Cacheability = HttpCacheType.NoCache,
-                       CacheLocation = HttpCacheLocation.Private,
-                       ExpirationSeconds = -5
-                   },
-                   CrossOriginConfig = new CrossOriginConfiguration
-                   {
-                       AllowCredentials = false,
-                       AllowedOrigins = new string[] { "*" }
-                   },
-                   Deprecated = false
-               });
-        }
-
-        /// <summary>Adds the environment endpoint.</summary>
-        /// <param name="table">The table.</param>
-        private static void AddEnvironmentEndpoint(IApiRoutingTable table)
-        {
-            table.AddRoute(
-               template: $"env",
-               httpMethod: "GET",
-               name: $"GET_env",
-               controller: typeof(EnnvironmentController),
-               endpoint: nameof(EnnvironmentController.Env),
                config: new DefaultApiRequestConfiguration
                {
                    AllowAnonymous = true,
@@ -312,6 +227,8 @@
             Console.WriteLine();
         }
 
+        /// <summary>Writes the endpoint template.</summary>
+        /// <param name="template">The template.</param>
         private static void WriteEndpointTemplate(string template)
         {
             var existingColor = Console.ForegroundColor;
@@ -332,6 +249,7 @@
             }
 
             Console.WriteLine("");
+            Console.ForegroundColor = existingColor;
         }
 
         /// <summary>Mays the fourth.</summary>

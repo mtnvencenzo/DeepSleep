@@ -39,19 +39,8 @@
         /// </summary>
         IJsonFormattingConfiguration JsonConfiguration { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets or sets the exclude paths.</summary>
+        /// <value>The exclude paths.</value>
         IList<string> ExcludePaths { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        bool UsePingEndpoint { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        bool UseEnvironmentEndpoint { get; set; }
     }
 }

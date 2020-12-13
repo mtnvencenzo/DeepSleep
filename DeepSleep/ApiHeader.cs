@@ -76,24 +76,6 @@
             return headers.GetHeader(name)?.Value ?? string.Empty;
         }
 
-        /// <summary>Gets the headers.</summary>
-        /// <param name="headers">The headers.</param>
-        /// <param name="name">The name.</param>
-        /// <returns></returns>
-        public static IEnumerable<ApiHeader> GetHeaders(this IEnumerable<ApiHeader> headers, string name)
-        {
-            if (headers == null)
-                yield break;
-
-            foreach (var header in headers)
-            {
-                if (string.Compare(header.Name, name, true) == 0)
-                {
-                    yield return header;
-                }
-            }
-        }
-
         /// <summary>Sets the value.</summary>
         /// <param name="headers">The headers.</param>
         /// <param name="name">The name.</param>

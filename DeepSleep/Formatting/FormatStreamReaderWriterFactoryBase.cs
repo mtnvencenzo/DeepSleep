@@ -105,38 +105,23 @@
         /// <exception cref="System.NotImplementedException"></exception>
         protected virtual IFormatStreamReaderWriter Get(string type, string parameters, bool forRead, out string formatterType)
         {
-            formatterType = string.Empty;
-            IFormatStreamReaderWriter foundFormatter = null;
-
             var formatters = GetFormatters()
-                .Where(f => (forRead && f.SupportsRead) || (!forRead && f.SupportsWrite))
-                .ToList();
+                .Where(f => (forRead && f.SupportsRead) || (!forRead && f.SupportsWrite));
 
-            if (foundFormatter == null)
+            foreach (var formatter in formatters)
             {
-                foreach (var formatter in formatters)
+                foreach (var contentType in formatter.SuuportedContentTypes)
                 {
-                    foreach (var contentType in formatter.SuuportedContentTypes)
+                    if (this.CanHandleType(contentType, type, parameters))
                     {
-                        if (CanHandleType(contentType, type, parameters))
-                        {
-                            formatterType = contentType;
-                            foundFormatter = formatter;
-                            break;
-                        }
+                        formatterType = contentType;
+                        return formatter;
                     }
-
-                    if (foundFormatter != null)
-                        break;
                 }
             }
 
-            if (foundFormatter == null)
-            {
-                formatterType = string.Empty;
-            }
-
-            return foundFormatter;
+            formatterType = string.Empty;
+            return null;
         }
     }
 }

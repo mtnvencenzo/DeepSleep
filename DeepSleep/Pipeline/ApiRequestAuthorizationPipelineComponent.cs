@@ -10,21 +10,17 @@
     /// </summary>
     public class ApiRequestAuthorizationPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestAuthorizationPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestAuthorizationPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
@@ -55,7 +51,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.ResourceAuthorizationConfig?.Policy))
+                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.AuthorizationConfig?.Policy))
                 {
                     var providers = context.RequestServices
                         .GetServices<IAuthorizationProvider>()
@@ -65,7 +61,7 @@
 
                     try
                     {
-                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig?.ResourceAuthorizationConfig?.Policy));
+                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig.AuthorizationConfig.Policy));
                     }
                     catch (Exception)
                     {
@@ -82,7 +78,7 @@
                     {
                         if (authProvider == null)
                         {
-                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig?.ResourceAuthorizationConfig?.Policy}'");
+                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig.AuthorizationConfig.Policy}'");
                         }
 
                         context.ResponseInfo.StatusCode = 403;

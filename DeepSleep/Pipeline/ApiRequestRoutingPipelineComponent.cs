@@ -11,25 +11,22 @@
     /// </summary>
     public class ApiRequestRoutingPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestRoutingPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestRoutingPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="routes">The routes.</param>
-        /// <param name="resolver">The resolver.</param>
-        /// <param name="defaultRequestConfig">The default request configuration.</param>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
+
+            var routes = context?.RequestServices?.GetService<IApiRoutingTable>();
+            var resolver = context?.RequestServices?.GetService<IUriRouteResolver>();
+            var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
 
             if (await context.ProcessHttpRequestRouting(routes, resolver, defaultRequestConfig).ConfigureAwait(false))
             {
@@ -57,7 +54,10 @@
         /// <param name="resolver">The resolver.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, IApiRoutingTable routes, IUriRouteResolver resolver, IApiRequestConfiguration defaultRequestConfig)
+        internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, 
+            IApiRoutingTable routes, 
+            IUriRouteResolver resolver, 
+            IApiRequestConfiguration defaultRequestConfig)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -79,7 +79,10 @@
         /// <param name="routes">The routes.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
         /// <returns></returns>
-        private static async Task<ApiRoutingItem> GetRouteInfo(this ApiRequestContext context, IUriRouteResolver resolver, IApiRoutingTable routes, IApiRequestConfiguration defaultRequestConfig)
+        private static async Task<ApiRoutingItem> GetRouteInfo(this ApiRequestContext context, 
+            IUriRouteResolver resolver, 
+            IApiRoutingTable routes, 
+            IApiRequestConfiguration defaultRequestConfig)
         {
             // -----------------------------------------------------------------
             // We want to trick the routing engine to treat HEAD requests as GET
@@ -202,106 +205,163 @@
         /// <param name="defaultConfig">The default configuration.</param>
         /// <param name="endpointConfig">The endpoint configuration.</param>
         /// <returns></returns>
-        private static IApiRequestConfiguration MergeConfigurations(ApiRequestContext context, IApiRequestConfiguration defaultConfig, IApiRequestConfiguration endpointConfig)
+        private static IApiRequestConfiguration MergeConfigurations(
+            ApiRequestContext context,
+            IApiRequestConfiguration defaultConfig,
+            IApiRequestConfiguration endpointConfig)
         {
+            IApiRequestConfiguration systemConfig = ApiRequestContext.GetDefaultRequestConfiguration();
+
             IApiRequestConfiguration requestConfig = (endpointConfig != null)
-                ? ResolveConfiguration(context, endpointConfig)
-                : ResolveConfiguration(context, defaultConfig);
+                ? GetNewConfiguration(context, endpointConfig)
+                : GetNewConfiguration(context, defaultConfig);
 
-            requestConfig.ApiErrorResponseProvider = endpointConfig?.ApiErrorResponseProvider 
-                ?? defaultConfig.ApiErrorResponseProvider 
-                ?? ((p) => new ApiResultErrorResponseProvider());
-            
-            requestConfig.AllowAnonymous = endpointConfig?.AllowAnonymous ?? defaultConfig.AllowAnonymous;
-            requestConfig.Deprecated = endpointConfig?.Deprecated ?? defaultConfig.Deprecated;
-            requestConfig.FallBackLanguage = endpointConfig?.FallBackLanguage ?? defaultConfig.FallBackLanguage;
-            requestConfig.MaxRequestLength = endpointConfig?.MaxRequestLength ?? defaultConfig.MaxRequestLength;
-            requestConfig.MaxRequestUriLength = endpointConfig?.MaxRequestUriLength ?? defaultConfig.MaxRequestUriLength;
-            requestConfig.MinRequestLength = endpointConfig?.MinRequestLength ?? defaultConfig.MinRequestLength;
-            requestConfig.SupportedLanguages = endpointConfig?.SupportedLanguages ?? defaultConfig.SupportedLanguages;
-            requestConfig.SupportedAuthenticationSchemes = endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig.SupportedAuthenticationSchemes;
+            if (requestConfig == null)
+            {
+                return systemConfig;
+            }
 
+
+            requestConfig.ApiErrorResponseProvider = endpointConfig?.ApiErrorResponseProvider
+                ?? defaultConfig?.ApiErrorResponseProvider
+                ?? systemConfig.ApiErrorResponseProvider;
+
+            requestConfig.AllowAnonymous = endpointConfig?.AllowAnonymous
+                ?? defaultConfig?.AllowAnonymous
+                ?? systemConfig.AllowAnonymous;
+
+            requestConfig.Deprecated = endpointConfig?.Deprecated
+                ?? defaultConfig?.Deprecated
+                ?? systemConfig.Deprecated;
+
+            requestConfig.AllowRequestBodyWhenNoModelDefined = endpointConfig?.AllowRequestBodyWhenNoModelDefined
+                ?? defaultConfig?.AllowRequestBodyWhenNoModelDefined
+                ?? systemConfig.AllowRequestBodyWhenNoModelDefined;
+
+            requestConfig.RequireContentLengthOnRequestBodyRequests = endpointConfig?.RequireContentLengthOnRequestBodyRequests
+                ?? defaultConfig?.RequireContentLengthOnRequestBodyRequests
+                ?? systemConfig.RequireContentLengthOnRequestBodyRequests;
+
+            requestConfig.FallBackLanguage = endpointConfig?.FallBackLanguage
+                ?? defaultConfig?.FallBackLanguage
+                ?? systemConfig.FallBackLanguage;
+
+            requestConfig.MaxRequestLength = endpointConfig?.MaxRequestLength
+                ?? defaultConfig?.MaxRequestLength
+                ?? systemConfig.MaxRequestLength;
+
+            requestConfig.MaxRequestUriLength = endpointConfig?.MaxRequestUriLength
+                ?? defaultConfig?.MaxRequestUriLength
+                ?? systemConfig.MaxRequestUriLength;
+
+            requestConfig.MinRequestLength = endpointConfig?.MinRequestLength
+                ?? defaultConfig?.MinRequestLength
+                ?? systemConfig.MinRequestLength;
+
+            requestConfig.SupportedLanguages = new List<string>(endpointConfig?.SupportedLanguages ?? defaultConfig?.SupportedLanguages ?? systemConfig.SupportedLanguages);
+
+            requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
+
+            // ----------------------------
             // Merge CacheDirective
-            if (defaultConfig?.CacheDirective != null || endpointConfig?.CacheDirective != null)
+            // ----------------------------
+            if (endpointConfig?.CacheDirective != null || defaultConfig?.CacheDirective != null)
             {
                 requestConfig.CacheDirective = new HttpCacheDirective
                 {
-                    Cacheability = endpointConfig?.CacheDirective?.Cacheability ?? defaultConfig?.CacheDirective?.Cacheability,
-                    CacheLocation = endpointConfig?.CacheDirective?.CacheLocation ?? defaultConfig?.CacheDirective?.CacheLocation,
-                    ExpirationSeconds = endpointConfig?.CacheDirective?.ExpirationSeconds ?? defaultConfig?.CacheDirective?.ExpirationSeconds
+                    Cacheability = endpointConfig?.CacheDirective?.Cacheability
+                        ?? defaultConfig?.CacheDirective?.Cacheability
+                        ?? systemConfig.CacheDirective?.Cacheability,
+                    CacheLocation = endpointConfig?.CacheDirective?.CacheLocation
+                        ?? defaultConfig?.CacheDirective?.CacheLocation
+                        ?? systemConfig.CacheDirective?.CacheLocation,
+                    ExpirationSeconds = endpointConfig?.CacheDirective?.ExpirationSeconds
+                        ?? defaultConfig?.CacheDirective?.ExpirationSeconds
+                        ?? systemConfig.CacheDirective?.ExpirationSeconds
                 };
             }
+            else
+            {
+                requestConfig.CacheDirective = systemConfig.CacheDirective;
+            }
 
+
+            // ----------------------------
             // Merge CrossOriginConfig
-            if (defaultConfig?.CrossOriginConfig != null || endpointConfig?.CrossOriginConfig != null)
+            // ----------------------------
+            if (endpointConfig?.CrossOriginConfig != null || defaultConfig?.CrossOriginConfig != null)
             {
                 requestConfig.CrossOriginConfig = new CrossOriginConfiguration
                 {
-                    AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials ?? defaultConfig?.CrossOriginConfig?.AllowCredentials,
-                    AllowedOrigins = endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins,
-                    ExposeHeaders = endpointConfig?.CrossOriginConfig?.ExposeHeaders ?? defaultConfig?.CrossOriginConfig?.ExposeHeaders
+                    AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials 
+                        ?? defaultConfig?.CrossOriginConfig?.AllowCredentials
+                        ?? systemConfig?.CrossOriginConfig?.AllowCredentials,
+                    AllowedOrigins = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins ?? systemConfig.CrossOriginConfig.AllowedOrigins),
+                    ExposeHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.ExposeHeaders ?? defaultConfig?.CrossOriginConfig?.ExposeHeaders ?? systemConfig.CrossOriginConfig.ExposeHeaders),
+                    AllowedHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedHeaders ?? defaultConfig?.CrossOriginConfig?.AllowedHeaders ?? systemConfig.CrossOriginConfig.AllowedHeaders)
                 };
             }
+            else
+            {
+                requestConfig.CrossOriginConfig = systemConfig.CrossOriginConfig;
+            }
 
+
+            // ----------------------------
             // Merge HeaderValidationConfig
+            // ----------------------------
             if (defaultConfig?.HeaderValidationConfig != null || endpointConfig?.HeaderValidationConfig != null)
             {
                 requestConfig.HeaderValidationConfig = new ApiHeaderValidationConfiguration
                 {
-                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength ?? defaultConfig?.HeaderValidationConfig?.MaxHeaderLength
+                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength 
+                        ?? defaultConfig?.HeaderValidationConfig?.MaxHeaderLength
+                        ?? systemConfig.HeaderValidationConfig.MaxHeaderLength
                 };
             }
+            else
+            {
+                requestConfig.HeaderValidationConfig = systemConfig.HeaderValidationConfig;
+            }
 
+
+            // ----------------------------
             // Merge HttpConfig
-            if (defaultConfig?.HttpConfig != null || endpointConfig?.HttpConfig != null)
+            // ----------------------------
+            if (endpointConfig?.HttpConfig != null || defaultConfig?.HttpConfig != null)
             {
                 requestConfig.HttpConfig = new ApiHttpConfiguration
                 {
-                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL ?? defaultConfig?.HttpConfig?.RequireSSL,
-                    SupportedVersions = endpointConfig?.HttpConfig?.SupportedVersions ?? defaultConfig?.HttpConfig?.SupportedVersions
+                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL 
+                        ?? defaultConfig?.HttpConfig?.RequireSSL
+                        ?? systemConfig.HttpConfig.RequireSSL,
+                    SupportedVersions = endpointConfig?.HttpConfig?.SupportedVersions 
+                        ?? defaultConfig?.HttpConfig?.SupportedVersions
+                        ?? systemConfig.HttpConfig.SupportedVersions
                 };
             }
-
-            // Merge Resource Authorization Config
-            if (defaultConfig?.ResourceAuthorizationConfig != null || endpointConfig?.ResourceAuthorizationConfig != null)
+            else
             {
-                requestConfig.ResourceAuthorizationConfig = new ResourceAuthorizationConfiguration
+                requestConfig.HttpConfig = systemConfig.HttpConfig;
+            }
+
+
+
+            // -----------------------------------
+            // Merge Resource Authorization Config
+            // -----------------------------------
+            if (endpointConfig?.AuthorizationConfig != null || defaultConfig?.AuthorizationConfig != null)
+            {
+                requestConfig.AuthorizationConfig = new ResourceAuthorizationConfiguration
                 {
-                    Policy = endpointConfig?.ResourceAuthorizationConfig?.Policy ?? defaultConfig?.ResourceAuthorizationConfig?.Policy,
+                    Policy = endpointConfig?.AuthorizationConfig?.Policy 
+                        ?? defaultConfig?.AuthorizationConfig?.Policy
+                        ?? systemConfig.AuthorizationConfig.Policy
                 };
-
-                if (endpointConfig?.ResourceAuthorizationConfig != null)
-                {
-                    requestConfig.ResourceAuthorizationConfig.Policy = endpointConfig.ResourceAuthorizationConfig.Policy;
-                }
-                else if (defaultConfig?.ResourceAuthorizationConfig != null)
-                {
-                    requestConfig.ResourceAuthorizationConfig.Policy = defaultConfig.ResourceAuthorizationConfig.Policy;
-                }
-
-
-                if (endpointConfig?.ResourceAuthorizationConfig != null)
-                {
-                    if (endpointConfig.ResourceAuthorizationConfig.Roles != null)
-                    {
-                        requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
-                        foreach (var role in endpointConfig.ResourceAuthorizationConfig.Roles)
-                        {
-                            requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
-                        }
-                    }
-                }
-                else if (defaultConfig?.ResourceAuthorizationConfig != null)
-                {
-                    if (defaultConfig.ResourceAuthorizationConfig.Roles != null)
-                    {
-                        requestConfig.ResourceAuthorizationConfig.Roles = new List<string>();
-                        foreach (var role in defaultConfig.ResourceAuthorizationConfig.Roles)
-                        {
-                            requestConfig.ResourceAuthorizationConfig.Roles.Add(role);
-                        }
-                    }
-                }
+            }
+            else
+            {
+                requestConfig.AuthorizationConfig = systemConfig.AuthorizationConfig;
             }
 
             return requestConfig;
@@ -311,8 +371,13 @@
         /// <param name="context">The context.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        private static IApiRequestConfiguration ResolveConfiguration(ApiRequestContext context, IApiRequestConfiguration config)
+        private static IApiRequestConfiguration GetNewConfiguration(ApiRequestContext context, IApiRequestConfiguration config)
         {
+            if (config == null)
+            {
+                return null;
+            }
+
             IApiRequestConfiguration init = null;
 
             if (context?.RequestServices != null)
@@ -321,9 +386,7 @@
                 {
                     init = context.RequestServices.GetService(config.GetType()) as IApiRequestConfiguration;
                 }
-                catch
-                {
-                }
+                catch { }
             }
 
             if (init == null)

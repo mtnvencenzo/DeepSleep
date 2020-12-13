@@ -50,11 +50,7 @@
                 },
                 RequestConfig = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider
-                    {
-                        WriteToBody = true,
-                        WriteToHeaders = true
-                    }
+                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
                 }
             };
 
@@ -80,15 +76,7 @@
             apiResult.Messages[2].Message.Should().Be("test1");
 
             context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(4);
-            context.ResponseInfo.Headers[1].Name.Should().Be("X-Api-Message");
-            context.ResponseInfo.Headers[1].Value.Should().Be("100|test1");
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-Api-Message");
-            context.ResponseInfo.Headers[0].Value.Should().Be("200|test1");
-            context.ResponseInfo.Headers[3].Name.Should().Be("X-Api-Message");
-            context.ResponseInfo.Headers[3].Value.Should().Be("300|test1");
-            context.ResponseInfo.Headers[2].Name.Should().Be("X-Api-Message");
-            context.ResponseInfo.Headers[2].Value.Should().Be("500|test1");
+            context.ResponseInfo.Headers.Should().HaveCount(0);
         }
 
         [Fact]

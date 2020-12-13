@@ -23,22 +23,18 @@
         /// <returns></returns>
         Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
         Task<long> WriteType(Stream stream, object obj, Action<long> preWriteCallback = null);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="options"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
         Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null);
 
@@ -56,14 +52,12 @@
         /// </summary>
         bool SupportsWrite { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the suuported content types.</summary>
+        /// <value>The suuported content types.</value>
         IList<string> SuuportedContentTypes { get; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the suuported charsets.</summary>
+        /// <value>The suuported charsets.</value>
         IList<string> SuuportedCharsets { get; }
     }
 }

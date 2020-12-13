@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0;netcoreapp3.1;net5.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <AssemblyName>deepsleep.netcore</AssemblyName>
   </PropertyGroup>
@@ -40,21 +40,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DeepSleep\DeepSleep.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Resources\UnhandledExceptionErrors.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>UnhandledExceptionErrors.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\UnhandledExceptionErrors.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>UnhandledExceptionErrors.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

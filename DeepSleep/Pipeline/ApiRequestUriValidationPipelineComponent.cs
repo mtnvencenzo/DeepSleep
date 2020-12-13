@@ -9,21 +9,17 @@
     /// </summary>
     public class ApiRequestUriValidationPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestUriValidationPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestUriValidationPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
@@ -60,9 +56,7 @@
                 {
                     if (context.RequestInfo.RequestUri.Length > max)
                     {
-                        context.ErrorMessages.Add(string.Format(ValidationErrors.RequestUriLengthExceeded, max.ToString(CultureInfo.InvariantCulture)));
                         context.ResponseInfo.StatusCode = 414;
-
                         return Task.FromResult(false);
                     }
                 }

@@ -8,24 +8,21 @@
     /// </summary>
     public class ApiRequestAcceptPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestAcceptPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestAcceptPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified formatter factory.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="formatterFactory">The formatterFactory.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
+
+            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
             if (await context.ProcessHttpRequestAccept(formatterFactory).ConfigureAwait(false))
             {

@@ -11,7 +11,41 @@
     /// <seealso cref="DeepSleep.IUriRouteResolver" />
     public class DefaultRouteResolver : IUriRouteResolver
     {
-        #region Helper Methods
+        /// <summary>Resolves the route.</summary>
+        /// <param name="template">The template.</param>
+        /// <param name="uri">The URI.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public Task<RouteMatch> ResolveRoute(string template, string uri)
+        {
+            string formattedRoute = (template ?? string.Empty).Trim();
+            string decodedUri = WebUtility.UrlDecode(uri ?? string.Empty);
+
+            if (!formattedRoute.StartsWith("/"))
+            {
+                formattedRoute = "/" + formattedRoute;
+            }
+
+            if (decodedUri.EndsWith("/") && !formattedRoute.EndsWith("/"))
+            {
+                formattedRoute += "/";
+            }
+
+            var match = new RouteMatch
+            {
+                IsMatch = false
+            };
+
+            if (IsMatch(formattedRoute, decodedUri))
+            {
+                match.IsMatch = true;
+                match.RouteVariables = GetRouteVariables(formattedRoute, decodedUri);
+            }
+
+            TaskCompletionSource<RouteMatch> source = new TaskCompletionSource<RouteMatch>();
+            source.SetResult(match);
+            return source.Task;
+        }
 
         /// <summary>Parses the template and uri to match uri variables with template variables
         /// </summary>
@@ -86,44 +120,6 @@
             }
 
             return true;
-        }
-        
-        #endregion
-
-        /// <summary>Resolves the route.</summary>
-        /// <param name="template">The template.</param>
-        /// <param name="uri">The URI.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public Task<RouteMatch> ResolveRoute(string template, string uri)
-        {
-            string formattedRoute = (template ?? string.Empty).Trim();
-            string decodedUri = WebUtility.UrlDecode(uri ?? string.Empty);
-
-            if (!formattedRoute.StartsWith("/"))
-            {
-                formattedRoute = "/" + formattedRoute;
-            }
-
-            if (decodedUri.EndsWith("/") && !formattedRoute.EndsWith("/"))
-            {
-                formattedRoute += "/";
-            }
-
-            var match = new RouteMatch
-            {
-                IsMatch = false
-            };
-
-            if(IsMatch(formattedRoute, decodedUri))
-            {
-                match.IsMatch = true;
-                match.RouteVariables = GetRouteVariables(formattedRoute, decodedUri);
-            }
-
-            TaskCompletionSource<RouteMatch> source = new TaskCompletionSource<RouteMatch>();
-            source.SetResult(match);
-            return source.Task;
         }
     }
 }

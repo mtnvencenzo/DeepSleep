@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Configuration;
-    using DeepSleep.Resources;
     using System;
     using System.Threading.Tasks;
 
@@ -10,22 +9,17 @@
     /// </summary>
     public class ApiResponseUnhandledExceptionPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseUnhandledExceptionPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiResponseUnhandledExceptionPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+              : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IApiServiceConfiguration config)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
@@ -35,7 +29,9 @@
             {
                 var context = contextResolver.GetContext();
 
-                await context.ProcessHttpResponseUnhandledException(ex, config).ConfigureAwait(false);
+                var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
+
+                await context.ProcessHttpResponseUnhandledException(ex, apiServiceConfiguration).ConfigureAwait(false);
             }
         }
     }
@@ -70,14 +66,8 @@
                     {
                         await config.ExceptionHandler(context, exception).ConfigureAwait(false);
                     }
-                    catch (Exception) 
-                    {
-                        //logger?.LogError(ex, $"Failed calling exception handler");
-                        //logger?.LogError(exception, "Recorded exception");
-                    }
+                    catch { }
                 }
-
-                //logger?.LogWarning($"Excetion recorded, issueing HTTP {code}");
 
                 context.ResponseInfo.StatusCode = code;
             }
@@ -93,55 +83,18 @@
         {
             int code;
 
-            if (exception is ApiNotImplementedException)
+            if (exception is ApiException apiException)
             {
-                code = 501;
-
-                if (context != null)
-                {
-                    context.ErrorMessages.Add(UnhandledExceptionErrors.NotImplemented);
-                    context.AddException(exception);
-                }
-            }
-            else if (exception is ApiBadGatewayException)
-            {
-                code = 502;
-
-                if (context != null)
-                {
-                    context.ErrorMessages.Add(UnhandledExceptionErrors.BadGateway);
-                    context.AddException(exception);
-                }
-            }
-            else if (exception is ApiServiceUnavailableException)
-            {
-                code = 503;
-
-                if (context != null)
-                {
-                    context.ErrorMessages.Add(UnhandledExceptionErrors.ServiceUnavailable);
-                    context.AddException(exception);
-                }
-            }
-            else if (exception is ApiGatewayTimeoutException)
-            {
-                code = 504;
-
-                if (context != null)
-                {
-                    context.ErrorMessages.Add(UnhandledExceptionErrors.GatewayTimeout);
-                    context.AddException(exception);
-                }
+                code = apiException.HttpStatus;
             }
             else
             {
                 code = 500;
+            }
 
-                if (context != null)
-                {
-                    context.ErrorMessages.Add(UnhandledExceptionErrors.UnhandledException);
-                    context.AddException(exception);
-                }
+            if (context != null)
+            {
+                context.AddException(exception);
             }
 
             return code;

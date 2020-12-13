@@ -8,26 +8,23 @@
     /// </summary>
     public class ApiResponseBodyWriterPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseBodyWriterPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiResponseBodyWriterPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
+
+            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
             await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
         }

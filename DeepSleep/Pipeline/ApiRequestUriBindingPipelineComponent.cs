@@ -14,24 +14,21 @@
     /// </summary>
     public class ApiRequestUriBindingPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestUriBindingPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestUriBindingPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="formUrlEncodedObjectSerializer">The form url serializer.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
+
+            var formUrlEncodedObjectSerializer = context?.RequestServices?.GetService<IFormUrlEncodedObjectSerializer>();
 
             if (await context.ProcessHttpRequestUriBinding(formUrlEncodedObjectSerializer).ConfigureAwait(false))
             {
@@ -72,12 +69,7 @@
                     {
                         foreach (var routeVar in context.RouteInfo.RoutingItem.RouteVariables.Keys)
                         {
-                            if (nameValues.ContainsKey(routeVar))
-                            {
-                                addedBindingError = true;
-                                context.ErrorMessages.Add(string.Format(ValidationErrors.UriRouteBindingError, routeVar));
-                            }
-                            else
+                            if (!nameValues.ContainsKey(routeVar))
                             {
                                 nameValues.Add(routeVar, context.RouteInfo.RoutingItem.RouteVariables[routeVar]);
                             }

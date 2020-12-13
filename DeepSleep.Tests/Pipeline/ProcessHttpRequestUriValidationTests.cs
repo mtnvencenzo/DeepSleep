@@ -105,9 +105,7 @@
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(1);
-            context.ErrorMessages[0].Should().StartWith("414.000001|");
-            context.ErrorMessages[0].Should().Contain("exceed 2083 characters");
+            context.ErrorMessages.Should().HaveCount(0);
         }
     }
 }

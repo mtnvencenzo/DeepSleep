@@ -61,29 +61,11 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 431.000001|Request header &apos;{0}&apos; cannot exceed {1} characters in length..
-        /// </summary>
-        internal static string HeaderLengthExceeded {
-            get {
-                return ResourceManager.GetString("HeaderLengthExceeded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 400.000003|Could not deserialize request..
         /// </summary>
         internal static string RequestBodyDeserializationError {
             get {
                 return ResourceManager.GetString("RequestBodyDeserializationError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 414.000001|Request uri cannot exceed {0} characters in length..
-        /// </summary>
-        internal static string RequestUriLengthExceeded {
-            get {
-                return ResourceManager.GetString("RequestUriLengthExceeded", resourceCulture);
             }
         }
         
@@ -102,24 +84,6 @@ namespace DeepSleep.Resources {
         internal static string UriBindingValueError {
             get {
                 return ResourceManager.GetString("UriBindingValueError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 400.000002|Duplicate query variable path &apos;{0}&apos;..
-        /// </summary>
-        internal static string UriQueryBindingError {
-            get {
-                return ResourceManager.GetString("UriQueryBindingError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 400.000001|Duplicate route variable path &apos;{0}&apos;..
-        /// </summary>
-        internal static string UriRouteBindingError {
-            get {
-                return ResourceManager.GetString("UriRouteBindingError", resourceCulture);
             }
         }
     }

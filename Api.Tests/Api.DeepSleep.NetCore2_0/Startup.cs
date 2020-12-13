@@ -1,0 +1,149 @@
+namespace Api.DeepSleep.NetCore2_0
+{
+    using Api.DeepSleep.Controllers.Binding;
+    using Api.DeepSleep.Controllers.Formatters;
+    using global::DeepSleep;
+    using global::DeepSleep.Configuration;
+    using global::DeepSleep.NetCore;
+    using global::DeepSleep.Validation;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
+
+    public class Startup
+    {
+        private IServiceProvider serviceProvider;
+
+        /// <summary>Initializes a new instance of the <see cref="Startup" /> class.</summary>
+        /// <param name="env">The env.</param>
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName?.ToLower()}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IServiceProvider ServiceProvider => this.serviceProvider;
+
+        /// <summary>Gets the configuration.</summary>
+        /// <value>The configuration.</value>
+        public IConfiguration Configuration { get; }
+
+        /// <summary>Configures the services.</summary>
+        /// <param name="services">The services.</param>
+        public void ConfigureServices(IServiceCollection services)
+        {
+            this.ConfigureDependentServices(services);
+        }
+
+        /// <summary>Configures the dependent services.</summary>
+        /// <param name="services">The services.</param>
+        public void ConfigureDependentServices(IServiceCollection services)
+        {
+            // Controlllers
+            services.AddTransient<SimpleUrlBindingController>();
+            services.AddTransient<MultipartController>();
+            services.AddTransient<CommonErrorResponseProvider>();
+
+            services
+                .AddLogging()
+                .UseApiCoreServices(new DefaultApiServiceConfiguration
+                {
+                    RoutingTable = GetRoutes(this.serviceProvider),
+                    ApiValidationProvider = new DefaultApiValidationProvider(serviceProvider).RegisterInvoker<TypeBasedValidationInvoker>(),
+                    DefaultRequestConfiguration = new DefaultApiRequestConfiguration
+                    {
+                        AllowAnonymous = true,
+                        ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>()
+                    }
+                });
+
+
+            if (ServicePreprocessor != null)
+            {
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+                this.serviceProvider = services.BuildServiceProvider();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+
+                ServicePreprocessor(services);
+            }
+
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+            this.serviceProvider = services.BuildServiceProvider();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+        }
+
+        /// <summary>Configures the specified application.</summary>
+        /// <param name="app">The application.</param>
+        public void Configure(IApplicationBuilder app)
+        {
+            app
+                .UseApiCoreHttp()
+                .UseForwardedHeaders();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Action<IServiceCollection> ServicePreprocessor { get; set; }
+
+        /// <summary>Gets the routes.</summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <returns></returns>
+        private static IApiRoutingTable GetRoutes(IServiceProvider serviceProvider)
+        {
+            var table = new DefaultApiRoutingTable();
+
+            table.AddRoute(
+                template: $"binding/simple/url",
+                httpMethod: "GET",
+                name: $"GET_binding/simple/url",
+                controller: typeof(SimpleUrlBindingController),
+                endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "binding/simple/url/{stringVar}/resource",
+                httpMethod: "GET",
+                name: "GET_binding/simple/url/{stringVar}/resource",
+                controller: typeof(SimpleUrlBindingController),
+                endpoint: nameof(SimpleUrlBindingController.GetWithRoute),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "binding/simple/url/{stringVar}/mixed",
+                httpMethod: "GET",
+                name: "GET_binding/simple/url/{stringVar}/mixed",
+                controller: typeof(SimpleUrlBindingController),
+                endpoint: nameof(SimpleUrlBindingController.GetWithMixed),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "formatters/multipart/formdata",
+                httpMethod: "POST",
+                name: "POST_formatters/multipart/formdata",
+                controller: typeof(MultipartController),
+                endpoint: nameof(MultipartController.Post),
+                config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: "formatters/multipart/formdata/custom",
+                httpMethod: "POST",
+                name: "POST_formatters/multipart/formdata/custom",
+                controller: typeof(MultipartController),
+                endpoint: nameof(MultipartController.PostCustom),
+                config: new DefaultApiRequestConfiguration());
+
+            return table;
+        }
+    }
+}

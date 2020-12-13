@@ -48,7 +48,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="obj"></param>
@@ -60,7 +59,6 @@
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="obj"></param>

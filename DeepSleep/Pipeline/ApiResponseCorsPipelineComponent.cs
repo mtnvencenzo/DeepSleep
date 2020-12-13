@@ -9,22 +9,17 @@
     /// </summary>
     public class ApiResponseCorsPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiResponseCorsPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiResponseCorsPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
-
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             try
             {
@@ -60,22 +55,29 @@
             {
                 if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))
                 {
-                    var allowedOrigins = context.RequestConfig?.CrossOriginConfig?.AllowedOrigins;
-                    var exposeHeaders = context.RequestConfig?.CrossOriginConfig?.ExposeHeaders;
+                    var allowedOrigins = (context.RequestConfig?.CrossOriginConfig?.AllowedOrigins ?? new string[] { })
+                        .Distinct()
+                        .Where(i => !string.IsNullOrWhiteSpace(i))
+                        .Select(i => i.Trim())
+                        .ToList();
+
+                    var exposeHeaders = (context.RequestConfig?.CrossOriginConfig?.ExposeHeaders ?? new string[] { })
+                        .Distinct()
+                        .Where(i => !string.IsNullOrWhiteSpace(i))
+                        .Select(i => i.Trim())
+                        .ToList();
+
                     var allowCredentials = context.RequestConfig?.CrossOriginConfig?.AllowCredentials;
 
                     string allowedOrigin = null;
 
-                    if ((allowedOrigins?.Count() ?? 0) > 0 && allowedOrigins.Contains("*"))
+                    if (allowedOrigins.Count > 0 && allowedOrigins.Contains("*"))
                     {
                         allowedOrigin = context.RequestInfo.CrossOriginRequest.Origin;
                     }
                     else
                     {
-                        allowedOrigin = (allowedOrigins ?? new string[] { })
-                            .Distinct()
-                            .Where(i => !string.IsNullOrWhiteSpace(i))
-                            .Select(i => i.Trim())
+                        allowedOrigin = allowedOrigins
                             .Where(i => i.Equals(context.RequestInfo.CrossOriginRequest.Origin, StringComparison.OrdinalIgnoreCase))
                             .FirstOrDefault();
                     }
@@ -83,14 +85,9 @@
                     context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", allowedOrigin ?? string.Empty);
                     context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", (allowCredentials ?? false).ToString().ToLowerInvariant());
 
-                    if ((exposeHeaders?.Count() ?? 0) > 0)
+                    if (exposeHeaders.Count > 0)
                     {
-                        var headers = exposeHeaders
-                            .Distinct()
-                            .Where(i => !string.IsNullOrWhiteSpace(i))
-                            .Select(i => i.Trim());
-
-                        context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", headers));
+                        context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", exposeHeaders));
                     }
                 }
 

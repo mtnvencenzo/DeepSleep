@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@
             {
                 if (context.ErrorMessages != null && context.ErrorMessages.Count > 0)
                 {
-                    if (this.WriteToBody && context.ResponseInfo.ResponseObject == null)
+                    if (context.ResponseInfo.ResponseObject == null)
                     {
                         var messages = context.ErrorMessages
                             .Where(e => !string.IsNullOrWhiteSpace(e))
@@ -35,31 +34,11 @@
                             };
                         }
                     }
-
-                    if (this.WriteToHeaders)
-                    {
-                        var messages = context.ErrorMessages
-                            .Where(e => !string.IsNullOrWhiteSpace(e))
-                            .ToList();
-
-                        if (messages.Count > 0)
-                        {
-                            messages.ForEach(m => context.ResponseInfo.AddHeader("X-Api-Message", m));
-                        }
-                    }
                 }
             }
 
             return Task.CompletedTask;
         }
-
-        /// <summary>Gets or sets a value indicating whether [write to body].</summary>
-        /// <value><c>true</c> if [write to body]; otherwise, <c>false</c>.</value>
-        public bool WriteToBody { get; set; } = true;
-
-        /// <summary>Gets or sets a value indicating whether [write to headers].</summary>
-        /// <value><c>true</c> if [write to headers]; otherwise, <c>false</c>.</value>
-        public bool WriteToHeaders { get; set; } = false;
 
         /// <summary>Builds the response message from resource.</summary>
         /// <param name="resource">The resource.</param>

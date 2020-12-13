@@ -8,20 +8,16 @@
     /// <seealso cref="DeepSleep.IApiRequestContextResolver" />
     public class DefaultApiRequestContextResolver : IApiRequestContextResolver
     {
-        #region Constructors & Initialization
-
         private ApiRequestContext _context;
-
-        #endregion
 
         /// <summary>Gets the context.</summary>
         /// <returns></returns>
         public ApiRequestContext GetContext() => _context;
 
-        /// <summary>
-        /// </summary>
-        /// <param name="context"></param>
+        /// <summary>Sets the context.</summary>
+        /// <param name="context">The context.</param>
         /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">Attempt to overwrite existing context not allowed</exception>
         public IApiRequestContextResolver SetContext(ApiRequestContext context)
         {
             if (_context != null)

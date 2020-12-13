@@ -296,9 +296,9 @@
             }
         }
 
-        private Mock<HttpMediaTypeStreamWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamWriterFactory>(new object[] { null })
+            var mockFactory = new Mock<HttpMediaTypeStreamReaderWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };

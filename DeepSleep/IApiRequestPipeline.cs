@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Pipeline;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -11,13 +12,7 @@
         /// <summary>Uses the pipeline component.</summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IApiRequestPipeline UsePipelineComponent<T>();
-
-        /// <summary>Uses the pipeline component.</summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="index">The index position to insert the component into the pipeline.</param>
-        /// <returns></returns>
-        IApiRequestPipeline UsePipelineComponent<T>(int index);
+        IApiRequestPipeline UsePipelineComponent<T>() where T : IPipelineComponent;
 
         /// <summary>Gets the registered pipeline.</summary>
         /// <value>The registered pipeline.</value>

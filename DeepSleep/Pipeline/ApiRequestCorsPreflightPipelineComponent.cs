@@ -9,21 +9,17 @@
     /// </summary>
     public class ApiRequestCorsPreflightPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestCorsPreflightPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestCorsPreflightPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
 
@@ -58,8 +54,6 @@
             {
                 if (context.RequestInfo?.IsCorsPreflightRequest() ?? false)
                 {
-                    //logger?.LogInformation($"Preflight request detected, issueing HTTP 200 OK");
-
                     var methods = (context.RouteInfo?.TemplateInfo?.EndpointLocations ?? new List<ApiEndpointLocation>())
                         .Where(r => !string.IsNullOrWhiteSpace(r.HttpMethod))
                         .Select(r => r.HttpMethod.ToUpper())
@@ -72,7 +66,20 @@
 
                     if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.AccessControlRequestHeaders))
                     {
-                        context.ResponseInfo.AddHeader("Access-Control-Allow-Headers", context.RequestInfo.CrossOriginRequest.AccessControlRequestHeaders);
+                        var allowHeaders = (context.RequestConfig?.CrossOriginConfig?.AllowedHeaders ?? new string[] { })
+                            .Distinct()
+                            .Where(i => !string.IsNullOrWhiteSpace(i))
+                            .Select(i => i.Trim())
+                            .ToList();
+
+                        if (allowHeaders.Count > 0 && allowHeaders.Contains("*"))
+                        {
+                            context.ResponseInfo.AddHeader("Access-Control-Allow-Headers", context.RequestInfo.CrossOriginRequest.AccessControlRequestHeaders);
+                        }
+                        else
+                        {
+                            context.ResponseInfo.AddHeader("Access-Control-Allow-Headers", string.Join(", ", allowHeaders));
+                        }
                     }
 
                     return Task.FromResult(false);

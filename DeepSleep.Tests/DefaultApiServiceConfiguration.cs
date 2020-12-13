@@ -1,12 +1,12 @@
-﻿namespace DeepSleep.Configuration
+﻿namespace DeepSleep.Tests
 {
     using DeepSleep.Formatting;
-    using DeepSleep.Auth;
     using System;
     using System.Threading.Tasks;
     using DeepSleep.Validation;
     using System.Collections.Generic;
     using DeepSleep.Pipeline;
+    using DeepSleep.Configuration;
 
     /// <summary>
     /// 
@@ -45,17 +45,9 @@
         /// <value>The paths to exclude.</value>
         public IList<string> ExcludePaths { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public bool UsePingEndpoint { get; set; } = true;
-
-        /// <summary>
-        /// </summary>
-        public bool UseEnvironmentEndpoint { get; set; } = true;
-
         /// <summary>Gets the default request pipeline.</summary>
         /// <returns></returns>
-        public static IApiRequestPipeline GetDefaultRequestPipeline()
+        internal static IApiRequestPipeline GetDefaultRequestPipeline()
         {
             return new ApiRequestPipeline()
                 .UseApiResponseUnhandledExceptionHandler()

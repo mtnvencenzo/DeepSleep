@@ -13,17 +13,7 @@
     "AllwedOrigins": [
       "*" // use * to allow all origins - default is '' (or none)
     ],
-    "ExposeHeaders": [
-      "X-CorrelationId",
-      "X-Deprecated",
-      "X-Api-Message",
-      "X-Api-Version",
-      "X-Api-RequestId",
-      "X-Allow-Accept",
-      "X-Allow-Accept-Charset",
-      "X-PrettyPrint",
-      "Location"
-    ],
+    "ExposeHeaders": [],
     "AllowCredentials": false // default value is false
   },
   "HeaderValidationConfig": {

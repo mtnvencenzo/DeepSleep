@@ -10,24 +10,21 @@
     /// </summary>
     public class ApiRequestBodyBindingPipelineComponent : PipelineComponentBase
     {
-        private readonly ApiRequestDelegate apinext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRequestBodyBindingPipelineComponent"/> class.
         /// </summary>
         /// <param name="next">The next.</param>
         public ApiRequestBodyBindingPipelineComponent(ApiRequestDelegate next)
-        {
-            apinext = next;
-        }
+            : base(next) { }
 
         /// <summary>Invokes the specified context resolver.</summary>
         /// <param name="contextResolver">The context resolver.</param>
-        /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        public async Task Invoke(IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
+
+            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
             if (await context.ProcessHttpRequestBodyBinding(formatterFactory).ConfigureAwait(false))
             {
@@ -61,26 +58,29 @@
                 {
                     if (!context.RequestInfo.ContentLength.HasValue)
                     {
-                        context.ResponseInfo.StatusCode = 411;
-
-                        return false;
+                        if (context.RequestConfig?.RequireContentLengthOnRequestBodyRequests ?? true)
+                        {
+                            context.ResponseInfo.StatusCode = 411;
+                            return false;
+                        }
                     }
 
                     if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
                         context.ResponseInfo.StatusCode = 422;
-
                         return false;
                     }
 
                     if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
                     {
-                        context.ResponseInfo.StatusCode = 413;
-
-                        return false;
+                        if (!(context.RequestConfig?.AllowRequestBodyWhenNoModelDefined ?? false))
+                        {
+                            context.ResponseInfo.StatusCode = 413;
+                            return false;
+                        }
                     }
 
-                    if (context.RequestInfo.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
+                    if (context.RequestInfo.InvocationContext?.BodyModelType != null && context.RequestInfo.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
                         IFormatStreamReaderWriter formatter = (formatterFactory != null)
                             ? await formatterFactory.GetMediaTypeFormatter(context.RequestInfo.ContentType, out var _).ConfigureAwait(false)
@@ -89,7 +89,6 @@
                         if (formatter == null)
                         {
                             context.ResponseInfo.StatusCode = 415;
-
                             return false;
                         }
 

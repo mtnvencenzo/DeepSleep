@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using System.Collections.Generic;
@@ -160,7 +161,7 @@
         }
 
         [Fact]
-        public async void ReturnsCorrectRequestHeadersForPreflightRequestMethod()
+        public async void ReturnsCorrectRequestHeadersForPreflightRequestMethodWithNoConfig()
         {
             var context = new ApiRequestContext
             {
@@ -198,7 +199,63 @@
             context.ResponseInfo.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
             context.ResponseInfo.Headers[0].Value.Should().Be("POST");
             context.ResponseInfo.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
-            context.ResponseInfo.Headers[1].Value.Should().Be("Content-Type, X-Header");
+            context.ResponseInfo.Headers[1].Value.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData("", null)]
+        [InlineData("", "")]
+        [InlineData("", " ")]
+        [InlineData("Content-Type", "Content-Type")]
+        [InlineData("X-BeansWithBacon, PorkNBeans", "X-BeansWithBacon", "PorkNBeans")]
+        [InlineData("Content-Type, X-Header", "*", "X-Header")]
+        [InlineData("Content-Type, X-Header", "*")]
+        public async void ReturnsCorrectRequestHeadersForPreflightRequestMethod(string expectedAllowHeaders, params string[] requestHeaders)
+        {
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "options",
+                    CrossOriginRequest = new CrossOriginRequestValues
+                    {
+                        Origin = "http://ron.vecchi.net",
+                        AccessControlRequestMethod = "POST",
+                        AccessControlRequestHeaders = "Content-Type, X-Header"
+                    }
+                },
+                RouteInfo = new ApiRoutingInfo
+                {
+                    TemplateInfo = new ApiRoutingTemplate
+                    {
+                        EndpointLocations = new List<ApiEndpointLocation>
+                        {
+                            new ApiEndpointLocation{ HttpMethod = "POST" }
+                        }
+                    }
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    CrossOriginConfig = new CrossOriginConfiguration
+                    {
+                        AllowedHeaders = requestHeaders
+                    }
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(200);
+
+            context.ResponseInfo.Headers.Should().NotBeNull();
+            context.ResponseInfo.Headers.Should().HaveCount(2);
+            context.ResponseInfo.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.ResponseInfo.Headers[0].Value.Should().Be("POST");
+            context.ResponseInfo.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
+            context.ResponseInfo.Headers[1].Value.Should().Be(expectedAllowHeaders);
         }
     }
 }

@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="HeaderLengthExceeded" xml:space="preserve">
-    <value>431.000001|Request header '{0}' cannot exceed {1} characters in length.</value>
-  </data>
   <data name="RequestBodyDeserializationError" xml:space="preserve">
     <value>400.000003|Could not deserialize request.</value>
-  </data>
-  <data name="RequestUriLengthExceeded" xml:space="preserve">
-    <value>414.000001|Request uri cannot exceed {0} characters in length.</value>
   </data>
   <data name="UriBindingError" xml:space="preserve">
     <value>400.000004|'{0}' Is in an incorrect format and could not be bound.</value>
   </data>
   <data name="UriBindingValueError" xml:space="preserve">
     <value>400.000005|Uri type conversion for '{0}' with value '{1}' could not be converted to type {2}.</value>
-  </data>
-  <data name="UriQueryBindingError" xml:space="preserve">
-    <value>400.000002|Duplicate query variable path '{0}'.</value>
-  </data>
-  <data name="UriRouteBindingError" xml:space="preserve">
-    <value>400.000001|Duplicate route variable path '{0}'.</value>
   </data>
 </root>

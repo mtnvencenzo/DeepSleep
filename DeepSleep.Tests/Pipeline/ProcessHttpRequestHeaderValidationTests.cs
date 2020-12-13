@@ -149,13 +149,7 @@
 
             context.ProcessingInfo.Should().NotBeNull();
             context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(2);
-            context.ErrorMessages[0].Should().StartWith("431.000001|");
-            context.ErrorMessages[0].Should().Contain("'X-Header1'");
-            context.ErrorMessages[0].Should().Contain(" exceed 10 ");
-            context.ErrorMessages[1].Should().StartWith("431.000001|");
-            context.ErrorMessages[1].Should().Contain("'X-Header2'");
-            context.ErrorMessages[1].Should().Contain(" exceed 10 ");
+            context.ErrorMessages.Should().HaveCount(0);
         }
     }
 }

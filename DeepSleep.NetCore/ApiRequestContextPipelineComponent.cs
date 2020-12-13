@@ -628,7 +628,6 @@
                 }
             }
 
-
             header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "access-control-request-headers");
             if (header.Key != null)
             {
@@ -637,8 +636,6 @@
                     requestHeaders = header.Value;
                 }
             }
-
-
 
             return new CrossOriginRequestValues
             {
@@ -1127,7 +1124,7 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="requestPipeline">The request pipeline.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
+        internal static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
