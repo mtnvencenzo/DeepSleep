@@ -63,12 +63,17 @@
                     {
                         authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig.AuthorizationConfig.Policy));
                     }
-                    catch (Exception)
+                    catch
                     {
                     }
 
                     if (authProvider != null)
                     {
+                        if (context.RequestInfo.ClientAuthorizationInfo == null)
+                        {
+                            context.RequestInfo.ClientAuthorizationInfo = new ClientAuthorization();
+                        }
+
                         await authProvider.Authorize(context).ConfigureAwait(false);
                     }
 
