@@ -54,7 +54,7 @@
             {
                 if (context.ResponseInfo != null && context.ResponseInfo.Cookies != null)
                 {
-                    foreach(var cookie in context.ResponseInfo.Cookies)
+                    foreach (var cookie in context.ResponseInfo.Cookies)
                     {
                         context.ResponseInfo.AddHeader("Set-Cookie", cookie.ToCookie());
                     };

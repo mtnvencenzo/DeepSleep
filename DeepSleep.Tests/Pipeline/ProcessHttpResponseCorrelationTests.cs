@@ -2,7 +2,6 @@
 {
     using DeepSleep.Pipeline;
     using FluentAssertions;
-    using System.Threading.Tasks;
     using Xunit;
 
     /// <summary>

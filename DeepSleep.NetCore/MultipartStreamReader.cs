@@ -25,19 +25,18 @@
         /// <summary>Reads as multipart.</summary>
         /// <param name="body">The body.</param>
         /// <returns></returns>
-        public async Task<MultipartHttpRequest> ReadAsMultipart(Stream body)
+        public async virtual Task<MultipartHttpRequest> ReadAsMultipart(Stream body)
         {
             if (body == null)
                 return null;
 
-            var context = requestContextResolver.GetContext();
-            var boundary = context.RequestInfo.ContentType.MediaValue.Boundary;
+            var context = this.requestContextResolver.GetContext();
+            var boundary = context.RequestInfo.ContentType.Boundary;
             MultipartHttpRequest multipart = null;
             MultipartSection section;
-
             MultipartReader reader = new MultipartReader(boundary, body);
 
-            while((section = await reader.ReadNextSectionAsync(context.RequestAborted).ConfigureAwait(false)) != null)
+            while ((section = await reader.ReadNextSectionAsync(context.RequestAborted).ConfigureAwait(false)) != null)
             {
                 if (multipart == null)
                 {
@@ -46,8 +45,8 @@
 
                 var multipartSection = new MultipartHttpRequestSection
                 {
-                    ContentType = new MediaHeaderValueWithParameters(section.ContentType),
-                    ContentDisposition = new ContentDisposition(section.ContentDisposition?.ToString()),
+                    ContentType = section.ContentType,
+                    ContentDisposition = section.ContentDisposition,
                 };
 
                 context.RegisterForDispose(multipartSection);

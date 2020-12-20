@@ -26,7 +26,7 @@
             if (await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false))
             {
                 await this.apinext.Invoke(contextResolver).ConfigureAwait(false);
-            }  
+            }
         }
     }
 

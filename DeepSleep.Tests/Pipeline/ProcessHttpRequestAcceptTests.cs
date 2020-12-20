@@ -77,7 +77,7 @@
 
             var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
             mockFormatterFactory
-                .Setup(m => m.GetTypes())
+                .Setup(m => m.GetWriteableTypes(It.IsAny<IList<IFormatStreamReaderWriter>>()))
                 .Returns(new string[] { "application/json", "text/xml", "text/plain" });
 
             var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
@@ -106,7 +106,7 @@
 
             var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
             mockFormatterFactory
-                .Setup(m => m.GetAcceptableFormatter(It.IsAny<MediaHeaderValueWithQualityString>(), out formatterType))
+                .Setup(m => m.GetAcceptableFormatter(It.IsAny<AcceptHeader>(), out formatterType, It.IsAny<IList<IFormatStreamReaderWriter>>(), It.IsAny<IList<string>>()))
                 .Returns(Task.FromResult(mockFormatter.Object));
 
             var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
@@ -128,11 +128,11 @@
                 RequestAborted = new System.Threading.CancellationToken(false),
                 RequestInfo = new ApiRequestInfo
                 {
-                    Accept = new MediaHeaderValueWithQualityString(requestAccept)
+                    Accept = new AcceptHeader(requestAccept)
                 }
             };
 
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
 
@@ -157,25 +157,14 @@
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] contentTypes, string[] charsets)
+        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
             var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
             {
                 CallBase = true
             };
-            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
-            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
-            return mockFormatter;
-        }
-
-        private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] contentTypes, string[] charsets)
-        {
-            var mockFormatter = new Mock<XmlHttpFormatter>
-            {
-                CallBase = true
-            };
-            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
-            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            mockFormatter.Setup(m => m.ReadableMediaTypes).Returns(readableTypes);
+            mockFormatter.Setup(m => m.WriteableMediaTypes).Returns(writeableTypes);
             return mockFormatter;
         }
     }

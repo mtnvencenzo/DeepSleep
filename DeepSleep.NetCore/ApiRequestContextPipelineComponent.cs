@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
+    using Microsoft.AspNetCore.Http.Features;
     using Microsoft.Extensions.Primitives;
     using System;
     using System.Collections.Generic;
@@ -79,6 +80,7 @@
                 RequestAborted = context.RequestAborted,
                 RequestServices = context.RequestServices,
                 RegisterForDispose = (disposable) => context.Response.RegisterForDispose(disposable),
+                ConfigureMaxRequestLength = (length) => SetMaxRequestLength(length, context),
                 ProcessingInfo = new ApiProcessingInfo
                 {
                     UTCRequestDuration = new ApiRequestDuration
@@ -102,7 +104,6 @@
                     RequestDate = GetRequestDate(context.Request, serverTime),
                     CorrelationId = GetCorrelationId(context.Request),
                     RemoteUser = GetRemoteUserFromServerVariables(context.Request),
-                    ForceDownload = GetForceDownloadFlag(context.Request),
                     ClientAuthenticationInfo = GetClientAuthInfo(context.Request),
                     CrossOriginRequest = GetCrossOriginRequestValues(context.Request),
                     QueryVariables = GetQueryStringVariables(context),
@@ -184,11 +185,7 @@
 
             foreach (var httpHeader in request.Headers)
             {
-                headers.Add(new ApiHeader
-                {
-                    Name = httpHeader.Key,
-                    Value = httpHeader.Value.ToString()
-                });
+                headers.Add(new ApiHeader(httpHeader.Key, httpHeader.Value.ToString()));
             }
 
             return headers;
@@ -765,44 +762,6 @@
                 .ToList();
         }
 
-        /// <summary>Gets the force download flag.</summary>
-        /// <param name="request">The request.</param>
-        /// <returns>The <see cref="bool"/>.</returns>
-        private bool GetForceDownloadFlag(HttpRequest request)
-        {
-            if (request == null)
-            {
-                return false;
-            }
-
-            bool download = false;
-            bool returnDownload = false;
-
-            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-download");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (bool.TryParse(val, out download) && download)
-                    {
-                        returnDownload = true;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "download");
-            if (queryString.Key != null)
-            {
-                if (bool.TryParse(queryString.Value, out download) && download)
-                {
-                    returnDownload = true;
-                }
-            }
-
-            return returnDownload;
-        }
-
         /// <summary>Gets the pretty print.</summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
@@ -1103,6 +1062,21 @@
 
             return returnValue;
         }
+
+        /// <summary>Sets the maximum length of the request.</summary>
+        /// <param name="length">The length.</param>
+        /// <param name="context">The context.</param>
+        private void SetMaxRequestLength(long length, HttpContext context)
+        {
+            var feature = context.Features.Get<IHttpMaxRequestBodySizeFeature>();
+
+            if (feature != null && !feature.IsReadOnly)
+            {
+                feature.MaxRequestBodySize = length <= 0
+                    ? null as long?
+                    : length;
+            }
+        }
     }
 
     /// <summary>
@@ -1148,6 +1122,15 @@
                 // Merge status code to the http response
                 httpcontext.Response.StatusCode = context.ResponseInfo.StatusCode;
 
+                if (context.ResponseInfo.StatusCode == 450)
+                {
+                    try
+                    {
+                        httpcontext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "Bad Request Format";
+                    }
+                    catch { }
+                }
+
                 // Add any headers to the http context
                 void addHeadersToResponse() => context.ResponseInfo.Headers.ForEach(h =>
                 {
@@ -1159,13 +1142,7 @@
 
                 if (context.ResponseInfo.ResponseWriter != null && context.ResponseInfo.ResponseWriterOptions != null)
                 {
-                    if (context.ResponseInfo.ResponseWriter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
-                    {
-                        context.ResponseInfo.AddHeader("X-PrettyPrint", context.ResponseInfo.ResponseWriterOptions.PrettyPrint.ToString().ToLowerInvariant());
-                    }
-
                     context.ResponseInfo.AddHeader("Content-Type", context.ResponseInfo.ContentType.ToString());
-
 
                     if (!string.IsNullOrWhiteSpace(context.ResponseInfo.ContentLanguage))
                     {

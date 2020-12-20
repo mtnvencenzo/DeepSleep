@@ -7,6 +7,6 @@
     /// </summary>
     public class CommonErrorResponse
     {
-        public IList<ErrorMessage> Messages { get; set; } = new List<ErrorMessage>();
+        public List<ErrorMessage> Messages { get; set; } = new List<ErrorMessage>();
     }
 }

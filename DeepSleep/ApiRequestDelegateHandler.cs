@@ -23,7 +23,7 @@
             this.requestDelegate = new ApiRequestDelegate(TaskInvoker);
             this.type = type;
         }
-        
+
         /// <summary>Tasks the invoker.</summary>
         /// <param name="contextResolver">The context resolver.</param>
         /// <returns></returns>

@@ -10,44 +10,39 @@
     /// </summary>
     public class CharsetValueWithQuality
     {
-        #region Constructors & Initialization
+        private readonly string comparisonValue;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CharsetValueWithQuality"/> class.
-        /// </summary>
-        public CharsetValueWithQuality()
+        /// <summary>Initializes a new instance of the <see cref="CharsetValueWithQuality"/> class.</summary>
+        /// <param name="charset">The charset.</param>
+        /// <param name="quality">The quality.</param>
+        /// <param name="parameters">The parameters.</param>
+        public CharsetValueWithQuality(string charset, float quality, List<string> parameters = null)
         {
-            Parameters = new List<string>();
-            Quality = 1.000f;
+            this.Charset = charset;
+            Parameters = parameters ?? new List<string>();
+
+            if (quality <= 0)
+                this.Quality = 0f;
+            else if (quality >= 1)
+                this.Quality = 1f;
+            else
+                this.Quality = quality;
+
+
+            this.comparisonValue = $"{Charset}; q={QualityString()}{ParameterString()}";
         }
-
-        private float _qual;
-
-        #endregion
 
         /// <summary>Gets or sets the type.</summary>
         /// <value>The type.</value>
-        public string Type { get; set; }
+        public string Charset { get; private set; }
 
         /// <summary>Gets or sets the quality.</summary>
         /// <value>The quality.</value>
-        public float Quality
-        {
-            get => _qual;
-            set
-            {
-                if (value <= 0)
-                    _qual = 0f;
-                if (value >= 1)
-                    _qual = 1f;
-
-                _qual = value;
-            }
-        }
+        public float Quality { get; private set; }
 
         /// <summary>Gets or sets the parameters.</summary>
         /// <value>The parameters.</value>
-        public List<string> Parameters { get; internal set; }
+        public List<string> Parameters { get; private set; }
 
         /// <summary>Qualities the string.</summary>
         /// <returns></returns>
@@ -59,7 +54,7 @@
             if (Quality == 1)
                 return "1";
 
-            return _qual.ToString(".###", CultureInfo.InvariantCulture).TrimEnd(new char[] { '0' });
+            return Quality.ToString(".###", CultureInfo.InvariantCulture).TrimEnd(new char[] { '0' });
         }
 
         /// <summary>Parameters the string.</summary>
@@ -73,7 +68,10 @@
 
             foreach (var p in Parameters)
             {
-                parameters += $"; {p}";
+                if (p.Trim().ToLowerInvariant().StartsWith("q=") == false)
+                {
+                    parameters += $"; {p}";
+                }
             }
 
             return parameters;
@@ -85,7 +83,7 @@
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return $"{Type}{ParameterString()}; q={QualityString()}";
+            return this.comparisonValue;
         }
     }
 
@@ -97,7 +95,7 @@
         /// <summary>Gets the header with quality values.</summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static IEnumerable<CharsetValueWithQuality> GetCharsetHeaderWithQualityValues(this string value)
+        public static IList<CharsetValueWithQuality> GetCharsetHeaderWithQualityValues(this string value)
         {
             var values = new List<CharsetValueWithQuality>();
 
@@ -111,35 +109,34 @@
             {
                 parts = item.Trim().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
 
-                var type = parts[0].Trim();
+                var charset = parts[0].Trim();
 
                 if (parts.Length == 1)
                 {
-                    values.Add(new CharsetValueWithQuality
-                    {
-                        Type = type,
-                        Quality = 1.000f
-                    });
+                    values.Add(new CharsetValueWithQuality(charset, 1.000f));
                 }
                 else
                 {
                     float quality = 1.000f;
-                    var qualityPart = parts.FirstOrDefault(p => p.StartsWith("q=", StringComparison.InvariantCultureIgnoreCase));
+                    var qualityPart = parts.FirstOrDefault(p => p?.Trim().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) ?? false);
                     if (qualityPart != null)
                     {
                         float.TryParse(
-                            qualityPart.Substring(2).Trim(), 
-                            NumberStyles.Any, 
-                            CultureInfo.InvariantCulture, 
+                            qualityPart.Trim().Substring(2).Trim(),
+                            NumberStyles.Any,
+                            CultureInfo.InvariantCulture,
                             out quality);
                     }
 
-                    values.Add(new CharsetValueWithQuality
-                    {
-                        Type = type,
-                        Quality = quality,
-                        Parameters = parts.ToList().FindAll(p => !p.StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) && p != parts[0])
-                    });
+                    if (quality < 0)
+                        quality = 0;
+                    if (quality > 1)
+                        quality = 1;
+
+                    values.Add(new CharsetValueWithQuality(
+                        charset: charset?.ToLowerInvariant()?.Trim(),
+                        quality: quality,
+                        parameters: parts.ToList().FindAll(p => !(p?.Trim().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) ?? false) && p != parts[0])));
                 }
             }
 
@@ -149,7 +146,7 @@
         /// <summary>Sorts the quality precedence.</summary>
         /// <param name="values">The values.</param>
         /// <returns></returns>
-        public static IEnumerable<CharsetValueWithQuality> SortCharsetQualityPrecedence(this IEnumerable<CharsetValueWithQuality> values)
+        public static IList<CharsetValueWithQuality> SortCharsetQualityPrecedence(this IList<CharsetValueWithQuality> values)
         {
             if (values.Count() <= 1)
                 return values;
@@ -157,7 +154,8 @@
             var retValues = new List<CharsetValueWithQuality>();
 
             float max;
-            IEnumerable<CharsetValueWithQuality> qualities;
+            List<CharsetValueWithQuality> qualities;
+
             while (values.Count() > retValues.Count())
             {
                 max = (from s in values
@@ -167,7 +165,9 @@
 
                 qualities = values
                     .Where(v => v.Quality == max)
-                    .SortValues();
+                    .ToList()
+                    .SortValues()
+                    .ToList();
 
                 retValues.AddRange(qualities);
             }
@@ -188,7 +188,7 @@
             var retValues = new List<CharsetValueWithQuality>();
             var inValues = values.ToList();
 
-            var item = inValues.FirstOrDefault(v => v.Type == "*");
+            var item = inValues.FirstOrDefault(v => v.Charset == "*");
 
             if (item != null)
             {

@@ -3,7 +3,6 @@
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.TestArtifacts;
     using FluentAssertions;
-    using System.Reflection;
     using System.Threading;
     using Xunit;
 

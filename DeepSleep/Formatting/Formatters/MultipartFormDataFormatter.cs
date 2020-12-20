@@ -41,7 +41,9 @@
         /// <returns></returns>
         public virtual async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
         {
-            var multipart = await this.multipartStreamReader.ReadAsMultipart(stream).ConfigureAwait(false);
+            MultipartHttpRequest multipart;
+
+            multipart = await this.multipartStreamReader.ReadAsMultipart(stream).ConfigureAwait(false);
 
             if (multipart == null)
             {
@@ -83,7 +85,7 @@
                     .Where(s => s.Name == partName)
                     .ToList();
 
-                for(int i = 0; i < fileSections.Count; i ++)
+                for (int i = 0; i < fileSections.Count; i++)
                 {
                     var section = fileSections[i];
                     formUrlEncoded += $"{UrlEncode(partName)}[{i}].{nameof(section.TempFileName)}={UrlEncode(section.TempFileName)}&";
@@ -142,15 +144,13 @@
         /// </summary>
         public virtual bool SupportsWrite => false;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedContentTypes => new string[] { "multipart/form-data" };
+        /// <summary>Gets the readable media types.</summary>
+        /// <value>The readable media types.</value>
+        public virtual IList<string> ReadableMediaTypes => new[] { "multipart/form-data" };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedCharsets => new string[] { "utf-32, utf-16, utf-8" };
+        /// <summary>Gets or sets the writeable media types.</summary>
+        /// <value>The writeable media types.</value>
+        public virtual IList<string> WriteableMediaTypes => new string[] { };
 
         /// <summary>URLs the encode.</summary>
         /// <param name="s">The s.</param>

@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.NetCore.Controllers
 {
-    using System.Threading.Tasks;
     using DeepSleep.OpenApi.v3_0;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// 
@@ -28,11 +28,6 @@
         internal Task<OpenApiDocument3_0> Doc()
         {
             var document = this.generator.Generate(OpenApiVersion.V3, routingTable);
-
-            var context = this.requestContextResolver.GetContext();
-
-            // Force json serialization since the standard demands it
-            context.RequestInfo.Accept = new MediaHeaderValueWithQualityString("application/json");
 
             return Task.FromResult(document);
         }

@@ -66,14 +66,10 @@
 
                 if (string.IsNullOrWhiteSpace(acceptedLanguage))
                 {
-                    acceptedLanguage = GetAcceptedSupportedLanguage(supportedLanguages, new LanguageValueWithQuality[] {
-                        new LanguageValueWithQuality
-                        {
-                            Code = fallBackLanguage,
-                            Parameters = new List<string>(),
-                            Quality = 1.0f
-                        }
-                    });
+                    acceptedLanguage = GetAcceptedSupportedLanguage(
+                        supportedLanguages: supportedLanguages, 
+                        acceptLanguages: new LanguageValueWithQuality[] { new LanguageValueWithQuality(fallBackLanguage, 1.0f) }
+                    );
                 }
 
 
@@ -81,12 +77,7 @@
                 {
                     var neutralLangs = context.RequestInfo.AcceptLanguage.Values
                         .Where(s => (s.Code?.Trim()?.Length ?? 0) > 1)
-                        .Select(s => new LanguageValueWithQuality
-                        {
-                            Code = s.Code.Trim().Substring(0, 2),
-                            Parameters = s.Parameters,
-                            Quality = s.Quality
-                        });
+                        .Select(s => new LanguageValueWithQuality(s.Code.Trim().Substring(0, 2), s.Quality, s.Parameters));
 
                     acceptedLanguage = GetAcceptedSupportedLanguage(supportedLanguages, neutralLangs);
                 }

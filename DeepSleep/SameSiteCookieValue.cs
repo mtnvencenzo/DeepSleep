@@ -1,9 +1,5 @@
 ﻿namespace DeepSleep
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     /// <summary>
     /// 
     /// </summary>

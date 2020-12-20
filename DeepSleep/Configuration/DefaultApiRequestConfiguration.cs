@@ -31,11 +31,7 @@
 
         /// <summary>Gets or sets the maximum request length in bytes.</summary>
         /// <value>The length of the max allowed bytes.</value>
-        public int? MinRequestLength { get; set; }
-
-        /// <summary>Gets or sets the maximum request length in bytes.</summary>
-        /// <value>The length of the max allowed bytes.</value>
-        public int? MaxRequestLength { get; set; }
+        public long? MaxRequestLength { get; set; }
 
         /// <summary>Gets or sets the maximum request length in bytes.</summary>
         /// <value>The length of the max allowed bytes.</value>
@@ -76,5 +72,13 @@
         /// <summary>Gets or sets the supported authorization configuration.</summary>
         /// <value>The supported authorization configuration.</value>
         public ResourceAuthorizationConfiguration AuthorizationConfig { get; set; }
+
+        /// <summary>Gets or sets the include request identifier header in response.</summary>
+        /// <value>The include request identifier header in response.</value>
+        public bool? IncludeRequestIdHeaderInResponse { get; set; }
+
+        /// <summary>Gets or sets the read write configuration.</summary>
+        /// <value>The read write configuration.</value>
+        public ApiReadWriteConfiguration ReadWriteConfiguration { get; set; }
     }
 }

@@ -20,7 +20,7 @@
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
             var context = contextResolver.GetContext();
-            
+
             await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
         }
     }

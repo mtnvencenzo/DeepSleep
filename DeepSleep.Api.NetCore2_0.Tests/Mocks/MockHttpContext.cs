@@ -50,7 +50,7 @@
         public override IFeatureCollection Features => features;
 
         public override ISession Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        
+
         public override WebSocketManager WebSockets => throw new NotImplementedException();
 
 #pragma warning disable CS0618 // Type or member is obsolete

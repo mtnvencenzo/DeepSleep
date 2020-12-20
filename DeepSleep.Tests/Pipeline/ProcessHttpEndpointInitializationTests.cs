@@ -267,7 +267,7 @@
                 },
                 RequestServices = mockServiceProvider.Object
             };
-            
+
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 

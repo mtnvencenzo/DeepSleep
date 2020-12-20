@@ -8,79 +8,49 @@
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{ToString(true, true)}")]
+    [DebuggerDisplay("{ToString()}")]
     public class MediaValueWithParameters
     {
-        #region Constructors & Initialization
+        private readonly string comparisonValue;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MediaValueWithQuality"/> class.
-        /// </summary>
-        public MediaValueWithParameters()
+        /// <summary>Initializes a new instance of the <see cref="MediaValueWithParameters"/> class.</summary>
+        /// <param name="type">The type.</param>
+        /// <param name="subtype">The subtype.</param>
+        /// <param name="parameters">The parameters.</param>
+        public MediaValueWithParameters(string type, string subtype, List<string> parameters = null)
         {
-            Parameters = new List<string>();
-        }
+            this.Type = type?.Trim()?.ToLowerInvariant() ?? string.Empty;
 
-        #endregion
+            this.SubType = subtype?.Trim()?.ToLowerInvariant() ?? string.Empty;
+
+            this.MediaType = $"{this.Type}/{this.SubType}";
+
+            this.Parameters = parameters ?? new List<string>();
+
+            this.comparisonValue = $"{Type}/{SubType}{ParameterString()}";
+        }
 
         /// <summary>Gets or sets the type.</summary>
         /// <value>The type.</value>
-        public string Type { get; set; }
+        public string Type { get; private set; }
 
         /// <summary>Gets or sets the type of the sub.</summary>
         /// <value>The type of the sub.</value>
-        public string SubType { get; set; }
-
-        /// <summary>Gets or sets the charset.</summary>
-        /// <value>The charset.</value>
-        public string Charset { get; set; }
-
-        /// <summary>Gets or sets the boundary.</summary>
-        /// <value>The boundary.</value>
-        public string Boundary { get; set; }
+        public string SubType { get; private set; }
 
         /// <summary>Gets the type of the media.</summary>
         /// <value>The type of the media.</value>
-        public string MediaType
-        {
-            get
-            {
-                if(!string.IsNullOrWhiteSpace(Type))
-                    return $"{Type}/{SubType}";
-
-                return string.Empty;
-            }
-        }
+        public string MediaType { get; private set; }
 
         /// <summary>Gets or sets the parameters.</summary>
         /// <value>The parameters.</value>
-        public List<string> Parameters { get; internal set; }
-
-        /// <summary>Charsets the string.</summary>
-        /// <returns></returns>
-        internal string CharsetString()
-        {
-            if (string.IsNullOrWhiteSpace(Charset))
-                return string.Empty;
-
-            return $"; charset={Charset}";
-        }
-
-        /// <summary>Boundaries the string.</summary>
-        /// <returns></returns>
-        internal string BoundaryString()
-        {
-            if (string.IsNullOrWhiteSpace(Boundary))
-                return string.Empty;
-
-            return $"; boundary={Boundary}";
-        }
+        public List<string> Parameters { get; private set; }
 
         /// <summary>Parameters the string.</summary>
         /// <returns></returns>
-        internal string ParameterString()
+        internal virtual string ParameterString()
         {
-            if (Parameters.Count == 0)
+            if (!Parameters.Any())
                 return string.Empty;
 
             string parameters = string.Empty;
@@ -99,24 +69,25 @@
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return ToString(true, true);
+            return this.comparisonValue;
         }
 
-        /// <summary>Converts to string.</summary>
-        /// <param name="includeCharset">if set to <c>true</c> [include charset].</param>
-        /// <param name="includeBoundary">if set to <c>true</c> [include boundary].</param>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public virtual string ToString(bool includeCharset, bool includeBoundary)
+        /// <summary>Gets the parameter value.</summary>
+        /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="trimValues">if set to <c>true</c> [trim values].</param>
+        /// <returns></returns>
+        public virtual string GetParameterValue(string parameterName, bool trimValues = true)
         {
-            string charsetString = (includeCharset)
-                ? CharsetString()
-                : string.Empty;
+            var param = this.Parameters?.FirstOrDefault(p => p.Replace(" ", string.Empty).StartsWith($"{parameterName}=", StringComparison.InvariantCultureIgnoreCase));
 
-            string boundaryString = (includeBoundary)
-                ? BoundaryString()
-                : string.Empty;
+            if (param != null && param.Contains("="))
+            {
+                return trimValues
+                    ? param.Substring(param.IndexOf("=") + 1).Trim()
+                    : param.Substring(param.IndexOf("=") + 1);
+            }
 
-            return $"{Type}/{SubType}{charsetString}{boundaryString}{ParameterString()}";
+            return string.Empty;
         }
     }
 
@@ -135,36 +106,34 @@
                 return null;
             }
 
+            var parts = value
+                .Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(p => p != null)
+                .Select(p => p)
+                .ToArray();
 
-            var parts = value.Trim().Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            var typeSubType = parts[0].Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-            var type = typeSubType[0].Trim();
+            var typeSubType = parts[0]
+                .Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+
+            var type = typeSubType[0]
+                .Trim()
+                .ToLowerInvariant();
+
             var subType = typeSubType.Length == 2
-                ? typeSubType[1].Trim()
+                ? typeSubType[1].Trim().ToLowerInvariant()
                 : string.Empty;
 
             if (parts.Length == 1)
             {
-                return new MediaValueWithParameters
-                {
-                    Type = type,
-                    SubType = subType,
-                    Charset = string.Empty,
-                    Parameters = new List<string>()
-                };
+                return new MediaValueWithParameters(type, subType);
             }
             else
             {
-                return new MediaValueWithParameters
-                {
-                    Type = type,
-                    SubType = subType,
-                    Charset = parts.FirstOrDefault(p => p.Trim().ToLower().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase))?.ToLower()?.Replace("charset=",string.Empty) ?? string.Empty,
-                    Boundary = (parts.FirstOrDefault(p => p.Trim().ToLower().StartsWith("boundary=", StringComparison.InvariantCultureIgnoreCase))?.Replace("boundary=", string.Empty) ?? string.Empty).Trim(),
-                    Parameters = parts
-                        .ToList()
-                        .FindAll(p => !p.Trim().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase) && !p.Trim().StartsWith("charset=", StringComparison.InvariantCultureIgnoreCase) && p != parts[0])
-                };
+                var parameters = parts
+                    .Where(p => p != null && p != parts[0])
+                    .ToList();
+
+                return new MediaValueWithParameters(type, subType, parameters);
             }
         }
     }

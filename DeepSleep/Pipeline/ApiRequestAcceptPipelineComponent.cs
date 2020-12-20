@@ -1,6 +1,8 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -56,19 +58,51 @@
                 {
                     var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
                         ? context.RequestInfo.Accept
-                        : new MediaHeaderValueWithQualityString("*/*");
+                        : AcceptHeader.All();
 
                     IFormatStreamReaderWriter formatter = null;
 
                     if (formatterFactory != null)
                     {
-                        formatter = await formatterFactory.GetAcceptableFormatter(accept, out var _).ConfigureAwait(false);
+                        formatter = await formatterFactory.GetAcceptableFormatter(
+                            acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                            writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                            formatterType: out var _).ConfigureAwait(false);
                     }
+
+                    IList<IFormatStreamReaderWriter> overridingFormatters = null;
+
+                    if (context.RequestConfig.ReadWriteConfiguration?.WriterResolver != null)
+                    {
+                        var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, null)).ConfigureAwait(false);
+
+                        overridingFormatters = overrides?.Formatters;
+
+                        if (overrides?.Formatters != null)
+                        {
+                            formatter = await formatterFactory.GetAcceptableFormatter(
+                                acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                                writeableFormatters: overrides.Formatters,
+                                formatterType: out var _).ConfigureAwait(false);
+                        }
+                    }
+
 
                     if (formatter == null)
                     {
-                        string acceptable = (formatterFactory != null)
-                            ? string.Join(", ", formatterFactory.GetTypes())
+                        var formatterTypes = formatterFactory != null
+                            ? formatterFactory.GetWriteableTypes(overridingFormatters) ?? new List<string>()
+                            : new HttpMediaTypeStreamReaderWriterFactory(context.RequestServices).GetWriteableTypes(overridingFormatters) ?? new List<string>();
+
+                        var writeableMediaTypes = context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes ?? formatterTypes ?? new List<string>();
+
+                        var acceptableTypes = writeableMediaTypes
+                            .Where(w => formatterTypes.Any(f => string.Equals(f, w, System.StringComparison.InvariantCultureIgnoreCase)))
+                            .ToList();
+
+                        string acceptable = (acceptableTypes != null && acceptableTypes.Count > 0)
+                            ? string.Join(", ", acceptableTypes)
                             : string.Empty;
 
                         context.ResponseInfo.AddHeader("X-Allow-Accept", acceptable);

@@ -54,9 +54,9 @@
         /// <param name="resolver">The resolver.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context, 
-            IApiRoutingTable routes, 
-            IUriRouteResolver resolver, 
+        internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context,
+            IApiRoutingTable routes,
+            IUriRouteResolver resolver,
             IApiRequestConfiguration defaultRequestConfig)
         {
             if (!context.RequestAborted.IsCancellationRequested)
@@ -65,6 +65,20 @@
                 {
                     context.RouteInfo.RoutingItem = await context.GetRouteInfo(resolver, routes, defaultRequestConfig).ConfigureAwait(false);
                     context.RouteInfo.TemplateInfo = await context.GetTemplateInfo(resolver, routes).ConfigureAwait(false);
+                }
+
+                if (context.RouteInfo.RoutingItem != null)
+                {
+                    context.RequestConfig = MergeConfigurations(context, defaultRequestConfig, context.RouteInfo.RoutingItem.Config);
+
+                    if (context.RequestConfig?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
+                    {
+                        try
+                        {
+                            context.ConfigureMaxRequestLength(context.RequestConfig.MaxRequestLength.Value);
+                        }
+                        catch { }
+                    }
                 }
 
                 return true;
@@ -79,9 +93,9 @@
         /// <param name="routes">The routes.</param>
         /// <param name="defaultRequestConfig">The default request configuration.</param>
         /// <returns></returns>
-        private static async Task<ApiRoutingItem> GetRouteInfo(this ApiRequestContext context, 
-            IUriRouteResolver resolver, 
-            IApiRoutingTable routes, 
+        private static async Task<ApiRoutingItem> GetRouteInfo(this ApiRequestContext context,
+            IUriRouteResolver resolver,
+            IApiRoutingTable routes,
             IApiRequestConfiguration defaultRequestConfig)
         {
             // -----------------------------------------------------------------
@@ -111,7 +125,7 @@
             });
 
             ApiRoutingItem routeInfo = null;
-            if (context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "head"))
+            if (context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "HEAD"))
             {
                 routeInfo = await routeMatch("HEAD").ConfigureAwait(false);
 
@@ -127,11 +141,6 @@
             else
             {
                 routeInfo = await routeMatch(context.RequestInfo.Method).ConfigureAwait(false);
-            }
-
-            if (routeInfo != null)
-            {
-                context.RequestConfig = MergeConfigurations(context, defaultRequestConfig, routeInfo.Config);
             }
 
             return routeInfo;
@@ -253,16 +262,16 @@
                 ?? defaultConfig?.MaxRequestUriLength
                 ?? systemConfig.MaxRequestUriLength;
 
-            requestConfig.MinRequestLength = endpointConfig?.MinRequestLength
-                ?? defaultConfig?.MinRequestLength
-                ?? systemConfig.MinRequestLength;
+            requestConfig.IncludeRequestIdHeaderInResponse = endpointConfig?.IncludeRequestIdHeaderInResponse
+                ?? defaultConfig?.IncludeRequestIdHeaderInResponse
+                ?? systemConfig.IncludeRequestIdHeaderInResponse;
 
             requestConfig.SupportedLanguages = new List<string>(endpointConfig?.SupportedLanguages ?? defaultConfig?.SupportedLanguages ?? systemConfig.SupportedLanguages);
 
             requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
 
             // ----------------------------
-            // Merge CacheDirective
+            // Merge Cache Directive
             // ----------------------------
             if (endpointConfig?.CacheDirective != null || defaultConfig?.CacheDirective != null)
             {
@@ -286,13 +295,13 @@
 
 
             // ----------------------------
-            // Merge CrossOriginConfig
+            // Merge Cross Origin Config
             // ----------------------------
             if (endpointConfig?.CrossOriginConfig != null || defaultConfig?.CrossOriginConfig != null)
             {
                 requestConfig.CrossOriginConfig = new CrossOriginConfiguration
                 {
-                    AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials 
+                    AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials
                         ?? defaultConfig?.CrossOriginConfig?.AllowCredentials
                         ?? systemConfig?.CrossOriginConfig?.AllowCredentials,
                     AllowedOrigins = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins ?? systemConfig.CrossOriginConfig.AllowedOrigins),
@@ -307,13 +316,13 @@
 
 
             // ----------------------------
-            // Merge HeaderValidationConfig
+            // Merge Header Validation Config
             // ----------------------------
             if (defaultConfig?.HeaderValidationConfig != null || endpointConfig?.HeaderValidationConfig != null)
             {
                 requestConfig.HeaderValidationConfig = new ApiHeaderValidationConfiguration
                 {
-                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength 
+                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength
                         ?? defaultConfig?.HeaderValidationConfig?.MaxHeaderLength
                         ?? systemConfig.HeaderValidationConfig.MaxHeaderLength
                 };
@@ -325,18 +334,17 @@
 
 
             // ----------------------------
-            // Merge HttpConfig
+            // Merge Http Config
             // ----------------------------
             if (endpointConfig?.HttpConfig != null || defaultConfig?.HttpConfig != null)
             {
                 requestConfig.HttpConfig = new ApiHttpConfiguration
                 {
-                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL 
+                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL
                         ?? defaultConfig?.HttpConfig?.RequireSSL
                         ?? systemConfig.HttpConfig.RequireSSL,
-                    SupportedVersions = endpointConfig?.HttpConfig?.SupportedVersions 
-                        ?? defaultConfig?.HttpConfig?.SupportedVersions
-                        ?? systemConfig.HttpConfig.SupportedVersions
+
+                    SupportedVersions = new List<string>(endpointConfig?.HttpConfig?.SupportedVersions ?? defaultConfig?.HttpConfig?.SupportedVersions ?? systemConfig.HttpConfig.SupportedVersions)
                 };
             }
             else
@@ -353,7 +361,7 @@
             {
                 requestConfig.AuthorizationConfig = new ResourceAuthorizationConfiguration
                 {
-                    Policy = endpointConfig?.AuthorizationConfig?.Policy 
+                    Policy = endpointConfig?.AuthorizationConfig?.Policy
                         ?? defaultConfig?.AuthorizationConfig?.Policy
                         ?? systemConfig.AuthorizationConfig.Policy
                 };
@@ -362,6 +370,51 @@
             {
                 requestConfig.AuthorizationConfig = systemConfig.AuthorizationConfig;
             }
+
+
+
+            // ----------------------------
+            // Merge Read Write Configuration
+            // ----------------------------
+            if (endpointConfig?.ReadWriteConfiguration != null || defaultConfig?.ReadWriteConfiguration != null)
+            {
+                requestConfig.ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    ReaderResolver = endpointConfig?.ReadWriteConfiguration?.ReaderResolver
+                        ?? defaultConfig?.ReadWriteConfiguration?.ReaderResolver
+                        ?? systemConfig.ReadWriteConfiguration?.ReaderResolver,
+
+                    WriterResolver = endpointConfig?.ReadWriteConfiguration?.WriterResolver
+                        ?? defaultConfig?.ReadWriteConfiguration?.WriterResolver
+                        ?? systemConfig.ReadWriteConfiguration?.WriterResolver,
+
+                    AcceptHeaderOverride = endpointConfig?.ReadWriteConfiguration?.AcceptHeaderOverride
+                        ?? defaultConfig?.ReadWriteConfiguration?.AcceptHeaderOverride
+                        ?? systemConfig.ReadWriteConfiguration?.AcceptHeaderOverride,
+                };
+
+                var endpointReadableMediaTypes = endpointConfig?.ReadWriteConfiguration?.ReadableMediaTypes != null
+                    ? new List<string>(endpointConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                    : null;
+
+                var endpointWriteableMediaTypes = endpointConfig?.ReadWriteConfiguration?.WriteableMediaTypes != null
+                    ? new List<string>(endpointConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                    : null;
+
+                requestConfig.ReadWriteConfiguration.ReadableMediaTypes = endpointReadableMediaTypes
+                        ?? defaultConfig?.ReadWriteConfiguration?.ReadableMediaTypes
+                        ?? systemConfig.ReadWriteConfiguration?.ReadableMediaTypes;
+
+                requestConfig.ReadWriteConfiguration.WriteableMediaTypes = endpointWriteableMediaTypes
+                        ?? defaultConfig?.ReadWriteConfiguration?.WriteableMediaTypes
+                        ?? systemConfig.ReadWriteConfiguration?.WriteableMediaTypes;
+            }
+            else
+            {
+                requestConfig.ReadWriteConfiguration = systemConfig.ReadWriteConfiguration;
+            }
+
+
 
             return requestConfig;
         }

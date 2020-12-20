@@ -29,21 +29,16 @@
             if (type == "*/*")
                 return true;
 
-            var formatterMediaType = string.Empty;
-            var formatterMediaSubType = string.Empty;
-            var typeMediaType = string.Empty;
-            var typeMediaSubType = string.Empty;
-
             var formatterParts = formatterType.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
             var typeParts = type.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 
-            formatterMediaType = formatterParts[0];
-            formatterMediaSubType = formatterParts.Length == 2
+            string formatterMediaType = formatterParts[0];
+            string formatterMediaSubType = formatterParts.Length == 2
                 ? formatterParts[1]
                 : "*";
 
-            typeMediaType = typeParts[0];
-            typeMediaSubType = typeParts.Length == 2
+            string typeMediaType = typeParts[0];
+            string typeMediaSubType = typeParts.Length == 2
                 ? typeParts[1]
                 : "*";
 

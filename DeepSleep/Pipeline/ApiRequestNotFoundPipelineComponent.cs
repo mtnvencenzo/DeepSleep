@@ -24,7 +24,7 @@
             if (await context.ProcessHttpRequestNotFound().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
-            } 
+            }
         }
     }
 
@@ -51,7 +51,7 @@
                 if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
                 {
                     //logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
-                    
+
                     context.ResponseInfo.StatusCode = 404;
 
                     return Task.FromResult(false);

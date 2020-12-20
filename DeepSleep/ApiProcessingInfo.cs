@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
 

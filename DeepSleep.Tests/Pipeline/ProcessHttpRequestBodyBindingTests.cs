@@ -16,7 +16,7 @@
     public class ProcessHttpRequestBodyBindingTests
     {
         [Fact]
-        public async void ReturnsFalseForCancelledRequest()
+        public async void body_binding___returns_false_for_cancelled_request()
         {
             var context = new ApiRequestContext
             {
@@ -37,7 +37,7 @@
         [InlineData("trace")]
         [InlineData("options")]
         [InlineData("delete")]
-        public async void ReturnsTrueForNonBodyBoundRequestMehod(string method)
+        public async void body_binding___returns_true_for_non_bodybound_request_method(string method)
         {
             var context = new ApiRequestContext
             {
@@ -59,7 +59,7 @@
         [InlineData("PUT")]
         [InlineData("paTch")]
         [InlineData("put")]
-        public async void ReturnsFalseAnd411StatusForMissingContentType(string method)
+        public async void body_binding___returns_false_and_411_status_for_missing_contenttype(string method)
         {
             var context = new ApiRequestContext
             {
@@ -83,7 +83,7 @@
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async void ReturnsFalseAnd422StatusForMissingContentTypeAndHasContent(string contentType)
+        public async void body_binding___returns_false_and_422_status_for_missing_contenttype_and_has_content(string contentType)
         {
             var context = new ApiRequestContext
             {
@@ -101,11 +101,11 @@
 
             context.ResponseInfo.Should().NotBeNull();
             context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(422);
+            context.ResponseInfo.StatusCode.Should().Be(450);
         }
 
         [Fact]
-        public async void ReturnsFalseAnd411StatusForContentLengthSuppliedButNullInvocationContext()
+        public async void body_binding___returns_false_and_411_status_for_contentlength_supplied_but_null_invocationcontext()
         {
             var context = new ApiRequestContext
             {
@@ -117,7 +117,7 @@
                     ContentType = "application/json",
                     InvocationContext = null
                 },
-                
+
             };
 
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
@@ -129,7 +129,7 @@
         }
 
         [Fact]
-        public async void ReturnsFalseAnd411StatusForContentLengthSuppliedButNullInvocationContextBodyModelType()
+        public async void body_binding___returns_false_and_411_status_for_contentlength_supplied_but_null_invocationcontext_bodymodeltype()
         {
             var context = new ApiRequestContext
             {
@@ -156,7 +156,7 @@
         }
 
         [Fact]
-        public async void ReturnsFalseAnd415StatusForNullFormatterFactory()
+        public async void body_binding___returns_false_and_415_status_for_null_formatterfactory()
         {
             var context = new ApiRequestContext
             {
@@ -182,9 +182,9 @@
         }
 
         [Fact]
-        public async void ReturnsFalseAnd415StatusForNUnMatchedFormatter()
+        public async void body_binding___returns_false_and_415_status_for_unmatched_formatter()
         {
-            var formatter = SetupXmlFormatterMock(new string[] { "application/xml" }, null);
+            var formatter = SetupXmlFormatterMock(null, new string[] { "application/xml" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -211,7 +211,79 @@
         }
 
         [Fact]
-        public async void ReturnsTrueFormSuccessfullBodyModelBinding()
+        public async void body_binding___returns_false_and_415_status_for_non_writable_formatter()
+        {
+            var xmlformatter = SetupXmlFormatterMock(null, null );
+            var jsonformatter = SetupJsonFormatterMock(null, null);
+            var mockFactory = SetupFormatterFactory(xmlformatter.Object, jsonformatter.Object);
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    Method = "POST",
+                    ContentLength = 1,
+                    ContentType = "application/json",
+                    InvocationContext = new ApiInvocationContext
+                    {
+                        BodyModelType = typeof(string)
+                    }
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+            processed.Should().BeFalse();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.ResponseInfo.StatusCode.Should().Be(415);
+        }
+
+        [Fact]
+        public async void body_binding___returns_false_and_413_status_for_maxrequestlength_too_long()
+        {
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
+            {
+                writer.Write("{ \"Name\": \"MyHeader\", \"Value\": \"MyValue\" }");
+                await writer.FlushAsync().ConfigureAwait(false);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+                var mockFactory = SetupFormatterFactory(formatter.Object);
+
+                var context = new ApiRequestContext
+                {
+                    RequestAborted = new System.Threading.CancellationToken(false),
+                    RequestInfo = new ApiRequestInfo
+                    {
+                        Method = "PATCH",
+                        ContentLength = 10,
+                        ContentType = "application/json",
+                        InvocationContext = new ApiInvocationContext
+                        {
+                            BodyModelType = typeof(ApiHeader)
+                        },
+                        Body = memoryStream
+                    },
+                    RequestConfig = new DefaultApiRequestConfiguration
+                    {
+                        MaxRequestLength = 1
+                    }
+                };
+
+                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+                processed.Should().BeFalse();
+
+                context.ResponseInfo.Should().NotBeNull();
+                context.ResponseInfo.ResponseObject.Should().BeNull();
+                context.ResponseInfo.StatusCode.Should().Be(413);
+            }
+        }
+
+        [Fact]
+        public async void body_binding___returns_true_for_successfull_bodymodel_binding()
         {
             using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(memoryStream))
@@ -253,7 +325,7 @@
         }
 
         [Fact]
-        public async void ReturnsFalseForFailedBodyBinding()
+        public async void body_binding___returns_false_for_failed_bodymodel_binding()
         {
             using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(memoryStream))
@@ -282,19 +354,19 @@
                 };
 
                 var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
-                processed.Should().BeFalse ();
+                processed.Should().BeFalse();
 
                 context.ResponseInfo.Should().NotBeNull();
                 context.ResponseInfo.ResponseObject.Should().BeNull();
-                context.ResponseInfo.StatusCode.Should().Be(400);
+                context.ResponseInfo.StatusCode.Should().Be(450);
 
                 context.ProcessingInfo.Should().NotBeNull();
                 context.ErrorMessages.Should().NotBeNull();
-                context.ErrorMessages.Should().HaveCount(1);
-                context.ErrorMessages[0].Should().StartWith("400.000003|");
-                context.ErrorMessages[0].Should().Be("400.000003|Could not deserialize request.");
+                context.ErrorMessages.Should().HaveCount(0);
             }
         }
+
+
 
         private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
         {
@@ -309,25 +381,25 @@
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] contentTypes, string[] charsets)
+        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
             var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
             {
                 CallBase = true
             };
-            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
-            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            mockFormatter.Setup(m => m.ReadableMediaTypes).Returns(readableTypes);
+            mockFormatter.Setup(m => m.WriteableMediaTypes).Returns(writeableTypes);
             return mockFormatter;
         }
 
-        private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] contentTypes, string[] charsets)
+        private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
             var mockFormatter = new Mock<XmlHttpFormatter>()
             {
                 CallBase = true
             };
-            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
-            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            mockFormatter.Setup(m => m.ReadableMediaTypes).Returns(readableTypes);
+            mockFormatter.Setup(m => m.WriteableMediaTypes).Returns(writeableTypes);
             return mockFormatter;
         }
     }

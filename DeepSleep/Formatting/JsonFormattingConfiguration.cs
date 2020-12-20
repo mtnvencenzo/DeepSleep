@@ -11,6 +11,6 @@
 
         /// <summary>Whether or not null values should be ecluded from written json
         /// </summary>
-        public virtual bool NullValuesExcluded { get; set; } = true; 
+        public virtual bool NullValuesExcluded { get; set; } = true;
     }
 }

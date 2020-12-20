@@ -1,10 +1,10 @@
 ﻿namespace DeepSleep.NetCore.Tests
 {
-    using Microsoft.Extensions.DependencyInjection;
-    using Xunit;
-    using System.Threading.Tasks;
     using DeepSleep.NetCore.Tests.Mocks;
+    using Microsoft.Extensions.DependencyInjection;
     using System;
+    using System.Threading.Tasks;
+    using Xunit;
 
     public class NotFound404RequestTest : PipelineTestBase
     {

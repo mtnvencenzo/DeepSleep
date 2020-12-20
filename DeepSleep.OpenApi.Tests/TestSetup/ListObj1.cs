@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.OpenApi.Tests.TestSetup
 {
-    using System;
-
     public class ListObj1
     {
         public int MyListItemProp11 { get; set; }

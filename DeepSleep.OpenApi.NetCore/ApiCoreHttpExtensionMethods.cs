@@ -4,7 +4,7 @@
     using DeepSleep.OpenApi.NetCore.Controllers;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
-    using System;
+    using System.Collections.Generic;
 
 
     /// <summary>
@@ -18,7 +18,7 @@
         /// <param name="prefixNamesWithNamespace">if set to <c>true</c> [prefix names with namespace].</param>
         /// <param name="includeHeadOperationsForGets">if set to <c>true</c> [include head operations for gets].</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseOpenApiEndpoint(this IApplicationBuilder builder, 
+        public static IApplicationBuilder UseOpenApiEndpoint(this IApplicationBuilder builder,
             string routeTemplate = "openapi",
             bool prefixNamesWithNamespace = false,
             bool includeHeadOperationsForGets = true)
@@ -35,7 +35,12 @@
                endpoint: nameof(OpenApiController.Doc),
                config: new DefaultApiRequestConfiguration
                {
-                   AllowAnonymous = true
+                   AllowAnonymous = true,
+                   ReadWriteConfiguration = new ApiReadWriteConfiguration
+                   {
+                       AcceptHeaderOverride = "application/json; q=1.0, test/json; q=0.9",
+                       WriteableMediaTypes = new List<string> { "application/json", "test/json" }
+                   }
                });
 
             return builder;

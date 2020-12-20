@@ -3,8 +3,6 @@
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.TestArtifacts;
     using FluentAssertions;
-    using Moq;
-    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Web;
@@ -179,7 +177,7 @@
                         UriModelType = typeof(StandardModel)
                     }
                 },
-                RouteInfo= new ApiRoutingInfo
+                RouteInfo = new ApiRoutingInfo
                 {
                     RoutingItem = new ApiRoutingItem
                     {
@@ -423,7 +421,7 @@
                         UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
-                    {                            
+                    {
                         { "StringProp", "StringProp1" },
                         { "CharProp", "a" },
                         { "ByteProp", "1" },

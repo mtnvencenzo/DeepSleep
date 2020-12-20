@@ -1,16 +1,16 @@
 ﻿namespace DeepSleep.NetCore
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Formatting;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.Extensions.DependencyInjection;
-    using DeepSleep.Validation;
-    using System;
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.NetCore.Controllers;
-    using DeepSleep.Configuration;
-    using System.Reflection;
+    using DeepSleep.Validation;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.Versioning;
 
     /// <summary>
@@ -23,8 +23,19 @@
         /// <returns></returns>
         public static IApplicationBuilder UseApiCoreHttp(this IApplicationBuilder builder)
         {
-            return builder
+            var ret = builder
                 .UseApiRequestContext();
+
+#if DEBUG
+            try
+            {
+                var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
+                WriteDeepsleepToConsole(config);
+            }
+            catch { }
+#endif
+
+            return ret;
         }
 
         /// <summary>Uses the API core services.</summary>
@@ -44,19 +55,10 @@
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
-                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => config.ApiRequestPipeline ?? DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
+                .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
+                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
-
-            
-            if (config.FormatterFactory != null)
-            {
-                services.AddScoped<IFormatStreamReaderWriterFactory, IFormatStreamReaderWriterFactory>((p) => config.FormatterFactory);
-            }
-            else
-            {
-                services.AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>();
-            }
 
             config.RoutingTable = config.RoutingTable ?? GetDefaultRoutingTable();
 
@@ -69,15 +71,6 @@
             }
 
             services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTable);
-
-#if DEBUG
-
-            try
-            {
-                WriteDeepsleepToConsole(config);
-            }
-            catch { }
-#endif
 
             return services;
         }
@@ -276,7 +269,7 @@
                 Console.WriteLine(@"                `--...__|`-._  _.-'|__...--'");
                 Console.WriteLine(@"                        |    `'    |");
 
-                
+
                 Console.WriteLine("");
                 Console.WriteLine(@"                  May the 4th be with you!");
                 Console.WriteLine("");

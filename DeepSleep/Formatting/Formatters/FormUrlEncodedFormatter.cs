@@ -1,10 +1,10 @@
 ﻿namespace DeepSleep.Formatting.Formatters
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// 
@@ -97,14 +97,12 @@
         /// </summary>
         public virtual bool SupportsWrite => false;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedContentTypes => new string[] { "application/x-www-form-urlencoded" };
+        /// <summary>Gets the readable media types.</summary>
+        /// <value>The readable media types.</value>
+        public virtual IList<string> ReadableMediaTypes => new[] { "application/x-www-form-urlencoded" };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedCharsets  => new string[] { "utf-32, utf-16, utf-8" };
+        /// <summary>Gets or sets the writeable media types.</summary>
+        /// <value>The writeable media types.</value>
+        public virtual IList<string> WriteableMediaTypes => new string [] { };
     }
 }

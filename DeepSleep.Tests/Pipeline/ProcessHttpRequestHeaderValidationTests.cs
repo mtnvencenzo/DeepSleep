@@ -69,8 +69,8 @@
                 {
                     Headers = new List<ApiHeader>
                     {
-                        new ApiHeader { Name = "X-Header1", Value = "MyValue1" },
-                        new ApiHeader { Name = "X-Header2", Value = "MyValue2" }
+                        new ApiHeader("X-Header1", "MyValue1"),
+                        new ApiHeader("X-Header2", "MyValue2")
                     }
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
@@ -98,8 +98,8 @@
                 {
                     Headers = new List<ApiHeader>
                     {
-                        new ApiHeader { Name = "X-Header1", Value = "MyValue1" },
-                        new ApiHeader { Name = "X-Header2", Value = "MyValue2" }
+                        new ApiHeader("X-Header1", "MyValue1"),
+                        new ApiHeader("X-Header2", "MyValue2")
                     }
                 },
                 RequestConfig = new DefaultApiRequestConfiguration
@@ -127,9 +127,9 @@
                 {
                     Headers = new List<ApiHeader>
                     {
-                        new ApiHeader { Name = "X-Header1", Value = "MyValue1111" },
-                        new ApiHeader { Name = "X-Header2", Value = "MyValue2222" },
-                        new ApiHeader { Name = "X-Header2", Value = "MyValue233" }
+                        new ApiHeader("X-Header1", "MyValue1111"),
+                        new ApiHeader("X-Header2", "MyValue2222"),
+                        new ApiHeader("X-Header2", "MyValue233")
                     }
                 },
                 RequestConfig = new DefaultApiRequestConfiguration

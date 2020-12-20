@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.Validation
 {
-    using System;
-
     /// <summary>
     /// 
     /// </summary>

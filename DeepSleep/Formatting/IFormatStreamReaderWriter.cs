@@ -52,12 +52,12 @@
         /// </summary>
         bool SupportsWrite { get; }
 
-        /// <summary>Gets the suuported content types.</summary>
-        /// <value>The suuported content types.</value>
-        IList<string> SuuportedContentTypes { get; }
+        /// <summary>Gets the readable media types.</summary>
+        /// <value>The readable media types.</value>
+        IList<string> ReadableMediaTypes { get; }
 
-        /// <summary>Gets the suuported charsets.</summary>
-        /// <value>The suuported charsets.</value>
-        IList<string> SuuportedCharsets { get; }
+        /// <summary>Gets or sets the writeable media types.</summary>
+        /// <value>The writeable media types.</value>
+        IList<string> WriteableMediaTypes { get; }
     }
 }

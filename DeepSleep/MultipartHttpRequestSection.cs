@@ -12,11 +12,11 @@
 
         /// <summary>Gets the type of the content.</summary>
         /// <value>The type of the content.</value>
-        public virtual MediaHeaderValueWithParameters ContentType { get; set; }
+        public virtual ContentTypeHeader ContentType { get; set; }
 
         /// <summary>Gets the content disposition.</summary>
         /// <value>The content disposition.</value>
-        public virtual ContentDisposition ContentDisposition { get; set; }
+        public virtual ContentDispositionHeader ContentDisposition { get; set; }
 
         /// <summary>Gets the name.</summary>
         /// <value>The name.</value>
@@ -99,9 +99,9 @@
                 return true;
             }
 
-            if (section.ContentType != null)
+            if (string.IsNullOrWhiteSpace(section.ContentType?.ToString()))
             {
-                return true;
+                return false;
             }
 
             return false;

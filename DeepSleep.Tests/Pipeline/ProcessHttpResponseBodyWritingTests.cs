@@ -130,7 +130,7 @@
         [InlineData("text/plain")]
         public async void ReturnsTrueAndDoesNotWriteForNonMatchingFormatter(string accept)
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" } );
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -161,7 +161,7 @@
         [InlineData(null)]
         public async void ReturnsTrueAndDoesWritesUsingDefaultFormatterWhenMissingRequestAccept(string accept)
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -197,7 +197,7 @@
         [InlineData(null, "application/json")]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatter(string accept, string expectedContentType)
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -229,7 +229,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfMatchAndIfModifedSinceMatch()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
@@ -268,7 +268,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfMatch()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
 
@@ -304,7 +304,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesNotWriteAndModifiedResponseTo304NotModifiedWhenIfModifedSinceMatch()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
 
@@ -340,7 +340,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesWithUnMatchedEtagAndIfModifiedSince()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
@@ -381,7 +381,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesWithUnMatchedEtagButMatchedIfModifiedSince()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
@@ -422,7 +422,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesWithMatchedEtagButUnMatchedIfModifiedSince()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
@@ -463,7 +463,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesWithUnMatchedEtag()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             var etag = "TEST-IF-MATCH";
 
@@ -501,7 +501,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesWithUnMatchedIfModifiedSince()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json", "text/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
             DateTimeOffset lastModifed = DateTimeOffset.UtcNow;
 
@@ -539,7 +539,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndPrettyPrint()
         {
-            var formatter = SetupJsonFormatterMock(new string[] { "application/json" }, null);
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -584,14 +584,14 @@
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] contentTypes, string[] charsets)
+        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
             var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
             {
                 CallBase = true
             };
-            mockFormatter.Setup(m => m.SuuportedContentTypes).Returns(contentTypes);
-            mockFormatter.Setup(m => m.SuuportedCharsets).Returns(charsets);
+            mockFormatter.Setup(m => m.ReadableMediaTypes).Returns(readableTypes);
+            mockFormatter.Setup(m => m.WriteableMediaTypes).Returns(writeableTypes);
             return mockFormatter;
         }
     }

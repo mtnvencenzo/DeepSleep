@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using Xunit;
@@ -30,7 +31,11 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = null
+                RequestInfo = null,
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = 1
+                }
             };
 
             var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
@@ -52,6 +57,10 @@
                 RequestInfo = new ApiRequestInfo
                 {
                     RequestUri = requestUri
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = 1
                 }
             };
 
@@ -62,17 +71,21 @@
             context.ResponseInfo.ResponseObject.Should().BeNull();
         }
 
-        [Theory]
-        [InlineData(2083)]
-        [InlineData(1)]
-        public async void ReturnsTrueWhenRequestUriDoesntExceedMaxLength(int length)
+        [Fact]
+        public async void ReturnsTrueWhenRequestUriDoesntExceedMaxLength()
         {
+            var url = "http://deepsleep.io/test/uri";
+
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
                 RequestInfo = new ApiRequestInfo
                 {
-                    RequestUri = new string('a', length)
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = url.Length
                 }
             };
 
@@ -83,16 +96,122 @@
             context.ResponseInfo.ResponseObject.Should().BeNull();
         }
 
-        [Theory]
-        [InlineData(2084)]
-        public async void ReturnsFalseWhenRequestUriExceedsMaxLength(int length)
+        [Fact]
+        public async void ReturnsTrueWhenRequestUriMaxLengthNull()
         {
+            var url = "http://deepsleep.io/test/uri";
+
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
                 RequestInfo = new ApiRequestInfo
                 {
-                    RequestUri = new string('a', length)
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = null
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+        }
+
+        [Fact]
+        public async void ReturnsTrueWhenRequestUriMaxLengthNegative()
+        {
+            var url = "http://deepsleep.io/test/uri";
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = -1
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+        }
+
+
+        [Fact]
+        public async void ReturnsTrueWhenRequestUriMaxLengthZero()
+        {
+            var url = "http://deepsleep.io/test/uri";
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = 0
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+        }
+
+        [Fact]
+        public async void ReturnsTrueWhenRequestConfigIsNull()
+        {
+            var url = "http://deepsleep.io/test/uri";
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = 0
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestUriValidation().ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+        }
+
+        [Fact]
+        public async void ReturnsFalseWhenRequestUriExceedsMaxLength()
+        {
+            var url = "http://deepsleep.io/test/uri";
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestInfo = new ApiRequestInfo
+                {
+                    RequestUri = url
+                },
+                RequestConfig = new DefaultApiRequestConfiguration
+                {
+                    MaxRequestUriLength = url.Length - 1
                 }
             };
 

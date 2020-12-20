@@ -8,20 +8,25 @@
     /// </summary>
     public interface IFormatStreamReaderWriterFactory
     {
-        /// <summary>Gets the types.</summary>
+        /// <summary>Gets the writeable types.</summary>
+        /// <param name="overridingFormatters">The overriding formatters.</param>
         /// <returns></returns>
-        IEnumerable<string> GetTypes();
+        IEnumerable<string> GetWriteableTypes(IList<IFormatStreamReaderWriter> overridingFormatters);
 
         /// <summary>Gets the acceptable formatter.</summary>
-        /// <param name="mediaHeader">The media header.</param>
+        /// <param name="acceptHeader">The accept header.</param>
         /// <param name="formatterType">Type of the formatter.</param>
+        /// <param name="writeableFormatters">The overriding formatters.</param>
+        /// <param name="writeableMediaTypes">The writeable media types.</param>
         /// <returns></returns>
-        Task<IFormatStreamReaderWriter> GetAcceptableFormatter(MediaHeaderValueWithQualityString mediaHeader, out string formatterType);
+        Task<IFormatStreamReaderWriter> GetAcceptableFormatter(AcceptHeader acceptHeader, out string formatterType, IList<IFormatStreamReaderWriter> writeableFormatters = null, IList<string> writeableMediaTypes = null);
 
-        /// <summary>Gets the media type formatter.</summary>
-        /// <param name="mediaHeader">The media header.</param>
+        /// <summary>Gets the content type formatter.</summary>
+        /// <param name="contentTypeHeader">The content type header.</param>
         /// <param name="formatterType">Type of the formatter.</param>
+        /// <param name="readableFormatters">The overriding formatters.</param>
+        /// <param name="readableMediaTypes">The readable media types.</param>
         /// <returns></returns>
-        Task<IFormatStreamReaderWriter> GetMediaTypeFormatter(MediaHeaderValueWithParameters mediaHeader, out string formatterType);
+        Task<IFormatStreamReaderWriter> GetContentTypeFormatter(ContentTypeHeader contentTypeHeader, out string formatterType, IList<IFormatStreamReaderWriter> readableFormatters = null, IList<string> readableMediaTypes = null);
     }
 }

@@ -16,7 +16,7 @@
 
 
         public MockHttpRequest(HttpContext context)
-            : base(context) 
+            : base(context)
         {
             this.headers = new HeaderDictionary();
             this.cookies = new RequestCookieCollection();
@@ -102,7 +102,7 @@
 
                 if (inHeaders && !inBody)
                 {
-                    if(string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                     {
                         inHeaders = false;
                         inBody = true;

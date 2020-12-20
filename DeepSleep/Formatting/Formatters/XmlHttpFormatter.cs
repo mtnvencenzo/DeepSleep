@@ -1,11 +1,11 @@
 ﻿namespace DeepSleep.Formatting.Formatters
 {
     using System;
-    using System.Threading.Tasks;
-    using System.IO;
-    using System.Xml.Serialization;
-    using System.Xml;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Threading.Tasks;
+    using System.Xml;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// 
@@ -47,23 +47,21 @@
             return Task.FromResult(obj);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
         public virtual async Task<long> WriteType(Stream stream, object obj, Action<long> preWriteCallback = null)
         {
             return await WriteType(stream, obj, new FormatterOptions(), preWriteCallback).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="options"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
         public virtual async Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null)
         {
@@ -115,14 +113,12 @@
         /// </summary>
         public virtual bool SupportsWrite => true;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedContentTypes => new string[] { "text/xml", "application/xml" };
+        /// <summary>Gets the readable media types.</summary>
+        /// <value>The readable media types.</value>
+        public virtual IList<string> ReadableMediaTypes => new[] { "text/xml", "application/xml" };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual IList<string> SuuportedCharsets => new string[] { "utf-32, utf-16, utf-8" };
+        /// <summary>Gets or sets the writeable media types.</summary>
+        /// <value>The writeable media types.</value>
+        public virtual IList<string> WriteableMediaTypes => new[] { "text/xml", "application/xml" };
     }
 }

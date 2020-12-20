@@ -84,7 +84,7 @@
                 // this gets updated when the response date is added to the headers.  THe value will
                 // ultimately be the response date - 1 year.  Needs to be here though because the header is checked
                 // for prior to updating it.
-                context.ResponseInfo.AddHeader("Expires", DateTime.UtcNow.AddYears(-1).ToString("r")); 
+                context.ResponseInfo.AddHeader("Expires", DateTime.UtcNow.AddYears(-1).ToString("r"));
             }
 
             return Task.FromResult(true);

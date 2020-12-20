@@ -12,44 +12,38 @@
     [DebuggerDisplay("{ToString()}")]
     public class LanguageValueWithQuality
     {
-        #region Constructors & Initialization
+        private readonly string comparisonValue;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LanguageValueWithQuality"/> class.
-        /// </summary>
-        public LanguageValueWithQuality()
+        /// <summary>Initializes a new instance of the <see cref="LanguageValueWithQuality"/> class.</summary>
+        /// <param name="code">The code.</param>
+        /// <param name="quality">The quality.</param>
+        /// <param name="parameters">The parameters.</param>
+        public LanguageValueWithQuality(string code, float quality, List<string> parameters = null)
         {
-            Parameters = new List<string>();
-            Quality = 1.000f;
+            this.Code = code;
+            Parameters = parameters ?? new List<string>();
+
+            if (quality <= 0)
+                this.Quality = 0f;
+            else if (quality >= 1)
+                this.Quality = 1f;
+            else
+                this.Quality = quality;
+
+            this.comparisonValue = $"{Code}; q={QualityString()}{ParameterString()}";
         }
-
-        private float _qual;
-
-        #endregion
 
         /// <summary>Gets or sets the code.</summary>
         /// <value>The code.</value>
-        public string Code { get; set; }
+        public string Code { get; private set; }
 
         /// <summary>Gets or sets the quality.</summary>
         /// <value>The quality.</value>
-        public float Quality
-        {
-            get => _qual;
-            set
-            {
-                if (value <= 0)
-                    _qual = 0f;
-                if (value >= 1)
-                    _qual = 1f;
-
-                _qual = value;
-            }
-        }
+        public float Quality { get; private set; }
 
         /// <summary>Gets or sets the parameters.</summary>
         /// <value>The parameters.</value>
-        public List<string> Parameters { get; internal set; }
+        public List<string> Parameters { get; private set; }
 
         /// <summary>Qualities the string.</summary>
         /// <returns></returns>
@@ -61,7 +55,7 @@
             if (Quality == 1)
                 return "1";
 
-            return _qual.ToString(".###", CultureInfo.InvariantCulture).TrimEnd(new char[] { '0' });
+            return Quality.ToString(".###", CultureInfo.InvariantCulture).TrimEnd(new char[] { '0' });
         }
 
         /// <summary>Parameters the string.</summary>
@@ -75,7 +69,10 @@
 
             foreach (var p in Parameters)
             {
-                parameters += $"; {p}";
+                if (p.Trim().ToLowerInvariant().StartsWith("q=") == false)
+                {
+                    parameters += $"; {p}";
+                }
             }
 
             return parameters;
@@ -87,7 +84,7 @@
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return $"{Code}{ParameterString()}; q={QualityString()}";
+            return this.comparisonValue;
         }
     }
 
@@ -99,7 +96,7 @@
         /// <summary>Gets the header with quality values.</summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static IEnumerable<LanguageValueWithQuality> GetLanguageHeaderWithQualityValues(this string value)
+        public static IList<LanguageValueWithQuality> GetLanguageHeaderWithQualityValues(this string value)
         {
             var values = new List<LanguageValueWithQuality>();
 
@@ -115,31 +112,38 @@
 
                 if (parts.Length == 1)
                 {
-                    values.Add(new LanguageValueWithQuality
-                    {
-                        Code = parts[0].Trim(),
-                        Quality = 1.000f
-                    });
+                    values.Add(new LanguageValueWithQuality(parts[0].Trim(), 1.000f));
                 }
                 else
                 {
                     float quality = 1.000f;
-                    var qualityPart = parts.FirstOrDefault(p => p.Trim().ToLower().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase));
+                    var qualityPart = parts.FirstOrDefault(p => p?.Trim().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) ?? false);
                     if (qualityPart != null)
                     {
                         float.TryParse(
-                            qualityPart.Trim().Substring(2).Trim(), 
-                            NumberStyles.Any, 
-                            CultureInfo.InvariantCulture, 
+                            qualityPart.Trim().Substring(2).Trim(),
+                            NumberStyles.Any,
+                            CultureInfo.InvariantCulture,
                             out quality);
                     }
 
-                    values.Add(new LanguageValueWithQuality
-                    {
-                        Code = parts[0].Trim(),
-                        Quality = quality,
-                        Parameters = parts.ToList().FindAll(p => !p.Trim().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) && p != parts[0])
-                    });
+                    if (quality < 0)
+                        quality = 0;
+                    if (quality > 1)
+                        quality = 1;
+
+                    var codeParts = parts[0]
+                        .Trim()
+                        .Split(new string[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+
+                    var code = codeParts.Length == 1
+                        ? codeParts[0].ToLowerInvariant()
+                        : $"{codeParts[0].Trim().ToLowerInvariant()}-{codeParts[1].Trim().ToUpperInvariant()}";
+
+                    values.Add(new LanguageValueWithQuality(
+                        code: code,
+                        quality: quality,
+                        parameters: parts.ToList().FindAll(p => !(p?.Trim().StartsWith("q=", StringComparison.InvariantCultureIgnoreCase) ?? false) && p != parts[0])));
                 }
             }
 
@@ -149,7 +153,7 @@
         /// <summary>Sorts the language quality precedence.</summary>
         /// <param name="values">The values.</param>
         /// <returns></returns>
-        public static IEnumerable<LanguageValueWithQuality> SortLanguageQualityPrecedence(this IEnumerable<LanguageValueWithQuality> values)
+        public static IList<LanguageValueWithQuality> SortLanguageQualityPrecedence(this IList<LanguageValueWithQuality> values)
         {
             if (values.Count() <= 1)
                 return values;

@@ -2,7 +2,6 @@
 {
     using DeepSleep.Pipeline;
     using FluentAssertions;
-    using Moq;
     using System.Collections.Generic;
     using Xunit;
 

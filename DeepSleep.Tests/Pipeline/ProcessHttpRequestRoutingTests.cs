@@ -1,11 +1,16 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Formatting;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.Mocks;
     using FluentAssertions;
+    using Moq;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using Xunit;
 
     /// <summary>
@@ -428,6 +433,383 @@
         }
 
         [Theory]
+        [InlineData(true, null, null)]
+        [InlineData(false, false, null)]
+        [InlineData(false, false, false)]
+        [InlineData(false, null, false)]
+        [InlineData(false, true, false)]
+        [InlineData(true, false, true)]
+        public async void request_config___includeRequestIdHeaderInResponse_returns_expected(bool expected, bool? def, bool? endpoint)
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                IncludeRequestIdHeaderInResponse = def
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                IncludeRequestIdHeaderInResponse = endpoint
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            context.RequestConfig.IncludeRequestIdHeaderInResponse.Should().Be(expected);
+        }
+
+
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("application/json", "application/json", null)]
+        [InlineData("application/json", "application/json", "application/json")]
+        [InlineData("application/json", null, "application/json")]
+        [InlineData("application/json", "text/json", "application/json")]
+        [InlineData("text/json", "application/json", "text/json")]
+        public async void request_config___readWriteConfiguration_acceptheaderoverride_returns_expected(string expected, string def, string endpoint)
+        {
+            AcceptHeader expectedHeader = expected != null
+                ? new AcceptHeader(expected)
+                : null;
+
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    AcceptHeaderOverride = def != null
+                        ? new AcceptHeader(def)
+                        : null
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    AcceptHeaderOverride = endpoint != null
+                        ? new AcceptHeader(endpoint)
+                        : null
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(expectedHeader);
+        }
+
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("application/json,text/json", "application/json,text/json", null)]
+        [InlineData("application/json,text/json", "application/xml", "application/json,text/json")]
+        [InlineData("application/json,text/json,text/plain", null, "application/json,text/json,text/plain")]
+        [InlineData("application/json", "text/json", "application/json")]
+        [InlineData("text/json", "application/json", "text/json")]
+        public async void request_config___readWriteConfiguration_readblemediatypes_returns_expected(string expected, string def, string endpoint)
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    ReadableMediaTypes = def != null
+                        ? def.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        : null
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    ReadableMediaTypes = endpoint != null
+                        ? endpoint.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        : null
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            var requestTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
+                ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                : null;
+
+            requestTypes.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("application/json,text/json", "application/json,text/json", null)]
+        [InlineData("application/json,text/json", "application/xml", "application/json,text/json")]
+        [InlineData("application/json,text/json,text/plain", null, "application/json,text/json,text/plain")]
+        [InlineData("application/json", "text/json", "application/json")]
+        [InlineData("text/json", "application/json", "text/json")]
+        public async void request_config___readWriteConfiguration_writeablemediatypes_returns_expected(string expected, string def, string endpoint)
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    WriteableMediaTypes = def != null
+                        ? def.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        : null
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    WriteableMediaTypes = endpoint != null
+                        ? endpoint.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                        : null
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            var requestTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
+                ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                : null;
+
+            requestTypes.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData(true, null, true)]
+        [InlineData(true, true, null)]
+        [InlineData(false, true, false)]
+        public async void request_config___readWriteConfiguration_readerresolver_returns_expected(bool? expected, bool? def, bool? endpoint)
+        {
+            var defaultMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            defaultMockFormatter.Setup(f => f.SupportsRead).Returns(def ?? false);
+            defaultMockFormatter.Setup(f => f.SupportsWrite).Returns(def ?? false);
+            defaultMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(def ?? false);
+
+            var endpointMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            endpointMockFormatter.Setup(f => f.SupportsRead).Returns(endpoint ?? false);
+            endpointMockFormatter.Setup(f => f.SupportsWrite).Returns(endpoint ?? false);
+            endpointMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(endpoint ?? false);
+
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+            };
+
+            if (def.HasValue)
+            {
+                defaultConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new FormatterReadOverrides(new[] { defaultMockFormatter.Object }));
+            }
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+            };
+
+            if (endpoint.HasValue)
+            {
+                endpointConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new FormatterReadOverrides(new[] { endpointMockFormatter.Object }));
+            }
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            if (!expected.HasValue)
+            {
+                context.RequestConfig.ReadWriteConfiguration.ReaderResolver.Should().BeNull();
+            }
+            else
+            {
+                context.RequestConfig.ReadWriteConfiguration.ReaderResolver.Should().NotBeNull();
+                var overrides = await context.RequestConfig.ReadWriteConfiguration.ReaderResolver(null);
+                overrides.Should().NotBeNull();
+                overrides.Formatters.Should().NotBeNull();
+                overrides.Formatters.Should().HaveCount(1);
+                overrides.Formatters[0].SupportsRead.Should().Be(expected.Value);
+                overrides.Formatters[0].SupportsWrite.Should().Be(expected.Value);
+                overrides.Formatters[0].SupportsPrettyPrint.Should().Be(expected.Value);
+            }
+        }
+
+        [Theory]
+        [InlineData(null, null, null)]
+        [InlineData(true, null, true)]
+        [InlineData(true, true, null)]
+        [InlineData(false, true, false)]
+        public async void request_config___readWriteConfiguration_writerresolver_returns_expected(bool? expected, bool? def, bool? endpoint)
+        {
+            var defaultMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            defaultMockFormatter.Setup(f => f.SupportsRead).Returns(def ?? false);
+            defaultMockFormatter.Setup(f => f.SupportsWrite).Returns(def ?? false);
+            defaultMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(def ?? false);
+
+            var endpointMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            endpointMockFormatter.Setup(f => f.SupportsRead).Returns(endpoint ?? false);
+            endpointMockFormatter.Setup(f => f.SupportsWrite).Returns(endpoint ?? false);
+            endpointMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(endpoint ?? false);
+
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+            };
+
+            if (def.HasValue)
+            {
+                defaultConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new FormatterWriteOverrides(new[] { defaultMockFormatter.Object }));
+            }
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+            };
+
+            if (endpoint.HasValue)
+            {
+                endpointConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new FormatterWriteOverrides(new[] { endpointMockFormatter.Object }));
+            }
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+
+            if (!expected.HasValue)
+            {
+                context.RequestConfig.ReadWriteConfiguration.WriterResolver.Should().BeNull();
+            }
+            else
+            {
+                context.RequestConfig.ReadWriteConfiguration.WriterResolver.Should().NotBeNull();
+                var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(null);
+                overrides.Should().NotBeNull();
+                overrides.Formatters.Should().NotBeNull();
+                overrides.Formatters.Should().HaveCount(1);
+                overrides.Formatters[0].SupportsRead.Should().Be(expected.Value);
+                overrides.Formatters[0].SupportsWrite.Should().Be(expected.Value);
+                overrides.Formatters[0].SupportsPrettyPrint.Should().Be(expected.Value);
+            }
+        }
+
+        [Theory]
         [InlineData(null, null, null)]
         [InlineData("en-US", "en-US", null)]
         [InlineData("en-US", "en-GB", "en-US")]
@@ -471,12 +853,14 @@
         }
 
         [Theory]
-        [InlineData(0, null, null)]
+        [InlineData(null, null, null)]
         [InlineData(4, 4, null)]
         [InlineData(5, 4, 5)]
         [InlineData(6, null, 6)]
-        public async void request_config___maxrequestlength_returns_expected(int expected, int? def, int? endpoint)
+        public async void request_config___maxrequestlength_returns_expected(long? expected, long? def, long? endpoint)
         {
+            var hasSet = false;
+
             var defaultConfig = new DefaultApiRequestConfiguration
             {
                 MaxRequestLength = def
@@ -494,7 +878,8 @@
             {
                 RequestAborted = new CancellationToken(false),
                 RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                RequestConfig = null,
+                ConfigureMaxRequestLength = (length) => { hasSet = true; }
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
@@ -511,6 +896,91 @@
             AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
 
             context.RequestConfig.MaxRequestLength.Should().Be(expected);
+
+            if (expected != null)
+            {
+                hasSet.Should().Be(true);
+            }
+            else
+            {
+                hasSet.Should().Be(false);
+            }
+        }
+
+        [Fact]
+        public async void request_config___maxrequestlength_does_not_fail_with_null_maxlengthsetter()
+        {
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                MaxRequestLength = 10
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null,
+                ConfigureMaxRequestLength = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, null);
+
+            context.RequestConfig.MaxRequestLength.Should().Be(10);
+        }
+
+        [Fact]
+        public async void request_config___maxrequestlength_does_not_fail_with_maxlengthsetter_exception()
+        {
+            var hasSet = false;
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                MaxRequestLength = 10
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                RequestInfo = GetRequestInfo(),
+                RequestConfig = null,
+                ConfigureMaxRequestLength = (length) => { 
+                    hasSet = true;
+                    throw new Exception("should not have been called"); 
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.ResponseInfo.Should().NotBeNull();
+            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.RouteInfo.Should().NotBeNull();
+            context.RouteInfo.RoutingItem.Should().NotBeNull();
+            context.RouteInfo.TemplateInfo.Should().NotBeNull();
+            context.RequestConfig.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.RequestConfig, endpointConfig, null);
+
+            context.RequestConfig.MaxRequestLength.Should().Be(10);
+            hasSet.Should().Be(true);
         }
 
         [Theory]
@@ -556,48 +1026,6 @@
             context.RequestConfig.MaxRequestUriLength.Should().Be(expected);
         }
 
-        [Theory]
-        [InlineData(0, null, null)]
-        [InlineData(4, 4, null)]
-        [InlineData(5, 4, 5)]
-        [InlineData(6, null, 6)]
-        public async void request_config___minrequestlength_returns_expected(int expected, int? def, int? endpoint)
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                MinRequestLength = def
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                MinRequestLength = endpoint
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
-
-            context.RequestConfig.MinRequestLength.Should().Be(expected);
-        }
 
         [Theory]
         [InlineData(true, null, null)]
@@ -1897,8 +2325,58 @@
             request.FallBackLanguage.Should().Be(endpoint?.FallBackLanguage ?? def?.FallBackLanguage ?? system.FallBackLanguage);
             request.MaxRequestLength.Should().Be(endpoint?.MaxRequestLength ?? def?.MaxRequestLength ?? system.MaxRequestLength);
             request.MaxRequestUriLength.Should().Be(endpoint?.MaxRequestUriLength ?? def?.MaxRequestUriLength ?? system.MaxRequestUriLength);
-            request.MinRequestLength.Should().Be(endpoint?.MinRequestLength ?? def?.MinRequestLength ?? system.MinRequestLength);
             request.RequireContentLengthOnRequestBodyRequests.Should().Be(endpoint?.RequireContentLengthOnRequestBodyRequests ?? def?.RequireContentLengthOnRequestBodyRequests ?? system.RequireContentLengthOnRequestBodyRequests);
+            request.IncludeRequestIdHeaderInResponse.Should().Be(endpoint?.IncludeRequestIdHeaderInResponse ?? def?.IncludeRequestIdHeaderInResponse ?? system.IncludeRequestIdHeaderInResponse);
+
+            // ------------------------
+            // Read Write Configuration
+            // ------------------------
+            if (endpoint?.ReadWriteConfiguration?.ReaderResolver != null)
+            {
+                request.ReadWriteConfiguration.ReaderResolver.Should().Be(endpoint.ReadWriteConfiguration.ReaderResolver);
+            }
+            else if (def?.ReadWriteConfiguration?.ReaderResolver != null)
+            {
+                request.ReadWriteConfiguration.ReaderResolver.Should().Be(def.ReadWriteConfiguration.ReaderResolver);
+            }
+            else
+            {
+                request.ReadWriteConfiguration.ReaderResolver.Should().BeNull();
+            }
+
+
+            if (endpoint?.ReadWriteConfiguration?.WriterResolver != null)
+            {
+                request.ReadWriteConfiguration.WriterResolver.Should().Be(endpoint.ReadWriteConfiguration.WriterResolver);
+            }
+            else if (def?.ReadWriteConfiguration?.WriterResolver != null)
+            {
+                request.ReadWriteConfiguration.WriterResolver.Should().Be(def.ReadWriteConfiguration.WriterResolver);
+            }
+            else
+            {
+                request.ReadWriteConfiguration.WriterResolver.Should().BeNull();
+            }
+
+            request.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(endpoint?.ReadWriteConfiguration?.AcceptHeaderOverride 
+                ?? def?.ReadWriteConfiguration?.AcceptHeaderOverride 
+                ?? system.ReadWriteConfiguration?.AcceptHeaderOverride);
+
+            request.ReadWriteConfiguration.ReadableMediaTypes?.Count.Should().Be(endpoint?.ReadWriteConfiguration?.ReadableMediaTypes?.Count
+                ?? def?.ReadWriteConfiguration?.ReadableMediaTypes?.Count
+                ?? system.ReadWriteConfiguration?.ReadableMediaTypes?.Count);
+            for (int i = 0; i < (request.ReadWriteConfiguration?.ReadableMediaTypes ?? new List<string>()).Count; i++)
+            {
+                request.ReadWriteConfiguration.ReadableMediaTypes[i].Should().Be(endpoint?.ReadWriteConfiguration?.ReadableMediaTypes?[i] ?? def?.ReadWriteConfiguration?.ReadableMediaTypes?[i] ?? system.ReadWriteConfiguration.ReadableMediaTypes[i]);
+            }
+
+            request.ReadWriteConfiguration.WriteableMediaTypes?.Count.Should().Be(endpoint?.ReadWriteConfiguration?.WriteableMediaTypes?.Count
+                ?? def?.ReadWriteConfiguration?.WriteableMediaTypes?.Count
+                ?? system.ReadWriteConfiguration?.WriteableMediaTypes?.Count);
+            for (int i = 0; i < (request.ReadWriteConfiguration?.WriteableMediaTypes ?? new List<string>()).Count; i++)
+            {
+                request.ReadWriteConfiguration.WriteableMediaTypes[i].Should().Be(endpoint?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? def?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? system.ReadWriteConfiguration.WriteableMediaTypes[i]);
+            }
 
             // -------------------
             // Authorization Config

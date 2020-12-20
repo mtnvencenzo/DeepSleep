@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Tests.TestArtifacts
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class StandardController

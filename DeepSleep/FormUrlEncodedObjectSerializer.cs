@@ -44,7 +44,7 @@
                 return default;
             }
 
-            return (T) obj;
+            return (T)obj;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@
                     : "{}";
             }
 
-  
+
             var obj = JsonSerializer.Deserialize(json, objType, JsonReaderSerializationOptions.ReaderOptions);
             return obj;
         }
@@ -275,7 +275,7 @@
                             arrayPropertyName,
                             primitiveElements);
                     }
-                    else if(elements.Any())
+                    else if (elements.Any())
                     {
                         writeStart();
 

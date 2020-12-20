@@ -3,13 +3,16 @@
     using Api.DeepSleep.Controllers.Binding;
     using Api.DeepSleep.Controllers.Exceptions;
     using Api.DeepSleep.Controllers.Formatters;
+    using Api.DeepSleep.Controllers.Pipeline;
     using global::DeepSleep;
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
+    using global::DeepSleep.Formatting;
     using global::DeepSleep.Validation;
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public static class ServiceStartup
     {
@@ -18,6 +21,8 @@
             services.AddTransient<SimpleUrlBindingController>();
             services.AddTransient<MultipartController>();
             services.AddTransient<ExceptionController>();
+            services.AddTransient<ReadWriteConfigurationController>();
+            services.AddScoped<RequestIdController>();
             services.AddTransient<CommonErrorResponseProvider>();
             services.AddTransient<NotImplementedExceptionThrowValidator>(); // Only one of these to check both injection and no-injection resolution
             services.AddScoped<IAuthenticationProvider, Ex500AuthenticationProvider>();
@@ -31,6 +36,7 @@
             services.AddScoped<IAuthorizationProvider, Ex502AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex503AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex504AuthorizationProvider>();
+            services.AddScoped<CustomXmlFormatStreamReaderWriter>();
         }
 
         public static IApiRoutingTable InitialzeRoutes()
@@ -269,6 +275,277 @@
                     AuthorizationConfig = new ResourceAuthorizationConfiguration
                     {
                         Policy = "EX-500"
+                    }
+                });
+
+            table.AddRoute(
+                template: "binding/body/max/request/length",
+                httpMethod: "POST",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PostForMaxRequestLength),
+                config: new DefaultApiRequestConfiguration
+                {
+                    MaxRequestLength = 5
+                });
+
+            table.AddRoute(
+                template: "binding/body/max/request/length",
+                httpMethod: "PUT",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PutForMaxRequestLength),
+                config: new DefaultApiRequestConfiguration
+                {
+                    MaxRequestLength = 5
+                });
+
+            table.AddRoute(
+                template: "binding/body/max/request/length",
+                httpMethod: "PATCH",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PatchForMaxRequestLength),
+                config: new DefaultApiRequestConfiguration
+                {
+                    MaxRequestLength = 5
+                });
+
+
+            table.AddRoute(
+                template: "binding/body/bad/request/format",
+                httpMethod: "POST",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PostForBadRequestFormat));
+
+            table.AddRoute(
+                template: "binding/body/bad/request/format",
+                httpMethod: "PUT",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PutForBadRequestFormat));
+
+            table.AddRoute(
+                template: "binding/body/bad/request/format",
+                httpMethod: "PATCH",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.PatchForBadRequestFormat));
+
+            table.AddRoute(
+                template: "binding/simple/post",
+                httpMethod: "POST",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.SimplePost));
+
+            table.AddRoute(
+                template: "binding/simple/put",
+                httpMethod: "PUT",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.SimplePut));
+
+            table.AddRoute(
+                template: "binding/simple/patch",
+                httpMethod: "PATCH",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.SimplePatch));
+
+            table.AddRoute(
+                template: "binding/simple/multipart",
+                httpMethod: "POST",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.SimpleMultipart));
+
+            table.AddRoute(
+                template: "formatters/accept",
+                httpMethod: "GET",
+                controller: typeof(AcceptController),
+                endpoint: nameof(AcceptController.Get));
+
+            table.AddRoute(
+                template: "pipeline/request/id",
+                httpMethod: "GET",
+                controller: typeof(RequestIdController),
+                endpoint: nameof(RequestIdController.Get));
+
+            table.AddRoute(
+                template: "pipeline/request/id/exception",
+                httpMethod: "GET",
+                controller: typeof(RequestIdController),
+                endpoint: nameof(RequestIdController.GetException));
+
+            table.AddRoute(
+                template: "pipeline/request/id/nocontent",
+                httpMethod: "GET",
+                controller: typeof(RequestIdController),
+                endpoint: nameof(RequestIdController.GetNoContent));
+
+            table.AddRoute(
+                template: "pipeline/request/id/disabled",
+                httpMethod: "GET",
+                controller: typeof(RequestIdController),
+                endpoint: nameof(RequestIdController.GetDisabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    IncludeRequestIdHeaderInResponse = false
+                });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/acceptheaderoverride/xml",
+                httpMethod: "GET",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.GetWithAcceptOverride),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        AcceptHeaderOverride = "text/xml"
+                    }
+                });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/acceptheaderoverride/406",
+                httpMethod: "GET",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.GetWith406AcceptOverride),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        AcceptHeaderOverride = "image/jpg; q=1, text/xml; q=0, application/json; q=0"
+                    }
+                });
+
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/writeabletypes/text-xml",
+                httpMethod: "GET",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableTypesTextXml),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        WriteableMediaTypes = new[] { "text/xml", "other/xml" }
+                    }
+                });
+
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/readabletypes/text-xml",
+                httpMethod: "POST",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        ReadableMediaTypes = new[] { "text/xml", "other/xml" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/writeresolver/text-xml",
+                httpMethod: "GET",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        WriterResolver = (args) => {
+                            var formatters = new List<IFormatStreamReaderWriter>();
+                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+
+                            if (formatter != null)
+                            {
+                                formatters.Add(formatter);
+                            }
+
+                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                        }
+                    }
+                });
+
+            table.AddRoute(
+                 template: "pipeline/readwrite/configuration/writeresolver/none",
+                 httpMethod: "GET",
+                 controller: typeof(ReadWriteConfigurationController),
+                 endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
+                 config: new DefaultApiRequestConfiguration
+                 {
+                     ReadWriteConfiguration = new ApiReadWriteConfiguration
+                     {
+                         WriterResolver = (args) => {
+                             var formatters = new List<IFormatStreamReaderWriter>();
+                             return Task.FromResult(new FormatterWriteOverrides(formatters));
+                         }
+                     }
+                 });
+
+            table.AddRoute(
+                 template: "pipeline/readwrite/configuration/writeresolver/writeabletypes",
+                 httpMethod: "GET",
+                 controller: typeof(ReadWriteConfigurationController),
+                 endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
+                 config: new DefaultApiRequestConfiguration
+                 {
+                     ReadWriteConfiguration = new ApiReadWriteConfiguration
+                     {
+                         WriterResolver = (args) => {
+                             var formatters = new List<IFormatStreamReaderWriter>();
+                             var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+
+                             if (formatter != null)
+                             {
+                                 formatters.Add(formatter);
+                             }
+
+                             return Task.FromResult(new FormatterWriteOverrides(formatters));
+                         },
+                         WriteableMediaTypes = new[] { "other/xml", "text/xml" }
+                     }
+                 });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/readresolver/xml",
+                httpMethod: "POST",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        ReaderResolver = (args) => {
+                            var formatters = new List<IFormatStreamReaderWriter>();
+                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+
+                            if (formatter != null)
+                            {
+                                formatters.Add(formatter);
+                            }
+
+                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                        },
+                    }
+                });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/readresolver/readabletypes",
+                httpMethod: "POST",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        ReaderResolver = (args) => {
+                            var formatters = new List<IFormatStreamReaderWriter>();
+                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+
+                            if (formatter != null)
+                            {
+                                formatters.Add(formatter);
+                            }
+
+                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                        },
+                        ReadableMediaTypes = new[] { "other/xml" }
                     }
                 });
 

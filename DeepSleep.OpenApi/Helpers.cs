@@ -161,7 +161,7 @@
             {
                 return "int32";
             }
-            
+
             if (openApiType == "integer" && rootType == typeof(long))
             {
                 return "int64";

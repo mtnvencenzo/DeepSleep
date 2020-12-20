@@ -58,40 +58,58 @@
                 {
                     var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
                         ? context.RequestInfo.Accept
-                        : new MediaHeaderValueWithQualityString("*/*");
+                        : AcceptHeader.All();
 
-                    var formatter = await formatterFactory.GetAcceptableFormatter(accept, out var formatterType).ConfigureAwait(false);
 
-                    if (formatter != null)
+                    var isConditionalRequestMatch = ApiCondtionalMatchType.None;
+
+                    if (string.Equals(context.RequestInfo.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.RequestInfo.IsHeadRequest() == false)
                     {
-                        var isConditionalRequestMatch = ApiCondtionalMatchType.None;
+                        isConditionalRequestMatch = context.IsConditionalRequestMatch(context.ResponseInfo);
+                    }
 
-                        if (string.Equals(context.RequestInfo.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.RequestInfo.IsHeadRequest() == false)
+                    if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
+                    {
+                        IFormatStreamOptions options = new FormatterOptions
                         {
-                            isConditionalRequestMatch = context.IsConditionalRequestMatch(context.ResponseInfo);
+                            PrettyPrint = context.RequestInfo.PrettyPrint
+                        };
+
+                        var formatter = await formatterFactory.GetAcceptableFormatter(
+                            acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept, 
+                            writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes, 
+                            formatterType: out var formatterType).ConfigureAwait(false);
+
+                        if (context.RequestConfig.ReadWriteConfiguration?.WriterResolver != null)
+                        {
+                            var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, options)).ConfigureAwait(false);
+
+                            if (overrides?.Formatters != null)
+                            {
+                                formatter = await formatterFactory.GetAcceptableFormatter(
+                                    acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                    writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                                    writeableFormatters: overrides.Formatters,
+                                    formatterType: out formatterType).ConfigureAwait(false);
+                            }
                         }
 
-                        if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
+                        if (formatter != null)
                         {
-                            var formatterOptions = new FormatterOptions 
-                            { 
-                                PrettyPrint = context.RequestInfo.PrettyPrint
-                            };
-
                             if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
                             {
-                                context.ResponseInfo.AddHeader("X-PrettyPrint", formatterOptions.PrettyPrint.ToString().ToLower());
+                                context.ResponseInfo.AddHeader("X-PrettyPrint", (options?.PrettyPrint ?? false).ToString().ToLower());
                             }
 
                             isWriteableResponse = true;
                             context.ResponseInfo.ResponseWriter = formatter;
-                            context.ResponseInfo.ResponseWriterOptions = formatterOptions;
+                            context.ResponseInfo.ResponseWriterOptions = options;
                             context.ResponseInfo.ContentType = formatterType;
                         }
-                        else
-                        {
-                            context.ResponseInfo.StatusCode = 304;
-                        }
+                    }
+                    else
+                    {
+                        context.ResponseInfo.StatusCode = 304;
                     }
                 }
 

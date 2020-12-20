@@ -50,7 +50,7 @@
         public override IFeatureCollection Features => features;
 
         public override ISession Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        
+
         public override WebSocketManager WebSockets => throw new NotImplementedException();
 
         public override void Abort()

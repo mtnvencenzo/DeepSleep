@@ -8,16 +8,10 @@
     /// </summary>
     public class ApiHeader
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public ApiHeader() { }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
+        /// <summary>Initializes a new instance of the <see cref="ApiHeader"/> class.</summary>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
         public ApiHeader(string name, string value)
         {
             Name = name;

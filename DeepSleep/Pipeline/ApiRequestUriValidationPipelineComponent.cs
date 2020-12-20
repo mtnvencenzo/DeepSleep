@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Resources;
-    using System.Globalization;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -50,11 +48,9 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                int max = 2083;
-
-                if (!string.IsNullOrWhiteSpace(context.RequestInfo?.RequestUri))
+                if(context.RequestConfig?.MaxRequestUriLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo?.RequestUri))
                 {
-                    if (context.RequestInfo.RequestUri.Length > max)
+                    if (context.RequestInfo.RequestUri.Length > context.RequestConfig.MaxRequestUriLength)
                     {
                         context.ResponseInfo.StatusCode = 414;
                         return Task.FromResult(false);

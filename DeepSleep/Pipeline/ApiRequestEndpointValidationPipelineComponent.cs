@@ -66,9 +66,9 @@
                         if (context.RequestInfo.InvocationContext.UriModel != null)
                         {
                             var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(
-                                context.RequestInfo.InvocationContext.UriModel, 
+                                context.RequestInfo.InvocationContext.UriModel,
                                 context).ConfigureAwait(false);
-                            
+
                             if (!objectUriValidationResult)
                             {
                                 context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -84,9 +84,9 @@
                             try
                             {
                                 var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(
-                                    context.RequestInfo.InvocationContext.BodyModel, 
+                                    context.RequestInfo.InvocationContext.BodyModel,
                                     context).ConfigureAwait(false);
-                                
+
                                 if (!objectBodyValidationResult)
                                 {
                                     context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
@@ -108,7 +108,7 @@
                             try
                             {
                                 var methodValidationResult = await validationInvoker.InvokeMethodValidation(
-                                    context.RequestInfo.InvocationContext.ControllerMethod, 
+                                    context.RequestInfo.InvocationContext.ControllerMethod,
                                     context).ConfigureAwait(false);
 
                                 if (!methodValidationResult)

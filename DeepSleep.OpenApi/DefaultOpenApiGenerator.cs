@@ -445,8 +445,8 @@
                     return existingSchema.Value;
                 }
             }
-            
-            
+
+
             var schema = existingSchema.Value;
 
             if (existingSchema.Value == null)
@@ -502,7 +502,7 @@
                 description = rootType.Name,
                 type = openApiType,
                 format = Helpers.GetOpenApiSchemaFormat(openApiType, rootType),
-                nullable = Helpers.IsNullableType(type) ? true : (bool?) null
+                nullable = Helpers.IsNullableType(type) ? true : (bool?)null
             };
         }
 
@@ -689,7 +689,7 @@
                 var properties = uriParameter.ParameterType.GetProperties()
                    .Where(p => p.CanWrite)
                    .ToArray();
- 
+
                 var prop = properties.FirstOrDefault(p => string.Compare($"{{{p.Name}}}", routeVar, true) == 0);
 
                 if (prop != null)

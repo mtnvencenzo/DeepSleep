@@ -2,6 +2,7 @@ namespace Api.DeepSleep.NetCore3_0
 {
     using Api.DeepSleep.Controllers;
     using global::DeepSleep.NetCore;
+    using global::DeepSleep.OpenApi.NetCore;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -49,6 +50,7 @@ namespace Api.DeepSleep.NetCore3_0
 
             services
                 .AddLogging()
+                .UseOpenApiServices()
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
                     RoutingTable = ServiceStartup.InitialzeRoutes(),
@@ -77,6 +79,10 @@ namespace Api.DeepSleep.NetCore3_0
         public void Configure(IApplicationBuilder app)
         {
             app
+                .UseOpenApiEndpoint(
+                    routeTemplate: "openapi/v3/doc",
+                    prefixNamesWithNamespace: false,
+                    includeHeadOperationsForGets: true)
                 .UseApiCoreHttp()
                 .UseForwardedHeaders();
         }

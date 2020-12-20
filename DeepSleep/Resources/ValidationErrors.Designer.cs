@@ -61,15 +61,6 @@ namespace DeepSleep.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 400.000003|Could not deserialize request..
-        /// </summary>
-        internal static string RequestBodyDeserializationError {
-            get {
-                return ResourceManager.GetString("RequestBodyDeserializationError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 400.000004|&apos;{0}&apos; Is in an incorrect format and could not be bound..
         /// </summary>
         internal static string UriBindingError {

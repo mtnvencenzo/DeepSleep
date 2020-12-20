@@ -1,7 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Resources;
-    using System.Globalization;
     using System.Threading.Tasks;
 
     /// <summary>

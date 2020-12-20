@@ -9,22 +9,13 @@
     /// <summary>The API request info.</summary>
     public class ApiRequestInfo
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiRequestInfo"/> class.
-        /// </summary>
-        public ApiRequestInfo()
-        {
-            this.Headers = new List<ApiHeader>();
-            this.Cookies = new Dictionary<string, string>();
-        }
-
         /// <summary>Gets or sets the request accept types.</summary>
         /// <value>The request accept types.</value>
-        public virtual MediaHeaderValueWithQualityString Accept { get; set; }
+        public virtual AcceptHeader Accept { get; set; }
 
         /// <summary>Gets or sets the accept language.</summary>
         /// <value>The accept language.</value>
-        public virtual LanguageHeaderValueWithQualityString AcceptLanguage { get; set; }
+        public virtual AcceptLanguageHeader AcceptLanguage { get; set; }
 
         /// <summary>Gets or sets the accept culture.</summary>
         /// <value>The accept culture.</value>
@@ -32,11 +23,11 @@
 
         /// <summary>Gets or sets the accept charset.</summary>
         /// <value>The accept charset.</value>
-        public virtual CharsetHeaderValueWithQualityString AcceptCharset { get; set; }
+        public virtual AcceptCharsetHeader AcceptCharset { get; set; }
 
         /// <summary>Gets or sets the accept encoding.</summary>
         /// <value>The accept encoding.</value>
-        public virtual MediaHeaderValueWithQualityString AcceptEncoding { get; set; }
+        public virtual AcceptEncodingHeader AcceptEncoding { get; set; }
 
         /// <summary>Gets or sets the authentication info.</summary>
         /// <value>The authentication info.</value>
@@ -52,7 +43,7 @@
 
         /// <summary>Gets or sets the type of the content.</summary>
         /// <value>The type of the content.</value>
-        public virtual MediaHeaderValueWithParameters ContentType { get; set; }
+        public virtual ContentTypeHeader ContentType { get; set; }
 
         /// <summary>Gets or sets the If-Modified-Since conditional request header.</summary>
         /// <value>The value of the If-Modified-Since header..</value>
@@ -72,7 +63,7 @@
 
         /// <summary>Gets or sets the cookies.</summary>
         /// <value>The cookies.</value>
-        public Dictionary<string, string> Cookies { get; set; }
+        public Dictionary<string, string> Cookies { get; set; } = new Dictionary<string, string>();
 
         /// <summary>Gets or sets the length of the content.</summary>
         /// <value>The length of the content.</value>
@@ -81,10 +72,6 @@
         /// <summary>Gets or sets the client specified correlation id for the request.</summary>
         /// <value>The correlation id.</value>
         public virtual string CorrelationId { get; set; }
-
-        /// <summary>Gets or sets a value indicating whether [force download].</summary>
-        /// <value><c>true</c> if [force download]; otherwise, <c>false</c>.</value>
-        public virtual bool ForceDownload { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [pretty print].
@@ -106,7 +93,7 @@
 
         /// <summary>Gets or sets the request identifier.</summary>
         /// <value>The request identifier.</value>
-        public virtual string RequestIdentifier { get; set; }
+        public virtual string RequestIdentifier { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>Gets or sets the request URI.</summary>
         /// <value>The request URI.</value>

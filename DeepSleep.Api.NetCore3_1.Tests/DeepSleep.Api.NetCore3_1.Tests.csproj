@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api.Tests\Api.DeepSleep.NetCore3_1\Api.DeepSleep.NetCore3_1.csproj" />
+    <ProjectReference Include="..\Api.Tests\DeepSleep.Api.NetCore.TestBase\DeepSleep.Api.NetCore.TestBase.csproj" />
     <ProjectReference Include="..\DeepSleep.NetCore\DeepSleep.NetCore.csproj" />
     <ProjectReference Include="..\DeepSleep\DeepSleep.csproj" />
   </ItemGroup>

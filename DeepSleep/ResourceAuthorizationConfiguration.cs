@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep
 {
-    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>

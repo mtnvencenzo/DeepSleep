@@ -11,7 +11,7 @@
     public class ProcessHttpResponseDeprecatedTests
     {
         [Fact]
-        public async void ReturnsTrueForCancelledRequest()
+        public async void pipeline_deprecated___returns_true_for_cancelled_request()
         {
             var context = new ApiRequestContext
             {
@@ -28,7 +28,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndDoesntAddHeaderForNullRouteInfo()
+        public async void pipeline_deprecated___returns_true_and_doesnt_add_header_for_null_routeInfo()
         {
             var context = new ApiRequestContext
             {
@@ -46,7 +46,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndDoesntAddHeaderForNullRequestConfig()
+        public async void pipeline_deprecated___returns_true_and_doesnt_add_header_for_null_requestConfig()
         {
             var context = new ApiRequestContext
             {
@@ -64,7 +64,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndDoesntAddHeaderForNullDeprecatedConfig()
+        public async void pipeline_deprecated___returns_true_and_doesnt_add_header_for_null_deprecatedConfig()
         {
             var context = new ApiRequestContext
             {
@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndDoesntAddHeaderForFalseDeprecatedConfig()
+        public async void pipeline_deprecated___returns_true_and_doesnt_add_header_for_false_deprecatedConfig()
         {
             var context = new ApiRequestContext
             {
@@ -106,7 +106,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndAddsHeaderForTrueDeprecatedConfig()
+        public async void pipeline_deprecated___returns_true_and_adds_header_for_true_deprecatedConfig()
         {
             var context = new ApiRequestContext
             {

@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
@@ -17,7 +18,6 @@
         private IRequestCookieCollection cookies;
         private IFormCollection form;
         private Stream stream;
-
 
         public MockHttpRequest(HttpContext context)
         {
@@ -98,7 +98,7 @@
             var inBody = false;
             var bodyText = string.Empty;
 
-            for(int i=0; i < httpLines.Length; i++)
+            for (int i = 0; i < httpLines.Length; i++)
             {
                 var httpLine = httpLines[i];
                 var line = httpLine.Trim();
@@ -178,19 +178,29 @@
 
             if (!string.IsNullOrWhiteSpace(bodyText))
             {
+                //System.Diagnostics.Debug.Write(bodyText);
+
                 request.Body.Seek(0, SeekOrigin.Begin);
 
                 var writer = new StreamWriter(request.Body);
                 writer.Write(bodyText);
                 writer.Flush();
+
+                var lenth = request.Body.Length;
                 request.Body.Position = 0;
                 request.Body.Seek(0, SeekOrigin.Begin);
 
-                headers.Add(("Content-Length", $"{request.Body.Length}"));
+                if (!headers.Any(h => h.name == "Content-Length"))
+                {
+                    headers.Add(("Content-Length", $"{lenth}"));
+                }
             }
-            else if(method.ToLower() == "post" || method.ToLower() == "put" || method.ToLower() == "patch")
+            else if (method.ToLower() == "post" || method.ToLower() == "put" || method.ToLower() == "patch")
             {
-                headers.Add(("Content-Length", "0"));
+                if (!headers.Any(h => h.name == "Content-Length"))
+                {
+                    headers.Add(("Content-Length", "0"));
+                }
             }
 
             if (headers.Count > 0)

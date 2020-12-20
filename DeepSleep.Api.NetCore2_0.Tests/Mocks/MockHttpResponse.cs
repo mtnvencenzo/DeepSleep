@@ -17,6 +17,7 @@
         private IResponseCookies cookies;
         private IFormCollection form;
         private Stream stream;
+        private IList<IDisposable> disposables;
 
         public MockHttpResponse(HttpContext context)
         {
@@ -25,6 +26,7 @@
             this.form = new FormCollection(new Dictionary<string, StringValues>());
             this.stream = new MemoryStream();
             this.httpContext = context;
+            this.disposables = new List<IDisposable>();
         }
 
         public override IHeaderDictionary Headers => this.headers;
@@ -49,6 +51,19 @@
             {
                 this.stream.Dispose();
             }
+
+            if (this.disposables != null)
+            {
+                foreach (var disposable in this.disposables)
+                {
+                    disposable.Dispose();
+                }
+            }
+        }
+
+        public override void RegisterForDispose(IDisposable disposable)
+        {
+            this.disposables.Add(disposable);
         }
 
         public override void OnCompleted(Func<object, Task> callback, object state)

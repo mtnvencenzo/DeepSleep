@@ -73,6 +73,10 @@
         /// <value>The register for dispose.</value>
         public Action<IDisposable> RegisterForDispose { get; set; }
 
+        /// <summary>Gets or sets the length of the configure maximum request.</summary>
+        /// <value>The length of the configure maximum request.</value>
+        public Action<long> ConfigureMaxRequestLength { get; set; }
+
         /// <summary>Gets the default request configuration.</summary>
         /// <returns></returns>
         public static IApiRequestConfiguration GetDefaultRequestConfiguration()
@@ -114,14 +118,22 @@
                 },
                 AllowRequestBodyWhenNoModelDefined = false,
                 RequireContentLengthOnRequestBodyRequests = true,
-                MaxRequestLength = 0,
+                MaxRequestLength = null,
                 MaxRequestUriLength = 0,
-                MinRequestLength = 0,
                 SupportedLanguages = new List<string>(),
                 SupportedAuthenticationSchemes = new List<string>(),
                 AuthorizationConfig = new ResourceAuthorizationConfiguration
                 {
                     Policy = null
+                },
+                IncludeRequestIdHeaderInResponse = true,
+                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                {
+                    ReadableMediaTypes = null,
+                    WriteableMediaTypes = null,
+                    ReaderResolver = null,
+                    WriterResolver = null,
+                    AcceptHeaderOverride = null
                 }
             };
         }

@@ -12,7 +12,7 @@
         /// <param name="list">The list.</param>
         /// <param name="separator">The separator.</param>
         /// <returns></returns>
-        public static string Concatenate(this System.Collections.IList list, string separator)
+        internal static string Concatenate(this System.Collections.IList list, string separator)
         {
             return list.Concatenate(separator, o => o.ToString());
         }
@@ -22,7 +22,7 @@
         /// <param name="separator">The separator.</param>
         /// <param name="projection">The projection.</param>
         /// <returns></returns>
-        public static string Concatenate(this System.Collections.IList list, string separator, Func<object, string> projection)
+        internal static string Concatenate(this System.Collections.IList list, string separator, Func<object, string> projection)
         {
             if (list == null || list.Count == 0)
                 return string.Empty;
@@ -46,7 +46,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="action"></param>
-        public static void ForEach<T>(this IList<T> items, Action<T> action)
+        internal static void ForEach<T>(this IList<T> items, Action<T> action)
         {
             foreach (var item in items)
             {

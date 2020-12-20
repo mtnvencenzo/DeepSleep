@@ -67,8 +67,17 @@
 
                     if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
-                        context.ResponseInfo.StatusCode = 422;
+                        context.ResponseInfo.StatusCode = 450;
                         return false;
+                    }
+
+                    if (context.RequestConfig?.MaxRequestLength > 0 && context.RequestInfo.ContentLength > 0)
+                    {
+                        if (context.RequestInfo.ContentLength > context.RequestConfig.MaxRequestLength)
+                        {
+                            context.ResponseInfo.StatusCode = 413;
+                            return false;
+                        }
                     }
 
                     if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
@@ -82,9 +91,29 @@
 
                     if (context.RequestInfo.InvocationContext?.BodyModelType != null && context.RequestInfo.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
                     {
-                        IFormatStreamReaderWriter formatter = (formatterFactory != null)
-                            ? await formatterFactory.GetMediaTypeFormatter(context.RequestInfo.ContentType, out var _).ConfigureAwait(false)
-                            : null;
+                        IFormatStreamReaderWriter formatter = null;
+
+                        if (formatterFactory != null)
+                        {
+                            formatter = await formatterFactory.GetContentTypeFormatter(
+                                contentTypeHeader: context.RequestInfo.ContentType,
+                                formatterType: out var _,
+                                readableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
+                        }
+
+                        if (context.RequestConfig.ReadWriteConfiguration?.ReaderResolver != null)
+                        {
+                            var overrides = await context.RequestConfig.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context, formatter)).ConfigureAwait(false);
+
+                            if (overrides?.Formatters != null)
+                            {
+                                formatter = await formatterFactory.GetContentTypeFormatter(
+                                    contentTypeHeader: context.RequestInfo.ContentType,
+                                    formatterType: out var _,
+                                    readableFormatters: overrides.Formatters,
+                                    readableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
+                            }
+                        }
 
                         if (formatter == null)
                         {
@@ -94,14 +123,23 @@
 
                         try
                         {
-                            context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(context.RequestInfo.Body, context.RequestInfo.InvocationContext.BodyModelType)
-                                .ConfigureAwait(false);
+                            context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(
+                                stream: context.RequestInfo.Body, 
+                                objType: context.RequestInfo.InvocationContext.BodyModelType,
+                                options: null).ConfigureAwait(false);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            context.ErrorMessages.Add(ValidationErrors.RequestBodyDeserializationError);
+                            context.AddException(ex);
 
-                            context.ResponseInfo.StatusCode = 400;
+                            if (ex.GetType().Name.Contains("BadHttpRequestException"))
+                            {
+                                context.ResponseInfo.StatusCode = 413;
+                            }
+                            else
+                            {
+                                context.ResponseInfo.StatusCode = 450;
+                            }
 
                             return false;
                         }

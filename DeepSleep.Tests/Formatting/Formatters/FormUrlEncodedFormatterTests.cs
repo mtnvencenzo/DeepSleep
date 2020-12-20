@@ -2,7 +2,6 @@
 {
     using DeepSleep.Formatting.Formatters;
     using FluentAssertions;
-    using Moq;
     using System;
     using System.Collections.Generic;
     using System.Globalization;

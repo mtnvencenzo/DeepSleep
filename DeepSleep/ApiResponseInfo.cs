@@ -33,7 +33,7 @@
 
         /// <summary>Gets or sets the type of the content.</summary>
         /// <value>The type of the content.</value>
-        public virtual MediaHeaderValueWithQualityString ContentType { get; set; }
+        public virtual ContentTypeHeader ContentType { get; set; }
 
         /// <summary>Gets or sets the length of the content.</summary>
         /// <value>The length of the content.</value>
@@ -103,7 +103,7 @@
         /// <returns></returns>
         public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value)
         {
-            response.Headers.Add(new ApiHeader { Name = name, Value = value });
+            response.Headers.Add(new ApiHeader(name, value));
             return response;
         }
 
@@ -145,11 +145,7 @@
                 }
                 else
                 {
-                    response.Headers.Add(new ApiHeader
-                    {
-                        Name = "ETag",
-                        Value = etag
-                    });
+                    response.Headers.Add(new ApiHeader("ETag", etag));
                 }
             }
 
@@ -161,11 +157,7 @@
                 }
                 else
                 {
-                    response.Headers.Add(new ApiHeader
-                    {
-                        Name = "Last-Modified",
-                        Value = lastModified.Value.ToString("r")
-                    });
+                    response.Headers.Add(new ApiHeader("Last-Modified", lastModified.Value.ToString("r")));
                 }
             }
 

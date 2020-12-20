@@ -31,10 +31,10 @@
             }
 
             var validationContext = new ValidationContext(
-                obj, 
-                serviceProvider: context.RequestServices, 
+                obj,
+                serviceProvider: context.RequestServices,
                 items: null);
-            
+
             var results = new List<ValidationResult>();
 
 
