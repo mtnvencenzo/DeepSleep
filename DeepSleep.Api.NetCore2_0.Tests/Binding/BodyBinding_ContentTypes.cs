@@ -46,7 +46,7 @@ X-CorrelationId: {correlationId}
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -91,7 +91,7 @@ X-CorrelationId: {correlationId}
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -136,7 +136,7 @@ X-CorrelationId: {correlationId}
                 shouldHaveResponse: true,
                 expectedContentType: applicationXml,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -181,7 +181,7 @@ X-CorrelationId: {correlationId}
                 shouldHaveResponse: true,
                 expectedContentType: applicationXml,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -231,7 +231,7 @@ X-PrettyPrint: true
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
                 expectedPrettyPrint: true,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"},
                     { "X-PrettyPrint", $"true"}
@@ -264,7 +264,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-Content-Type: {multipartFormData}; charset=us-ascii
+Content-Type: {multipartFormData}; charset=""us-ascii""
 X-CorrelationId: {correlationId}
 
 {multipart.Replace(System.Environment.NewLine, "\r\n")}";
@@ -280,7 +280,7 @@ X-CorrelationId: {correlationId}
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

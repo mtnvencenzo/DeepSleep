@@ -54,10 +54,10 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestInfo != null)
+                if (context.Request != null)
                 {
-                    var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
-                        ? context.RequestInfo.Accept
+                    var accept = !string.IsNullOrWhiteSpace(context.Request.Accept)
+                        ? context.Request.Accept
                         : AcceptHeader.All();
 
                     IFormatStreamReaderWriter formatter = null;
@@ -65,24 +65,24 @@
                     if (formatterFactory != null)
                     {
                         formatter = await formatterFactory.GetAcceptableFormatter(
-                            acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
-                            writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                            acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                            writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                             formatterType: out var _).ConfigureAwait(false);
                     }
 
                     IList<IFormatStreamReaderWriter> overridingFormatters = null;
 
-                    if (context.RequestConfig.ReadWriteConfiguration?.WriterResolver != null)
+                    if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                     {
-                        var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, null)).ConfigureAwait(false);
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, null)).ConfigureAwait(false);
 
                         overridingFormatters = overrides?.Formatters;
 
                         if (overrides?.Formatters != null)
                         {
                             formatter = await formatterFactory.GetAcceptableFormatter(
-                                acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
-                                writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                                acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                                 writeableFormatters: overrides.Formatters,
                                 formatterType: out var _).ConfigureAwait(false);
                         }
@@ -95,7 +95,7 @@
                             ? formatterFactory.GetWriteableTypes(overridingFormatters) ?? new List<string>()
                             : new HttpMediaTypeStreamReaderWriterFactory(context.RequestServices).GetWriteableTypes(overridingFormatters) ?? new List<string>();
 
-                        var writeableMediaTypes = context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes ?? formatterTypes ?? new List<string>();
+                        var writeableMediaTypes = context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes ?? formatterTypes ?? new List<string>();
 
                         var acceptableTypes = writeableMediaTypes
                             .Where(w => formatterTypes.Any(f => string.Equals(f, w, System.StringComparison.InvariantCultureIgnoreCase)))
@@ -105,8 +105,8 @@
                             ? string.Join(", ", acceptableTypes)
                             : string.Empty;
 
-                        context.ResponseInfo.AddHeader("X-Allow-Accept", acceptable);
-                        context.ResponseInfo.StatusCode = 406;
+                        context.Response.AddHeader("X-Allow-Accept", acceptable);
+                        context.Response.StatusCode = 406;
                         return false;
                     }
                 }

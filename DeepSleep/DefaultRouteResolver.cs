@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -31,20 +32,51 @@
                 formattedRoute += "/";
             }
 
-            var match = new RouteMatch
-            {
-                IsMatch = false
-            };
-
             if (IsMatch(formattedRoute, decodedUri))
             {
-                match.IsMatch = true;
-                match.RouteVariables = GetRouteVariables(formattedRoute, decodedUri);
+                return Task.FromResult(new RouteMatch
+                {
+                    IsMatch = true,
+                    RouteVariables = GetRouteVariables(formattedRoute, decodedUri)
+                });
             }
 
-            TaskCompletionSource<RouteMatch> source = new TaskCompletionSource<RouteMatch>();
-            source.SetResult(match);
-            return source.Task;
+            return Task.FromResult(new RouteMatch
+            {
+                IsMatch = false
+            });
+        }
+
+        /// <summary>Matches the route.</summary>
+        /// <param name="routes">The routes.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="requestPath">The request path.</param>
+        /// <returns></returns>
+        public async Task<ApiRoutingItem> MatchRoute(
+            IApiRoutingTable routes,
+            string method,
+            string requestPath)
+        {
+            var potentialRoutes = routes?.GetRoutes()
+                .Where(r => r.Location != null)
+                .Where(r => string.Compare(r.HttpMethod, method, true) == 0);
+
+            potentialRoutes = potentialRoutes ?? new List<ApiRoutingItem>();
+
+            RouteMatch result;
+            foreach (var route in potentialRoutes)
+            {
+                result = await this.ResolveRoute(route.Template, requestPath).ConfigureAwait(false);
+
+                if (result?.IsMatch ?? false)
+                {
+                    var newRoute = CloneRoutingItem(route);
+                    newRoute.RouteVariables = result.RouteVariables;
+                    return newRoute;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>Parses the template and uri to match uri variables with template variables
@@ -120,6 +152,28 @@
             }
 
             return true;
+        }
+
+        /// <summary>Clones the routing item.</summary>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        private ApiRoutingItem CloneRoutingItem(ApiRoutingItem item)
+        {
+            var newitem = new ApiRoutingItem
+            {
+                Location = new ApiEndpointLocation
+                {
+                    Controller = item.Location.Controller,
+                    Endpoint = item.Location?.Endpoint,
+                    HttpMethod = item.Location.HttpMethod
+                },
+                Template = item.Template,
+                Configuration = item.Configuration,
+                HttpMethod = item.HttpMethod,
+                RouteVariables = new Dictionary<string, string>()
+            };
+
+            return newitem;
         }
     }
 }

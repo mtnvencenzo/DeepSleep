@@ -1,14 +1,15 @@
 ﻿namespace DeepSleep
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{Name}: {Value}")]
     public class ApiHeader
     {
-
         /// <summary>Initializes a new instance of the <see cref="ApiHeader"/> class.</summary>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>

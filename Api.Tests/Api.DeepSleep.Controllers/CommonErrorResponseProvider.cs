@@ -27,11 +27,11 @@
         {
             var injectedContext = apiRequestContextResolver.GetContext();
 
-            if (injectedContext?.ResponseInfo != null && injectedContext.ResponseInfo.HasSuccessStatus() == false)
+            if (injectedContext?.Response != null && injectedContext.Response.HasSuccessStatus() == false)
             {
-                if (injectedContext.ErrorMessages != null && injectedContext.ErrorMessages.Count > 0)
+                if (injectedContext.Validation.Errors != null && injectedContext.Validation.Errors.Count > 0)
                 {
-                    var messages = injectedContext.ErrorMessages
+                    var messages = injectedContext.Validation.Errors
                         .Where(e => !string.IsNullOrWhiteSpace(e))
                         .Select(e => BuildResponseMessageFromResource(e))
                         .Where(e => e != null)
@@ -39,7 +39,7 @@
 
                     if (messages.Count > 0)
                     {
-                        injectedContext.ResponseInfo.ResponseObject = new CommonErrorResponse
+                        injectedContext.Response.ResponseObject = new CommonErrorResponse
                         {
                             Messages = messages
                         };

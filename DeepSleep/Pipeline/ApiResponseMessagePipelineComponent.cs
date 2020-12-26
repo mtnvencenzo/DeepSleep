@@ -48,15 +48,15 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if ((context.ErrorMessages?.Count ?? 0) > 0)
+                if ((context.Validation?.Errors?.Count ?? 0) > 0)
                 {
-                    context.ErrorMessages = context.ErrorMessages
+                    context.Validation.Errors = context.Validation.Errors
                         .Distinct()
                         .ToList();
 
-                    if (context.RequestConfig?.ApiErrorResponseProvider != null)
+                    if (context.Configuration?.ApiErrorResponseProvider != null)
                     {
-                        var provider = context.RequestConfig.ApiErrorResponseProvider(context.RequestServices);
+                        var provider = context.Configuration.ApiErrorResponseProvider(context.RequestServices);
 
                         if (provider != null)
                         {

@@ -19,8 +19,8 @@
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -29,7 +29,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Headers = null
                 }
@@ -37,8 +37,8 @@
 
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -47,7 +47,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Headers = new List<ApiHeader>()
                 }
@@ -55,8 +55,8 @@
 
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -65,7 +65,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Headers = new List<ApiHeader>
                     {
@@ -73,7 +73,7 @@
                         new ApiHeader("X-Header2", "MyValue2")
                     }
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     HeaderValidationConfig = null
                 }
@@ -81,8 +81,8 @@
 
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -94,7 +94,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Headers = new List<ApiHeader>
                     {
@@ -102,7 +102,7 @@
                         new ApiHeader("X-Header2", "MyValue2")
                     }
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     HeaderValidationConfig = new ApiHeaderValidationConfiguration
                     {
@@ -113,8 +113,8 @@
 
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -123,7 +123,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Headers = new List<ApiHeader>
                     {
@@ -132,7 +132,7 @@
                         new ApiHeader("X-Header2", "MyValue233")
                     }
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     HeaderValidationConfig = new ApiHeaderValidationConfiguration
                     {
@@ -143,13 +143,13 @@
 
             var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
             processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(431);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(431);
 
-            context.ProcessingInfo.Should().NotBeNull();
-            context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(0);
+            context.Validation.Should().NotBeNull();
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
         }
     }
 }

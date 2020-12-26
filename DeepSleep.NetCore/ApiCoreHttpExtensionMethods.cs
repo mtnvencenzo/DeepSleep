@@ -109,9 +109,8 @@
                        CacheLocation = HttpCacheLocation.Private,
                        ExpirationSeconds = -5
                    },
-                   CrossOriginConfig = new CrossOriginConfiguration
+                   CrossOriginConfig = new ApiCrossOriginConfiguration
                    {
-                       AllowCredentials = false,
                        AllowedOrigins = new string[] { "*" }
                    },
                    Deprecated = false

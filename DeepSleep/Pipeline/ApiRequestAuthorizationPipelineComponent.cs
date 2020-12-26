@@ -51,7 +51,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (!(context.RequestConfig?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.RequestConfig?.AuthorizationConfig?.Policy))
+                if (!(context.Configuration?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.Configuration?.AuthorizationConfig?.Policy))
                 {
                     var providers = context.RequestServices
                         .GetServices<IAuthorizationProvider>()
@@ -61,7 +61,7 @@
 
                     try
                     {
-                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.RequestConfig.AuthorizationConfig.Policy));
+                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.Configuration.AuthorizationConfig.Policy));
                     }
                     catch
                     {
@@ -69,24 +69,24 @@
 
                     if (authProvider != null)
                     {
-                        if (context.RequestInfo.ClientAuthorizationInfo == null)
+                        if (context.Request.ClientAuthorizationInfo == null)
                         {
-                            context.RequestInfo.ClientAuthorizationInfo = new ClientAuthorization();
+                            context.Request.ClientAuthorizationInfo = new ClientAuthorization();
                         }
 
                         await authProvider.Authorize(context).ConfigureAwait(false);
                     }
 
-                    var result = context.RequestInfo?.ClientAuthorizationInfo?.AuthResult;
+                    var result = context.Request?.ClientAuthorizationInfo?.AuthResult;
 
                     if (result == null || !result.IsAuthorized)
                     {
                         if (authProvider == null)
                         {
-                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.RequestConfig.AuthorizationConfig.Policy}'");
+                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.Configuration.AuthorizationConfig.Policy}'");
                         }
 
-                        context.ResponseInfo.StatusCode = 403;
+                        context.Response.StatusCode = 403;
 
                         return false;
                     }

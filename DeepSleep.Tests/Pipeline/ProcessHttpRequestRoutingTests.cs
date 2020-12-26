@@ -29,8 +29,8 @@
             var processed = await context.ProcessHttpRequestRouting(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -44,11 +44,11 @@
             var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RouteInfo.TemplateInfo.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Routing.Template.Should().BeNull();
         }
 
         [Fact]
@@ -62,11 +62,11 @@
             var processed = await context.ProcessHttpRequestRouting(null, new DefaultRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RouteInfo.TemplateInfo.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Routing.Template.Should().BeNull();
         }
 
         [Fact]
@@ -80,11 +80,11 @@
             var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), new DefaultRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RouteInfo.TemplateInfo.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Routing.Template.Should().BeNull();
         }
 
         // HEAD Match Tests
@@ -101,38 +101,36 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(method: head),
-                RequestConfig = null
+                Request = GetRequestInfo(method: head),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.HttpMethod.Should().Be("GET");
-            context.RouteInfo.RoutingItem.RouteVariables.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.RouteVariables.Should().HaveCount(1);
-            context.RouteInfo.RoutingItem.RouteVariables.Should().ContainKey("id");
-            context.RouteInfo.RoutingItem.RouteVariables["id"].Should().Be("1");
-            context.RouteInfo.RoutingItem.VariablesList.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.VariablesList.Should().HaveCount(1);
-            context.RouteInfo.RoutingItem.EndpointLocation.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.EndpointLocation.Endpoint.Should().Be(nameof(MockController.Get));
-            context.RouteInfo.RoutingItem.EndpointLocation.Controller.Should().Be(typeof(MockController));
-            context.RouteInfo.RoutingItem.EndpointLocation.HttpMethod.Should().Be("GET");
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.VariablesList.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.VariablesList.Should().HaveCount(1);
-            context.RouteInfo.TemplateInfo.Template.Should().Be("test/{id}/name");
-            context.RouteInfo.TemplateInfo.EndpointLocations.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.EndpointLocations.Should().HaveCount(1);
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].Controller.Should().Be(typeof(MockController));
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].Endpoint.Should().Be(nameof(MockController.Get));
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].HttpMethod.Should().Be("GET");
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Route.HttpMethod.Should().Be("GET");
+            context.Routing.Route.RouteVariables.Should().NotBeNull();
+            context.Routing.Route.RouteVariables.Should().HaveCount(1);
+            context.Routing.Route.RouteVariables.Should().ContainKey("id");
+            context.Routing.Route.RouteVariables["id"].Should().Be("1");
+            context.Routing.Route.Location.Should().NotBeNull();
+            context.Routing.Route.Location.Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Route.Location.Controller.Should().Be(typeof(MockController));
+            context.Routing.Route.Location.HttpMethod.Should().Be("GET");
+            context.Routing.Template.Should().NotBeNull();
+            context.Routing.Template.Variables.Should().NotBeNull();
+            context.Routing.Template.Variables.Should().HaveCount(1);
+            context.Routing.Template.Template.Should().Be("test/{id}/name");
+            context.Routing.Template.Locations.Should().NotBeNull();
+            context.Routing.Template.Locations.Should().HaveCount(1);
+            context.Routing.Template.Locations[0].Controller.Should().Be(typeof(MockController));
+            context.Routing.Template.Locations[0].Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Template.Locations[0].HttpMethod.Should().Be("GET");
+            context.Configuration.Should().NotBeNull();
         }
 
         [Theory]
@@ -154,41 +152,39 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(method: head),
-                RequestConfig = null
+                Request = GetRequestInfo(method: head),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.HttpMethod.Should().Be("HEAD");
-            context.RouteInfo.RoutingItem.RouteVariables.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.RouteVariables.Should().HaveCount(1);
-            context.RouteInfo.RoutingItem.RouteVariables.Should().ContainKey("id");
-            context.RouteInfo.RoutingItem.RouteVariables["id"].Should().Be("1");
-            context.RouteInfo.RoutingItem.VariablesList.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.VariablesList.Should().HaveCount(1);
-            context.RouteInfo.RoutingItem.EndpointLocation.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.EndpointLocation.Endpoint.Should().Be(nameof(MockController.Head));
-            context.RouteInfo.RoutingItem.EndpointLocation.Controller.Should().Be(typeof(MockController));
-            context.RouteInfo.RoutingItem.EndpointLocation.HttpMethod.Should().Be("HEAD");
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.VariablesList.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.VariablesList.Should().HaveCount(1);
-            context.RouteInfo.TemplateInfo.Template.Should().Be("test/{id}/name");
-            context.RouteInfo.TemplateInfo.EndpointLocations.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.EndpointLocations.Should().HaveCount(2);
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].Controller.Should().Be(typeof(MockController));
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].Endpoint.Should().Be(nameof(MockController.Get));
-            context.RouteInfo.TemplateInfo.EndpointLocations[0].HttpMethod.Should().Be("GET");
-            context.RouteInfo.TemplateInfo.EndpointLocations[1].Controller.Should().Be(typeof(MockController));
-            context.RouteInfo.TemplateInfo.EndpointLocations[1].Endpoint.Should().Be(nameof(MockController.Head));
-            context.RouteInfo.TemplateInfo.EndpointLocations[1].HttpMethod.Should().Be("HEAD");
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Route.HttpMethod.Should().Be("HEAD");
+            context.Routing.Route.RouteVariables.Should().NotBeNull();
+            context.Routing.Route.RouteVariables.Should().HaveCount(1);
+            context.Routing.Route.RouteVariables.Should().ContainKey("id");
+            context.Routing.Route.RouteVariables["id"].Should().Be("1");
+            context.Routing.Route.Location.Should().NotBeNull();
+            context.Routing.Route.Location.Endpoint.Should().Be(nameof(MockController.Head));
+            context.Routing.Route.Location.Controller.Should().Be(typeof(MockController));
+            context.Routing.Route.Location.HttpMethod.Should().Be("HEAD");
+            context.Routing.Template.Should().NotBeNull();
+            context.Routing.Template.Variables.Should().NotBeNull();
+            context.Routing.Template.Variables.Should().HaveCount(1);
+            context.Routing.Template.Template.Should().Be("test/{id}/name");
+            context.Routing.Template.Locations.Should().NotBeNull();
+            context.Routing.Template.Locations.Should().HaveCount(2);
+            context.Routing.Template.Locations[0].Controller.Should().Be(typeof(MockController));
+            context.Routing.Template.Locations[0].Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Template.Locations[0].HttpMethod.Should().Be("GET");
+            context.Routing.Template.Locations[1].Controller.Should().Be(typeof(MockController));
+            context.Routing.Template.Locations[1].Endpoint.Should().Be(nameof(MockController.Head));
+            context.Routing.Template.Locations[1].HttpMethod.Should().Be("HEAD");
+            context.Configuration.Should().NotBeNull();
         }
 
 
@@ -207,22 +203,22 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
         }
 
         [Theory]
@@ -250,25 +246,72 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AllowAnonymous.Should().Be(expected);
+            context.Configuration.AllowAnonymous.Should().Be(expected);
         }
+
+
+        [Theory]
+        [InlineData(true, null, null)]
+        [InlineData(false, false, null)]
+        [InlineData(false, false, false)]
+        [InlineData(false, null, false)]
+        [InlineData(false, true, false)]
+        [InlineData(true, false, true)]
+        public async void request_config___enableHeadForGetRequests_returns_expected(bool expected, bool? def, bool? endpoint)
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                EnableHeadForGetRequests = def
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                EnableHeadForGetRequests = endpoint
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.EnableHeadForGetRequests.Should().Be(expected);
+        }
+
 
         [Fact]
         public async void request_config___allowanoymous_endpoint_null_returns_expected()
@@ -286,24 +329,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AllowAnonymous.Should().Be(true);
+            context.Configuration.AllowAnonymous.Should().Be(true);
         }
 
         [Fact]
@@ -322,24 +365,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AllowAnonymous.Should().Be(true);
+            context.Configuration.AllowAnonymous.Should().Be(true);
         }
 
         [Theory]
@@ -367,24 +410,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AllowRequestBodyWhenNoModelDefined.Should().Be(expected);
+            context.Configuration.AllowRequestBodyWhenNoModelDefined.Should().Be(expected);
         }
 
         [Theory]
@@ -412,24 +455,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.Deprecated.Should().Be(expected);
+            context.Configuration.Deprecated.Should().Be(expected);
         }
 
         [Theory]
@@ -457,24 +500,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.IncludeRequestIdHeaderInResponse.Should().Be(expected);
+            context.Configuration.IncludeRequestIdHeaderInResponse.Should().Be(expected);
         }
 
 
@@ -517,24 +560,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(expectedHeader);
+            context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(expectedHeader);
         }
 
         [Theory]
@@ -572,25 +615,25 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            var requestTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
-                ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+            var requestTypes = context.Configuration.ReadWriteConfiguration.ReadableMediaTypes != null
+                ? string.Join(",", context.Configuration.ReadWriteConfiguration.ReadableMediaTypes)
                 : null;
 
             requestTypes.Should().Be(expected);
@@ -631,25 +674,25 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            var requestTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
-                ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+            var requestTypes = context.Configuration.ReadWriteConfiguration.WriteableMediaTypes != null
+                ? string.Join(",", context.Configuration.ReadWriteConfiguration.WriteableMediaTypes)
                 : null;
 
             requestTypes.Should().Be(expected);
@@ -698,31 +741,31 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             if (!expected.HasValue)
             {
-                context.RequestConfig.ReadWriteConfiguration.ReaderResolver.Should().BeNull();
+                context.Configuration.ReadWriteConfiguration.ReaderResolver.Should().BeNull();
             }
             else
             {
-                context.RequestConfig.ReadWriteConfiguration.ReaderResolver.Should().NotBeNull();
-                var overrides = await context.RequestConfig.ReadWriteConfiguration.ReaderResolver(null);
+                context.Configuration.ReadWriteConfiguration.ReaderResolver.Should().NotBeNull();
+                var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(null);
                 overrides.Should().NotBeNull();
                 overrides.Formatters.Should().NotBeNull();
                 overrides.Formatters.Should().HaveCount(1);
@@ -775,31 +818,31 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             if (!expected.HasValue)
             {
-                context.RequestConfig.ReadWriteConfiguration.WriterResolver.Should().BeNull();
+                context.Configuration.ReadWriteConfiguration.WriterResolver.Should().BeNull();
             }
             else
             {
-                context.RequestConfig.ReadWriteConfiguration.WriterResolver.Should().NotBeNull();
-                var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(null);
+                context.Configuration.ReadWriteConfiguration.WriterResolver.Should().NotBeNull();
+                var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(null);
                 overrides.Should().NotBeNull();
                 overrides.Formatters.Should().NotBeNull();
                 overrides.Formatters.Should().HaveCount(1);
@@ -832,24 +875,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.FallBackLanguage.Should().Be(expected);
+            context.Configuration.FallBackLanguage.Should().Be(expected);
         }
 
         [Theory]
@@ -877,25 +920,25 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null,
+                Request = GetRequestInfo(),
+                Configuration = null,
                 ConfigureMaxRequestLength = (length) => { hasSet = true; }
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.MaxRequestLength.Should().Be(expected);
+            context.Configuration.MaxRequestLength.Should().Be(expected);
 
             if (expected != null)
             {
@@ -921,25 +964,25 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null,
+                Request = GetRequestInfo(),
+                Configuration = null,
                 ConfigureMaxRequestLength = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, null);
+            AssertConfiguration(context.Configuration, endpointConfig, null);
 
-            context.RequestConfig.MaxRequestLength.Should().Be(10);
+            context.Configuration.MaxRequestLength.Should().Be(10);
         }
 
         [Fact]
@@ -958,8 +1001,8 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null,
+                Request = GetRequestInfo(),
+                Configuration = null,
                 ConfigureMaxRequestLength = (length) => { 
                     hasSet = true;
                     throw new Exception("should not have been called"); 
@@ -969,17 +1012,17 @@
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, null);
+            AssertConfiguration(context.Configuration, endpointConfig, null);
 
-            context.RequestConfig.MaxRequestLength.Should().Be(10);
+            context.Configuration.MaxRequestLength.Should().Be(10);
             hasSet.Should().Be(true);
         }
 
@@ -1006,24 +1049,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.MaxRequestUriLength.Should().Be(expected);
+            context.Configuration.MaxRequestUriLength.Should().Be(expected);
         }
 
 
@@ -1052,24 +1095,24 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.RequireContentLengthOnRequestBodyRequests.Should().Be(expected);
+            context.Configuration.RequireContentLengthOnRequestBodyRequests.Should().Be(expected);
         }
 
         [Fact]
@@ -1093,26 +1136,26 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AuthorizationConfig.Should().NotBeNull();
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Policy.Should().Be("TestPolicy");
+            context.Configuration.AuthorizationConfig.Should().NotBeNull();
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Policy.Should().Be("TestPolicy");
         }
 
         [Fact]
@@ -1136,26 +1179,26 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AuthorizationConfig.Should().NotBeNull();
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Policy.Should().Be("TestPolicyDefault");
+            context.Configuration.AuthorizationConfig.Should().NotBeNull();
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Policy.Should().Be("TestPolicyDefault");
         }
 
         [Theory]
@@ -1187,27 +1230,27 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.AuthorizationConfig.Should().NotBeNull();
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.AuthorizationConfig.Policy.Should().Be(expected);
+            context.Configuration.AuthorizationConfig.Should().NotBeNull();
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.AuthorizationConfig.Policy.Should().Be(expected);
         }
 
         [Fact]
@@ -1228,28 +1271,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.RequestConfig.SupportedAuthenticationSchemes[0].Should().Be("test1");
-            context.RequestConfig.SupportedAuthenticationSchemes[1].Should().Be("test2");
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
+            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test1");
+            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1270,28 +1313,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.RequestConfig.SupportedAuthenticationSchemes[0].Should().Be("test1");
-            context.RequestConfig.SupportedAuthenticationSchemes[1].Should().Be("test2");
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
+            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test1");
+            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1312,28 +1355,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.RequestConfig.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.RequestConfig.SupportedAuthenticationSchemes[0].Should().Be("test3");
-            context.RequestConfig.SupportedAuthenticationSchemes[1].Should().Be("test4");
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
+            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
+            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test3");
+            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test4");
         }
 
         [Fact]
@@ -1354,28 +1397,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedLanguages.Should().NotBeNull();
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().HaveCount(2);
-            context.RequestConfig.SupportedLanguages[0].Should().Be("test1");
-            context.RequestConfig.SupportedLanguages[1].Should().Be("test2");
+            context.Configuration.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.SupportedLanguages[0].Should().Be("test1");
+            context.Configuration.SupportedLanguages[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1396,28 +1439,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedLanguages.Should().NotBeNull();
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().HaveCount(2);
-            context.RequestConfig.SupportedLanguages[0].Should().Be("test1");
-            context.RequestConfig.SupportedLanguages[1].Should().Be("test2");
+            context.Configuration.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.SupportedLanguages[0].Should().Be("test1");
+            context.Configuration.SupportedLanguages[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1438,28 +1481,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.SupportedLanguages.Should().NotBeNull();
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.SupportedLanguages.Should().HaveCount(2);
-            context.RequestConfig.SupportedLanguages[0].Should().Be("test3");
-            context.RequestConfig.SupportedLanguages[1].Should().Be("test4");
+            context.Configuration.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.SupportedLanguages[0].Should().Be("test3");
+            context.Configuration.SupportedLanguages[1].Should().Be("test4");
         }
 
         [Fact]
@@ -1485,28 +1528,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CacheDirective.Should().NotBeNull();
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
-            context.RequestConfig.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
-            context.RequestConfig.CacheDirective.ExpirationSeconds.Should().Be(100);
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
+            context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
+            context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
         }
 
         [Fact]
@@ -1532,28 +1575,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CacheDirective.Should().NotBeNull();
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
-            context.RequestConfig.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
-            context.RequestConfig.CacheDirective.ExpirationSeconds.Should().Be(100);
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
+            context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
+            context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
         }
 
         [Theory]
@@ -1585,27 +1628,27 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CacheDirective.Should().NotBeNull();
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.Cacheability.Should().Be(expected);
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Cacheability.Should().Be(expected);
         }
 
         [Theory]
@@ -1637,27 +1680,27 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CacheDirective.Should().NotBeNull();
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.CacheLocation.Should().Be(expected);
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.CacheLocation.Should().Be(expected);
         }
 
         [Theory]
@@ -1689,27 +1732,27 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CacheDirective.Should().NotBeNull();
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.RequestConfig.CacheDirective.ExpirationSeconds.Should().Be(expected);
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(expected);
         }
 
         [Fact]
@@ -1730,34 +1773,35 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CrossOriginConfig.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.AllowCredentials.Should().Be(true);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().HaveCount(1);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[0].Should().Be("*");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().HaveCount(1);
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[0].Should().Be("*");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().HaveCount(0);
+            context.Configuration.CrossOriginConfig.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(true);
+            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(600);
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().HaveCount(1);
+            context.Configuration.CrossOriginConfig.AllowedHeaders[0].Should().Be("*");
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().HaveCount(1);
+            context.Configuration.CrossOriginConfig.AllowedOrigins[0].Should().Be("*");
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().HaveCount(0);
         }
 
         [Fact]
@@ -1770,12 +1814,13 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CrossOriginConfig = new CrossOriginConfiguration
+                CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = false,
                     AllowedHeaders = new string[] { "Header1", "Header2" },
                     AllowedOrigins = new string[] { "http://origin1.ut", "http://origin12.ut" },
-                    ExposeHeaders = new string[] { "ExHeader1", "ExHeader2" }
+                    ExposeHeaders = new string[] { "ExHeader1", "ExHeader2" },
+                    MaxAgeSeconds = 100
                 }
             };
 
@@ -1784,38 +1829,39 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CrossOriginConfig.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.AllowCredentials.Should().Be(false);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[0].Should().Be("Header1");
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[1].Should().Be("Header2");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://origin1.ut");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://origin12.ut");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[0].Should().Be("ExHeader1");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[1].Should().Be("ExHeader2");
+            context.Configuration.CrossOriginConfig.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
+            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(100);
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedHeaders[0].Should().Be("Header1");
+            context.Configuration.CrossOriginConfig.AllowedHeaders[1].Should().Be("Header2");
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://origin1.ut");
+            context.Configuration.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://origin12.ut");
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.ExposeHeaders[0].Should().Be("ExHeader1");
+            context.Configuration.CrossOriginConfig.ExposeHeaders[1].Should().Be("ExHeader2");
         }
 
         [Fact]
@@ -1823,12 +1869,13 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CrossOriginConfig = new CrossOriginConfiguration
+                CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = false,
                     AllowedHeaders = new string[] { "Header1", "Header2" },
                     AllowedOrigins = new string[] { "http://origin1.ut", "http://origin12.ut" },
-                    ExposeHeaders = new string[] { "ExHeader1", "ExHeader2" }
+                    ExposeHeaders = new string[] { "ExHeader1", "ExHeader2" },
+                    MaxAgeSeconds = 150
                 }
             };
 
@@ -1842,38 +1889,39 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CrossOriginConfig.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.AllowCredentials.Should().Be(false);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[0].Should().Be("Header1");
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[1].Should().Be("Header2");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://origin1.ut");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://origin12.ut");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[0].Should().Be("ExHeader1");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[1].Should().Be("ExHeader2");
+            context.Configuration.CrossOriginConfig.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
+            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(150);
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedHeaders[0].Should().Be("Header1");
+            context.Configuration.CrossOriginConfig.AllowedHeaders[1].Should().Be("Header2");
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://origin1.ut");
+            context.Configuration.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://origin12.ut");
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.ExposeHeaders[0].Should().Be("ExHeader1");
+            context.Configuration.CrossOriginConfig.ExposeHeaders[1].Should().Be("ExHeader2");
         }
 
         [Fact]
@@ -1881,23 +1929,25 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CrossOriginConfig = new CrossOriginConfiguration
+                CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = true,
                     AllowedHeaders = new string[] { "D:Header1", "D:Header2" },
                     AllowedOrigins = new string[] { "http://dorigin1.ut", "http://dorigin12.ut" },
-                    ExposeHeaders = new string[] { "D:ExHeader1", "D:ExHeader2" }
+                    ExposeHeaders = new string[] { "D:ExHeader1", "D:ExHeader2" },
+                    MaxAgeSeconds = 200
                 }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CrossOriginConfig = new CrossOriginConfiguration
+                CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = false,
                     AllowedHeaders = new string[] { "E:Header1", "E:Header2" },
                     AllowedOrigins = new string[] { "http://eorigin1.ut", "http://eorigin12.ut" },
-                    ExposeHeaders = new string[] { "E:ExHeader1", "E:ExHeader2" }
+                    ExposeHeaders = new string[] { "E:ExHeader1", "E:ExHeader2" },
+                    MaxAgeSeconds = 100
                 }
             };
 
@@ -1907,39 +1957,40 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.CrossOriginConfig.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.RequestConfig.CrossOriginConfig.AllowCredentials.Should().Be(false);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[0].Should().Be("E:Header1");
-            context.RequestConfig.CrossOriginConfig.AllowedHeaders[1].Should().Be("E:Header2");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://eorigin1.ut");
-            context.RequestConfig.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://eorigin12.ut");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[0].Should().Be("E:ExHeader1");
-            context.RequestConfig.CrossOriginConfig.ExposeHeaders[1].Should().Be("E:ExHeader2");
+            context.Configuration.CrossOriginConfig.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
+            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(100);
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedHeaders[0].Should().Be("E:Header1");
+            context.Configuration.CrossOriginConfig.AllowedHeaders[1].Should().Be("E:Header2");
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.AllowedOrigins.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.AllowedOrigins[0].Should().Be("http://eorigin1.ut");
+            context.Configuration.CrossOriginConfig.AllowedOrigins[1].Should().Be("http://eorigin12.ut");
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().NotBeNull();
+            context.Configuration.CrossOriginConfig.ExposeHeaders.Should().HaveCount(2);
+            context.Configuration.CrossOriginConfig.ExposeHeaders[0].Should().Be("E:ExHeader1");
+            context.Configuration.CrossOriginConfig.ExposeHeaders[1].Should().Be("E:ExHeader2");
         }
 
         [Fact]
@@ -1960,26 +2011,26 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeNull();
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.MaxHeaderLength.Should().Be(0);
+            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(0);
         }
 
         [Fact]
@@ -2003,26 +2054,26 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeNull();
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
         }
 
         [Fact]
@@ -2046,26 +2097,26 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
+                Request = GetRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeNull();
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
         }
 
         [Fact]
@@ -2093,226 +2144,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
+                Request = GetRequestInfo(),
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
 
             // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeNull();
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.RequestConfig.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
         }
-
-        [Fact]
-        public async void request_config___endpoint_httpconfig_null_default_null_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = null
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = null
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
-
-            context.RequestConfig.HttpConfig.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(defaultConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(endpointConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.RequireSSL.Should().Be(false);
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().HaveCount(5);
-            context.RequestConfig.HttpConfig.SupportedVersions[0].Should().Be("http/1.1");
-            context.RequestConfig.HttpConfig.SupportedVersions[1].Should().Be("http/1.2");
-            context.RequestConfig.HttpConfig.SupportedVersions[2].Should().Be("http/2");
-            context.RequestConfig.HttpConfig.SupportedVersions[3].Should().Be("http/2.0");
-            context.RequestConfig.HttpConfig.SupportedVersions[4].Should().Be("http/2.1");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_httpconfig_notnull_default_null_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = null
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = true,
-                    SupportedVersions = new string[] { "test1/1.0", "test1/2.0" }
-                }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
-
-            context.RequestConfig.HttpConfig.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(defaultConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(endpointConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.RequireSSL.Should().Be(true);
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().HaveCount(2);
-            context.RequestConfig.HttpConfig.SupportedVersions[0].Should().Be("test1/1.0");
-            context.RequestConfig.HttpConfig.SupportedVersions[1].Should().Be("test1/2.0");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_httpconfig_null_default_notnull_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = true,
-                    SupportedVersions = new string[] { "test1/1.0", "test1/2.0" }
-                }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = null
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
-
-            context.RequestConfig.HttpConfig.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(defaultConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(endpointConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.RequireSSL.Should().Be(true);
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().HaveCount(2);
-            context.RequestConfig.HttpConfig.SupportedVersions[0].Should().Be("test1/1.0");
-            context.RequestConfig.HttpConfig.SupportedVersions[1].Should().Be("test1/2.0");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_httpconfig_default_notnull_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = false,
-                    SupportedVersions = new string[] { "test1/4.0", "test1/5.0" }
-                }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = true,
-                    SupportedVersions = new string[] { "test1/1.0", "test1/2.0" }
-                }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                RequestInfo = GetRequestInfo(),
-                RequestConfig = null
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().NotBeNull();
-            context.RouteInfo.TemplateInfo.Should().NotBeNull();
-            context.RequestConfig.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.RequestConfig, endpointConfig, defaultConfig);
-
-            context.RequestConfig.HttpConfig.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(defaultConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.Should().NotBeSameAs(endpointConfig.HttpConfig);
-            context.RequestConfig.HttpConfig.RequireSSL.Should().Be(true);
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().NotBeNull();
-            context.RequestConfig.HttpConfig.SupportedVersions.Should().HaveCount(2);
-            context.RequestConfig.HttpConfig.SupportedVersions[0].Should().Be("test1/1.0");
-            context.RequestConfig.HttpConfig.SupportedVersions[1].Should().Be("test1/2.0");
-        }
-
 
 
         private void AssertConfiguration(IApiRequestConfiguration request, IApiRequestConfiguration endpoint, IApiRequestConfiguration def)
@@ -2379,13 +2232,13 @@
             }
 
             // -------------------
-            // Authorization Config
+            // Authorization Configuration
             // -------------------
             request.AuthorizationConfig.Policy.Should().Be(endpoint?.AuthorizationConfig?.Policy ?? def?.AuthorizationConfig?.Policy ?? system.AuthorizationConfig.Policy);
 
 
             // -------------------
-            // Cross Origin Config
+            // Cross Origin Configuration
             // -------------------
             request.CacheDirective.Cacheability.Should().Be(endpoint?.CacheDirective?.Cacheability ?? def?.CacheDirective?.Cacheability ?? system.CacheDirective.Cacheability);
             request.CacheDirective.CacheLocation.Should().Be(endpoint?.CacheDirective?.CacheLocation ?? def?.CacheDirective?.CacheLocation ?? system.CacheDirective.CacheLocation);
@@ -2393,9 +2246,12 @@
 
 
             // -------------------
-            // Cross Origin Config
+            // Cross Origin Configuration
             // -------------------
             request.CrossOriginConfig.AllowCredentials.Should().Be(endpoint?.CrossOriginConfig?.AllowCredentials ?? def?.CrossOriginConfig?.AllowCredentials ?? system.CrossOriginConfig.AllowCredentials);
+            request.CrossOriginConfig.MaxAgeSeconds.Should().Be(endpoint?.CrossOriginConfig?.MaxAgeSeconds ?? def?.CrossOriginConfig?.MaxAgeSeconds ?? system.CrossOriginConfig.MaxAgeSeconds);
+
+
             request.CrossOriginConfig.AllowedHeaders.Count.Should().Be(endpoint?.CrossOriginConfig?.AllowedHeaders?.Count ?? def?.CrossOriginConfig?.AllowedHeaders?.Count ?? system.CrossOriginConfig.AllowedHeaders?.Count);
             for (int i = 0; i < request.CrossOriginConfig.AllowedHeaders.Count; i++)
             {
@@ -2416,20 +2272,9 @@
 
 
             // ------------------------
-            // Header Validation Config
+            // Header Validation Configuration
             // ------------------------
             request.HeaderValidationConfig.MaxHeaderLength.Should().Be(endpoint?.HeaderValidationConfig?.MaxHeaderLength ?? def?.HeaderValidationConfig?.MaxHeaderLength ?? system.HeaderValidationConfig.MaxHeaderLength);
-
-
-            // ------------------------
-            // Http Config
-            // ------------------------
-            request.HttpConfig.RequireSSL.Should().Be(endpoint?.HttpConfig?.RequireSSL ?? def?.HttpConfig?.RequireSSL ?? system.HttpConfig.RequireSSL);
-            request.HttpConfig.SupportedVersions.Count.Should().Be(endpoint?.HttpConfig?.SupportedVersions?.Count ?? def?.HttpConfig?.SupportedVersions?.Count ?? system.HttpConfig.SupportedVersions.Count);
-            for (int i = 0; i < request.HttpConfig.SupportedVersions.Count; i++)
-            {
-                request.HttpConfig.SupportedVersions[i].Should().Be(endpoint?.HttpConfig?.SupportedVersions?[i] ?? def?.HttpConfig?.SupportedVersions?[i] ?? system.HttpConfig.SupportedVersions[i]);
-            }
 
 
             // --------------------------------
@@ -2461,7 +2306,6 @@
             request.HeaderValidationConfig.Should().NotBeSameAs(system.HeaderValidationConfig);
             request.SupportedAuthenticationSchemes.Should().NotBeSameAs(system.SupportedAuthenticationSchemes);
             request.SupportedLanguages.Should().NotBeSameAs(system.SupportedLanguages);
-            request.HttpConfig.Should().NotBeSameAs(system.HttpConfig);
         }
 
         private ApiRequestInfo GetRequestInfo(string method = "GET")

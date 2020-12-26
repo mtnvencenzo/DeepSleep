@@ -54,15 +54,15 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var fallBackLanguage = !string.IsNullOrWhiteSpace(context.RequestConfig?.FallBackLanguage)
-                    ? context.RequestConfig.FallBackLanguage
+                var fallBackLanguage = !string.IsNullOrWhiteSpace(context.Configuration?.FallBackLanguage)
+                    ? context.Configuration.FallBackLanguage
                     : CultureInfo.CurrentUICulture.Name;
 
-                var supportedLanguages = context.RequestConfig?.SupportedLanguages != null
-                    ? context.RequestConfig.SupportedLanguages
+                var supportedLanguages = context.Configuration?.SupportedLanguages != null
+                    ? context.Configuration.SupportedLanguages
                     : new string[] { };
 
-                var acceptedLanguage = GetAcceptedSupportedLanguage(supportedLanguages, context.RequestInfo?.AcceptLanguage?.Values);
+                var acceptedLanguage = GetAcceptedSupportedLanguage(supportedLanguages, context.Request?.AcceptLanguage?.Values);
 
                 if (string.IsNullOrWhiteSpace(acceptedLanguage))
                 {
@@ -73,9 +73,9 @@
                 }
 
 
-                if (string.IsNullOrWhiteSpace(acceptedLanguage) && context.RequestInfo?.AcceptLanguage?.Values != null)
+                if (string.IsNullOrWhiteSpace(acceptedLanguage) && context.Request?.AcceptLanguage?.Values != null)
                 {
-                    var neutralLangs = context.RequestInfo.AcceptLanguage.Values
+                    var neutralLangs = context.Request.AcceptLanguage.Values
                         .Where(s => (s.Code?.Trim()?.Length ?? 0) > 1)
                         .Select(s => new LanguageValueWithQuality(s.Code.Trim().Substring(0, 2), s.Quality, s.Parameters));
 
@@ -89,12 +89,12 @@
 
                 if (string.IsNullOrWhiteSpace(acceptedLanguage))
                 {
-                    context.RequestInfo.AcceptCulture = CultureInfo.CurrentUICulture;
+                    context.Request.AcceptCulture = CultureInfo.CurrentUICulture;
                 }
                 else
                 {
                     var culture = new CultureInfo(acceptedLanguage);
-                    context.RequestInfo.AcceptCulture = culture;
+                    context.Request.AcceptCulture = culture;
                 }
 
                 return Task.FromResult(true);

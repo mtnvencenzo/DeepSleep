@@ -18,15 +18,15 @@
 
             return new ReadWriteOverrideModel
             {
-                AcceptHeader = context.RequestInfo.Accept.Value,
-                WriteableTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                AcceptHeader = context.Request.Accept.Value,
+                WriteableTypes = context.Configuration.ReadWriteConfiguration.WriteableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.WriteableMediaTypes)
                     : null,
-                ReadableTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                ReadableTypes = context.Configuration.ReadWriteConfiguration.ReadableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.ReadableMediaTypes)
                     : null,
-                AcceptHeaderOverride = context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
-                    ? context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Value
+                AcceptHeaderOverride = context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
+                    ? context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride.Value
                     : null
             };
         }
@@ -42,36 +42,55 @@
 
             return new ReadWriteOverrideModel
             {
-                AcceptHeader = context.RequestInfo.Accept.Value,
-                WriteableTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                AcceptHeader = context.Request.Accept.Value,
+                WriteableTypes = context.Configuration.ReadWriteConfiguration.WriteableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.WriteableMediaTypes)
                     : null,
-                ReadableTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                ReadableTypes = context.Configuration.ReadWriteConfiguration.ReadableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.ReadableMediaTypes)
                     : null,
-                AcceptHeaderOverride = context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
-                    ? context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Value
+                AcceptHeaderOverride = context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
+                    ? context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride.Value
                     : null
             };
         }
 
         public ReadWriteOverrideModel PostWithReadableTypesTextXml([BodyBound] ReadWriteOverrideModel model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
             var context = this.requestContextResolver.GetContext();
 
             return new ReadWriteOverrideModel
             {
-                AcceptHeader = context.RequestInfo.Accept.Value,
-                WriteableTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                AcceptHeader = context.Request.Accept.Value,
+                WriteableTypes = context.Configuration.ReadWriteConfiguration.WriteableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.WriteableMediaTypes)
                     : null,
-                ReadableTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                ReadableTypes = context.Configuration.ReadWriteConfiguration.ReadableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.ReadableMediaTypes)
                     : null,
-                AcceptHeaderOverride = context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
-                    ? context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Value
+                AcceptHeaderOverride = context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
+                    ? context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride.Value
                     : null
             };
+        }
+
+        public string PostWithReadableTypesPlainText([BodyBound] string model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
+        }
+
+        public string PostWithReadableTypesAllPlusPlainText([BodyBound] string model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            return model;
         }
 
         public ReadWriteOverrideModel GetWithWriteableOverrides()
@@ -80,15 +99,15 @@
 
             return new ReadWriteOverrideModel
             {
-                AcceptHeader = context.RequestInfo.Accept.Value,
-                WriteableTypes = context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                AcceptHeader = context.Request.Accept.Value,
+                WriteableTypes = context.Configuration.ReadWriteConfiguration.WriteableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.WriteableMediaTypes)
                     : null,
-                ReadableTypes = context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes != null
-                    ? string.Join(",", context.RequestConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                ReadableTypes = context.Configuration.ReadWriteConfiguration.ReadableMediaTypes != null
+                    ? string.Join(",", context.Configuration.ReadWriteConfiguration.ReadableMediaTypes)
                     : null,
-                AcceptHeaderOverride = context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
-                    ? context.RequestConfig.ReadWriteConfiguration.AcceptHeaderOverride.Value
+                AcceptHeaderOverride = context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride != (null as AcceptHeader)
+                    ? context.Configuration.ReadWriteConfiguration.AcceptHeaderOverride.Value
                     : null
             };
         }

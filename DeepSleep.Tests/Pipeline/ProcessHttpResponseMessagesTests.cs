@@ -16,17 +16,20 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(true),
-                ErrorMessages = new List<string>
+                Validation = new ApiValidationInfo
                 {
-                    "1|test1"
+                    Errors = new List<string>
+                    {
+                        "1|test1"
+                    }
                 }
             };
 
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -35,19 +38,22 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ErrorMessages = new List<string>
+                Validation = new ApiValidationInfo
                 {
-                    "200|test1",
-                    "100|test1",
-                    "100|test1",
-                    "500|test1",
-                    "300|test1"
+                    Errors = new List<string>
+                    {
+                        "200|test1",
+                        "100|test1",
+                        "100|test1",
+                        "500|test1",
+                        "300|test1"
+                    }
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 400
                 },
-                RequestConfig = new Configuration.DefaultApiRequestConfiguration
+                Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
                 }
@@ -56,12 +62,12 @@
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeAssignableTo<ApiResult>();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeAssignableTo<ApiResult>();
 
-            var apiResult = context.ResponseInfo.ResponseObject as ApiResult;
+            var apiResult = context.Response.ResponseObject as ApiResult;
             apiResult.Should().NotBeNull();
             apiResult.Messages.Should().NotBeNull();
             apiResult.Messages.Should().HaveCount(4);
@@ -74,8 +80,8 @@
             apiResult.Messages[2].Code.Should().Be("500");
             apiResult.Messages[2].Message.Should().Be("test1");
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(0);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(0);
         }
 
         [Fact]
@@ -84,8 +90,8 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ProcessingInfo = null,
-                RequestConfig = new Configuration.DefaultApiRequestConfiguration
+                Runtime = null,
+                Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
                 }
@@ -94,8 +100,8 @@
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -104,8 +110,11 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ErrorMessages = null,
-                RequestConfig = new Configuration.DefaultApiRequestConfiguration
+                Validation = new ApiValidationInfo
+                {
+                    Errors = null
+                },
+                Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
                 }
@@ -114,8 +123,8 @@
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -124,8 +133,11 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ErrorMessages = new List<string>(),
-                RequestConfig = new Configuration.DefaultApiRequestConfiguration
+                Validation = new ApiValidationInfo
+                {
+                    Errors = new List<string>()
+                },
+                Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
                 }
@@ -134,8 +146,8 @@
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -144,18 +156,21 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ErrorMessages = new List<string>
+                Validation = new ApiValidationInfo
                 {
-                    "1|test",
-                    "2|test2"
+                    Errors = new List<string>
+                    {
+                        "1|test",
+                        "2|test2"
+                    }
                 }
             };
 
             var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
     }
 }

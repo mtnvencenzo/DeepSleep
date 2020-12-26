@@ -41,7 +41,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 406,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", "text/xml" }
@@ -81,7 +81,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentType: textXml,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -125,7 +125,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 406,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", $"text/xml" }

@@ -4,12 +4,13 @@ namespace DeepSleep.OpenApi.Tests
     using DeepSleep.OpenApi.Tests.TestSetup;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class OpenApiV3GenerateTests
     {
         [Fact]
-        public void Test1()
+        public async Task Test1()
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(
@@ -49,7 +50,7 @@ namespace DeepSleep.OpenApi.Tests
 
             var generator = new DefaultOpenApiGenerator();
 
-            var document = generator.Generate(OpenApiVersion.V3, table);
+            var document = await generator.Generate(OpenApiVersion.V3, table, null).ConfigureAwait(false);
 
             var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -61,7 +62,7 @@ namespace DeepSleep.OpenApi.Tests
         }
 
         [Fact]
-        public void TestList()
+        public async Task TestList()
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(
@@ -95,7 +96,8 @@ namespace DeepSleep.OpenApi.Tests
             var generator = new DefaultOpenApiGenerator();
 
             DefaultOpenApiGenerator.PrefixNamesWithNamespace = false;
-            var document = generator.Generate(OpenApiVersion.V3, table);
+
+            var document = await generator.Generate(OpenApiVersion.V3, table, null).ConfigureAwait(false);
 
             var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {

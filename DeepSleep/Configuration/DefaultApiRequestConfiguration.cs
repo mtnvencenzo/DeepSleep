@@ -9,13 +9,9 @@
     /// <seealso cref="DeepSleep.Configuration.IApiRequestConfiguration" />
     public class DefaultApiRequestConfiguration : IApiRequestConfiguration
     {
-        /// <summary>Gets or sets the HTTP configuration.</summary>
-        /// <value>The HTTP configuration.</value>
-        public ApiHttpConfiguration HttpConfig { get; set; }
-
         /// <summary>Gets or sets the cross origin configuration.</summary>
         /// <value>The cross origin configuration.</value>
-        public CrossOriginConfiguration CrossOriginConfig { get; set; }
+        public ApiCrossOriginConfiguration CrossOriginConfig { get; set; }
 
         /// <summary>Gets or sets the header validation configuration.</summary>
         /// <value>The header validation configuration.</value>
@@ -76,6 +72,10 @@
         /// <summary>Gets or sets the include request identifier header in response.</summary>
         /// <value>The include request identifier header in response.</value>
         public bool? IncludeRequestIdHeaderInResponse { get; set; }
+
+        /// <summary>Gets or sets the enable head for get requests.</summary>
+        /// <value>The enable head for get requests.</value>
+        public bool? EnableHeadForGetRequests { get; set; }
 
         /// <summary>Gets or sets the read write configuration.</summary>
         /// <value>The read write configuration.</value>

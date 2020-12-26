@@ -19,70 +19,88 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
-        public async void pipeline_requestId___returns_true_and_doesnt_add_header_for_null_routeInfo()
+        public async void pipeline_requestId___returns_true_and_adds_header_for_null_routeInfo()
         {
+            var requestId = $"test-Id-{Guid.NewGuid()}";
+
             var context = new ApiRequestContext
             {
+                Request = new ApiRequestInfo
+                {
+                    RequestIdentifier = requestId
+                },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = null
+                Routing = null
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-RequestId");
+            context.Response.Headers[0].Value.Should().Be(requestId);
         }
 
         [Fact]
-        public async void pipeline_requestId___returns_true_and_doesnt_add_header_for_null_requestConfig()
+        public async void pipeline_requestId___returns_true_and_adds_header_for_null_requestConfig()
         {
+            var requestId = $"test-Id-{Guid.NewGuid()}";
+
             var context = new ApiRequestContext
             {
+                Request = new ApiRequestInfo
+                {
+                    RequestIdentifier = requestId
+                },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = null
+                Configuration = null
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-RequestId");
+            context.Response.Headers[0].Value.Should().Be(requestId);
         }
 
         [Fact]
-        public async void pipeline_requestId___returns_true_and_doesnt_add_header_for_null_requestIdConfig()
+        public async void pipeline_requestId___returns_true_and_doesnt_add_header_for_null_requestId()
         {
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = null
                 }
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            context.Request.RequestIdentifier = null;
+
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -91,19 +109,19 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = false
                 }
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Theory]
@@ -114,24 +132,24 @@
         {
             var context = new ApiRequestContext
             {
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     RequestIdentifier = requestId
                 },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -141,26 +159,26 @@
 
             var context = new ApiRequestContext
             {
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     RequestIdentifier = requestId
                 },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-RequestId");
-            context.ResponseInfo.Headers[0].Value.Should().Be(requestId);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-RequestId");
+            context.Response.Headers[0].Value.Should().Be(requestId);
         }
 
         [Fact]
@@ -168,23 +186,23 @@
         {
             var context = new ApiRequestContext
             {
-                RequestInfo = new ApiRequestInfo(),
+                Request = new ApiRequestInfo(),
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }
             };
 
-            var processed = await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestId(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-RequestId");
-            context.ResponseInfo.Headers[0].Value.Should().Be(context.RequestInfo.RequestIdentifier);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-RequestId");
+            context.Response.Headers[0].Value.Should().Be(context.Request.RequestIdentifier);
         }
     }
 }

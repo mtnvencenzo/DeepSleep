@@ -67,7 +67,7 @@ Content-Length: 1
                 shouldHaveResponse: true,
                 expectedContentType: applicationXml,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

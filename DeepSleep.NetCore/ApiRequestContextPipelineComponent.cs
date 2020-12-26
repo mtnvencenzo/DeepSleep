@@ -58,9 +58,9 @@
 
 #if DEBUG
             var previousForeColor = Console.ForegroundColor;
-            Console.Write($"{context.ProcessingInfo.UTCRequestDuration.StartDate.ToString("yyyy-MM-ddT HH:mm:ss.fffzzz", CultureInfo.CurrentCulture)} ");
+            Console.Write($"{context.Runtime.Duration.UtcStart.ToString("yyyy-MM-ddT HH:mm:ss.fffzzz", CultureInfo.CurrentCulture)} ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{context.RequestInfo.Method.ToUpper()} {context.RequestInfo.RequestUri} {context.RequestInfo.Protocol}");
+            Console.WriteLine($"{context.Request.Method.ToUpper()} {context.Request.RequestUri} {context.Request.Protocol}");
             Console.ForegroundColor = previousForeColor;
 #endif
 
@@ -72,7 +72,7 @@
         /// <returns></returns>
         private Task<ApiRequestContext> BuildApiRequestContext(HttpContext context)
         {
-            DateTime serverTime = DateTime.UtcNow;
+            var serverTime = DateTimeOffset.UtcNow;
 
             var apiContext = new ApiRequestContext
             {
@@ -81,14 +81,8 @@
                 RequestServices = context.RequestServices,
                 RegisterForDispose = (disposable) => context.Response.RegisterForDispose(disposable),
                 ConfigureMaxRequestLength = (length) => SetMaxRequestLength(length, context),
-                ProcessingInfo = new ApiProcessingInfo
-                {
-                    UTCRequestDuration = new ApiRequestDuration
-                    {
-                        StartDate = serverTime
-                    }
-                },
-                RequestInfo = new ApiRequestInfo
+                Runtime = new ApiRuntimeInfo(),
+                Request = new ApiRequestInfo
                 {
                     Path = context.Request.Path,
                     Protocol = context.Request.Protocol,
@@ -121,6 +115,8 @@
                 }
             };
 
+            apiContext.Runtime.Duration.UtcStart = serverTime;
+
             return Task.FromResult(apiContext);
         }
 
@@ -128,7 +124,7 @@
         /// <param name="request">The request.</param>
         /// <param name="serverTime">The server time.</param>
         /// <returns></returns>
-        private DateTime? GetRequestDate(HttpRequest request, DateTime serverTime)
+        private DateTime? GetRequestDate(HttpRequest request, DateTimeOffset serverTime)
         {
             if (request == null)
             {
@@ -195,7 +191,7 @@
         /// <param name="val">The value.</param>
         /// <param name="serverTime">The server time (UTC) when the service started processing the request.</param>
         /// <returns></returns>
-        private DateTime? ProcessHeaderDateValue(string val, DateTime serverTime)
+        private DateTime? ProcessHeaderDateValue(string val, DateTimeOffset serverTime)
         {
             if (string.IsNullOrWhiteSpace(val))
             {
@@ -274,7 +270,7 @@
         /// <param name="isInUtc">if set to <c>true</c> [is in UTC].</param>
         /// <param name="hasLocalOffSet">if set to <c>true</c> [has local off set].</param>
         /// <returns></returns>
-        private DateTime ProcessDateHeaderValueKind(DateTime parsed, DateTime serverTime, bool isInUtc, bool hasLocalOffSet)
+        private DateTime ProcessDateHeaderValueKind(DateTime parsed, DateTimeOffset serverTime, bool isInUtc, bool hasLocalOffSet)
         {
             if (parsed.Kind != DateTimeKind.Utc && isInUtc)
                 return parsed.ChangeKind(DateTimeKind.Utc);
@@ -604,36 +600,27 @@
                 return null;
             }
 
-            string origin = string.Empty;
-            string requestMethod = string.Empty;
-            string requestHeaders = string.Empty;
+            string origin = null;
+            string requestMethod = null;
+            string requestHeaders = null;
 
             var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "origin");
             if (header.Key != null)
             {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    origin = header.Value;
-                }
+                origin = header.Value;
             }
 
 
             header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "access-control-request-method");
             if (header.Key != null)
             {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    requestMethod = header.Value;
-                }
+                requestMethod = header.Value;
             }
 
             header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "access-control-request-headers");
             if (header.Key != null)
             {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    requestHeaders = header.Value;
-                }
+                requestHeaders = header.Value;
             }
 
             return new CrossOriginRequestValues
@@ -670,7 +657,7 @@
         {
             string ip = null;
 
-            // todo support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-For
+            // TODO: support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-For
 
             // X-Forwarded-For (csv list):  Using the First entry in the list seems to work
             // for 99% of cases however it has been suggested that a better (although tedious)
@@ -702,7 +689,7 @@
         {
             string port = null;
 
-            // todo support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-Port
+            // TODO: support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-Port
 
             // X-Forwarded-Port (csv list):  Using the First entry in the list seems to work
             // for 99% of cases however it has been suggested that a better (although tedious)
@@ -1104,15 +1091,15 @@
             {
                 await requestPipeline.Run(contextResolver);
 
-                var responseDate = DateTime.UtcNow;
-                context.ResponseInfo.Date = responseDate;
+                var responseDate = DateTimeOffset.UtcNow;
+                context.Response.Date = responseDate;
 
-                context.ResponseInfo.AddHeader("Date", responseDate.ToString("r"));
+                context.Response.AddHeader("Date", responseDate.ToString("r"));
                 httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
                 // Sync up the expir header for nocache requests with the date header being used
-                var contextExpiresHeader = context.ResponseInfo.Headers.FirstOrDefault(h => h.Name == "Expires");
-                var cacheDirective = context.RequestConfig?.CacheDirective;
+                var contextExpiresHeader = context.Response.Headers.FirstOrDefault(h => h.Name == "Expires");
+                var cacheDirective = context.Configuration?.CacheDirective;
 
                 if (contextExpiresHeader != null && (cacheDirective == null || cacheDirective.Cacheability == HttpCacheType.NoCache))
                 {
@@ -1120,9 +1107,9 @@
                 }
 
                 // Merge status code to the http response
-                httpcontext.Response.StatusCode = context.ResponseInfo.StatusCode;
+                httpcontext.Response.StatusCode = context.Response.StatusCode;
 
-                if (context.ResponseInfo.StatusCode == 450)
+                if (context.Response.StatusCode == 450)
                 {
                     try
                     {
@@ -1132,62 +1119,63 @@
                 }
 
                 // Add any headers to the http context
-                void addHeadersToResponse() => context.ResponseInfo.Headers.ForEach(h =>
+                void addHeadersToResponse() => context.Response.Headers.ForEach(h =>
                 {
                     if (!httpcontext.Response.Headers.ContainsKey(h.Name))
                     {
-                        httpcontext.Response.Headers.Add(h.Name, context.ResponseInfo.GetHeaderValues(h.Name));
+                        httpcontext.Response.Headers.Add(h.Name, context.Response.GetHeaderValues(h.Name));
                     }
                 });
 
-                if (context.ResponseInfo.ResponseWriter != null && context.ResponseInfo.ResponseWriterOptions != null)
+                if (context.Response.ResponseWriter != null && context.Response.ResponseWriterOptions != null)
                 {
-                    context.ResponseInfo.AddHeader("Content-Type", context.ResponseInfo.ContentType.ToString());
+                    context.Response.AddHeader("Content-Type", context.Response.ContentType.ToString());
 
-                    if (!string.IsNullOrWhiteSpace(context.ResponseInfo.ContentLanguage))
+                    if (!string.IsNullOrWhiteSpace(context.Response.ContentLanguage))
                     {
-                        context.ResponseInfo.AddHeader("Content-Language", context.ResponseInfo.ContentLanguage);
+                        context.Response.AddHeader("Content-Language", context.Response.ContentLanguage);
                     }
 
-                    if (!context.RequestInfo.IsHeadRequest())
+                    if (!context.Request.IsHeadRequest())
                     {
-                        var contentLength = await context.ResponseInfo.ResponseWriter.WriteType(
+                        var contentLength = await context.Response.ResponseWriter.WriteType(
                             httpcontext.Response.Body,
-                            context.ResponseInfo.ResponseObject,
-                            context.ResponseInfo.ResponseWriterOptions,
+                            context.Response.ResponseObject,
+                            context.Response.ResponseWriterOptions,
                             (l) =>
                             {
-                                context.ResponseInfo.ContentLength = l;
-                                context.ResponseInfo.AddHeader("Content-Length", l.ToString(CultureInfo.InvariantCulture));
+                                context.Response.ContentLength = l;
+                                context.Response.AddHeader("Content-Length", l.ToString(CultureInfo.InvariantCulture));
                                 addHeadersToResponse();
                             }).ConfigureAwait(false);
 
-                        context.ResponseInfo.ContentLength = contentLength;
+                        context.Response.ContentLength = contentLength;
                     }
                     else
                     {
                         using (var ms = new MemoryStream())
                         {
-                            await context.ResponseInfo.ResponseWriter.WriteType(
+                            await context.Response.ResponseWriter.WriteType(
                                 ms,
-                                context.ResponseInfo.ResponseObject,
-                                context.ResponseInfo.ResponseWriterOptions).ConfigureAwait(false);
+                                context.Response.ResponseObject,
+                                context.Response.ResponseWriterOptions).ConfigureAwait(false);
 
-                            context.ResponseInfo.ContentLength = ms.Length;
-                            context.ResponseInfo.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
+                            context.Response.ResponseObject = null;
+                            context.Response.ContentLength = ms.Length;
+                            context.Response.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
                             addHeadersToResponse();
                         }
                     }
                 }
                 else
                 {
-                    context.ResponseInfo.ContentLength = 0;
-                    context.ResponseInfo.AddHeader("Content-Length", "0");
+                    context.Response.ContentLength = 0;
+                    context.Response.AddHeader("Content-Length", "0");
                     addHeadersToResponse();
                 }
             }
 
-            context.ProcessingInfo.UTCRequestDuration.EndDate = DateTime.UtcNow;
+            context.Runtime.Duration.UtcEnd = DateTime.UtcNow;
             return true;
         }
     }

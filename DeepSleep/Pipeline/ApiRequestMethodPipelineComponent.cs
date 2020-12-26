@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -22,7 +23,11 @@
         {
             var context = contextResolver.GetContext();
 
-            if (await context.ProcessHttpRequestMethod().ConfigureAwait(false))
+            var routes = context?.RequestServices.GetService<IApiRoutingTable>();
+            var resolver = context?.RequestServices.GetService<IUriRouteResolver>();
+            var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
+
+            if (await context.ProcessHttpRequestMethod(routes, resolver, defaultRequestConfig).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -44,18 +49,24 @@
 
         /// <summary>Processes the HTTP request method.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="routes">The routes.</param>
+        /// <param name="resolver">The resolver.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context)
+        internal static async Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context, 
+            IApiRoutingTable routes, 
+            IUriRouteResolver resolver, 
+            IApiRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 // Templates exist for thies route
-                if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) > 0)
+                if ((context.Routing?.Template?.Locations?.Count ?? 0) > 0)
                 {
                     // A route was not found for the template 
-                    if (context.RouteInfo.RoutingItem == null)
+                    if (context.Routing.Route == null)
                     {
-                        var methods = context.RouteInfo.TemplateInfo.EndpointLocations
+                        var methods = context.Routing.Template.Locations
                             .Where(e => !string.IsNullOrWhiteSpace(e?.HttpMethod))
                             .Select(e => e.HttpMethod.ToUpper())
                             .Distinct()
@@ -63,23 +74,40 @@
 
                         if (methods.Contains("GET") && !methods.Contains("HEAD"))
                         {
-                            methods.Add("HEAD");
+                            if (resolver != null)
+                            {
+                                var match = await resolver.MatchRoute(
+                                    routes,
+                                    "GET",
+                                    context.Request.Path).ConfigureAwait(false);
+
+                                if (match != null)
+                                {
+                                    var enableHeadForGetRequests = match.Configuration?.EnableHeadForGetRequests
+                                        ?? defaultRequestConfiguration?.EnableHeadForGetRequests
+                                        ?? ApiRequestContext.GetDefaultRequestConfiguration().EnableHeadForGetRequests
+                                        ?? true;
+
+                                    if (enableHeadForGetRequests)
+                                    {
+                                        methods.Add("HEAD");
+                                    }
+                                }
+                            }
                         }
 
-                        context.ResponseInfo.AddHeader("Allow", string.Join(", ", methods));
+                        context.Runtime.Internals.IsMethodNotFound = true;
+                        context.Response.AddHeader("Allow", string.Join(", ", methods));
+                        context.Response.StatusCode = 405;
 
-                        //logger?.LogWarning($"Request method {context.RequestInfo.Method} could be not matched with template {context.RouteInfo.TemplateInfo}.  Available methods are {string.Join(", ", methods)}, issueing HTTP 405 Method Not Allowed");
-
-                        context.ResponseInfo.StatusCode = 405;
-
-                        return Task.FromResult(false);
+                        return false;
                     }
                 }
 
-                return Task.FromResult(true);
+                return true;
             }
 
-            return Task.FromResult(false);
+            return false;
         }
     }
 }

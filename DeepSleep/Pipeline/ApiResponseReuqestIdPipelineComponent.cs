@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -26,7 +27,10 @@
             finally
             {
                 var context = contextResolver.GetContext();
-                await context.ProcessHttpResponseRequestId().ConfigureAwait(false);
+
+                var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
+
+                await context.ProcessHttpResponseRequestId(defaultRequestConfig).ConfigureAwait(false);
             }
         }
     }
@@ -44,18 +48,24 @@
             return pipeline.UsePipelineComponent<ApiResponseReuqestIdPipelineComponent>();
         }
 
-        /// <summary>Processes the HTTP response correlation.</summary>
+        /// <summary>Processes the HTTP response request identifier.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpResponseRequestId(this ApiRequestContext context)
+        internal static Task<bool> ProcessHttpResponseRequestId(this ApiRequestContext context, IApiRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestConfig?.IncludeRequestIdHeaderInResponse ?? false)
+                if (!string.IsNullOrWhiteSpace(context.Request.RequestIdentifier))
                 {
-                    if (!string.IsNullOrWhiteSpace(context.RequestInfo.RequestIdentifier))
+                    var includeRequestIdHeaderInResponse = context.Configuration?.IncludeRequestIdHeaderInResponse
+                        ?? defaultRequestConfiguration?.EnableHeadForGetRequests
+                        ?? ApiRequestContext.GetDefaultRequestConfiguration().IncludeRequestIdHeaderInResponse
+                        ?? false;
+
+                    if (includeRequestIdHeaderInResponse == true)
                     {
-                        context.ResponseInfo.AddHeader("X-RequestId", context.RequestInfo.RequestIdentifier);
+                        context.Response.AddHeader("X-RequestId", context.Request.RequestIdentifier);
                     }
                 }
             }

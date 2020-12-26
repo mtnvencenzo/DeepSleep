@@ -23,7 +23,7 @@
         }
 
 
-        protected void SetupEnvironment(Action<IServiceCollection> servicePreprocessor)
+        protected void SetupEnvironment(Action<IServiceCollection> servicePreprocessor = null)
         {
             var services = new ServiceCollection();
             var basePath = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Startup)).Location);

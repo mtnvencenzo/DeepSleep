@@ -4,7 +4,6 @@
     using FluentAssertions;
     using global::Api.DeepSleep.Controllers.Pipeline;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -38,14 +37,14 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectRequestIdHeader: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<RequestIdModel>(response).ConfigureAwait(false);
             data.Should().NotBeNull();
-            data.RequestIdentifier.Should().Be(apiContext.RequestInfo.RequestIdentifier);
+            data.RequestIdentifier.Should().Be(apiContext.Request.RequestIdentifier);
         }
 
         [Fact]
@@ -75,7 +74,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectRequestIdHeader: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -108,7 +107,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectRequestIdHeader: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -142,14 +141,14 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectRequestIdHeader: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<RequestIdModel>(response).ConfigureAwait(false);
             data.Should().NotBeNull();
-            data.RequestIdentifier.Should().Be(apiContext.RequestInfo.RequestIdentifier);
+            data.RequestIdentifier.Should().Be(apiContext.Request.RequestIdentifier);
         }
     }
 }

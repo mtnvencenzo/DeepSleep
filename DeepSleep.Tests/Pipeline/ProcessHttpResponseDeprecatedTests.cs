@@ -21,10 +21,10 @@
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -33,16 +33,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = null
+                Routing = null
             };
 
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -51,16 +51,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = null
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -69,7 +69,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     Deprecated = null
                 }
@@ -78,10 +78,10 @@
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -90,7 +90,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     Deprecated = false
                 }
@@ -99,10 +99,10 @@
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -111,7 +111,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     Deprecated = true
                 }
@@ -120,12 +120,12 @@
             var processed = await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-Deprecated");
-            context.ResponseInfo.Headers[0].Value.Should().Be("true");
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-Deprecated");
+            context.Response.Headers[0].Value.Should().Be("true");
         }
     }
 }

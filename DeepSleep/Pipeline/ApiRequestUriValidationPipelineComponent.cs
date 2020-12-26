@@ -48,11 +48,11 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if(context.RequestConfig?.MaxRequestUriLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo?.RequestUri))
+                if(context.Configuration?.MaxRequestUriLength > 0 && !string.IsNullOrWhiteSpace(context.Request?.RequestUri))
                 {
-                    if (context.RequestInfo.RequestUri.Length > context.RequestConfig.MaxRequestUriLength)
+                    if (context.Request.RequestUri.Length > context.Configuration.MaxRequestUriLength)
                     {
-                        context.ResponseInfo.StatusCode = 414;
+                        context.Response.StatusCode = 414;
                         return Task.FromResult(false);
                     }
                 }

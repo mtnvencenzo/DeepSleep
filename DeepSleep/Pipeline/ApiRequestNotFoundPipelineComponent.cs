@@ -48,11 +48,11 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if ((context.RouteInfo?.TemplateInfo?.EndpointLocations?.Count ?? 0) == 0)
+                if ((context.Routing?.Template?.Locations?.Count ?? 0) == 0)
                 {
-                    //logger?.LogWarning($"Request routing could not find a match, issueing HTTP 404 Not Found");
+                    context.Runtime.Internals.IsNotFound = true;
 
-                    context.ResponseInfo.StatusCode = 404;
+                    context.Response.StatusCode = 404;
 
                     return Task.FromResult(false);
                 }

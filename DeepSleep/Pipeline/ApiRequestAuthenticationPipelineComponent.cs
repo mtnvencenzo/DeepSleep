@@ -55,56 +55,56 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (!(context.RequestConfig?.AllowAnonymous ?? false))
+                if (!(context.Configuration?.AllowAnonymous ?? false))
                 {
-                    var providers = context.RequestServices
-                        .GetServices<IAuthenticationProvider>()
-                        .ToList();
-
-                    var supportedAuthSchemes = context.RequestConfig.SupportedAuthenticationSchemes?.Count > 0
-                        ? context.RequestConfig.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
+                    var supportedAuthSchemes = context.Configuration.SupportedAuthenticationSchemes?.Count > 0
+                        ? context.Configuration.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
                         : new string[] { };
 
-                    var authProvider = providers
+                    var providers = context.RequestServices
+                        .GetServices<IAuthenticationProvider>()
                         .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
-                        .FirstOrDefault(p => p.CanHandleAuthScheme(context.RequestInfo.ClientAuthenticationInfo?.AuthScheme));
+                        .ToList();
+
+                    var authProvider = providers
+                        .FirstOrDefault(p => p.CanHandleAuthScheme(context.Request.ClientAuthenticationInfo?.AuthScheme));
 
                     if (authProvider != null)
                     {
-                        if (context.RequestInfo.ClientAuthenticationInfo == null)
+                        if (context.Request.ClientAuthenticationInfo == null)
                         {
-                            context.RequestInfo.ClientAuthenticationInfo = new ClientAuthentication
+                            context.Request.ClientAuthenticationInfo = new ClientAuthentication
                             {
                                 AuthenticatedBy = AuthenticationType.Provider
                             };
                         }
                         else
                         {
-                            context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Provider;
+                            context.Request.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Provider;
                         }
 
                         await authProvider.Authenticate(context).ConfigureAwait(false);
                     }
                     else
                     {
-                        if (context.RequestInfo.ClientAuthenticationInfo == null)
+                        if (context.Request.ClientAuthenticationInfo == null)
                         {
-                            context.RequestInfo.ClientAuthenticationInfo = new ClientAuthentication
+                            context.Request.ClientAuthenticationInfo = new ClientAuthentication
                             {
                                 AuthenticatedBy = AuthenticationType.None
                             };
                         }
                         else
                         {
-                            context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.None;
+                            context.Request.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.None;
                         }
                     }
 
-                    var result = context.RequestInfo.ClientAuthenticationInfo.AuthResult;
+                    context.Request.ClientAuthenticationInfo.AuthResult = context.Request.ClientAuthenticationInfo.AuthResult ?? new AuthenticationResult(false);
+                    var result = context.Request.ClientAuthenticationInfo.AuthResult;
 
-                    if (result == null || !result.IsAuthenticated)
+                    if (!result.IsAuthenticated)
                     {
-
                         if (providers.FirstOrDefault() == null)
                         {
                             throw new Exception("No authentication providers established for authenticated route");
@@ -119,18 +119,17 @@
                             }
                         };
 
-                        challenges.ForEach(c => context.ResponseInfo.AddHeader("WWW-Authenticate", c));
-
-                        context.ResponseInfo.StatusCode = 401;
+                        context.Response.StatusCode = 401;
+                        challenges.ForEach(c => context.Response.AddHeader("WWW-Authenticate", c));
 
                         return false;
                     }
                 }
                 else
                 {
-                    if (context.RequestInfo.ClientAuthenticationInfo == null)
+                    if (context.Request.ClientAuthenticationInfo == null)
                     {
-                        context.RequestInfo.ClientAuthenticationInfo = new ClientAuthentication
+                        context.Request.ClientAuthenticationInfo = new ClientAuthentication
                         {
                             AuthenticatedBy = AuthenticationType.Anonymous,
                             AuthResult = new AuthenticationResult(true)
@@ -138,8 +137,8 @@
                     }
                     else
                     {
-                        context.RequestInfo.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Anonymous;
-                        context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
+                        context.Request.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Anonymous;
+                        context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
                     }
                 }
 

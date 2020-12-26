@@ -9,19 +9,9 @@
     /// </summary>
     public class ApiResponseInfo
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiResponseInfo"/> class.
-        /// </summary>
-        public ApiResponseInfo()
-        {
-            this.StatusCode = 200;
-            this.Headers = new List<ApiHeader>();
-            this.Cookies = new List<ApiCookie>();
-        }
-
         /// <summary>Gets or sets the status code.</summary>
         /// <value>The status code.</value>
-        public int StatusCode { get; set; }
+        public virtual int StatusCode { get; set; } = 200;
 
         /// <summary>Gets or sets the response object.</summary>
         /// <value>The response object.</value>
@@ -41,15 +31,15 @@
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public virtual IList<ApiHeader> Headers { get; set; }
+        public virtual IList<ApiHeader> Headers { get; set; } = new List<ApiHeader>();
 
         /// <summary>Gets or sets the cokkies associated with the response.</summary>
         /// <value>The cokies.</value>
-        public IList<ApiCookie> Cookies { get; set; }
+        public virtual IList<ApiCookie> Cookies { get; set; } = new List<ApiCookie>();
 
         /// <summary>The response header date used in generating the response
         /// </summary>
-        public virtual DateTime? Date { get; set; }
+        public virtual DateTimeOffset? Date { get; set; }
 
         /// <summary>The response writer available to write the response
         /// </summary>
@@ -63,7 +53,7 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        public string Dump()
+        public virtual string Dump()
         {
             var builder = new StringBuilder();
 
@@ -93,7 +83,10 @@
         /// </returns>
         public static bool HasSuccessStatus(this ApiResponseInfo response)
         {
-            return (response?.StatusCode).IsBetween(200, 299);
+            if (response == null)
+                return false;
+
+            return response.StatusCode.IsBetween(200, 299);
         }
 
         /// <summary>Adds the header.</summary>
@@ -103,7 +96,19 @@
         /// <returns></returns>
         public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value)
         {
-            response.Headers.Add(new ApiHeader(name, value));
+            if (response == null)
+                return response;
+
+            if (response.Headers == null)
+            {
+                response.Headers = new List<ApiHeader>();
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                response.Headers.Add(new ApiHeader(name, value));
+            }
+
             return response;
         }
 
@@ -113,7 +118,11 @@
         /// <returns></returns>
         public static string[] GetHeaderValues(this ApiResponseInfo response, string name)
         {
+            if (response == null || string.IsNullOrWhiteSpace(name))
+                return new string[] { };
+
             List<string> values = new List<string>();
+
             response.Headers.ForEach(h =>
             {
                 if (string.Compare(h.Name, name, true) == 0)
@@ -137,6 +146,14 @@
         /// <returns></returns>
         public static ApiResponseInfo AddEntityCaching(this ApiResponseInfo response, string etag = null, DateTimeOffset? lastModified = null)
         {
+            if (response == null)
+                return response;
+
+            if (response.Headers == null)
+            {
+                response.Headers = new List<ApiHeader>();
+            }
+
             if (!string.IsNullOrWhiteSpace(etag))
             {
                 if (response.Headers.HasHeader("ETag"))

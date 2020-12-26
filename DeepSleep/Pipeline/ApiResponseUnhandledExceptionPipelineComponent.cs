@@ -69,7 +69,7 @@
                     catch { }
                 }
 
-                context.ResponseInfo.StatusCode = code;
+                context.Response.StatusCode = code;
             }
 
             return true;

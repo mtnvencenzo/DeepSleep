@@ -57,13 +57,13 @@
         {
             if (UriModelType != null)
             {
-                if (UriModelType == typeof(T) || UriModelType.IsAssignableFrom(typeof(T)))
+                if (UriModelType == typeof(T) || UriModelType.IsSubclassOf(typeof(T)))
                     yield return (T)UriModel;
             }
 
             if (BodyModelType != null)
             {
-                if (BodyModelType == typeof(T) || BodyModelType.IsAssignableFrom(typeof(T)))
+                if (BodyModelType == typeof(T) || BodyModelType.IsSubclassOf(typeof(T)))
                     yield return (T)BodyModel;
             }
 

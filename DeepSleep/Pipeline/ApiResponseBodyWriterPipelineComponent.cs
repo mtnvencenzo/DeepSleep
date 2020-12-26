@@ -54,41 +54,41 @@
             {
                 var isWriteableResponse = false;
 
-                if (context.ResponseInfo.ResponseObject != null && formatterFactory != null)
+                if (context.Response.ResponseObject != null && formatterFactory != null)
                 {
-                    var accept = !string.IsNullOrWhiteSpace(context.RequestInfo.Accept)
-                        ? context.RequestInfo.Accept
+                    var accept = !string.IsNullOrWhiteSpace(context.Request.Accept)
+                        ? context.Request.Accept
                         : AcceptHeader.All();
 
 
                     var isConditionalRequestMatch = ApiCondtionalMatchType.None;
 
-                    if (string.Equals(context.RequestInfo.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.RequestInfo.IsHeadRequest() == false)
+                    if (string.Equals(context.Request.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.Request.IsHeadRequest() == false)
                     {
-                        isConditionalRequestMatch = context.IsConditionalRequestMatch(context.ResponseInfo);
+                        isConditionalRequestMatch = context.IsConditionalRequestMatch(context.Response);
                     }
 
                     if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
                     {
                         IFormatStreamOptions options = new FormatterOptions
                         {
-                            PrettyPrint = context.RequestInfo.PrettyPrint
+                            PrettyPrint = context.Request.PrettyPrint
                         };
 
                         var formatter = await formatterFactory.GetAcceptableFormatter(
-                            acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept, 
-                            writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes, 
+                            acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept, 
+                            writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes, 
                             formatterType: out var formatterType).ConfigureAwait(false);
 
-                        if (context.RequestConfig.ReadWriteConfiguration?.WriterResolver != null)
+                        if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                         {
-                            var overrides = await context.RequestConfig.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, options)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, options)).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
                                 formatter = await formatterFactory.GetAcceptableFormatter(
-                                    acceptHeader: context.RequestConfig?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
-                                    writeableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.WriteableMediaTypes,
+                                    acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                    writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                                     writeableFormatters: overrides.Formatters,
                                     formatterType: out formatterType).ConfigureAwait(false);
                             }
@@ -96,28 +96,28 @@
 
                         if (formatter != null)
                         {
-                            if (formatter.SupportsPrettyPrint && context.RequestInfo.PrettyPrint)
+                            if (formatter.SupportsPrettyPrint && context.Request.PrettyPrint)
                             {
-                                context.ResponseInfo.AddHeader("X-PrettyPrint", (options?.PrettyPrint ?? false).ToString().ToLower());
+                                context.Response.AddHeader("X-PrettyPrint", (options?.PrettyPrint ?? false).ToString().ToLower());
                             }
 
                             isWriteableResponse = true;
-                            context.ResponseInfo.ResponseWriter = formatter;
-                            context.ResponseInfo.ResponseWriterOptions = options;
-                            context.ResponseInfo.ContentType = formatterType;
+                            context.Response.ResponseWriter = formatter;
+                            context.Response.ResponseWriterOptions = options;
+                            context.Response.ContentType = formatterType;
                         }
                     }
                     else
                     {
-                        context.ResponseInfo.StatusCode = 304;
+                        context.Response.StatusCode = 304;
                     }
                 }
 
                 if (!isWriteableResponse)
                 {
-                    if (context.ResponseInfo.HasSuccessStatus() && context.ResponseInfo.StatusCode != 202)
+                    if (context.Response.HasSuccessStatus() && context.Response.StatusCode != 202)
                     {
-                        context.ResponseInfo.StatusCode = 204;
+                        context.Response.StatusCode = 204;
                     }
                 }
             }

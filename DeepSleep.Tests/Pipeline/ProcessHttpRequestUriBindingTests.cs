@@ -24,8 +24,8 @@
             var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -34,7 +34,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = null
                 }
@@ -43,8 +43,8 @@
             var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -53,7 +53,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -65,8 +65,8 @@
             var processed = await context.ProcessHttpRequestUriBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -75,7 +75,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -87,11 +87,11 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
         [Fact]
@@ -100,7 +100,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -112,11 +112,11 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
         [Fact]
@@ -125,7 +125,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -137,11 +137,11 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RouteInfo.RoutingItem.Should().BeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().BeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
         [Fact]
@@ -150,7 +150,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -161,7 +161,7 @@
 
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().Be(true);
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
         [Fact]
@@ -170,16 +170,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
                         UriModelType = typeof(StandardModel)
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -211,12 +211,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
             model.StringProp.Should().Be("StringProp1");
             model.CharProp.Should().Be('a');
@@ -249,16 +249,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
                         UriModelType = typeof(StandardModel)
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -271,12 +271,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
             model.DateTimeProp.ToString("r").Should().Be("Mon, 15 Jun 2009 20:45:30 GMT");
         }
@@ -295,16 +295,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
                         UriModelType = typeof(StandardModel)
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -317,12 +317,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
 
             if (boolValue.ToString().ToLower() == "true" || boolValue == "1")
@@ -341,16 +341,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
                         UriModelType = typeof(StandardNullableModel)
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -381,12 +381,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardNullableModel;
+            var model = context.Request.InvocationContext.UriModel as StandardNullableModel;
             model.Should().NotBeNull();
             model.CharProp.Value.Should().Be('a');
             model.ByteProp.Value.Should().Be(1);
@@ -414,7 +414,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -449,12 +449,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
             model.StringProp.Should().Be("StringProp1");
             model.CharProp.Should().Be('a');
@@ -484,16 +484,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
                         UriModelType = typeof(StandardNullableModel)
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -524,12 +524,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardNullableModel;
+            var model = context.Request.InvocationContext.UriModel as StandardNullableModel;
             model.Should().NotBeNull();
             model.CharProp.Value.Should().Be('a');
             model.ByteProp.Value.Should().Be(1);
@@ -557,7 +557,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -587,9 +587,9 @@
                         { "EnumProp", "Item2" }
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -621,12 +621,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
             model.StringProp.Should().Be("StringProp1");
             model.CharProp.Should().Be('a');
@@ -656,7 +656,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -677,9 +677,9 @@
                         { "EnumProp", "Item1" }
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -700,12 +700,12 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().NotBeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().NotBeNull();
 
-            var model = context.RequestInfo.InvocationContext.UriModel as StandardModel;
+            var model = context.Request.InvocationContext.UriModel as StandardModel;
             model.Should().NotBeNull();
             model.StringProp.Should().Be("StringProp1");
             model.CharProp.Should().Be('a');
@@ -735,7 +735,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
@@ -746,9 +746,9 @@
                         { "LongProp", "def" },
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = new ApiRoutingItem
+                    Route = new ApiRoutingItem
                     {
                         RouteVariables = new Dictionary<string, string>
                         {
@@ -761,17 +761,17 @@
             var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(400);
-            context.RouteInfo.Should().NotBeNull();
-            context.RequestInfo.InvocationContext.UriModel.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(400);
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().BeNull();
 
-            context.ProcessingInfo.Should().NotBeNull();
-            context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(1);
-            context.ErrorMessages[0].Should().StartWith("400.000004|");
-            context.ErrorMessages[0].Should().Be("400.000004|'LongProp' Is in an incorrect format and could not be bound.");
+            context.Runtime.Should().NotBeNull();
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(1);
+            context.Validation.Errors[0].Should().StartWith("400.000004|");
+            context.Validation.Errors[0].Should().Be("400.000004|'LongProp' Is in an incorrect format and could not be bound.");
         }
 
         private string UrlEncode(string val) => HttpUtility.UrlEncode(val);

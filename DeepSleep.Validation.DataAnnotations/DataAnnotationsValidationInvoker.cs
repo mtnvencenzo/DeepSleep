@@ -42,12 +42,12 @@
             var isValid = Validator.TryValidateObject(obj, validationContext, results, true);
             if (!isValid)
             {
-                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                context.Validation.State = ApiValidationState.Failed;
 
                 foreach (var validationResult in results)
                 {
                     var message = validationResult.ErrorMessage;
-                    context.ErrorMessages.Add(message);
+                    context.Validation.Errors.Add(message);
                 }
             }
 

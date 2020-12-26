@@ -20,8 +20,8 @@
             var processed = await context.ProcessHttpRequestAuthorization().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -35,8 +35,8 @@
             var processed = await context.ProcessHttpRequestAuthorization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
     }
 }

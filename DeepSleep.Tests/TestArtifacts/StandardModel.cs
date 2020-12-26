@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class StandardModel
+    public class StandardModel : StandardModelBase
     {
         public string StringProp { get; set; }
 

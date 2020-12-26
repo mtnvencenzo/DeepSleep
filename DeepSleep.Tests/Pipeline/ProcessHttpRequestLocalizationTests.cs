@@ -30,8 +30,8 @@ namespace DeepSleep.Tests.Pipeline
             var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
 
             CultureInfo.CurrentCulture.Name.Should().Be(currentCultureCode);
             CultureInfo.CurrentUICulture.Name.Should().Be(currentUiCultureCode);
@@ -48,10 +48,10 @@ namespace DeepSleep.Tests.Pipeline
             var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
 
             processed.Should().BeTrue();
-            context.RequestInfo.AcceptCulture.Name.Should().Be("es");
+            context.Request.AcceptCulture.Name.Should().Be("es");
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -73,12 +73,12 @@ namespace DeepSleep.Tests.Pipeline
         {
             var context = new ApiRequestContext
             {
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     FallBackLanguage = fallBackLanguage,
                     SupportedLanguages = supported?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     AcceptCulture = new CultureInfo("ru"),
                     AcceptLanguage = acceptable
@@ -89,10 +89,10 @@ namespace DeepSleep.Tests.Pipeline
             var processed = await context.ProcessHttpRequestLocalization().ConfigureAwait(false);
 
             processed.Should().BeTrue();
-            context.RequestInfo.AcceptCulture.Name.Should().Be(expected);
+            context.Request.AcceptCulture.Name.Should().Be(expected);
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
     }
 }

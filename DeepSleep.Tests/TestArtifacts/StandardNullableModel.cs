@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class StandardNullableModel
+    public class StandardNullableModel : StandardModelBase
     {
         public char? CharProp { get; set; }
 

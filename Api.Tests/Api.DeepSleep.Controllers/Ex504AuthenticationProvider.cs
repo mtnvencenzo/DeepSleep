@@ -12,7 +12,7 @@
     {
         /// <summary>Gets the realm.</summary>
         /// <value>The realm.</value>
-        public string Realm => "UnitTest";
+        public string Realm => "Api-Unit-Test";
 
         /// <summary>Gets the authentication scheme.</summary>
         /// <value>The authentication scheme.</value>

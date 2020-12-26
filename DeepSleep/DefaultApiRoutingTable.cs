@@ -81,9 +81,8 @@
             {
                 Template = template,
                 HttpMethod = httpMethod.ToUpper(),
-                VariablesList = GetTemplateVariables(template),
-                Config = config,
-                EndpointLocation = new ApiEndpointLocation
+                Configuration = config,
+                Location = new ApiEndpointLocation
                 {
                     Controller = Type.GetType(controller.AssemblyQualifiedName),
                     Endpoint = endpoint,
@@ -93,26 +92,6 @@
 
             routes.Add(item);
             return this;
-        }
-
-        /// <summary>Gets the template variables.</summary>
-        /// <param name="template">The template.</param>
-        /// <returns></returns>
-        private IList<string> GetTemplateVariables(string template)
-        {
-            List<string> vars = new List<string>();
-
-            string[] parts = template.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var part in parts)
-            {
-                if (part.StartsWith("{"))
-                {
-                    vars.Add(part);
-                }
-            }
-
-            return vars;
         }
     }
 }

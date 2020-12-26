@@ -48,43 +48,42 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var statusCode = context.ResponseInfo.StatusCode;
+                var statusCode = context.Response.StatusCode;
 
                 if (statusCode >= 200 && statusCode <= 299 && statusCode != 204)
                 {
-                    if (context.RequestInfo.IsCorsPreflightRequest())
+                    // Don't add cache headers for pre-flight requests
+                    // This is handled in the prflight pipeline component
+                    if (context.Request.IsCorsPreflightRequest())
                     {
-                        context.ResponseInfo.AddHeader("Vary", "Origin");
-                        context.ResponseInfo.AddHeader("Access-Control-Max-Age", "600");
-
                         return Task.FromResult(true);
                     }
 
-                    var method = context.RequestInfo?.Method?.ToLower() ?? string.Empty;
+                    var method = context.Request?.Method?.ToLower() ?? string.Empty;
 
                     if (method.In(StringComparison.InvariantCultureIgnoreCase, "get", "put", "options", "head"))
                     {
-                        var directive = context.RequestConfig?.CacheDirective;
+                        var directive = context.Configuration?.CacheDirective;
 
                         if (directive != null && directive.Cacheability == HttpCacheType.Cacheable && directive.ExpirationSeconds > 0)
                         {
-                            context.ResponseInfo.AddHeader("Cache-Control", $"{(directive.CacheLocation ?? HttpCacheLocation.Private).ToString().ToLower()}, max-age={directive.ExpirationSeconds}");
-                            context.ResponseInfo.AddHeader("Expires", DateTime.UtcNow.AddSeconds(directive.ExpirationSeconds.Value).ToString("r"));
+                            context.Response.AddHeader("Cache-Control", $"{(directive.CacheLocation ?? HttpCacheLocation.Private).ToString().ToLower()}, max-age={directive.ExpirationSeconds}");
+                            context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(directive.ExpirationSeconds.Value).ToString("r"));
 
                             // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
-                            context.ResponseInfo.AddHeader("Vary", "Accept, Accept-Encoding, Accept-Language");
+                            context.Response.AddHeader("Vary", "Accept, Accept-Encoding, Accept-Language");
 
                             return Task.FromResult(true);
                         }
                     }
                 }
 
-                context.ResponseInfo.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+                context.Response.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
 
                 // this gets updated when the response date is added to the headers.  THe value will
                 // ultimately be the response date - 1 year.  Needs to be here though because the header is checked
                 // for prior to updating it.
-                context.ResponseInfo.AddHeader("Expires", DateTime.UtcNow.AddYears(-1).ToString("r"));
+                context.Response.AddHeader("Expires", DateTime.UtcNow.AddYears(-1).ToString("r"));
             }
 
             return Task.FromResult(true);

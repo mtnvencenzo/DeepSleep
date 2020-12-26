@@ -18,8 +18,8 @@
             var processed = await context.ProcessHttpResponseUnhandledException(null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -32,16 +32,16 @@
             var processed = await context.ProcessHttpResponseUnhandledException(exception, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(501);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(501);
 
-            context.ProcessingInfo.Should().NotBeNull();
-            context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(0);
-            context.ProcessingInfo.Exceptions.Should().NotBeNull();
-            context.ProcessingInfo.Exceptions.Should().HaveCount(1);
-            context.ProcessingInfo.Exceptions[0].Should().Be(exception);
+            context.Runtime.Should().NotBeNull();
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
+            context.Runtime.Exceptions.Should().NotBeNull();
+            context.Runtime.Exceptions.Should().HaveCount(1);
+            context.Runtime.Exceptions[0].Should().Be(exception);
         }
 
         [Fact]
@@ -61,16 +61,16 @@
             var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(501);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(501);
 
-            context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(0);
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
             exHandled.Should().Be(false);
-            context.ProcessingInfo.Exceptions.Should().NotBeNull();
-            context.ProcessingInfo.Exceptions.Should().HaveCount(1);
-            context.ProcessingInfo.Exceptions[0].Should().Be(exception);
+            context.Runtime.Exceptions.Should().NotBeNull();
+            context.Runtime.Exceptions.Should().HaveCount(1);
+            context.Runtime.Exceptions[0].Should().Be(exception);
         }
 
         [Fact]
@@ -90,17 +90,17 @@
             var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(500);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(500);
 
-            context.ProcessingInfo.Should().NotBeNull();
-            context.ErrorMessages.Should().NotBeNull();
-            context.ErrorMessages.Should().HaveCount(0);
+            context.Validation.Should().NotBeNull();
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
             exHandled.Should().Be(true);
-            context.ProcessingInfo.Exceptions.Should().NotBeNull();
-            context.ProcessingInfo.Exceptions.Should().HaveCount(1);
-            context.ProcessingInfo.Exceptions[0].Should().Be(exception);
+            context.Runtime.Exceptions.Should().NotBeNull();
+            context.Runtime.Exceptions.Should().HaveCount(1);
+            context.Runtime.Exceptions[0].Should().Be(exception);
         }
     }
 }

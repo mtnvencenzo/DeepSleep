@@ -58,17 +58,17 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RouteInfo?.RoutingItem?.EndpointLocation?.Controller == null)
+                if (context.Routing?.Route?.Location?.Controller == null)
                 {
                     throw new Exception("Routing item's controller type is null");
                 }
 
-                if (string.IsNullOrWhiteSpace(context.RouteInfo.RoutingItem.EndpointLocation.Endpoint))
+                if (string.IsNullOrWhiteSpace(context.Routing.Route.Location.Endpoint))
                 {
                     throw new Exception("Routing item's endpoint name is null");
                 }
 
-                MethodInfo method = context.RouteInfo.RoutingItem.EndpointLocation.GetEndpointMethod();
+                MethodInfo method = context.Routing.Route.Location.GetEndpointMethod();
                 object endpointController = null;
 
 
@@ -76,7 +76,7 @@
                 {
                     try
                     {
-                        endpointController = context.RequestServices.GetService(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
+                        endpointController = context.RequestServices.GetService(context.Routing.Route.Location.Controller);
                     }
                     catch
                     {
@@ -88,18 +88,18 @@
                 {
                     try
                     {
-                        var constructors = context.RouteInfo.RoutingItem.EndpointLocation.Controller.GetConstructors();
+                        var constructors = context.Routing.Route.Location.Controller.GetConstructors();
 
                         if (constructors.Length == 0 || constructors.FirstOrDefault(c => c.GetParameters().Length == 0) != null)
                         {
-                            endpointController = Activator.CreateInstance(context.RouteInfo.RoutingItem.EndpointLocation.Controller);
+                            endpointController = Activator.CreateInstance(context.Routing.Route.Location.Controller);
                         }
 
                         var firstConstructor = constructors.First();
                         var constructorParameters = new List<object>();
 
                         firstConstructor.GetParameters().ToList().ForEach(p => constructorParameters.Add(null));
-                        endpointController = Activator.CreateInstance(context.RouteInfo.RoutingItem.EndpointLocation.Controller, constructorParameters.ToArray());
+                        endpointController = Activator.CreateInstance(context.Routing.Route.Location.Controller, constructorParameters.ToArray());
                     }
                     catch (Exception)
                     {
@@ -107,11 +107,11 @@
                     }
                 }
 
-                var uriParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetUriParameter();
-                var bodyParameter = context.RouteInfo.RoutingItem.EndpointLocation.GetBodyParameter();
-                var simpleParameters = context.RouteInfo.RoutingItem.EndpointLocation.GetSimpleParameters();
+                var uriParameter = context.Routing.Route.Location.GetUriParameter();
+                var bodyParameter = context.Routing.Route.Location.GetBodyParameter();
+                var simpleParameters = context.Routing.Route.Location.GetSimpleParameters();
 
-                context.RequestInfo.InvocationContext = new ApiInvocationContext
+                context.Request.InvocationContext = new ApiInvocationContext
                 {
                     Controller = endpointController,
                     ControllerMethod = method,

@@ -20,13 +20,13 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(true),
-                ResponseInfo = null
+                Response = null
             };
 
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().BeNull();
+            context.Response.Should().BeNull();
         }
 
         [Fact]
@@ -38,19 +38,19 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     ResponseObject = null
                 },
-                RequestInfo = mockRequestInfo.Object
+                Request = mockRequestInfo.Object
             };
 
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(204);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(204);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -62,19 +62,19 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     ResponseObject = null
                 },
-                RequestInfo = mockRequestInfo.Object
+                Request = mockRequestInfo.Object
             };
 
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(204);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(204);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -86,19 +86,19 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     ResponseObject = "test"
                 },
-                RequestInfo = mockRequestInfo.Object
+                Request = mockRequestInfo.Object
             };
 
             var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(204);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(204);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -109,7 +109,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     ResponseObject = "test"
                 }
@@ -118,9 +118,9 @@
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(204);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(204);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Theory]
@@ -136,12 +136,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Accept = accept
                 }
@@ -150,9 +150,9 @@
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(204);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(204);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Theory]
@@ -167,12 +167,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Accept = accept
                 }
@@ -181,13 +181,13 @@
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(0);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(0);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Theory]
@@ -203,12 +203,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Accept = accept
                 }
@@ -217,13 +217,13 @@
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(0);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be(expectedContentType);
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(0);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be(expectedContentType);
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -237,12 +237,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -251,18 +251,18 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(304);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.ContentType.Should().BeNull();
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(304);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.ContentType.Should().BeNull();
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -275,12 +275,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -288,17 +288,17 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(304);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.ContentType.Should().BeNull();
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(304);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.ContentType.Should().BeNull();
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -311,12 +311,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -324,17 +324,17 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(304);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.ContentType.Should().BeNull();
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(304);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.ContentType.Should().BeNull();
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -349,12 +349,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -363,19 +363,19 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -390,12 +390,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -404,19 +404,19 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -431,12 +431,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -445,19 +445,19 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -471,12 +471,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -484,18 +484,18 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("ETag", etag));
+            context.Response.Headers.Add(new ApiHeader("ETag", etag));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -509,12 +509,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "GET",
                     Accept = "application/json",
@@ -522,18 +522,18 @@
                 }
             };
 
-            context.ResponseInfo.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
+            context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         [Fact]
@@ -545,12 +545,12 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 201,
                     ResponseObject = "test"
                 },
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Accept = "application/json",
                     PrettyPrint = true
@@ -560,15 +560,15 @@
             var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.ResponseObject.Should().NotBeNull();
-            context.ResponseInfo.StatusCode.Should().Be(201);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-PrettyPrint");
-            context.ResponseInfo.Headers[0].Value.Should().Be("true");
-            context.ResponseInfo.ContentType.Should().NotBeNull();
-            context.ResponseInfo.ContentType.Should().Be("application/json");
-            context.ResponseInfo.ContentLength.Should().Be(0);
+            context.Response.ResponseObject.Should().NotBeNull();
+            context.Response.StatusCode.Should().Be(201);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-PrettyPrint");
+            context.Response.Headers[0].Value.Should().Be("true");
+            context.Response.ContentType.Should().NotBeNull();
+            context.Response.ContentType.Should().Be("application/json");
+            context.Response.ContentLength.Should().Be(0);
         }
 
         private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)

@@ -60,28 +60,28 @@
             {
                 var addedBindingError = false;
 
-                if (context.RequestInfo.InvocationContext?.UriModelType != null || (context.RequestInfo.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
+                if (context.Request.InvocationContext?.UriModelType != null || (context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
                 {
                     var nameValues = new Dictionary<string, string>();
 
-                    if ((context.RouteInfo?.RoutingItem?.RouteVariables?.Count ?? 0) > 0)
+                    if ((context.Routing?.Route?.RouteVariables?.Count ?? 0) > 0)
                     {
-                        foreach (var routeVar in context.RouteInfo.RoutingItem.RouteVariables.Keys)
+                        foreach (var routeVar in context.Routing.Route.RouteVariables.Keys)
                         {
                             if (!nameValues.ContainsKey(routeVar))
                             {
-                                nameValues.Add(routeVar, context.RouteInfo.RoutingItem.RouteVariables[routeVar]);
+                                nameValues.Add(routeVar, context.Routing.Route.RouteVariables[routeVar]);
                             }
                         }
                     }
 
-                    if ((context.RequestInfo.QueryVariables?.Count ?? 0) > 0)
+                    if ((context.Request.QueryVariables?.Count ?? 0) > 0)
                     {
-                        foreach (var qvar in context.RequestInfo.QueryVariables.Keys)
+                        foreach (var qvar in context.Request.QueryVariables.Keys)
                         {
                             if (!nameValues.ContainsKey(qvar))
                             {
-                                nameValues.Add(qvar, context.RequestInfo.QueryVariables[qvar]);
+                                nameValues.Add(qvar, context.Request.QueryVariables[qvar]);
                             }
                         }
                     }
@@ -91,7 +91,7 @@
                         // ----------------------------------------
                         // Bind the UrlModel if UrlModelType exists
                         // ----------------------------------------
-                        if (context.RequestInfo.InvocationContext?.UriModelType != null)
+                        if (context.Request.InvocationContext?.UriModelType != null)
                         {
                             var bindingValues = nameValues
                                 .Select(kv => $"{kv.Key}={kv.Value}");
@@ -102,47 +102,47 @@
                             {
                                 var uriModel = await formUrlEncodedObjectSerializer.Deserialize(
                                     formUrlEncoded,
-                                    context.RequestInfo.InvocationContext.UriModelType,
+                                    context.Request.InvocationContext.UriModelType,
                                     true).ConfigureAwait(false);
 
-                                context.RequestInfo.InvocationContext.UriModel = uriModel;
+                                context.Request.InvocationContext.UriModel = uriModel;
                             }
                             catch (JsonException ex)
                             {
                                 addedBindingError = true;
-                                context.ErrorMessages.Add(string.Format(ValidationErrors.UriBindingError, ex.Path.TrimStart('$', '.')));
+                                context.Validation.Errors.Add(string.Format(ValidationErrors.UriBindingError, ex.Path.TrimStart('$', '.')));
                             }
                         }
 
                         // ----------------------------------------
                         // Bind the Simple Parameters if exists
                         // ----------------------------------------
-                        if ((context.RequestInfo.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
+                        if ((context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
                         {
                             foreach (var nameValue in nameValues)
                             {
-                                var simpleParameter = context.RequestInfo.InvocationContext.SimpleParameters
+                                var simpleParameter = context.Request.InvocationContext.SimpleParameters
                                     .Where(s => s.Value == null)
                                     .FirstOrDefault(p => p.Key.Name == nameValue.Key).Key;
 
                                 // case insensitive check
                                 if (simpleParameter == null)
                                 {
-                                    simpleParameter = context.RequestInfo.InvocationContext.SimpleParameters
+                                    simpleParameter = context.Request.InvocationContext.SimpleParameters
                                         .Where(s => s.Value == null)
                                         .FirstOrDefault(p => string.Compare(p.Key.Name, nameValue.Key, true) == 0).Key;
                                 }
 
-                                if (simpleParameter != null && context.RequestInfo.InvocationContext.SimpleParameters.ContainsKey(simpleParameter))
+                                if (simpleParameter != null && context.Request.InvocationContext.SimpleParameters.ContainsKey(simpleParameter))
                                 {
                                     try
                                     {
-                                        context.RequestInfo.InvocationContext.SimpleParameters[simpleParameter] = ConvertValue(nameValue.Value, simpleParameter.ParameterType);
+                                        context.Request.InvocationContext.SimpleParameters[simpleParameter] = ConvertValue(nameValue.Value, simpleParameter.ParameterType);
                                     }
                                     catch
                                     {
                                         addedBindingError = true;
-                                        context.ErrorMessages.Add(
+                                        context.Validation.Errors.Add(
                                             string.Format(ValidationErrors.UriBindingValueError, simpleParameter.Name, nameValue.Value, simpleParameter.ParameterType.Name));
                                     }
                                 }
@@ -153,7 +153,7 @@
 
                 if (addedBindingError)
                 {
-                    context.ResponseInfo.StatusCode = 400;
+                    context.Response.StatusCode = 400;
                     return false;
                 }
 

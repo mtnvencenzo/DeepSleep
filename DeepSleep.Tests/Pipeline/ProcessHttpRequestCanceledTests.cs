@@ -19,9 +19,9 @@
 
             var processed = await context.ProcessHttpRequestCanceled().ConfigureAwait(false);
             processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(408);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(408);
         }
 
         [Fact]
@@ -35,8 +35,8 @@
             var processed = await context.ProcessHttpRequestCanceled().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
     }
 }

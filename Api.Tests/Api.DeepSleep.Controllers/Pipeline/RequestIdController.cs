@@ -29,7 +29,7 @@
 
             return new RequestIdModel
             {
-                RequestIdentifier = context.RequestInfo.RequestIdentifier
+                RequestIdentifier = context.Request.RequestIdentifier
             };
         }
 
@@ -39,7 +39,7 @@
 
             return new RequestIdModel
             {
-                RequestIdentifier = context.RequestInfo.RequestIdentifier
+                RequestIdentifier = context.Request.RequestIdentifier
             };
         }
     }

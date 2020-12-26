@@ -14,13 +14,13 @@
         /// <returns></returns>
         public Task Process(ApiRequestContext context)
         {
-            if (context?.ResponseInfo != null && context.ResponseInfo.HasSuccessStatus() == false)
+            if (context?.Response != null && context.Response.HasSuccessStatus() == false)
             {
-                if (context.ErrorMessages != null && context.ErrorMessages.Count > 0)
+                if (context.Validation?.Errors != null && context.Validation?.Errors.Count > 0)
                 {
-                    if (context.ResponseInfo.ResponseObject == null)
+                    if (context.Response.ResponseObject == null)
                     {
-                        var messages = context.ErrorMessages
+                        var messages = context.Validation.Errors
                             .Where(e => !string.IsNullOrWhiteSpace(e))
                             .Select(e => BuildResponseMessageFromResource(e))
                             .Where(e => e != null)
@@ -28,7 +28,7 @@
 
                         if (messages.Count > 0)
                         {
-                            context.ResponseInfo.ResponseObject = new ApiResult
+                            context.Response.ResponseObject = new ApiResult
                             {
                                 Messages = messages
                             };

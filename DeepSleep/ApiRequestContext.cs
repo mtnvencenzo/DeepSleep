@@ -3,50 +3,36 @@
     using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading;
 
     /// <summary>The API request context.</summary>
+    [DebuggerDisplay("[{RequestInfo?.Method?.ToUpper()}] {PathBase}")]
     public class ApiRequestContext
     {
-        /// <summary>Initializes a new instance of the <see cref="ApiRequestContext"/> class.</summary>
-        public ApiRequestContext()
-        {
-            RequestInfo = new ApiRequestInfo();
-            ProcessingInfo = new ApiProcessingInfo();
-            Items = new Dictionary<string, object>();
-            RouteInfo = new ApiRoutingInfo();
-            ResponseInfo = new ApiResponseInfo();
-            RequestAborted = new CancellationToken(false);
-            RequestConfig = new DefaultApiRequestConfiguration();
-        }
-
         /// <summary>Gets the items.</summary>
         /// <value>The items.</value>
-        public virtual Dictionary<string, object> Items { get; private set; }
+        public virtual IDictionary<string, object> Items { get; private set; } = new Dictionary<string, object>();
 
         /// <summary>Gets the request information.</summary>
         /// <value>The request information.</value>
-        public virtual ApiRequestInfo RequestInfo { get; set; }
+        public virtual ApiRequestInfo Request { get; set; } = new ApiRequestInfo();
 
         /// <summary>Gets or sets the request configuration.</summary>
         /// <value>The request configuration.</value>
-        public virtual IApiRequestConfiguration RequestConfig { get; set; }
+        public virtual IApiRequestConfiguration Configuration { get; set; } = new DefaultApiRequestConfiguration();
 
         /// <summary>Gets or sets the response information.</summary>
         /// <value>The response information.</value>
-        public virtual ApiResponseInfo ResponseInfo { get; set; }
+        public virtual ApiResponseInfo Response { get; set; } = new ApiResponseInfo();
 
-        /// <summary>Gets or sets the route information.</summary>
-        /// <value>The route information.</value>
-        public virtual ApiRoutingInfo RouteInfo { get; set; }
+        /// <summary>Gets or sets the routing.</summary>
+        /// <value>The routing.</value>
+        public virtual ApiRoutingInfo Routing { get; set; } = new ApiRoutingInfo();
 
         /// <summary>Gets the response information.</summary>
         /// <value>The response information.</value>
-        public virtual ApiProcessingInfo ProcessingInfo { get; set; }
-
-        /// <summary>Gets or sets the extended messages.</summary>
-        /// <value>The extended messages.</value>
-        public virtual List<string> ErrorMessages { get; set; } = new List<string>();
+        public virtual ApiRuntimeInfo Runtime { get; set; } = new ApiRuntimeInfo();
 
         /// <summary>Gets or sets the path base.</summary>
         /// <value>The path base.</value>
@@ -54,7 +40,7 @@
 
         /// <summary>Gets or sets the request aborted.</summary>
         /// <value>The request aborted.</value>
-        public virtual CancellationToken RequestAborted { get; set; }
+        public virtual CancellationToken RequestAborted { get; set; } = new CancellationToken(false);
 
         /// <summary>Gets or sets the request services.</summary>
         /// <value>The request services.</value>
@@ -65,7 +51,7 @@
         /// <returns></returns>
         public ApiRequestContext AddResponseCookie(ApiCookie cookie)
         {
-            this.ResponseInfo.Cookies.Add(cookie);
+            this.Response.Cookies.Add(cookie);
             return this;
         }
 
@@ -76,6 +62,10 @@
         /// <summary>Gets or sets the length of the configure maximum request.</summary>
         /// <value>The length of the configure maximum request.</value>
         public Action<long> ConfigureMaxRequestLength { get; set; }
+
+        /// <summary>Gets or sets the validation.</summary>
+        /// <value>The validation.</value>
+        public ApiValidationInfo Validation { get; set; } = new ApiValidationInfo();
 
         /// <summary>Gets the default request configuration.</summary>
         /// <returns></returns>
@@ -91,30 +81,19 @@
                     CacheLocation = HttpCacheLocation.Private,
                     ExpirationSeconds = -1
                 },
-                CrossOriginConfig = new CrossOriginConfiguration
+                CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = true,
                     AllowedOrigins = new List<string> { "*" },
                     AllowedHeaders = new List<string> { "*" },
-                    ExposeHeaders = new List<string>()
+                    ExposeHeaders = new List<string>(),
+                    MaxAgeSeconds = 600
                 },
                 Deprecated = false,
                 FallBackLanguage = null,
                 HeaderValidationConfig = new ApiHeaderValidationConfiguration
                 {
                     MaxHeaderLength = 0
-                },
-                HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = false,
-                    SupportedVersions = new List<string>
-                    {
-                        "http/1.1",
-                        "http/1.2",
-                        "http/2",
-                        "http/2.0",
-                        "http/2.1"
-                    }
                 },
                 AllowRequestBodyWhenNoModelDefined = false,
                 RequireContentLengthOnRequestBodyRequests = true,
@@ -134,7 +113,8 @@
                     ReaderResolver = null,
                     WriterResolver = null,
                     AcceptHeaderOverride = null
-                }
+                },
+                EnableHeadForGetRequests = true
             };
         }
     }
@@ -149,17 +129,73 @@
         /// <returns></returns>
         public static ApiValidationState ValidationState(this ApiRequestContext context)
         {
-            return (context?.ProcessingInfo?.Validation?.State ?? ApiValidationState.NotAttempted);
+            return (context?.Validation?.State ?? ApiValidationState.NotAttempted);
         }
 
         /// <summary>Adds the exception.</summary>
-        /// <param name="request">The request.</param>
+        /// <param name="context">The context.</param>
         /// <param name="ex">The ex.</param>
         /// <returns></returns>
-        public static ApiRequestContext AddException(this ApiRequestContext request, Exception ex)
+        public static ApiRequestContext AddException(this ApiRequestContext context, Exception ex)
         {
-            request.ProcessingInfo.Exceptions.Add(ex);
-            return request;
+            if (context == null)
+                return context;
+
+            if (context.Runtime == null)
+            {
+                context.Runtime = new ApiRuntimeInfo();
+            }
+
+            if (context.Runtime.Exceptions == null)
+            {
+                context.Runtime.Exceptions = new List<Exception>();
+            }
+
+            context.Runtime.Exceptions.Add(ex);
+            return context;
+        }
+
+        /// <summary>Adds the validation error.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="error">The error.</param>
+        /// <returns></returns>
+        public static ApiRequestContext AddValidationError(this ApiRequestContext context, string error)
+        {
+            if (context == null)
+                return context;
+
+            if (context.Validation == null)
+            {
+                context.Validation = new ApiValidationInfo();
+            }
+
+            if (context.Validation.Errors == null)
+            {
+                context.Validation.Errors = new List<string>();
+            }
+
+            if (error != null)
+            {
+                context.Validation.Errors.Add(error);
+            }
+            return context;
+        }
+
+        /// <summary>Adds the validation errors.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static ApiRequestContext AddValidationErrors(this ApiRequestContext context, IList<string> errors)
+        {
+            if (context == null || errors == null)
+                return context;
+
+            foreach (var error in errors)
+            {
+                context.AddValidationError(error);
+            }
+
+            return context;
         }
 
         /// <summary>Adds the item.</summary>
@@ -240,8 +276,8 @@
         /// <returns></returns>
         public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, string etag, DateTimeOffset? lastModified)
         {
-            var condtionalRequestETag = context.RequestInfo.IfMatch;
-            var condtionalRequestLastModfied = context.RequestInfo.IfModifiedSince;
+            var condtionalRequestETag = context.Request.IfMatch;
+            var condtionalRequestLastModfied = context.Request.IfModifiedSince;
 
             // Conditional Get Request
             if (!string.IsNullOrWhiteSpace(condtionalRequestETag) || condtionalRequestLastModfied != null)
@@ -264,8 +300,8 @@
             }
 
             // Concurrency Request
-            var currencyRequestETag = context.RequestInfo.IfNoneMatch;
-            var currencyRequestLastModfied = context.RequestInfo.IfUnmodifiedSince;
+            var currencyRequestETag = context.Request.IfNoneMatch;
+            var currencyRequestLastModfied = context.Request.IfUnmodifiedSince;
 
             if (!string.IsNullOrWhiteSpace(currencyRequestETag) || currencyRequestLastModfied != null)
             {
@@ -295,11 +331,15 @@
         /// <returns></returns>
         public static ApiRequestContext SetHttpStatus(this ApiRequestContext context, int status)
         {
-            if (context?.ResponseInfo != null)
+            if (context == null)
+                return context;
+
+            if (context.Response == null)
             {
-                context.ResponseInfo.StatusCode = status;
+                context.Response = new ApiResponseInfo();
             }
 
+            context.Response.StatusCode = status;
             return context;
         }
 
@@ -310,9 +350,22 @@
         /// <returns></returns>
         public static ApiRequestContext SetHttpHeader(this ApiRequestContext context, string name, string value)
         {
-            if (context?.ResponseInfo != null)
+            if (context == null)
+                return context;
+
+            if (context.Response == null)
             {
-                context.ResponseInfo.AddHeader(name, value);
+                context.Response = new ApiResponseInfo();
+            }
+
+            if (context.Response.Headers == null)
+            {
+                context.Response.Headers = new List<ApiHeader>();
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                context.Response.AddHeader(name, value);
             }
 
             return context;

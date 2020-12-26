@@ -54,78 +54,78 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestInfo.Method?.In(StringComparison.InvariantCultureIgnoreCase, "post", "patch", "put") ?? false)
+                if (context.Request.Method?.In(StringComparison.InvariantCultureIgnoreCase, "post", "patch", "put") ?? false)
                 {
-                    if (!context.RequestInfo.ContentLength.HasValue)
+                    if (!context.Request.ContentLength.HasValue)
                     {
-                        if (context.RequestConfig?.RequireContentLengthOnRequestBodyRequests ?? true)
+                        if (context.Configuration?.RequireContentLengthOnRequestBodyRequests ?? true)
                         {
-                            context.ResponseInfo.StatusCode = 411;
+                            context.Response.StatusCode = 411;
                             return false;
                         }
                     }
 
-                    if (context.RequestInfo.ContentLength > 0 && string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
+                    if (context.Request.ContentLength > 0 && string.IsNullOrWhiteSpace(context.Request.ContentType))
                     {
-                        context.ResponseInfo.StatusCode = 450;
+                        context.Response.StatusCode = 450;
                         return false;
                     }
 
-                    if (context.RequestConfig?.MaxRequestLength > 0 && context.RequestInfo.ContentLength > 0)
+                    if (context.Configuration?.MaxRequestLength > 0 && context.Request.ContentLength > 0)
                     {
-                        if (context.RequestInfo.ContentLength > context.RequestConfig.MaxRequestLength)
+                        if (context.Request.ContentLength > context.Configuration.MaxRequestLength)
                         {
-                            context.ResponseInfo.StatusCode = 413;
+                            context.Response.StatusCode = 413;
                             return false;
                         }
                     }
 
-                    if (context.RequestInfo.ContentLength > 0 && context.RequestInfo.InvocationContext?.BodyModelType == null)
+                    if (context.Request.ContentLength > 0 && context.Request.InvocationContext?.BodyModelType == null)
                     {
-                        if (!(context.RequestConfig?.AllowRequestBodyWhenNoModelDefined ?? false))
+                        if (!(context.Configuration?.AllowRequestBodyWhenNoModelDefined ?? false))
                         {
-                            context.ResponseInfo.StatusCode = 413;
+                            context.Response.StatusCode = 413;
                             return false;
                         }
                     }
 
-                    if (context.RequestInfo.InvocationContext?.BodyModelType != null && context.RequestInfo.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.RequestInfo.ContentType))
+                    if (context.Request.InvocationContext?.BodyModelType != null && context.Request.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.Request.ContentType))
                     {
                         IFormatStreamReaderWriter formatter = null;
 
                         if (formatterFactory != null)
                         {
                             formatter = await formatterFactory.GetContentTypeFormatter(
-                                contentTypeHeader: context.RequestInfo.ContentType,
+                                contentTypeHeader: context.Request.ContentType,
                                 formatterType: out var _,
-                                readableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
+                                readableMediaTypes: context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
                         }
 
-                        if (context.RequestConfig.ReadWriteConfiguration?.ReaderResolver != null)
+                        if (context.Configuration.ReadWriteConfiguration?.ReaderResolver != null)
                         {
-                            var overrides = await context.RequestConfig.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context, formatter)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context, formatter)).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
                                 formatter = await formatterFactory.GetContentTypeFormatter(
-                                    contentTypeHeader: context.RequestInfo.ContentType,
+                                    contentTypeHeader: context.Request.ContentType,
                                     formatterType: out var _,
                                     readableFormatters: overrides.Formatters,
-                                    readableMediaTypes: context.RequestConfig?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
+                                    readableMediaTypes: context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
                             }
                         }
 
                         if (formatter == null)
                         {
-                            context.ResponseInfo.StatusCode = 415;
+                            context.Response.StatusCode = 415;
                             return false;
                         }
 
                         try
                         {
-                            context.RequestInfo.InvocationContext.BodyModel = await formatter.ReadType(
-                                stream: context.RequestInfo.Body, 
-                                objType: context.RequestInfo.InvocationContext.BodyModelType,
+                            context.Request.InvocationContext.BodyModel = await formatter.ReadType(
+                                stream: context.Request.Body, 
+                                objType: context.Request.InvocationContext.BodyModelType,
                                 options: null).ConfigureAwait(false);
                         }
                         catch (Exception ex)
@@ -134,11 +134,11 @@
 
                             if (ex.GetType().Name.Contains("BadHttpRequestException"))
                             {
-                                context.ResponseInfo.StatusCode = 413;
+                                context.Response.StatusCode = 413;
                             }
                             else
                             {
-                                context.ResponseInfo.StatusCode = 450;
+                                context.Response.StatusCode = 450;
                             }
 
                             return false;

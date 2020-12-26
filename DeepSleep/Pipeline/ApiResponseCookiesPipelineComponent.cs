@@ -52,11 +52,11 @@
         {
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
-                if (context.ResponseInfo != null && context.ResponseInfo.Cookies != null)
+                if (context.Response != null && context.Response.Cookies != null)
                 {
-                    foreach (var cookie in context.ResponseInfo.Cookies)
+                    foreach (var cookie in context.Response.Cookies)
                     {
-                        context.ResponseInfo.AddHeader("Set-Cookie", cookie.ToCookie());
+                        context.Response.AddHeader("Set-Cookie", cookie.ToCookie());
                     };
                 }
 

@@ -31,7 +31,7 @@
                 return null;
 
             var context = this.requestContextResolver.GetContext();
-            var boundary = context.RequestInfo.ContentType.Boundary;
+            var boundary = context.Request.ContentType.Boundary;
             MultipartHttpRequest multipart = null;
             MultipartSection section;
             MultipartReader reader = new MultipartReader(boundary, body);

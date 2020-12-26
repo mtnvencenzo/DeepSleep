@@ -20,10 +20,10 @@
             var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -32,16 +32,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = null
+                Request = null
             };
 
             var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -50,7 +50,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     CorrelationId = null
                 }
@@ -59,10 +59,10 @@
             var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().BeEmpty();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().BeEmpty();
         }
 
         [Theory]
@@ -74,7 +74,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     CorrelationId = correlationId
                 }
@@ -83,12 +83,12 @@
             var processed = await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-CorrelationId");
-            context.ResponseInfo.Headers[0].Value.Should().Be(correlationId);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-CorrelationId");
+            context.Response.Headers[0].Value.Should().Be(correlationId);
         }
     }
 }

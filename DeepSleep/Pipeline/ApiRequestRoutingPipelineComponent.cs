@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -63,22 +62,19 @@
             {
                 if (routes != null && resolver != null)
                 {
-                    context.RouteInfo.RoutingItem = await context.GetRouteInfo(resolver, routes, defaultRequestConfig).ConfigureAwait(false);
-                    context.RouteInfo.TemplateInfo = await context.GetTemplateInfo(resolver, routes).ConfigureAwait(false);
+                    context.Routing.Route = await context.GetRoutingItem(resolver, routes, defaultRequestConfig).ConfigureAwait(false);
+                    context.Routing.Template = await context.GetRoutingTemplate(resolver, routes).ConfigureAwait(false);
                 }
 
-                if (context.RouteInfo.RoutingItem != null)
-                {
-                    context.RequestConfig = MergeConfigurations(context, defaultRequestConfig, context.RouteInfo.RoutingItem.Config);
+                context.Configuration = MergeConfigurations(context, defaultRequestConfig, context.Routing?.Route?.Configuration);
 
-                    if (context.RequestConfig?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
+                if (context.Configuration?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            context.ConfigureMaxRequestLength(context.RequestConfig.MaxRequestLength.Value);
-                        }
-                        catch { }
+                        context.ConfigureMaxRequestLength(context.Configuration.MaxRequestLength.Value);
                     }
+                    catch { }
                 }
 
                 return true;
@@ -91,56 +87,91 @@
         /// <param name="context">The context.</param>
         /// <param name="resolver">The resolver.</param>
         /// <param name="routes">The routes.</param>
-        /// <param name="defaultRequestConfig">The default request configuration.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        private static async Task<ApiRoutingItem> GetRouteInfo(this ApiRequestContext context,
+        private static async Task<ApiRoutingItem> GetRoutingItem(this ApiRequestContext context,
             IUriRouteResolver resolver,
             IApiRoutingTable routes,
-            IApiRequestConfiguration defaultRequestConfig)
+            IApiRequestConfiguration defaultRequestConfiguration)
         {
             // -----------------------------------------------------------------
             // We want to trick the routing engine to treat HEAD requests as GET
             // http://tools.ietf.org/html/rfc7231#section-4.3.2
             // -----------------------------------------------------------------
-            var routeMatch = new Func<string, Task<ApiRoutingItem>>(async (method) =>
+            ApiRoutingItem routeInfo;
+
+            if (context.Request.Method.In(StringComparison.InvariantCultureIgnoreCase, "HEAD"))
             {
-                var potentialRoutes = routes.GetRoutes()
-                    .Where(r => r.EndpointLocation != null)
-                    .Where(r => string.Compare(r.HttpMethod, method, true) == 0);
-
-                RouteMatch result;
-                foreach (var route in potentialRoutes)
-                {
-                    result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path).ConfigureAwait(false);
-
-                    if (result?.IsMatch ?? false)
-                    {
-                        var newRoute = CloneRoutingItem(route);
-                        newRoute.RouteVariables = result.RouteVariables;
-                        return newRoute;
-                    }
-                }
-
-                return null;
-            });
-
-            ApiRoutingItem routeInfo = null;
-            if (context.RequestInfo.Method.In(StringComparison.InvariantCultureIgnoreCase, "HEAD"))
-            {
-                routeInfo = await routeMatch("HEAD").ConfigureAwait(false);
+                routeInfo = await resolver.MatchRoute(
+                    routes,
+                    "HEAD",
+                    context.Request.Path).ConfigureAwait(false);
 
                 if (routeInfo == null)
                 {
-                    routeInfo = await routeMatch("GET").ConfigureAwait(false);
+                    routeInfo = await resolver.MatchRoute(
+                        routes, 
+                        "GET", 
+                        context.Request.Path).ConfigureAwait(false);
+
+                    if (routeInfo != null)
+                    {
+                        var enableHeadForGetRequests = routeInfo.Configuration?.EnableHeadForGetRequests
+                            ?? defaultRequestConfiguration?.EnableHeadForGetRequests
+                            ?? ApiRequestContext.GetDefaultRequestConfiguration().EnableHeadForGetRequests
+                            ?? true;
+
+                        if (!enableHeadForGetRequests)
+                        {
+                            routeInfo = null;
+                        }
+                    }
                 }
             }
-            else if (context.RequestInfo.IsCorsPreflightRequest())
+            else if (context.Request.IsCorsPreflightRequest())
             {
-                routeInfo = await routeMatch(context.RequestInfo.CrossOriginRequest.AccessControlRequestMethod).ConfigureAwait(false);
+                if (context.Request.CrossOriginRequest.AccessControlRequestMethod.In(StringComparison.InvariantCultureIgnoreCase, "HEAD"))
+                {
+                    routeInfo = await resolver.MatchRoute(
+                        routes,
+                        context.Request.CrossOriginRequest.AccessControlRequestMethod,
+                        context.Request.Path).ConfigureAwait(false);
+
+                    if (routeInfo == null)
+                    {
+                        routeInfo = await resolver.MatchRoute(
+                            routes,
+                            "GET",
+                            context.Request.Path).ConfigureAwait(false);
+
+                        if (routeInfo != null)
+                        {
+                            var enableHeadForGetRequests = routeInfo.Configuration?.EnableHeadForGetRequests
+                                ?? defaultRequestConfiguration?.EnableHeadForGetRequests
+                                ?? ApiRequestContext.GetDefaultRequestConfiguration().EnableHeadForGetRequests
+                                ?? true;
+
+                            if (!enableHeadForGetRequests)
+                            {
+                                routeInfo = null;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    routeInfo = await resolver.MatchRoute(
+                        routes,
+                        context.Request.CrossOriginRequest.AccessControlRequestMethod,
+                        context.Request.Path).ConfigureAwait(false);
+                }
             }
             else
             {
-                routeInfo = await routeMatch(context.RequestInfo.Method).ConfigureAwait(false);
+                routeInfo = await resolver.MatchRoute(
+                    routes,
+                    context.Request.Method,
+                    context.Request.Path).ConfigureAwait(false);
             }
 
             return routeInfo;
@@ -151,61 +182,35 @@
         /// <param name="resolver">The resolver.</param>
         /// <param name="routes">The routes.</param>
         /// <returns></returns>
-        private static async Task<ApiRoutingTemplate> GetTemplateInfo(this ApiRequestContext context, IUriRouteResolver resolver, IApiRoutingTable routes)
+        private static async Task<ApiRoutingTemplate> GetRoutingTemplate(
+            this ApiRequestContext context, 
+            IUriRouteResolver resolver, 
+            IApiRoutingTable routes)
         {
             RouteMatch result;
             ApiRoutingTemplate template = null;
 
             foreach (var route in routes.GetRoutes())
             {
-                result = await resolver.ResolveRoute(route.Template, context.RequestInfo.Path).ConfigureAwait(false);
+                result = await resolver.ResolveRoute(route.Template, context.Request.Path).ConfigureAwait(false);
 
                 if (result?.IsMatch ?? false)
                 {
                     if (template == null)
                     {
-                        template = new ApiRoutingTemplate
-                        {
-                            EndpointLocations = new List<ApiEndpointLocation>(),
-                            Template = route.Template
-                        };
-
-                        template.VariablesList.AddRange(route.VariablesList);
+                        template = new ApiRoutingTemplate(route.Template);
                     }
 
-                    template.EndpointLocations.Add(new ApiEndpointLocation
+                    template.Locations.Add(new ApiEndpointLocation
                     {
-                        Controller = route.EndpointLocation.Controller,
-                        Endpoint = route.EndpointLocation.Endpoint,
+                        Controller = route.Location.Controller,
+                        Endpoint = route.Location.Endpoint,
                         HttpMethod = route.HttpMethod
                     });
                 }
             }
 
             return template;
-        }
-
-        /// <summary>Clones the routing item.</summary>
-        /// <param name="item">The item.</param>
-        /// <returns></returns>
-        private static ApiRoutingItem CloneRoutingItem(ApiRoutingItem item)
-        {
-            var newitem = new ApiRoutingItem
-            {
-                EndpointLocation = new ApiEndpointLocation
-                {
-                    Controller = item.EndpointLocation.Controller,
-                    Endpoint = item.EndpointLocation?.Endpoint,
-                    HttpMethod = item.EndpointLocation.HttpMethod
-                },
-                Template = item.Template,
-                Config = item.Config,
-                HttpMethod = item.HttpMethod,
-            };
-
-            newitem.RouteVariables = new Dictionary<string, string>();
-            item.VariablesList.ForEach(v => newitem.VariablesList.Add(v));
-            return newitem;
         }
 
         /// <summary>Merges the configurations.</summary>
@@ -266,6 +271,10 @@
                 ?? defaultConfig?.IncludeRequestIdHeaderInResponse
                 ?? systemConfig.IncludeRequestIdHeaderInResponse;
 
+            requestConfig.EnableHeadForGetRequests = endpointConfig?.EnableHeadForGetRequests
+                ?? defaultConfig?.EnableHeadForGetRequests
+                ?? systemConfig.EnableHeadForGetRequests;
+
             requestConfig.SupportedLanguages = new List<string>(endpointConfig?.SupportedLanguages ?? defaultConfig?.SupportedLanguages ?? systemConfig.SupportedLanguages);
 
             requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
@@ -295,15 +304,18 @@
 
 
             // ----------------------------
-            // Merge Cross Origin Config
+            // Merge Cross Origin Configuration
             // ----------------------------
             if (endpointConfig?.CrossOriginConfig != null || defaultConfig?.CrossOriginConfig != null)
             {
-                requestConfig.CrossOriginConfig = new CrossOriginConfiguration
+                requestConfig.CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
                     AllowCredentials = endpointConfig?.CrossOriginConfig?.AllowCredentials
                         ?? defaultConfig?.CrossOriginConfig?.AllowCredentials
                         ?? systemConfig?.CrossOriginConfig?.AllowCredentials,
+                    MaxAgeSeconds = endpointConfig?.CrossOriginConfig?.MaxAgeSeconds
+                        ?? defaultConfig?.CrossOriginConfig?.MaxAgeSeconds
+                        ?? systemConfig?.CrossOriginConfig?.MaxAgeSeconds,
                     AllowedOrigins = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins ?? systemConfig.CrossOriginConfig.AllowedOrigins),
                     ExposeHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.ExposeHeaders ?? defaultConfig?.CrossOriginConfig?.ExposeHeaders ?? systemConfig.CrossOriginConfig.ExposeHeaders),
                     AllowedHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedHeaders ?? defaultConfig?.CrossOriginConfig?.AllowedHeaders ?? systemConfig.CrossOriginConfig.AllowedHeaders)
@@ -316,7 +328,7 @@
 
 
             // ----------------------------
-            // Merge Header Validation Config
+            // Merge Header Validation Configuration
             // ----------------------------
             if (defaultConfig?.HeaderValidationConfig != null || endpointConfig?.HeaderValidationConfig != null)
             {
@@ -333,29 +345,8 @@
             }
 
 
-            // ----------------------------
-            // Merge Http Config
-            // ----------------------------
-            if (endpointConfig?.HttpConfig != null || defaultConfig?.HttpConfig != null)
-            {
-                requestConfig.HttpConfig = new ApiHttpConfiguration
-                {
-                    RequireSSL = endpointConfig?.HttpConfig?.RequireSSL
-                        ?? defaultConfig?.HttpConfig?.RequireSSL
-                        ?? systemConfig.HttpConfig.RequireSSL,
-
-                    SupportedVersions = new List<string>(endpointConfig?.HttpConfig?.SupportedVersions ?? defaultConfig?.HttpConfig?.SupportedVersions ?? systemConfig.HttpConfig.SupportedVersions)
-                };
-            }
-            else
-            {
-                requestConfig.HttpConfig = systemConfig.HttpConfig;
-            }
-
-
-
             // -----------------------------------
-            // Merge Resource Authorization Config
+            // Merge Resource Authorization Configuration
             // -----------------------------------
             if (endpointConfig?.AuthorizationConfig != null || defaultConfig?.AuthorizationConfig != null)
             {

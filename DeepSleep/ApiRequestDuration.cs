@@ -7,28 +7,15 @@
     /// </summary>
     public class ApiRequestDuration
     {
-        #region Constructors
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiRequestDuration"/> class.
+        /// Gets or sets the start date.
         /// </summary>
-        public ApiRequestDuration()
-        {
-            StartDate = DateTimeOffset.UtcNow;
-            EndDate = DateTimeOffset.UtcNow;
-        }
-
-        #endregion
+        public DateTimeOffset UtcStart { get; set; } = DateTimeOffset.UtcNow;
 
         /// <summary>
         /// Gets or sets the end date.
         /// </summary>
-        public DateTimeOffset EndDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets the start date.
-        /// </summary>
-        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset? UtcEnd { get; set; }
 
         /// <summary>Gets or sets the duration.</summary>
         /// <value>The duration.</value>
@@ -36,7 +23,12 @@
         {
             get
             {
-                return (int)(EndDate - StartDate).TotalMilliseconds;
+                if (UtcEnd.HasValue)
+                {
+                    return (int)(UtcEnd.Value - UtcStart).TotalMilliseconds;
+                }
+
+                return (int)(DateTimeOffset.UtcNow - UtcStart).TotalMilliseconds;
             }
         }
     }

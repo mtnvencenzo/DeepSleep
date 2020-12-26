@@ -12,6 +12,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public static class ServiceStartup
@@ -23,14 +24,23 @@
             services.AddTransient<ExceptionController>();
             services.AddTransient<ReadWriteConfigurationController>();
             services.AddScoped<RequestIdController>();
+            services.AddTransient<AuthenticationController>();
+            services.AddTransient<EnableHeadController>();
             services.AddTransient<CommonErrorResponseProvider>();
-            services.AddTransient<NotImplementedExceptionThrowValidator>(); // Only one of these to check both injection and no-injection resolution
+            services.AddTransient<MethodNotFoundController>();
+
+            // Only one of these to check both injection and no-injection resolution
+            services.AddTransient<NotImplementedExceptionThrowValidator>();
+
             services.AddScoped<IAuthenticationProvider, Ex500AuthenticationProvider>();
             services.AddScoped<IAuthenticationProvider, Ex501AuthenticationProvider>();
             services.AddScoped<IAuthenticationProvider, Ex502AuthenticationProvider>();
             services.AddScoped<IAuthenticationProvider, Ex503AuthenticationProvider>();
             services.AddScoped<IAuthenticationProvider, Ex504AuthenticationProvider>();
             services.AddScoped<IAuthenticationProvider, SuccessAuthenticationProvider>();
+            services.AddScoped<IAuthenticationProvider, StaticTokenAuthenticationProvider>();
+            services.AddScoped<IAuthenticationProvider, Static2TokenAuthenticationProvider>();
+
             services.AddScoped<IAuthorizationProvider, Ex500AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex501AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex502AuthorizationProvider>();
@@ -526,6 +536,63 @@
                 });
 
             table.AddRoute(
+                template: "pipeline/readwrite/configuration/readresolver/plaintext",
+                httpMethod: "POST",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesPlainText),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        ReaderResolver = (args) => {
+
+                            var formatters = new List<IFormatStreamReaderWriter>
+                            {
+                                new PlainTextFormatStreamReaderWriter()
+                            };
+
+                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                        },
+                        WriterResolver = (args) =>
+                        {
+                            var formatters = new List<IFormatStreamReaderWriter>
+                            {
+                                new PlainTextFormatStreamReaderWriter()
+                            };
+
+                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                        }
+                    }
+                });
+
+            table.AddRoute(
+                template: "pipeline/readwrite/configuration/readresolver/all/plus/plaintext",
+                httpMethod: "POST",
+                controller: typeof(ReadWriteConfigurationController),
+                endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesPlainText),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        ReaderResolver = (args) => {
+                            var formatters = args.Context.RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+
+                            formatters.Add(new PlainTextFormatStreamReaderWriter());
+    
+                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                        },
+                        WriterResolver = (args) => {
+                            var formatters = args.Context.RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+
+                            formatters.Add(new PlainTextFormatStreamReaderWriter());
+
+                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                        },
+                    }
+                });
+
+
+            table.AddRoute(
                 template: "pipeline/readwrite/configuration/readresolver/readabletypes",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -547,6 +614,267 @@
                         },
                         ReadableMediaTypes = new[] { "other/xml" }
                     }
+                });
+
+
+            table.AddRoute(
+                template: "authentication/single/supported/schemes",
+                httpMethod: "GET",
+                controller: typeof(AuthenticationController),
+                endpoint: nameof(AuthenticationController.GetWithSingleSupportedScheme),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { "Token" }
+                });
+
+
+            table.AddRoute(
+                template: "authentication/multiple/supported/schemes",
+                httpMethod: "GET",
+                controller: typeof(AuthenticationController),
+                endpoint: nameof(AuthenticationController.GetWithMultipleSupportedScheme),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { "Token", "Token2" }
+                });
+
+            table.AddRoute(
+                template: "authentication/not/defined/supported/schemes",
+                httpMethod: "GET",
+                controller: typeof(AuthenticationController),
+                endpoint: nameof(AuthenticationController.GetWithSupportedSchemesNotDefined),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false
+                });
+
+            table.AddRoute(
+                template: "authentication/empty/defined/supported/scheme",
+                httpMethod: "GET",
+                controller: typeof(AuthenticationController),
+                endpoint: nameof(AuthenticationController.GetWithNoSupportedScheme),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { }
+                });
+
+            table.AddRoute(
+                template: "authentication/anonymous/allowed",
+                httpMethod: "GET",
+                controller: typeof(AuthenticationController),
+                endpoint: nameof(AuthenticationController.GetWithAllowAnonymousTrue),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = true
+                });
+
+            table.AddRoute(
+                template: "head/configured/disabled",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false
+                });
+
+            table.AddRoute(
+                template: "head/configured/disabled/maxage",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        MaxAgeSeconds = 100
+                    }
+                });
+
+
+            table.AddRoute(
+                template: "head/configured/disabled/origin",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowedOrigins = new string[] { "https://test1.com", "https://test2.com" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/disabled/exposeheaders",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        ExposeHeaders = new string[] { "X-Header1", "X-Header2" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/disabled/allowheaders",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowedHeaders = new string[] { "Content-Type", "X-CorrelationId" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/enabled",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowCredentials = false
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/enabled/maxage",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowCredentials = false,
+                        MaxAgeSeconds = 150
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/enabled/origin",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowCredentials = false,
+                        AllowedOrigins = new string[] { "https://test1.com", "https://test2.com" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/enabled/exposeheaders",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowCredentials = false,
+                        ExposeHeaders = new string[] { "X-Header1", "X-Header2" },
+                        AllowedOrigins = new string[] { "https://test1.com", "https://test2.com" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/enabled/allowheaders",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true,
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowCredentials = false,
+                        AllowedHeaders = new string[] { "Content-Type", "X-CorrelationId" }
+                    }
+                });
+
+            table.AddRoute(
+                template: "head/configured/default",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithDefaultEnableHead));
+
+            table.AddRoute(
+                template: "head/explicit",
+                httpMethod: "HEAD",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.ExplicitHead));
+
+            table.AddRoute(
+                template: "head/explicit",
+                httpMethod: "GET",
+                controller: typeof(EnableHeadController),
+                endpoint: nameof(EnableHeadController.GetWithExplicitHead),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false
+                });
+
+            table.AddRoute(
+                template: "method/not/found",
+                httpMethod: "GET",
+                controller: typeof(MethodNotFoundController),
+                endpoint: nameof(MethodNotFoundController.Get),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true
+                });
+
+            table.AddRoute(
+                template: "method/not/found",
+                httpMethod: "PUT",
+                controller: typeof(MethodNotFoundController),
+                endpoint: nameof(MethodNotFoundController.Put));
+
+            table.AddRoute(
+                template: "method/not/found/nohead",
+                httpMethod: "GET",
+                controller: typeof(MethodNotFoundController),
+                endpoint: nameof(MethodNotFoundController.GetNoHead),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = false
+                });
+
+            table.AddRoute(
+                template: "method/not/found/nohead",
+                httpMethod: "PUT",
+                controller: typeof(MethodNotFoundController),
+                endpoint: nameof(MethodNotFoundController.PutNoHead));
+
+            table.AddRoute(
+                template: "route/not/found",
+                httpMethod: "GET",
+                controller: typeof(NotFoundController),
+                endpoint: nameof(NotFoundController.Get),
+                config: new DefaultApiRequestConfiguration
+                {
+                    EnableHeadForGetRequests = true
                 });
 
             return table;

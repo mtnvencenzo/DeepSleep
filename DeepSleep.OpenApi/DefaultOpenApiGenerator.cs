@@ -1,7 +1,9 @@
 ﻿namespace DeepSleep.OpenApi
 {
+    using DeepSleep.Configuration;
     using DeepSleep.OpenApi.Decorators;
     using DeepSleep.OpenApi.v3_0;
+    using DeepSleep.Pipeline;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,13 +24,12 @@
         /// </summary>
         public static bool IncludeHeadOperationsForGets = true;
 
-        /// <summary>
-        /// Generates the specified version.
-        /// </summary>
+        /// <summary>Generates the specified version.</summary>
         /// <param name="version">The version.</param>
         /// <param name="routingTable">The routing table.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        public OpenApiDocument3_0 Generate(OpenApiVersion version, IApiRoutingTable routingTable)
+        public async Task<OpenApiDocument3_0> Generate(OpenApiVersion version, IApiRoutingTable routingTable, IApiRequestConfiguration defaultRequestConfiguration)
         {
             var routes = routingTable.GetRoutes();
 
@@ -63,18 +64,50 @@
                     continue;
                 }
 
-                this.AddRoute(document, route);
+                await this.AddRoute(document, route, routingTable, defaultRequestConfiguration).ConfigureAwait(false);
             }
 
             return document;
         }
 
-        /// <summary>
-        /// Adds the route.
-        /// </summary>
+        /// <summary>Replaces the template vars.</summary>
+        /// <param name="template">The template.</param>
+        /// <returns></returns>
+        private string ReplaceTemplateVars(string template)
+        {
+            var temp = template;
+
+            while (temp.IndexOf("{") >= 0 && temp.IndexOf("}") >= 0)
+            {
+                var newTemp = string.Empty;
+                var start = temp.IndexOf("{");
+                var end = temp.IndexOf("}");
+
+                if (start > 0)
+                {
+                    newTemp = temp.Substring(0, start);
+                }
+
+                newTemp += "1";
+
+                if (end < temp.Length - 1)
+                {
+                    newTemp += temp.Substring(end + 1);
+                }
+
+                temp = newTemp;
+            }
+            
+            return temp;
+        }
+
+
+        /// <summary>Adds the route.</summary>
         /// <param name="document">The document.</param>
         /// <param name="route">The route.</param>
-        private void AddRoute(OpenApiDocument3_0 document, ApiRoutingItem route)
+        /// <param name="routes">The routes.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
+        private async Task AddRoute(OpenApiDocument3_0 document, ApiRoutingItem route, IApiRoutingTable routes, IApiRequestConfiguration defaultRequestConfiguration)
         {
             var pathName = route.Template.StartsWith("/")
                 ? route.Template
@@ -116,11 +149,34 @@
 
             if (string.Equals(route.HttpMethod, "get", StringComparison.OrdinalIgnoreCase) && IncludeHeadOperationsForGets)
             {
-                var headOperation = this.AddOperation(document, existingPath.Value, route, "head");
-                if (headOperation != null)
+                var definedHeadRoute = routes.GetRoutes()
+                    .Where(r => r.HttpMethod.Equals("head", StringComparison.OrdinalIgnoreCase))
+                    .Where(r => r.Template.Equals(route.Template, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
+
+                if (definedHeadRoute == null)
                 {
-                    this.AddOperationResponses(document, headOperation, route, "head");
-                    headOperation.parameters = this.GetQueryStringParameters(document, route);
+                    var template = ReplaceTemplateVars(route.Template);
+
+                    var match = await new DefaultRouteResolver().MatchRoute(
+                        routes: routes,
+                        method: route.HttpMethod,
+                        requestPath: template).ConfigureAwait(false);
+
+                    var enableHeadForGetRequests = match.Configuration?.EnableHeadForGetRequests
+                        ?? defaultRequestConfiguration?.EnableHeadForGetRequests
+                        ?? ApiRequestContext.GetDefaultRequestConfiguration().EnableHeadForGetRequests
+                        ?? true;
+
+                    if (enableHeadForGetRequests)
+                    {
+                        var headOperation = this.AddOperation(document, existingPath.Value, route, "head");
+                        if (headOperation != null)
+                        {
+                            this.AddOperationResponses(document, headOperation, route, "head");
+                            headOperation.parameters = this.GetQueryStringParameters(document, route);
+                        }
+                    }
                 }
             }
         }
@@ -143,7 +199,7 @@
             {
                 if (pathItem.delete != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.delete = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -154,18 +210,19 @@
             {
                 if (pathItem.get != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.get = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
                 return pathItem.get;
             }
 
+
             if (method == "head")
             {
                 if (pathItem.head != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.head = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -176,7 +233,7 @@
             {
                 if (pathItem.options != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.options = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -187,7 +244,7 @@
             {
                 if (pathItem.patch != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.patch = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -198,7 +255,7 @@
             {
                 if (pathItem.post != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.post = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -209,7 +266,7 @@
             {
                 if (pathItem.put != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.put = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -220,7 +277,7 @@
             {
                 if (pathItem.trace != null)
                 {
-                    throw new InvalidOperationException($"{method} operation is alread defined on the path item.");
+                    throw new InvalidOperationException($"{method} operation is already defined on the path item.");
                 }
 
                 pathItem.trace = new OpenApiOperation3_0 { operationId = $"{Helpers.GetOperationId(httpMethod, route)}" };
@@ -239,8 +296,8 @@
         /// <param name="httpMethod">The HTTP method.</param>
         private void AddOperationResponses(OpenApiDocument3_0 document, OpenApiOperation3_0 operation, ApiRoutingItem route, string httpMethod)
         {
-            var methodInfo = route.EndpointLocation.GetEndpointMethod();
-            var returnType = Helpers.GetRootType(route.EndpointLocation.GetEndpointReturnType());
+            var methodInfo = route.Location.GetEndpointMethod();
+            var returnType = Helpers.GetRootType(route.Location.GetEndpointReturnType());
 
             if (returnType == typeof(Task) || string.Equals(httpMethod, "head", StringComparison.OrdinalIgnoreCase))
             {
@@ -263,7 +320,7 @@
 
             if (responseTypes.Count == 0)
             {
-                var typeDescriptorMethod = route.EndpointLocation.Controller.GetMethod($"{methodInfo.Name}TypeDescriptor", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                var typeDescriptorMethod = route.Location.Controller.GetMethod($"{methodInfo.Name}TypeDescriptor", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
                 if (typeDescriptorMethod != null && typeDescriptorMethod.ReturnType == typeof(Type) && typeDescriptorMethod.IsStatic)
                 {
@@ -575,23 +632,26 @@
         {
             var container = new List<OpenApiParameter3_0>();
 
-            if ((route.VariablesList?.Count ?? 0) > 0)
+            if (!string.IsNullOrWhiteSpace(route?.Template))
             {
-                foreach (var routeVar in route.VariablesList)
+                var template = new ApiRoutingTemplate(route.Template);
+
+                if (template.Variables.Count > 0)
                 {
-                    var schema = this.GetRouteVariableSchema(document, routeVar, route.EndpointLocation);
-
-                    if (schema != null)
+                    foreach (var routeVar in template.Variables)
                     {
-                        var paramName = routeVar.Replace("{", string.Empty).Replace("}", string.Empty);
+                        var schema = this.GetRouteVariableSchema(document, routeVar, route.Location);
 
-                        container.Add(new OpenApiParameter3_0
+                        if (schema != null)
                         {
-                            name = paramName,
-                            required = true,
-                            @in = OpenApiIn3_0.path.ToString(),
-                            schema = schema
-                        });
+                            container.Add(new OpenApiParameter3_0
+                            {
+                                name = routeVar,
+                                required = true,
+                                @in = OpenApiIn3_0.path.ToString(),
+                                schema = schema
+                            });
+                        }
                     }
                 }
             }
@@ -607,13 +667,15 @@
         {
             var container = new List<OpenApiParameter3_0>();
 
-            var uriParameter = route.EndpointLocation.GetUriParameter();
+            var uriParameter = route.Location.GetUriParameter();
 
             if (uriParameter != null)
             {
-                var preparedRouteVars = route.VariablesList != null
-                    ? route.VariablesList.Select(v => v.ToLower().Replace("{", string.Empty).Replace("}", string.Empty)).ToList()
-                    : new List<string>();
+                var template = new ApiRoutingTemplate(route.Template);
+
+                var preparedRouteVars = template.Variables
+                    .Select(v => v.ToLower())
+                    .ToList();
 
                 var properties = uriParameter.ParameterType.GetProperties()
                    .Where(p => p.CanWrite)
@@ -649,7 +711,7 @@
         /// <returns></returns>
         private OpenApiRequestBody3_0 GetRequestBody(OpenApiDocument3_0 document, ApiRoutingItem route)
         {
-            var bodyParameter = route.EndpointLocation.GetBodyParameter();
+            var bodyParameter = route.Location.GetBodyParameter();
 
             if (bodyParameter != null)
             {

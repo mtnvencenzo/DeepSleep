@@ -46,7 +46,7 @@ X-CorrelationId: {correlationId}
                 expectedHttpStatus: 415,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -85,7 +85,7 @@ X-CorrelationId: {correlationId}
                 expectedContentType: textJson,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

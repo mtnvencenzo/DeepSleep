@@ -51,9 +51,9 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestInfo?.CorrelationId != null)
+                if (context.Request?.CorrelationId != null)
                 {
-                    context.ResponseInfo.AddHeader("X-CorrelationId", context.RequestInfo.CorrelationId);
+                    context.Response.AddHeader("X-CorrelationId", context.Request.CorrelationId);
                 }
             }
 

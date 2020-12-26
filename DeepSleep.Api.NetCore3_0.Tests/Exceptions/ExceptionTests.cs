@@ -37,7 +37,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 501,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -69,7 +69,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 501,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Exception,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -103,7 +103,10 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 expectedAuthenticationResult: true,
-                extendedHeaders: new Dictionary<string, string>
+                expectedAuthenticationScheme: "Success",
+                expectedAuthenticationValue: "test",
+                expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -136,7 +139,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 501,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -171,7 +174,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 502,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -203,7 +206,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 502,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Exception,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -236,7 +239,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 502,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -269,7 +272,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 502,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -304,7 +307,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 504,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -336,7 +339,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 504,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Exception,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -370,7 +373,10 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 expectedAuthenticationResult: true,
-                extendedHeaders: new Dictionary<string, string>
+                expectedAuthenticationScheme: "Success",
+                expectedAuthenticationValue: "test",
+                expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -403,7 +409,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 504,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -438,7 +444,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 503,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -470,7 +476,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 503,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Exception,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -504,7 +510,10 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 expectedAuthenticationResult: true,
-                extendedHeaders: new Dictionary<string, string>
+                expectedAuthenticationScheme: "Success",
+                expectedAuthenticationValue: "test",
+                expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -537,7 +546,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 503,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -572,7 +581,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 500,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -604,7 +613,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 500,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.Exception,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -638,7 +647,10 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 expectedAuthenticationResult: true,
-                extendedHeaders: new Dictionary<string, string>
+                expectedAuthenticationScheme: "Success",
+                expectedAuthenticationValue: "test",
+                expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -671,7 +683,7 @@ X-CorrelationId: {correlationId}";
                 expectedHttpStatus: 500,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

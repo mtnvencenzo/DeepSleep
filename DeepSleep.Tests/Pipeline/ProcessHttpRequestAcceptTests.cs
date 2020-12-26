@@ -25,8 +25,8 @@
             var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -35,14 +35,14 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = null
+                Request = null
             };
 
             var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -51,18 +51,18 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo()
+                Request = new ApiRequestInfo()
             };
 
             var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
             processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(406);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-Allow-Accept");
-            context.ResponseInfo.Headers[0].Value.Should().Be(string.Empty);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(406);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-Allow-Accept");
+            context.Response.Headers[0].Value.Should().Be(string.Empty);
 
         }
 
@@ -72,7 +72,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo()
+                Request = new ApiRequestInfo()
             };
 
             var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
@@ -82,13 +82,13 @@
 
             var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(406);
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("X-Allow-Accept");
-            context.ResponseInfo.Headers[0].Value.Should().Be("application/json, text/xml, text/plain");
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(406);
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("X-Allow-Accept");
+            context.Response.Headers[0].Value.Should().Be("application/json, text/xml, text/plain");
 
         }
 
@@ -98,7 +98,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo()
+                Request = new ApiRequestInfo()
             };
 
             string formatterType;
@@ -111,10 +111,10 @@
 
             var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(0);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(0);
         }
 
         [Theory]
@@ -126,7 +126,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Accept = new AcceptHeader(requestAccept)
                 }
@@ -138,10 +138,10 @@
 
             var processed = await context.ProcessHttpRequestAccept(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(0);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(0);
         }
 
         private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)

@@ -50,7 +50,7 @@
             {
                 //logger?.LogInformation($"Request has been cancelled by client, issuing HTTP 408 Request Timeout");
 
-                context.ResponseInfo.StatusCode = 408;
+                context.Response.StatusCode = 408;
 
                 return Task.FromResult(false);
             }

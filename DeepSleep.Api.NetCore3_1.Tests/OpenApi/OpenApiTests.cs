@@ -40,7 +40,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentType: applicationJson,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

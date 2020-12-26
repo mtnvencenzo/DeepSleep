@@ -51,7 +51,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
+                if (context.Request?.InvocationContext?.ControllerMethod != null)
                 {
                     var parameters = new List<object>();
                     bool addedUriParam = false;
@@ -64,21 +64,21 @@
                     // they'll be passed a null value.  A possible enhancement
                     // would be to pull the extra parameters from the DI container
                     // -----------------------------------------------------------
-                    foreach (var param in context.RequestInfo.InvocationContext.ControllerMethod.GetParameters())
+                    foreach (var param in context.Request.InvocationContext.ControllerMethod.GetParameters())
                     {
-                        if (!addedUriParam && context.RequestInfo.InvocationContext.UriModel != null && param.GetCustomAttribute<UriBoundAttribute>() != null)
+                        if (!addedUriParam && context.Request.InvocationContext.UriModel != null && param.GetCustomAttribute<UriBoundAttribute>() != null)
                         {
-                            parameters.Add(context.RequestInfo.InvocationContext.UriModel);
+                            parameters.Add(context.Request.InvocationContext.UriModel);
                             addedUriParam = true;
                         }
-                        else if (!addedBodyParam && context.RequestInfo.InvocationContext.BodyModel != null && param.GetCustomAttribute<BodyBoundAttribute>() != null)
+                        else if (!addedBodyParam && context.Request.InvocationContext.BodyModel != null && param.GetCustomAttribute<BodyBoundAttribute>() != null)
                         {
-                            parameters.Add(context.RequestInfo.InvocationContext.BodyModel);
+                            parameters.Add(context.Request.InvocationContext.BodyModel);
                             addedBodyParam = true;
                         }
                         else
                         {
-                            var simpleParameter = context.RequestInfo.InvocationContext.SimpleParameters
+                            var simpleParameter = context.Request.InvocationContext.SimpleParameters
                                 .Where(p => p.Key.Name == param.Name && p.Key.ParameterType == param.ParameterType)
                                 .FirstOrDefault();
 
@@ -96,14 +96,14 @@
                     // -----------------------------------------------------
                     // Invoke the controller method with the parameters list
                     // -----------------------------------------------------
-                    //logger?.LogInformation($"Invoking controller method {context.RequestInfo.InvocationContext.Controller.GetType().FullName}::{context.RequestInfo.InvocationContext.ControllerMethod.Name}");
+                    //logger?.LogInformation($"Invoking controller method {context.Request.InvocationContext.Controller.GetType().FullName}::{context.Request.InvocationContext.ControllerMethod.Name}");
 
                     object endpointResponse;
 
                     try
                     {
-                        endpointResponse = context.RequestInfo.InvocationContext.ControllerMethod.Invoke(
-                            context.RequestInfo.InvocationContext.Controller,
+                        endpointResponse = context.Request.InvocationContext.ControllerMethod.Invoke(
+                            context.Request.InvocationContext.Controller,
                             parameters.ToArray());
                     }
                     catch (TargetInvocationException ex)
@@ -139,7 +139,7 @@
                         }
                     }
 
-                    context.ResponseInfo.ResponseObject = endpointResponse;
+                    context.Response.ResponseObject = endpointResponse;
                 }
 
                 return true;

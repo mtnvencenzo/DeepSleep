@@ -58,34 +58,34 @@
                             {
                                 if (!string.IsNullOrWhiteSpace(result.Message))
                                 {
-                                    context.ErrorMessages.Add(result.Message);
+                                    context.Validation.Errors.Add(result.Message);
                                 }
 
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                context.Validation.State = ApiValidationState.Failed;
                                 isValid = false;
 
                                 // Update the suggested status if it applies
                                 var suggestedStatus = result.SuggestedHttpStatusCode;
-                                var currentStatus = context.ProcessingInfo.Validation.SuggestedErrorStatusCode;
+                                var currentStatus = context.Validation.SuggestedErrorStatusCode;
 
                                 if (suggestedStatus != currentStatus)
                                 {
                                     if (statusCodePrecedence?.Contains(suggestedStatus) == true && statusCodePrecedence?.Contains(currentStatus) == false)
                                     {
-                                        context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                        context.Validation.SuggestedErrorStatusCode = suggestedStatus;
                                     }
                                     else if (statusCodePrecedence?.Contains(suggestedStatus) == true && statusCodePrecedence?.Contains(currentStatus) == true)
                                     {
                                         if (statusCodePrecedence.IndexOf(suggestedStatus) < statusCodePrecedence.IndexOf(currentStatus))
                                         {
-                                            context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                            context.Validation.SuggestedErrorStatusCode = suggestedStatus;
                                         }
                                     }
                                     else if (statusCodePrecedence?.Contains(suggestedStatus) == false && statusCodePrecedence?.Contains(currentStatus) == false)
                                     {
                                         if (suggestedStatus > currentStatus)
                                         {
-                                            context.ProcessingInfo.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                            context.Validation.SuggestedErrorStatusCode = suggestedStatus;
                                         }
                                     }
                                 }

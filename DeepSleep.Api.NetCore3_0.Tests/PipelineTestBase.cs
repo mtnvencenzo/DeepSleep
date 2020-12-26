@@ -3,28 +3,22 @@
     using DeepSleep;
     using DeepSleep.Configuration;
     using DeepSleep.NetCore;
-    using FluentAssertions;
     using global::Api.DeepSleep.NetCore3_0;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
     using Moq;
-    using Newtonsoft.Json;
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
-    using System.Web;
-    using System.Xml;
-    using System.Xml.Serialization;
 
     public abstract class PipelineTestBase : TestBase
     {
         private Startup startup;
 
-        protected void SetupEnvironment(Action<IServiceCollection> servicePreprocessor)
+        protected void SetupEnvironment(Action<IServiceCollection> servicePreprocessor = null)
         {
             var services = new ServiceCollection();
             var basePath = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Startup)).Location);

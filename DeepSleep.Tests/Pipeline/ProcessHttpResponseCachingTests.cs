@@ -21,7 +21,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(true),
-                ResponseInfo = mockResponseInfo.Object
+                Response = mockResponseInfo.Object
             };
 
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
@@ -34,8 +34,8 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = null,
-                ResponseInfo = new ApiResponseInfo
+                Request = null,
+                Response = new ApiResponseInfo
                 {
                     ResponseObject = null
                 }
@@ -44,14 +44,14 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -73,8 +73,8 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = null,
-                ResponseInfo = new ApiResponseInfo
+                Request = null,
+                Response = new ApiResponseInfo
                 {
                     StatusCode = statusCode,
                     ResponseObject = null
@@ -84,52 +84,15 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
-        }
-
-        [Theory]
-        [InlineData(200)]
-        [InlineData(201)]
-        [InlineData(202)]
-        [InlineData(203)]
-        [InlineData(299)]
-        public async void ReturnsTrueAndCorrectHeadersForPreflightRequest(int statusCode)
-        {
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
-                {
-                    Method = "OPTIONS",
-                    CrossOriginRequest = new CrossOriginRequestValues
-                    {
-                        Origin = "http://ron.vecchi.net",
-                        AccessControlRequestMethod = "POST"
-                    }
-                },
-                ResponseInfo = new ApiResponseInfo
-                {
-                    StatusCode = statusCode
-                }
-            };
-
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Vary");
-            context.ResponseInfo.Headers[0].Value.Should().Be("Origin");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Access-Control-Max-Age");
-            context.ResponseInfo.Headers[1].Value.Should().Be("600");
         }
 
         [Theory]
@@ -140,33 +103,33 @@
         public async void ReturnsTrueAndCorrectHeadersForNonCachableRequestMethod(string method)
         {
             var mockRouteInfo = new Mock<ApiRoutingInfo>();
-            mockRouteInfo.Setup(m => m.RoutingItem).Throws(new Exception("test"));
+            mockRouteInfo.Setup(m => m.Route).Throws(new Exception("test"));
 
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200
                 },
-                RouteInfo = mockRouteInfo.Object
+                Routing = mockRouteInfo.Object
             };
 
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -180,29 +143,29 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RouteInfo = null
+                Routing = null
             };
 
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -216,32 +179,32 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    RoutingItem = null
+                    Route = null
                 }
             };
 
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -255,29 +218,29 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RequestConfig = null
+                Configuration = null
             };
 
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -291,16 +254,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     CacheDirective = null
                 }
@@ -309,14 +272,14 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -330,15 +293,15 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     CacheDirective = new HttpCacheDirective
                     {
@@ -351,14 +314,14 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -372,16 +335,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     CacheDirective = new HttpCacheDirective
                     {
@@ -394,14 +357,14 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -424,16 +387,16 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     CacheDirective = cacheDirective
                 }
@@ -442,17 +405,17 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(3);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be($"{cacheDirective.CacheLocation.ToString().ToLower()}, max-age={cacheDirective.ExpirationSeconds}");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(3);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be($"{cacheDirective.CacheLocation.ToString().ToLower()}, max-age={cacheDirective.ExpirationSeconds}");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Should().BeOnOrAfter(expiresDate);
 
-            context.ResponseInfo.Headers[2].Name.Should().Be("Vary");
-            context.ResponseInfo.Headers[2].Value.Should().Be("Accept, Accept-Encoding, Accept-Language");
+            context.Response.Headers[2].Name.Should().Be("Vary");
+            context.Response.Headers[2].Value.Should().Be("Accept, Accept-Encoding, Accept-Language");
         }
 
         [Theory]
@@ -474,15 +437,15 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 },
-                ResponseInfo = new ApiResponseInfo
+                Response = new ApiResponseInfo
                 {
                     StatusCode = 200
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
                     CacheDirective = cacheDirective
                 }
@@ -491,17 +454,17 @@
             var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(3);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Cache-Control");
-            context.ResponseInfo.Headers[0].Value.Should().Be($"{cacheDirective.CacheLocation.ToString().ToLower()}, max-age={cacheDirective.ExpirationSeconds}");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(3);
+            context.Response.Headers[0].Name.Should().Be("Cache-Control");
+            context.Response.Headers[0].Value.Should().Be($"{cacheDirective.CacheLocation.ToString().ToLower()}, max-age={cacheDirective.ExpirationSeconds}");
+            context.Response.Headers[1].Name.Should().Be("Expires");
 
-            var expires = DateTime.Parse(context.ResponseInfo.Headers[1].Value);
+            var expires = DateTime.Parse(context.Response.Headers[1].Value);
             expires.Should().BeOnOrAfter(expiresDate);
 
-            context.ResponseInfo.Headers[2].Name.Should().Be("Vary");
-            context.ResponseInfo.Headers[2].Value.Should().Be("Accept, Accept-Encoding, Accept-Language");
+            context.Response.Headers[2].Name.Should().Be("Vary");
+            context.Response.Headers[2].Value.Should().Be("Accept, Accept-Encoding, Accept-Language");
         }
     }
 }

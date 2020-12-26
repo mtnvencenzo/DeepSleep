@@ -21,14 +21,14 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(true),
-                RequestInfo = null
+                Request = null
             };
 
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -42,7 +42,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 }
@@ -51,8 +51,8 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -64,7 +64,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = method,
                     ContentLength = null
@@ -74,9 +74,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(411);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(411);
         }
 
         [Theory]
@@ -88,7 +88,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "PUT",
                     ContentLength = 1,
@@ -99,9 +99,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(450);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(450);
         }
 
         [Fact]
@@ -110,7 +110,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "PATCH",
                     ContentLength = 1,
@@ -123,9 +123,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(413);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(413);
         }
 
         [Fact]
@@ -134,7 +134,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "PATCH",
                     ContentLength = 1,
@@ -150,9 +150,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(413);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(413);
         }
 
         [Fact]
@@ -161,7 +161,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "PATCH",
                     ContentLength = 1,
@@ -176,9 +176,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(415);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -190,7 +190,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "PATCH",
                     ContentLength = 1,
@@ -205,9 +205,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(415);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -220,7 +220,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                Request = new ApiRequestInfo
                 {
                     Method = "POST",
                     ContentLength = 1,
@@ -235,9 +235,9 @@
             var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(415);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -256,7 +256,7 @@
                 var context = new ApiRequestContext
                 {
                     RequestAborted = new System.Threading.CancellationToken(false),
-                    RequestInfo = new ApiRequestInfo
+                    Request = new ApiRequestInfo
                     {
                         Method = "PATCH",
                         ContentLength = 10,
@@ -267,7 +267,7 @@
                         },
                         Body = memoryStream
                     },
-                    RequestConfig = new DefaultApiRequestConfiguration
+                    Configuration = new DefaultApiRequestConfiguration
                     {
                         MaxRequestLength = 1
                     }
@@ -276,9 +276,9 @@
                 var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeFalse();
 
-                context.ResponseInfo.Should().NotBeNull();
-                context.ResponseInfo.ResponseObject.Should().BeNull();
-                context.ResponseInfo.StatusCode.Should().Be(413);
+                context.Response.Should().NotBeNull();
+                context.Response.ResponseObject.Should().BeNull();
+                context.Response.StatusCode.Should().Be(413);
             }
         }
 
@@ -298,7 +298,7 @@
                 var context = new ApiRequestContext
                 {
                     RequestAborted = new System.Threading.CancellationToken(false),
-                    RequestInfo = new ApiRequestInfo
+                    Request = new ApiRequestInfo
                     {
                         Method = "PATCH",
                         ContentLength = 1,
@@ -314,13 +314,13 @@
                 var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeTrue();
 
-                context.ResponseInfo.Should().NotBeNull();
-                context.ResponseInfo.ResponseObject.Should().BeNull();
-                context.RequestInfo.InvocationContext.BodyModel.Should().NotBeNull();
-                context.RequestInfo.InvocationContext.BodyModel.Should().BeOfType<ApiHeader>();
+                context.Response.Should().NotBeNull();
+                context.Response.ResponseObject.Should().BeNull();
+                context.Request.InvocationContext.BodyModel.Should().NotBeNull();
+                context.Request.InvocationContext.BodyModel.Should().BeOfType<ApiHeader>();
 
-                ((ApiHeader)context.RequestInfo.InvocationContext.BodyModel).Name.Should().Be("MyHeader");
-                ((ApiHeader)context.RequestInfo.InvocationContext.BodyModel).Value.Should().Be("MyValue");
+                ((ApiHeader)context.Request.InvocationContext.BodyModel).Name.Should().Be("MyHeader");
+                ((ApiHeader)context.Request.InvocationContext.BodyModel).Value.Should().Be("MyValue");
             }
         }
 
@@ -340,7 +340,7 @@
                 var context = new ApiRequestContext
                 {
                     RequestAborted = new System.Threading.CancellationToken(false),
-                    RequestInfo = new ApiRequestInfo
+                    Request = new ApiRequestInfo
                     {
                         Method = "PATCH",
                         ContentLength = 1,
@@ -356,13 +356,13 @@
                 var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeFalse();
 
-                context.ResponseInfo.Should().NotBeNull();
-                context.ResponseInfo.ResponseObject.Should().BeNull();
-                context.ResponseInfo.StatusCode.Should().Be(450);
+                context.Response.Should().NotBeNull();
+                context.Response.ResponseObject.Should().BeNull();
+                context.Response.StatusCode.Should().Be(450);
 
-                context.ProcessingInfo.Should().NotBeNull();
-                context.ErrorMessages.Should().NotBeNull();
-                context.ErrorMessages.Should().HaveCount(0);
+                context.Validation.Should().NotBeNull();
+                context.Validation.Errors.Should().NotBeNull();
+                context.Validation.Errors.Should().HaveCount(0);
             }
         }
 

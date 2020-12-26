@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Text;
 
     /// <summary>The API request info.</summary>
+    [DebuggerDisplay("[{Method?.ToUpper()}] {RequestUri}")]
     public class ApiRequestInfo
     {
         /// <summary>Gets or sets the request accept types.</summary>

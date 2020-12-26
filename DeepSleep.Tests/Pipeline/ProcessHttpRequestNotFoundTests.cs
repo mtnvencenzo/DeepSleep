@@ -21,8 +21,8 @@
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -31,15 +31,15 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = null
+                Routing = null
             };
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(404);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(404);
         }
 
         [Fact]
@@ -48,41 +48,38 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = null
+                    Template = null
                 }
             };
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(404);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(404);
         }
 
         [Fact]
-        public async void ReturnsFalseForNullEndpointLocations()
+        public async void ReturnsFalseForDefaultEndpointLocations()
         {
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = null
-                    }
+                    Template = new ApiRoutingTemplate(null)
                 }
             };
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(404);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(404);
         }
 
         [Fact]
@@ -91,21 +88,18 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>()
-                    }
+                    Template = new ApiRoutingTemplate(null)
                 }
             };
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(404);
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(404);
         }
 
         [Fact]
@@ -114,23 +108,19 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>
-                        {
-                            new ApiEndpointLocation()
-                        }
-                    }
+                    Template = new ApiRoutingTemplate(null)
                 }
             };
+
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation());
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Fact]
@@ -139,24 +129,20 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>
-                        {
-                            new ApiEndpointLocation(),
-                            new ApiEndpointLocation()
-                        }
-                    }
+                    Template = new ApiRoutingTemplate(null)
                 }
             };
+
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation());
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation());
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
     }
 }

@@ -12,7 +12,7 @@
     {
         /// <summary>Gets the realm.</summary>
         /// <value>The realm.</value>
-        public string Realm => "UnitTest";
+        public string Realm => "Unit-Test";
 
         /// <summary>Gets the authentication scheme.</summary>
         /// <value>The authentication scheme.</value>
@@ -24,7 +24,7 @@
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
         public Task Authenticate(ApiRequestContext context)
         {
-            context.RequestInfo.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
+            context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
             return Task.CompletedTask;
         }
 

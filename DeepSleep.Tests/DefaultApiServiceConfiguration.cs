@@ -44,7 +44,6 @@
             return new ApiRequestPipeline()
                 .UseApiResponseUnhandledExceptionHandler()
                 .UseApiRequestCanceled()
-                .UseApiHttpComformance()
                 .UseApiResponseBodyWriter()
                 .UseApiResponseCookies()
                 .UseApiResponseMessages()

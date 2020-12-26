@@ -11,50 +11,11 @@
     /// </summary>
     public class ApiEndpointLocation
     {
-        private static readonly List<Type> SimpleBindableTypes = new List<Type>
-        {
-            typeof(string),
-            typeof(char),
-            typeof(char?),
-            typeof(DateTime),
-            typeof(DateTime?),
-            typeof(DateTimeOffset),
-            typeof(DateTimeOffset?),
-            typeof(TimeSpan),
-            typeof(TimeSpan?),
-            typeof(short),
-            typeof(short?),
-            typeof(ushort),
-            typeof(ushort?),
-            typeof(int),
-            typeof(int?),
-            typeof(uint),
-            typeof(uint?),
-            typeof(long),
-            typeof(long?),
-            typeof(ulong),
-            typeof(ulong?),
-            typeof(byte),
-            typeof(byte?),
-            typeof(sbyte),
-            typeof(sbyte?),
-            typeof(double),
-            typeof(double?),
-            typeof(float),
-            typeof(float?),
-            typeof(decimal),
-            typeof(decimal?),
-            typeof(bool),
-            typeof(bool?),
-            typeof(Guid),
-            typeof(Guid?)
-        };
         private MethodInfo methodInfo;
         private ParameterInfo uriParameter;
         private ParameterInfo bodyParameter;
-        private ParameterInfo[] complexParameters;
+        private ParameterInfo[] boundParameters;
         private ParameterInfo[] simpleParameters;
-
 
         /// <summary>Gets or sets the controller.</summary>
         /// <value>The controller.</value>
@@ -68,10 +29,9 @@
         /// <value>The HTTP method.</value>
         public string HttpMethod { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the endpoint method.</summary>
         /// <returns></returns>
+        /// <exception cref="Exception">Routing items endpoint method '{this.Endpoint}' does not exist on controller '{this.Controller.Name}'.</exception>
         public MethodInfo GetEndpointMethod()
         {
             if (this.methodInfo == null)
@@ -98,9 +58,7 @@
             return methodInfo;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the type of the endpoint return.</summary>
         /// <returns></returns>
         public Type GetEndpointReturnType()
         {
@@ -115,58 +73,48 @@
             return methodInfo.ReturnType;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the URI parameter.</summary>
         /// <returns></returns>
         public ParameterInfo GetUriParameter()
         {
-            if (this.complexParameters == null)
+            if (this.boundParameters == null)
             {
                 var method = GetEndpointMethod();
 
-                this.complexParameters = method.GetParameters()
-                   .Where(p => p.ParameterType.IsPrimitive == false)
-                   .Where(p => p.ParameterType.IsEnum == false)
-                   .Where(p => p.ParameterType != typeof(byte[]))
-                   .Where(p => SimpleBindableTypes.Contains(p.ParameterType) == false)
-                   .ToArray();
+                this.boundParameters = method.GetParameters()
+                    .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                    .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
+                    .ToArray();
             }
 
-            this.uriParameter = complexParameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
+            this.uriParameter = boundParameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
 
             return this.uriParameter;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the body parameter.</summary>
         /// <returns></returns>
         public ParameterInfo GetBodyParameter()
         {
-            if (this.complexParameters == null)
+            if (this.boundParameters == null)
             {
                 var method = GetEndpointMethod();
 
-                this.complexParameters = method.GetParameters()
-                   .Where(p => p.ParameterType.IsPrimitive == false)
-                   .Where(p => p.ParameterType.IsEnum == false)
-                   .Where(p => p.ParameterType != typeof(byte[]))
-                   .Where(p => SimpleBindableTypes.Contains(p.ParameterType) == false)
-                   .ToArray();
+                this.boundParameters = method.GetParameters()
+                    .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                    .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
+                    .ToArray();
             }
 
             if (this.HttpMethod.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
             {
-                this.bodyParameter = complexParameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() != null);
+                this.bodyParameter = boundParameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() != null);
             }
 
             return this.bodyParameter;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Gets the simple parameters.</summary>
         /// <returns></returns>
         public IDictionary<ParameterInfo, object> GetSimpleParameters()
         {

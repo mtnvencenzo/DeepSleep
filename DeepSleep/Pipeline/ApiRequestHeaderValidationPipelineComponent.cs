@@ -48,17 +48,17 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestInfo.Headers != null)
+                if (context.Request.Headers != null)
                 {
-                    var maxHeaderLength = context.RequestConfig?.HeaderValidationConfig?.MaxHeaderLength ?? 0;
+                    var maxHeaderLength = context.Configuration?.HeaderValidationConfig?.MaxHeaderLength ?? 0;
 
                     if (maxHeaderLength > 0)
                     {
-                        foreach (var header in context.RequestInfo.Headers)
+                        foreach (var header in context.Request.Headers)
                         {
                             if (header.Value?.Length > maxHeaderLength)
                             {
-                                context.ResponseInfo.StatusCode = 431;
+                                context.Response.StatusCode = 431;
                                 return Task.FromResult(false);
                             }
                         }

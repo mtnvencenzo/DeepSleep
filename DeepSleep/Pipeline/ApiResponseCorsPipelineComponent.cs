@@ -53,42 +53,50 @@
         {
             if (!(context?.RequestAborted.IsCancellationRequested ?? false))
             {
-                if (!string.IsNullOrWhiteSpace(context.RequestInfo?.CrossOriginRequest?.Origin))
+                // No Cors for not found endponts or method not found
+                if (context.Runtime.Internals.IsNotFound || context.Runtime.Internals.IsMethodNotFound)
                 {
-                    var allowedOrigins = (context.RequestConfig?.CrossOriginConfig?.AllowedOrigins ?? new string[] { })
+                    return Task.FromResult(true);
+                }
+
+                if (context.Request?.CrossOriginRequest?.Origin != null)
+                {
+                    var allowedOrigins = (context.Configuration?.CrossOriginConfig?.AllowedOrigins ?? new string[] { })
                         .Distinct()
                         .Where(i => !string.IsNullOrWhiteSpace(i))
                         .Select(i => i.Trim())
                         .ToList();
 
-                    var exposeHeaders = (context.RequestConfig?.CrossOriginConfig?.ExposeHeaders ?? new string[] { })
+                    var exposeHeaders = (context.Configuration?.CrossOriginConfig?.ExposeHeaders ?? new string[] { })
                         .Distinct()
                         .Where(i => !string.IsNullOrWhiteSpace(i))
                         .Select(i => i.Trim())
                         .ToList();
 
-                    var allowCredentials = context.RequestConfig?.CrossOriginConfig?.AllowCredentials;
+                    var allowCredentials = context.Configuration?.CrossOriginConfig?.AllowCredentials;
 
                     string allowedOrigin = null;
 
                     if (allowedOrigins.Count > 0 && allowedOrigins.Contains("*"))
                     {
-                        allowedOrigin = context.RequestInfo.CrossOriginRequest.Origin;
+                        allowedOrigin = context.Request.CrossOriginRequest.Origin;
                     }
                     else
                     {
                         allowedOrigin = allowedOrigins
-                            .Where(i => i.Equals(context.RequestInfo.CrossOriginRequest.Origin, StringComparison.OrdinalIgnoreCase))
+                            .Where(i => i.Equals(context.Request.CrossOriginRequest.Origin, StringComparison.OrdinalIgnoreCase))
                             .FirstOrDefault();
                     }
 
-                    context.ResponseInfo.AddHeader("Access-Control-Allow-Origin", allowedOrigin ?? string.Empty);
-                    context.ResponseInfo.AddHeader("Access-Control-Allow-Credentials", (allowCredentials ?? false).ToString().ToLowerInvariant());
+                    context.Response.AddHeader("Access-Control-Allow-Origin", allowedOrigin ?? string.Empty);
+                    context.Response.AddHeader("Access-Control-Allow-Credentials", (allowCredentials ?? false).ToString().ToLowerInvariant());
 
                     if (exposeHeaders.Count > 0)
                     {
-                        context.ResponseInfo.AddHeader("Access-Control-Expose-Headers", string.Join(", ", exposeHeaders));
+                        context.Response.AddHeader("Access-Control-Expose-Headers", string.Join(", ", exposeHeaders));
                     }
+
+                    context.Response.AddHeader("Vary", "Origin");
                 }
 
                 return Task.FromResult(true);

@@ -45,9 +45,9 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.RequestConfig?.Deprecated ?? false)
+                if (context.Configuration?.Deprecated ?? false)
                 {
-                    context.ResponseInfo.AddHeader("X-Deprecated", true.ToString().ToLower());
+                    context.Response.AddHeader("X-Deprecated", true.ToString().ToLower());
                 }
             }
 

@@ -53,7 +53,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                context.ProcessingInfo.Validation.State = ApiValidationState.Validating;
+                context.Validation.State = ApiValidationState.Validating;
 
                 if (validationProvider != null)
                 {
@@ -63,15 +63,15 @@
 
                     foreach (var validationInvoker in invokers)
                     {
-                        if (context.RequestInfo.InvocationContext.UriModel != null)
+                        if (context.Request.InvocationContext.UriModel != null)
                         {
                             var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(
-                                context.RequestInfo.InvocationContext.UriModel,
+                                context.Request.InvocationContext.UriModel,
                                 context).ConfigureAwait(false);
 
                             if (!objectUriValidationResult)
                             {
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                context.Validation.State = ApiValidationState.Failed;
                             }
                         }
                     }
@@ -79,22 +79,22 @@
 
                     foreach (var validationInvoker in invokers)
                     {
-                        if (context.RequestInfo.InvocationContext.BodyModel != null)
+                        if (context.Request.InvocationContext.BodyModel != null)
                         {
                             try
                             {
                                 var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(
-                                    context.RequestInfo.InvocationContext.BodyModel,
+                                    context.Request.InvocationContext.BodyModel,
                                     context).ConfigureAwait(false);
 
                                 if (!objectBodyValidationResult)
                                 {
-                                    context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                    context.Validation.State = ApiValidationState.Failed;
                                 }
                             }
                             catch
                             {
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Exception;
+                                context.Validation.State = ApiValidationState.Exception;
                                 throw;
                             }
                         }
@@ -103,22 +103,22 @@
 
                     foreach (var validationInvoker in invokers)
                     {
-                        if (context.RequestInfo?.InvocationContext?.ControllerMethod != null)
+                        if (context.Request?.InvocationContext?.ControllerMethod != null)
                         {
                             try
                             {
                                 var methodValidationResult = await validationInvoker.InvokeMethodValidation(
-                                    context.RequestInfo.InvocationContext.ControllerMethod,
+                                    context.Request.InvocationContext.ControllerMethod,
                                     context).ConfigureAwait(false);
 
                                 if (!methodValidationResult)
                                 {
-                                    context.ProcessingInfo.Validation.State = ApiValidationState.Failed;
+                                    context.Validation.State = ApiValidationState.Failed;
                                 }
                             }
                             catch
                             {
-                                context.ProcessingInfo.Validation.State = ApiValidationState.Exception;
+                                context.Validation.State = ApiValidationState.Exception;
                                 throw;
                             }
                         }
@@ -126,13 +126,13 @@
                 }
 
 
-                if (context.ProcessingInfo.Validation.State == ApiValidationState.Failed)
+                if (context.Validation.State == ApiValidationState.Failed)
                 {
-                    context.ResponseInfo.StatusCode = context.ProcessingInfo.Validation.SuggestedErrorStatusCode;
+                    context.Response.StatusCode = context.Validation.SuggestedErrorStatusCode;
                     return false;
                 }
 
-                context.ProcessingInfo.Validation.State = ApiValidationState.Succeeded;
+                context.Validation.State = ApiValidationState.Succeeded;
                 return true;
             }
 

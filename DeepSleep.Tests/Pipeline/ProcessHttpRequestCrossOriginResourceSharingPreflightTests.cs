@@ -4,6 +4,7 @@
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using System.Collections.Generic;
+    using System.Threading;
     using Xunit;
 
     /// <summary>
@@ -16,14 +17,14 @@
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(true)
+                RequestAborted = new CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -39,33 +40,33 @@
         [InlineData("PATCH")]
         [InlineData("head")]
         [InlineData("HEAD")]
-        public async void ReturnsTrueForNonOptionsPreflightRequestMethod(string method)
+        public async void pipeline_preflight__returns_true_for_non_options_preflight_request_method(string method)
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = method
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async void ReturnsTrueForNoOriginPreflightRequestMethod(string origin)
+        public async void pipeline_preflight__returns_true_for_no_origin_preflight_request_method(string origin)
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = "options",
                     CrossOriginRequest = new CrossOriginRequestValues
@@ -75,22 +76,22 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async void ReturnsTrueForNoRequestMethodPreflightRequestMethod(string requestMethod)
+        public async void pipeline_preflight__returns_true_for_no_request_method_preflight_request_method(string requestMethod)
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = "options",
                     CrossOriginRequest = new CrossOriginRequestValues
@@ -101,10 +102,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
         }
 
         [Theory]
@@ -114,12 +115,12 @@
         [InlineData("PaTCh")]
         [InlineData("GET")]
         [InlineData("Head")]
-        public async void ReturnsCorrectMatchedRouteTemplatesAllowMethodsForPreflightRequestMethod(string requestMethod)
+        public async void pipeline_preflight__returns_correct_matched_route_templates_allow_methods_for_preflight_request_method(string requestMethod)
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = "options",
                     CrossOriginRequest = new CrossOriginRequestValues
@@ -128,45 +129,42 @@
                         AccessControlRequestMethod = requestMethod
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>
-                        {
-                            new ApiEndpointLocation{ HttpMethod = "POST" },
-                            new ApiEndpointLocation{ HttpMethod = "PUT" },
-                            new ApiEndpointLocation{ HttpMethod = "PUT" },
-                            new ApiEndpointLocation{ HttpMethod = "PATCH" },
-                            new ApiEndpointLocation{ HttpMethod = null },
-                            new ApiEndpointLocation{ HttpMethod = "get" },
-                            new ApiEndpointLocation{ HttpMethod = "DelEte" },
-                            new ApiEndpointLocation{ HttpMethod = " " },
-                            new ApiEndpointLocation{ HttpMethod = "" }
-                        }
-                    }
+                    Template = new ApiRoutingTemplate("/test")
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
-            processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PUT" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PUT" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PATCH" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = null });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "get" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "DelEte" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = " " });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "" });
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(1);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
-            context.ResponseInfo.Headers[0].Value.Should().Be("POST, PUT, PATCH, GET, DELETE");
+
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(200);
+
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(1);
+            context.Response.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.Response.Headers[0].Value.Should().Be("POST, PUT, PATCH, GET, DELETE");
         }
 
         [Fact]
-        public async void ReturnsCorrectRequestHeadersForPreflightRequestMethodWithNoConfig()
+        public async void pipeline_preflight__returns_correct_request_headers_for_preflight_request_method_with_no_config()
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = "options",
                     CrossOriginRequest = new CrossOriginRequestValues
@@ -176,30 +174,27 @@
                         AccessControlRequestHeaders = "Content-Type, X-Header"
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>
-                        {
-                            new ApiEndpointLocation{ HttpMethod = "POST" }
-                        }
-                    }
+                    Template = new ApiRoutingTemplate("/test")
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
-            processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
-            context.ResponseInfo.Headers[0].Value.Should().Be("POST");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
-            context.ResponseInfo.Headers[1].Value.Should().BeEmpty();
+
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(200);
+
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.Response.Headers[0].Value.Should().Be("POST");
+            context.Response.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
+            context.Response.Headers[1].Value.Should().BeEmpty();
         }
 
         [Theory]
@@ -210,12 +205,12 @@
         [InlineData("X-BeansWithBacon, PorkNBeans", "X-BeansWithBacon", "PorkNBeans")]
         [InlineData("Content-Type, X-Header", "*", "X-Header")]
         [InlineData("Content-Type, X-Header", "*")]
-        public async void ReturnsCorrectRequestHeadersForPreflightRequestMethod(string expectedAllowHeaders, params string[] requestHeaders)
+        public async void pipeline_preflight__returns_correct_request_headers_for_preflight_request_method(string expectedAllowHeaders, params string[] requestHeaders)
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                RequestInfo = new ApiRequestInfo
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
                 {
                     Method = "options",
                     CrossOriginRequest = new CrossOriginRequestValues
@@ -225,37 +220,136 @@
                         AccessControlRequestHeaders = "Content-Type, X-Header"
                     }
                 },
-                RouteInfo = new ApiRoutingInfo
+                Routing = new ApiRoutingInfo
                 {
-                    TemplateInfo = new ApiRoutingTemplate
-                    {
-                        EndpointLocations = new List<ApiEndpointLocation>
-                        {
-                            new ApiEndpointLocation{ HttpMethod = "POST" }
-                        }
-                    }
+                    Template = new ApiRoutingTemplate("/test")
                 },
-                RequestConfig = new DefaultApiRequestConfiguration
+                Configuration = new DefaultApiRequestConfiguration
                 {
-                    CrossOriginConfig = new CrossOriginConfiguration
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
                         AllowedHeaders = requestHeaders
                     }
                 }
             };
 
-            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight().ConfigureAwait(false);
-            processed.Should().BeFalse();
-            context.ResponseInfo.Should().NotBeNull();
-            context.ResponseInfo.ResponseObject.Should().BeNull();
-            context.ResponseInfo.StatusCode.Should().Be(200);
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
 
-            context.ResponseInfo.Headers.Should().NotBeNull();
-            context.ResponseInfo.Headers.Should().HaveCount(2);
-            context.ResponseInfo.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
-            context.ResponseInfo.Headers[0].Value.Should().Be("POST");
-            context.ResponseInfo.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
-            context.ResponseInfo.Headers[1].Value.Should().Be(expectedAllowHeaders);
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(200);
+
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.Response.Headers[0].Value.Should().Be("POST");
+            context.Response.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
+            context.Response.Headers[1].Value.Should().Be(expectedAllowHeaders);
+        }
+
+        [Theory]
+        [InlineData(200)]
+        [InlineData(201)]
+        [InlineData(202)]
+        [InlineData(203)]
+        [InlineData(299)]
+        public async void pipeline_preflight__returns_true_and_correct_headers_for_preflight_request(int statusCode)
+        {
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
+                {
+                    Method = "options",
+                    CrossOriginRequest = new CrossOriginRequestValues
+                    {
+                        Origin = "http://ron.vecchi.net",
+                        AccessControlRequestMethod = "POST",
+                        AccessControlRequestHeaders = "Content-Type, X-Header"
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Template = new ApiRoutingTemplate("/test")
+                },
+
+                Response = new ApiResponseInfo
+                {
+                    StatusCode = statusCode
+                },
+                Configuration = new DefaultApiRequestConfiguration
+                {
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowedHeaders = new string[] { "Content-Type" }
+                    }
+                }
+            };
+
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(200);
+
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.Response.Headers[0].Value.Should().Be("POST");
+            context.Response.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
+            context.Response.Headers[1].Value.Should().Be("Content-Type");
+        }
+
+        [Fact]
+        public async void pipeline_preflight__returns_true_and_includes_max_age_for_explicit_config()
+        {
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = new ApiRequestInfo
+                {
+                    Method = "options",
+                    CrossOriginRequest = new CrossOriginRequestValues
+                    {
+                        Origin = "http://ron.vecchi.net",
+                        AccessControlRequestMethod = "POST",
+                        AccessControlRequestHeaders = "Content-Type, X-Header"
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Template = new ApiRoutingTemplate("/test")
+                },
+                Configuration = new DefaultApiRequestConfiguration
+                {
+                    CrossOriginConfig = new ApiCrossOriginConfiguration
+                    {
+                        AllowedHeaders = new string[] { "Content-Type", "X-RequestId" },
+                        MaxAgeSeconds = 100
+                    }
+                }
+            };
+
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+
+            var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
+            processed.Should().BeFalse();
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(200);
+
+            context.Response.Headers.Should().NotBeNull();
+            context.Response.Headers.Should().HaveCount(3);
+            context.Response.Headers[0].Name.Should().Be("Access-Control-Allow-Methods");
+            context.Response.Headers[0].Value.Should().Be("POST");
+            context.Response.Headers[1].Name.Should().Be("Access-Control-Allow-Headers");
+            context.Response.Headers[1].Value.Should().Be("Content-Type, X-RequestId");
+            context.Response.Headers[2].Name.Should().Be("Access-Control-Max-Age");
+            context.Response.Headers[2].Value.Should().Be("100");
         }
     }
 }

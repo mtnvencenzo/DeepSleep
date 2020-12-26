@@ -125,7 +125,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -280,7 +280,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -434,7 +434,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -522,7 +522,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -677,7 +677,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -837,7 +837,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -950,7 +950,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1024,7 +1024,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1100,7 +1100,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1178,7 +1178,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1337,7 +1337,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1496,7 +1496,7 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -1551,49 +1551,49 @@ X-CorrelationId: {correlationId}";
         // -------------------------------
 
         [Theory]
-        [InlineData("CharVar", "aa", typeof(char), "charVar")]
-        [InlineData("NullCharVar", "aa", typeof(char?), "nullCharVar")]
-        [InlineData("Int16Var", "a", typeof(short), "int16Var")]
-        [InlineData("NullInt16Var", "a", typeof(short?), "nullInt16Var")]
-        [InlineData("UInt16Var", "a", typeof(ushort), "uInt16Var")]
-        [InlineData("UInt16Var", "-1", typeof(ushort), "uInt16Var")]
-        [InlineData("NullUInt16Var", "a", typeof(ushort?), "nullUInt16Var")]
-        [InlineData("NullUInt16Var", "-1", typeof(ushort?), "nullUInt16Var")]
-        [InlineData("Int32Var", "a", typeof(int), "int32Var")]
-        [InlineData("NullInt32Var", "a", typeof(int?), "nullInt32Var")]
-        [InlineData("UInt32Var", "a", typeof(uint), "uInt32Var")]
-        [InlineData("UInt32Var", "-1", typeof(uint), "uInt32Var")]
-        [InlineData("NullUInt32Var", "a", typeof(uint?), "nullUInt32Var")]
-        [InlineData("NullUInt32Var", "-1", typeof(uint?), "nullUInt32Var")]
-        [InlineData("Int64Var", "a", typeof(long), "int64Var")]
-        [InlineData("NullInt64Var", "a", typeof(long?), "nullInt64Var")]
-        [InlineData("UInt64Var", "a", typeof(ulong), "uInt64Var")]
-        [InlineData("UInt64Var", "-1", typeof(ulong), "uInt64Var")]
-        [InlineData("NullUInt64Var", "a", typeof(ulong?), "nullUInt64Var")]
-        [InlineData("NullUInt64Var", "-1", typeof(ulong?), "nullUInt64Var")]
-        [InlineData("DoubleVar", "a", typeof(double), "doubleVar")]
-        [InlineData("NullDoubleVar", "a", typeof(double?), "nullDoubleVar")]
-        [InlineData("DecimalVar", "a", typeof(decimal), "decimalVar")]
-        [InlineData("NullDecimalVar", "a", typeof(decimal?), "nullDecimalVar")]
-        [InlineData("FloatVar", "a", typeof(float), "floatVar")]
-        [InlineData("NullFloatVar", "a", typeof(float?), "nullFloatVar")]
-        [InlineData("BoolVar", "a", typeof(bool), "boolVar")]
-        [InlineData("NullBoolVar", "a", typeof(bool?), "nullBoolVar")]
-        [InlineData("DateTimeVar", "a", typeof(DateTime), "dateTimeVar")]
-        [InlineData("NullDateTimeVar", "a", typeof(DateTime?), "nullDateTimeVar")]
-        [InlineData("DateTimeOffsetVar", "a", typeof(DateTimeOffset), "dateTimeOffsetVar")]
-        [InlineData("NullDateTimeOffsetVar", "a", typeof(DateTimeOffset?), "nullDateTimeOffsetVar")]
-        [InlineData("TimeSpanVar", "a", typeof(TimeSpan), "timeSpanVar")]
-        [InlineData("NullTimeSpanVar", "a", typeof(TimeSpan?), "nullTimeSpanVar")]
-        [InlineData("ByteVar", "a", typeof(byte), "byteVar")]
-        [InlineData("NullByteVar", "a", typeof(byte?), "nullByteVar")]
-        [InlineData("SByteVar", "a", typeof(sbyte), "sByteVar")]
-        [InlineData("NullSByteVar", "a", typeof(sbyte?), "nullSByteVar")]
-        [InlineData("GuidVar", "a", typeof(Guid), "guidVar")]
-        [InlineData("NullGuidVar", "a", typeof(Guid?), "nullGuidVar")]
-        [InlineData("EnumVar", "a", typeof(SimpleUrlBindingEnum), "enumVar")]
-        [InlineData("NullEnumVar", "a", typeof(SimpleUrlBindingEnum?), "nullEnumVar")]
-        public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail(string varName, string value, Type expectedType, string expectedVarName)
+        [InlineData("CharVar", "aa", typeof(char), "charVar", 168)]
+        [InlineData("NullCharVar", "aa", typeof(char?), "nullCharVar", 183)]
+        [InlineData("Int16Var", "a", typeof(short), "int16Var", 169)]
+        [InlineData("NullInt16Var", "a", typeof(short?), "nullInt16Var", 183)]
+        [InlineData("UInt16Var", "a", typeof(ushort), "uInt16Var", 171)]
+        [InlineData("UInt16Var", "-1", typeof(ushort), "uInt16Var", 172)]
+        [InlineData("NullUInt16Var", "a", typeof(ushort?), "nullUInt16Var", 184)]
+        [InlineData("NullUInt16Var", "-1", typeof(ushort?), "nullUInt16Var", 185)]
+        [InlineData("Int32Var", "a", typeof(int), "int32Var", 169)]
+        [InlineData("NullInt32Var", "a", typeof(int?), "nullInt32Var", 183)]
+        [InlineData("UInt32Var", "a", typeof(uint), "uInt32Var", 171)]
+        [InlineData("UInt32Var", "-1", typeof(uint), "uInt32Var", 172)]
+        [InlineData("NullUInt32Var", "a", typeof(uint?), "nullUInt32Var", 184)]
+        [InlineData("NullUInt32Var", "-1", typeof(uint?), "nullUInt32Var", 185)]
+        [InlineData("Int64Var", "a", typeof(long), "int64Var", 169)]
+        [InlineData("NullInt64Var", "a", typeof(long?), "nullInt64Var", 183)]
+        [InlineData("UInt64Var", "a", typeof(ulong), "uInt64Var", 171)]
+        [InlineData("UInt64Var", "-1", typeof(ulong), "uInt64Var", 172)]
+        [InlineData("NullUInt64Var", "a", typeof(ulong?), "nullUInt64Var", 184)]
+        [InlineData("NullUInt64Var", "-1", typeof(ulong?), "nullUInt64Var", 185)]
+        [InlineData("DoubleVar", "a", typeof(double), "doubleVar", 171)]
+        [InlineData("NullDoubleVar", "a", typeof(double?), "nullDoubleVar", 184)]
+        [InlineData("DecimalVar", "a", typeof(decimal), "decimalVar", 173)]
+        [InlineData("NullDecimalVar", "a", typeof(decimal?), "nullDecimalVar", 185)]
+        [InlineData("FloatVar", "a", typeof(float), "floatVar", 170)]
+        [InlineData("NullFloatVar", "a", typeof(float?), "nullFloatVar", 183)]
+        [InlineData("BoolVar", "a", typeof(bool), "boolVar", 170)]
+        [InlineData("NullBoolVar", "a", typeof(bool?), "nullBoolVar", 182)]
+        [InlineData("DateTimeVar", "a", typeof(DateTime), "dateTimeVar", 175)]
+        [InlineData("NullDateTimeVar", "a", typeof(DateTime?), "nullDateTimeVar", 186)]
+        [InlineData("DateTimeOffsetVar", "a", typeof(DateTimeOffset), "dateTimeOffsetVar", 187)]
+        [InlineData("NullDateTimeOffsetVar", "a", typeof(DateTimeOffset?), "nullDateTimeOffsetVar", 192)]
+        [InlineData("TimeSpanVar", "a", typeof(TimeSpan), "timeSpanVar", 175)]
+        [InlineData("NullTimeSpanVar", "a", typeof(TimeSpan?), "nullTimeSpanVar", 186)]
+        [InlineData("ByteVar", "a", typeof(byte), "byteVar", 167)]
+        [InlineData("NullByteVar", "a", typeof(byte?), "nullByteVar", 182)]
+        [InlineData("SByteVar", "a", typeof(sbyte), "sByteVar", 169)]
+        [InlineData("NullSByteVar", "a", typeof(sbyte?), "nullSByteVar", 183)]
+        [InlineData("GuidVar", "a", typeof(Guid), "guidVar", 167)]
+        [InlineData("NullGuidVar", "a", typeof(Guid?), "nullGuidVar", 182)]
+        [InlineData("EnumVar", "a", typeof(SimpleUrlBindingEnum), "enumVar", 183)]
+        [InlineData("NullEnumVar", "a", typeof(SimpleUrlBindingEnum?), "nullEnumVar", 182)]
+        public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail(string varName, string value, Type expectedType, string expectedVarName, int expectedContentLength)
         {
             base.SetupEnvironment(services =>
             {
@@ -1621,7 +1621,8 @@ X-CorrelationId: {correlationId}";
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                expectedContentLength: expectedContentLength,
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

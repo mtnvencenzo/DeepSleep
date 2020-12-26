@@ -49,7 +49,7 @@ X-CorrelationId: {correlationId}
                 expectedHttpStatus: 413,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -97,7 +97,7 @@ Content-Length: 1
                 expectedHttpStatus: 413,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -145,7 +145,7 @@ Content-Length: 1
                 expectedHttpStatus: 413,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
@@ -203,7 +203,7 @@ Content-Length: 1
                 expectedHttpStatus: 413,
                 shouldHaveResponse: false,
                 expectedValidationState: ApiValidationState.NotAttempted,
-                extendedHeaders: new Dictionary<string, string>
+                extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });

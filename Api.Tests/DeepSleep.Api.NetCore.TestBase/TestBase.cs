@@ -1,11 +1,12 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests
 {
     using DeepSleep;
+    using DeepSleep.Auth;
     using FluentAssertions;
     using Microsoft.AspNetCore.Http;
     using System;
-    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
@@ -18,12 +19,13 @@
         protected readonly string host = "ut-test.com";
         protected readonly string applicationJson = "application/json";
         protected readonly string textJson = "text/json";
+        protected readonly string textPlain = "text/plain";
         protected readonly string applicationWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         protected readonly string applicationXml = "application/xml";
         protected readonly string textXml = "text/xml";
         protected readonly string applicationJsonPatch = "application/json-patch+json";
         protected static readonly string multipartBoundary = "gc0p4Jq0M2Yt08j34c0p";
-        protected readonly string multipartFormData = $"multipart/form-data; boundary={multipartBoundary}";
+        protected readonly string multipartFormData = $"multipart/form-data; boundary=\"{multipartBoundary}\"";
         protected readonly string cacheControlNoCache = "no-cache, no-store, must-revalidate, max-age=0";
         protected readonly string authSchemeToken = "Token";
         protected readonly string authSchemeBearer = "Bearer";
@@ -36,12 +38,16 @@
             bool shouldHaveResponse = true,
             string expectedContentType = null,
             ApiValidationState expectedValidationState = ApiValidationState.Succeeded,
-            Dictionary<string, string> extendedHeaders = null,
+            NameValuePairs<string, string> extendedHeaders = null,
             bool shouldBeCancelledReuqest = false,
             string expectedProtocol = "HTTP/1.1",
-            bool? expectedAuthenticationResult = null,
             bool expectedPrettyPrint = false,
-            bool expectRequestIdHeader = true)
+            bool expectRequestIdHeader = true,
+            bool? expectedAuthenticationResult = null,
+            string expectedAuthenticationScheme = null,
+            string expectedAuthenticationValue = null,
+            long? expectedContentLength = null,
+            AuthenticationType expectedAuthenticatedBy = AuthenticationType.None)
         {
             apiContext.Should().NotBeNull();
             response.Should().NotBeNull();
@@ -50,33 +56,24 @@
             // success responses.  This helps in debuging failing tests
             if (expectedHttpStatus >= 200 && expectedHttpStatus < 300)
             {
-                apiContext.ProcessingInfo.Exceptions.ForEach(ex =>
+                foreach (var error in apiContext.Runtime.Exceptions)
                 {
-                    ex.ToString().Should().BeNull();
-                });
+                    error.ToString().Should().BeNull();
+                }
 
-                apiContext.ErrorMessages.ForEach(m =>
+                foreach (var error in apiContext.Validation.Errors)
                 {
-                    m.Should().BeNull();
-                });
+                    error.Should().BeNull();
+                }
             }
 
-            if (shouldHaveResponse)
-            {
-                apiContext.ResponseInfo.ResponseObject.Should().NotBeNull();
-                apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().Be(expectedPrettyPrint);
-            }
-            else
-            {
-                apiContext.ResponseInfo.ResponseObject.Should().BeNull();
-            }
 
-            apiContext.ResponseInfo.StatusCode.Should().Be(expectedHttpStatus);
+            apiContext.Response.StatusCode.Should().Be(expectedHttpStatus);
             apiContext.ValidationState().Should().Be(expectedValidationState);
-            apiContext.PathBase.Should().Be(apiContext.RequestInfo.Path);
+            apiContext.PathBase.Should().Be(apiContext.Request.Path);
             response.StatusCode.Should().Be(expectedHttpStatus);
 
-            var expectedHeaderCount = (response.StatusCode >= 500)
+            var expectedHeaderCount = (response.StatusCode >= 500 || apiContext.Request.IsCorsPreflightRequest())
                 ? 3 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1)
                 : 5 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1);
 
@@ -85,70 +82,83 @@
                 expectedHeaderCount++;
             }
 
+
+            var responseHeaderCount = response.Headers.Sum(c => c.Value.Count);
+
             // Check for headers
-            apiContext.ResponseInfo.Headers.Should().HaveCount(expectedHeaderCount);
-            response.Headers.Should().HaveCount(expectedHeaderCount);
+            apiContext.Response.Headers.Should().HaveCount(expectedHeaderCount);
+            responseHeaderCount.Should().Be(expectedHeaderCount);
 
             response.Headers.Should().ContainKey("Date");
-            response.Headers["Date"].Should().Equal(apiContext.ResponseInfo.Date?.ToString("r"));
-            apiContext.ResponseInfo.Headers.HasHeader("Date").Should().BeTrue();
-            apiContext.ResponseInfo.Headers.GetHeader("Date").Value.Should().Be(apiContext.ResponseInfo.Date?.ToString("r"));
+            response.Headers["Date"].Should().Equal(apiContext.Response.Date?.ToString("r"));
+            apiContext.Response.Headers.HasHeader("Date").Should().BeTrue();
+            apiContext.Response.Headers.GetHeader("Date").Value.Should().Be(apiContext.Response.Date?.ToString("r"));
+
+            var assertionContentLength = expectedContentLength ?? response.Body.Length;
 
             response.Headers.Should().ContainKey("Content-Length");
-            response.Headers["Content-Length"].Should().Equal(response.Body.Length.ToString());
-            apiContext.ResponseInfo.Headers.HasHeader("Content-Length").Should().BeTrue();
-            apiContext.ResponseInfo.Headers.GetHeader("Content-Length").Value.Should().Be(response.Body.Length.ToString());
-            apiContext.ResponseInfo.ContentLength.Should().Be(response.Body.Length);
+            response.Headers["Content-Length"].Should().Equal(assertionContentLength.ToString());
+            apiContext.Response.Headers.HasHeader("Content-Length").Should().BeTrue();
+            apiContext.Response.Headers.GetHeader("Content-Length").Value.Should().Be(assertionContentLength.ToString());
+            apiContext.Response.ContentLength.Should().Be(assertionContentLength);
 
             if (expectRequestIdHeader)
             {
                 response.Headers.Should().ContainKey("X-RequestId");
-                response.Headers["X-RequestId"].Should().Equal(apiContext.RequestInfo.RequestIdentifier);
-                apiContext.ResponseInfo.Headers.HasHeader("X-RequestId").Should().BeTrue();
-                apiContext.ResponseInfo.Headers.GetHeader("X-RequestId").Value.Should().Be(apiContext.RequestInfo.RequestIdentifier);
+                response.Headers["X-RequestId"].Should().Equal(apiContext.Request.RequestIdentifier);
+                apiContext.Response.Headers.HasHeader("X-RequestId").Should().BeTrue();
+                apiContext.Response.Headers.GetHeader("X-RequestId").Value.Should().Be(apiContext.Request.RequestIdentifier);
             }
 
-            if (response.StatusCode < 500)
+            if (response.StatusCode < 500 && apiContext.Request.IsCorsPreflightRequest() == false)
             {
                 response.Headers.Should().ContainKey("Cache-Control");
                 response.Headers["Cache-Control"].Should().Equal(this.cacheControlNoCache);
-                apiContext.ResponseInfo.Headers.HasHeader("Cache-Control").Should().BeTrue();
-                apiContext.ResponseInfo.Headers.GetHeader("Cache-Control").Value.Should().Be(this.cacheControlNoCache);
+                apiContext.Response.Headers.HasHeader("Cache-Control").Should().BeTrue();
+                apiContext.Response.Headers.GetHeader("Cache-Control").Value.Should().Be(this.cacheControlNoCache);
 
                 response.Headers.Should().ContainKey("Expires");
-                response.Headers["Expires"].Should().Equal(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
-                apiContext.ResponseInfo.Headers.HasHeader("Expires").Should().BeTrue();
-                apiContext.ResponseInfo.Headers.GetHeader("Expires").Value.Should().Be(apiContext.ResponseInfo.Date?.AddYears(-1).ToString("r"));
+                response.Headers["Expires"].Should().Equal(apiContext.Response.Date?.AddYears(-1).ToString("r"));
+                apiContext.Response.Headers.HasHeader("Expires").Should().BeTrue();
+                apiContext.Response.Headers.GetHeader("Expires").Value.Should().Be(apiContext.Response.Date?.AddYears(-1).ToString("r"));
             }
 
             if (shouldHaveResponse)
             {
-
                 response.Headers.Should().ContainKey("Content-Type");
                 response.Headers["Content-Type"].Should().Equal(expectedContentType ?? this.applicationJson);
-                apiContext.ResponseInfo.Headers.HasHeader("Content-Type").Should().BeTrue();
-                apiContext.ResponseInfo.Headers.GetHeader("Content-Type").Value.Should().Be(expectedContentType ?? this.applicationJson);
-                apiContext.ResponseInfo.ContentType.Should().Be(expectedContentType);
+                apiContext.Response.Headers.HasHeader("Content-Type").Should().BeTrue();
+                apiContext.Response.Headers.GetHeader("Content-Type").Value.Should().Be(expectedContentType ?? this.applicationJson);
+                apiContext.Response.ContentType.Should().Be(expectedContentType);
 
-                apiContext.ResponseInfo.ResponseWriter.Should().NotBeNull();
-                apiContext.ResponseInfo.ResponseWriterOptions.Should().NotBeNull();
+                apiContext.Response.ContentLength.Should().BeGreaterThan(0);
+                int.TryParse(response.Headers["Content-Length"], out var contentLength);
+                contentLength.Should().BeGreaterThan(0);
 
-                if (apiContext.RequestInfo.PrettyPrint && apiContext.ResponseInfo.ResponseWriter.SupportsPrettyPrint)
+                apiContext.Response.ResponseWriter.Should().NotBeNull();
+                apiContext.Response.ResponseWriterOptions.Should().NotBeNull();
+                apiContext.Response.ResponseWriterOptions.PrettyPrint.Should().Be(expectedPrettyPrint);
+
+                if (apiContext.Request.IsHeadRequest())
                 {
-                    apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeTrue();
+                    apiContext.Response.ResponseObject.Should().BeNull();
                 }
                 else
                 {
-                    apiContext.ResponseInfo.ResponseWriterOptions.PrettyPrint.Should().BeFalse();
+                    apiContext.Response.ResponseObject.Should().NotBeNull();
                 }
             }
             else
             {
                 response.Headers.Should().NotContainKey("Content-Type");
-                apiContext.ResponseInfo.Headers.HasHeader("Content-Type").Should().BeFalse();
+                apiContext.Response.Headers.HasHeader("Content-Type").Should().BeFalse();
 
-                apiContext.ResponseInfo.ResponseWriter.Should().BeNull();
-                apiContext.ResponseInfo.ResponseWriterOptions.Should().BeNull();
+                apiContext.Response.ResponseObject.Should().BeNull();
+                apiContext.Response.ResponseWriter.Should().BeNull();
+                apiContext.Response.ResponseWriterOptions.Should().BeNull();
+
+                apiContext.Response.ContentLength.Should().Be(0);
+                int.Parse(response.Headers["Content-Length"]).Should().Be(0);
             }
 
             if (extendedHeaders != null)
@@ -156,33 +166,48 @@
                 foreach (var header in extendedHeaders)
                 {
                     response.Headers.Should().ContainKey(header.Key);
-                    response.Headers[header.Key].Should().Equal(header.Value);
+                    response.Headers[header.Key].Should().Contain(header.Value);
 
-                    apiContext.ResponseInfo.Headers.HasHeader(header.Key).Should().BeTrue();
-                    apiContext.ResponseInfo.Headers.GetHeader(header.Key).Value.Should().Be(header.Value);
+                    apiContext.Response.Headers.HasHeader(header.Key).Should().BeTrue();
+
+                    var matchingHeader = apiContext.Response.Headers
+                        .ToList()
+                        .Where(h => h.Name == header.Key)
+                        .Where(h => h.Value == header.Value)
+                        .FirstOrDefault();
+
+                    matchingHeader.Should().NotBeNull();
                 }
             }
 
             // -------------------------------------
             // Misicalleanous Api Context Validation
-            apiContext.ProcessingInfo.UTCRequestDuration.Should().NotBeNull();
-            apiContext.ProcessingInfo.UTCRequestDuration.Duration.Should().Be(
-                (int)(apiContext.ProcessingInfo.UTCRequestDuration.EndDate - apiContext.ProcessingInfo.UTCRequestDuration.StartDate).TotalMilliseconds);
+            apiContext.Runtime.Duration.Should().NotBeNull();
+            apiContext.Runtime.Duration.Duration.Should().Be(
+                (int)(apiContext.Runtime.Duration.UtcEnd.Value - apiContext.Runtime.Duration.UtcStart).TotalMilliseconds);
 
             apiContext.RequestAborted.IsCancellationRequested.Should().Be(shouldBeCancelledReuqest);
-            apiContext.RequestInfo.Protocol.Should().Be(expectedProtocol);
-            apiContext.RequestInfo.RequestIdentifier.Should().NotBeNull();
+            apiContext.Request.Protocol.Should().Be(expectedProtocol);
+            apiContext.Request.RequestIdentifier.Should().NotBeNull();
 
-            if (expectedAuthenticationResult.HasValue)
+            if (!(apiContext.Configuration?.AllowAnonymous ?? false) && expectedAuthenticationResult.HasValue)
             {
-                apiContext.RequestInfo.ClientAuthenticationInfo.Should().NotBeNull();
-                apiContext.RequestInfo.ClientAuthenticationInfo.AuthResult.Should().NotBeNull();
-                apiContext.RequestInfo.ClientAuthenticationInfo.AuthResult.IsAuthenticated.Should().Be(expectedAuthenticationResult.Value);
+                apiContext.Request.ClientAuthenticationInfo.Should().NotBeNull();
+                apiContext.Request.ClientAuthenticationInfo.AuthenticatedBy.Should().Be(expectedAuthenticatedBy);
+                apiContext.Request.ClientAuthenticationInfo.AuthScheme.Should().Be(expectedAuthenticationScheme);
+                apiContext.Request.ClientAuthenticationInfo.AuthValue.Should().Be(expectedAuthenticationValue);
+                apiContext.Request.ClientAuthenticationInfo.AuthResult.Should().NotBeNull();
+                apiContext.Request.ClientAuthenticationInfo.AuthResult.IsAuthenticated.Should().Be(expectedAuthenticationResult.Value);
             }
         }
 
         protected Task<T> GetResponseData<T>(HttpResponse response)
         {
+            if (response.Body == null || !response.Body.CanRead || response.Body.Length == 0)
+            {
+                return Task.FromResult(default(T));
+            }
+
             var contentType = response.Headers["Content-Type"][0] ?? string.Empty;
 
             if (contentType == this.applicationJson || contentType == this.textJson)
@@ -231,6 +256,17 @@
                     return obj != null
                         ? Task.FromResult((T)obj)
                         : Task.FromResult(default(T));
+                }
+            }
+            else if (contentType == this.textPlain)
+            {
+                response.Body.Seek(0, SeekOrigin.Begin);
+
+                using (var reader = new StreamReader(response.Body))
+                {
+                    object data = reader.ReadToEnd();
+
+                    return Task.FromResult((T)data);
                 }
             }
 
