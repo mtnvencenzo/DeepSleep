@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Resources;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -110,7 +109,15 @@
                             catch (JsonException ex)
                             {
                                 addedBindingError = true;
-                                context.Validation.Errors.Add(string.Format(ValidationErrors.UriBindingError, ex.Path.TrimStart('$', '.')));
+
+                                var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingError ?? string.Empty;
+
+                                var errorMessage = error.Replace("{paramName}", ex.Path?.TrimStart('$', '.') ?? string.Empty);
+
+                                if (!string.IsNullOrWhiteSpace(errorMessage))
+                                {
+                                    context.Validation.Errors.Add(errorMessage);
+                                }
                             }
                         }
 
@@ -142,8 +149,18 @@
                                     catch
                                     {
                                         addedBindingError = true;
-                                        context.Validation.Errors.Add(
-                                            string.Format(ValidationErrors.UriBindingValueError, simpleParameter.Name, nameValue.Value, simpleParameter.ParameterType.Name));
+
+                                        var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingValueError ?? string.Empty;
+
+                                        var errorMessage = error
+                                            .Replace("{paramName}", simpleParameter.Name)
+                                            .Replace("{paramValue}", nameValue.Value ?? string.Empty)
+                                            .Replace("{paramType}", simpleParameter.ParameterType.Name);
+
+                                        if (!string.IsNullOrWhiteSpace(errorMessage))
+                                        {
+                                            context.Validation.Errors.Add(errorMessage);
+                                        }
                                     }
                                 }
                             }

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.NetCore</id>
-    <version>0.0.2-beta.50</version>
+    <version>0.0.2-beta.51</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -14,11 +14,27 @@
     <copyright>Copyright 2020</copyright>
     <tags>deepsleep api rest</tags>
     <dependencies>
+      <group targetFramework="netcoreapp2.0">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="netcoreapp2.1">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="netcoreapp2.2">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
       <group targetFramework="netcoreapp3.0">
         <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="netcoreapp3.1">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net5.0">
         <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>

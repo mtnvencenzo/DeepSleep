@@ -1,8 +1,11 @@
 ﻿namespace Api.DeepSleep.Controllers
 {
+    using Api.DeepSleep.Controllers.Authentication;
+    using Api.DeepSleep.Controllers.Authorization;
     using Api.DeepSleep.Controllers.Binding;
     using Api.DeepSleep.Controllers.Exceptions;
     using Api.DeepSleep.Controllers.Formatters;
+    using Api.DeepSleep.Controllers.Items;
     using Api.DeepSleep.Controllers.Pipeline;
     using global::DeepSleep;
     using global::DeepSleep.Auth;
@@ -23,11 +26,14 @@
             services.AddTransient<MultipartController>();
             services.AddTransient<ExceptionController>();
             services.AddTransient<ReadWriteConfigurationController>();
+            services.AddSingleton<AuthorizationController>();
             services.AddScoped<RequestIdController>();
             services.AddTransient<AuthenticationController>();
             services.AddTransient<EnableHeadController>();
             services.AddTransient<CommonErrorResponseProvider>();
             services.AddTransient<MethodNotFoundController>();
+            services.AddTransient<ItemsController>();
+            services.AddTransient<ContextDumpController>();
 
             // Only one of these to check both injection and no-injection resolution
             services.AddTransient<NotImplementedExceptionThrowValidator>();
@@ -46,6 +52,9 @@
             services.AddScoped<IAuthorizationProvider, Ex502AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex503AuthorizationProvider>();
             services.AddScoped<IAuthorizationProvider, Ex504AuthorizationProvider>();
+            services.AddScoped<IAuthorizationProvider, DefaultAuthorizationProvider>();
+            services.AddScoped<IAuthorizationProvider, DefaultFailingAuthorizationProvider>();
+
             services.AddScoped<CustomXmlFormatStreamReaderWriter>();
         }
 
@@ -59,6 +68,32 @@
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
                 config: new DefaultApiRequestConfiguration());
+
+            table.AddRoute(
+                template: $"binding/simple/url/empty/binding/error",
+                httpMethod: "GET",
+                controller: typeof(SimpleUrlBindingController),
+                endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        UriBindingValueError = string.Empty
+                    }
+                });
+
+            table.AddRoute(
+                template: $"binding/simple/url/custom/binding/error",
+                httpMethod: "GET",
+                controller: typeof(SimpleUrlBindingController),
+                endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        UriBindingValueError = "100|Test {paramName}."
+                    }
+                });
 
             table.AddRoute(
                 template: "binding/simple/url/{stringVar}/resource",
@@ -362,6 +397,12 @@
                 endpoint: nameof(BodyBindingController.SimpleMultipart));
 
             table.AddRoute(
+                template: "binding/multipart/custom",
+                httpMethod: "POST",
+                controller: typeof(BodyBindingController),
+                endpoint: nameof(BodyBindingController.MultipartCustom));
+
+            table.AddRoute(
                 template: "formatters/accept",
                 httpMethod: "GET",
                 controller: typeof(AcceptController),
@@ -628,7 +669,6 @@
                     SupportedAuthenticationSchemes = new string[] { "Token" }
                 });
 
-
             table.AddRoute(
                 template: "authentication/multiple/supported/schemes",
                 httpMethod: "GET",
@@ -876,6 +916,79 @@
                 {
                     EnableHeadForGetRequests = true
                 });
+
+            table.AddRoute(
+                template: "authorization/anonymous/allowed",
+                httpMethod: "GET",
+                controller: typeof(AuthorizationController),
+                endpoint: nameof(AuthorizationController.GetWithAuthorization),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = true
+                });
+
+            table.AddRoute(
+                template: "authorization/policy/configured/success/provider",
+                httpMethod: "GET",
+                controller: typeof(AuthorizationController),
+                endpoint: nameof(AuthorizationController.GetWithAuthorization),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { "Token" },
+                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    {
+                        Policy = "Default"
+                    }
+                });
+
+            table.AddRoute(
+                template: "authorization/policy/configured/failing/provider",
+                httpMethod: "GET",
+                controller: typeof(AuthorizationController),
+                endpoint: nameof(AuthorizationController.GetWithAuthorization),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { "Token" },
+                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    {
+                        Policy = "DefaultFail"
+                    }
+                });
+
+            table.AddRoute(
+                template: "authorization/policy/configured/no/provider",
+                httpMethod: "GET",
+                controller: typeof(AuthorizationController),
+                endpoint: nameof(AuthorizationController.GetWithAuthorization),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    SupportedAuthenticationSchemes = new string[] { "Token" },
+                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    {
+                        Policy = "Default1"
+                    }
+                });
+
+            table.AddRoute(
+                template: "context/items",
+                httpMethod: "GET",
+                controller: typeof(ItemsController),
+                endpoint: nameof(ItemsController.GetWithItems));
+
+            table.AddRoute(
+                template: "context/dump",
+                httpMethod: "GET",
+                controller: typeof(ContextDumpController),
+                endpoint: nameof(ContextDumpController.GetDump));
+
+            table.AddRoute(
+                template: "context/dump",
+                httpMethod: "POST",
+                controller: typeof(ContextDumpController),
+                endpoint: nameof(ContextDumpController.PostDump));
 
             return table;
         }

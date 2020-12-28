@@ -1,10 +1,12 @@
 ﻿namespace DeepSleep
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{ToCookie()}")]
     public class ApiCookie
     {
         /// <summary>

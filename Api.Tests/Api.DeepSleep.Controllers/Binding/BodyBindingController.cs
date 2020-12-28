@@ -1,6 +1,7 @@
 ﻿namespace Api.DeepSleep.Controllers.Binding
 {
     using global::DeepSleep;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -104,6 +105,33 @@
                 TextFileData = fileData
             };
         }
+
+        /// <summary>Multiparts the custom.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        public SimpleMultipartRs MultipartCustom([BodyBound] SimpleMultipartRq request)
+        {
+            string fileData = null;
+            var filesSection = request.Files.FirstOrDefault(m => m.Name == "files");
+
+            if (filesSection != null)
+            {
+                var stream = filesSection.GetStream();
+
+                using (var reader = new StreamReader(stream, Encoding.UTF8, true, 1024, true))
+                {
+                    fileData = reader.ReadToEnd();
+                }
+            }
+
+
+            return new SimpleMultipartRs
+            {
+                Value = request.Value,
+                OtherValue = request.OtherValue,
+                TextFileData = fileData
+            };
+        }
     }
 
     public class SimpleMultipartRs
@@ -113,6 +141,17 @@
         public string OtherValue { get; set; }
 
         public string TextFileData { get; set; }
+    }
+
+
+
+    public class SimpleMultipartRq
+    {
+        public string Value { get; set; }
+
+        public string OtherValue { get; set; }
+
+        public IList<MultipartHttpRequestSection> Files { get; set; }
     }
 
     public class MaxRequestLengthModel

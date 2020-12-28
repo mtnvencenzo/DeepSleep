@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using System.Text.Json.Serialization;
 
     /// <summary>The API request info.</summary>
     [DebuggerDisplay("[{Method?.ToUpper()}] {RequestUri}")]
@@ -21,6 +22,7 @@
 
         /// <summary>Gets or sets the accept culture.</summary>
         /// <value>The accept culture.</value>
+        [JsonIgnore]
         public virtual CultureInfo AcceptCulture { get; set; }
 
         /// <summary>Gets or sets the accept charset.</summary>
@@ -123,27 +125,8 @@
 
         /// <summary>Gets or sets the body.</summary>
         /// <value>The body.</value>
+        [JsonIgnore]
         public virtual Stream Body { get; set; }
-
-        /// <summary>Dumps this instance.</summary>
-        /// <returns></returns>
-        public string Dump()
-        {
-            var builder = new StringBuilder();
-
-            builder.AppendLine($"{this.Method.ToUpper()} {this.RequestUri} {this.Protocol}");
-            builder.AppendLine("");
-
-            if (this.Headers != null)
-            {
-                foreach (var header in this.Headers)
-                {
-                    builder.AppendLine($"{header.Name}: {header.Value}");
-                }
-            }
-
-            return builder.ToString();
-        }
     }
 
     /// <summary>
@@ -189,6 +172,80 @@
             }
 
             return false;
+        }
+
+        /// <summary>Determines whether [is conditional request match] [the specified response].</summary>
+        /// <param name="request">The request.</param>
+        /// <param name="response">The response.</param>
+        /// <returns></returns>
+        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestInfo request, ApiResponseInfo response)
+        {
+            var etag = response?.Headers.GetValue("ETag");
+            var lastModifiedRaw = response?.Headers.GetValue("Last-Modified");
+
+            DateTimeOffset? lastModified = null;
+            if (DateTimeOffset.TryParse(lastModifiedRaw, out var parsed))
+            {
+                lastModified = parsed;
+            }
+
+            return IsConditionalRequestMatch(request, etag, lastModified);
+        }
+
+        /// <summary>Determines whether [is conditional request match] [the specified etag].</summary>
+        /// <param name="request">The request.</param>
+        /// <param name="etag">The etag.</param>
+        /// <param name="lastModified">The last modified.</param>
+        /// <returns></returns>
+        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestInfo request, string etag, DateTimeOffset? lastModified)
+        {
+            var condtionalRequestETag = request.IfMatch;
+            var condtionalRequestLastModfied = request.IfModifiedSince;
+
+            // Conditional Get Request
+            if (!string.IsNullOrWhiteSpace(condtionalRequestETag) || condtionalRequestLastModfied != null)
+            {
+                var match = true;
+                if (!string.IsNullOrWhiteSpace(condtionalRequestETag) && condtionalRequestETag != etag)
+                {
+                    match = false;
+                }
+
+                if (condtionalRequestLastModfied != null && condtionalRequestLastModfied.Value.ToString("r") != lastModified?.ToString("r"))
+                {
+                    match = false;
+                }
+
+                if (match)
+                {
+                    return ApiCondtionalMatchType.ConditionalGetMatch;
+                }
+            }
+
+            // Concurrency Request
+            var currencyRequestETag = request.IfNoneMatch;
+            var currencyRequestLastModfied = request.IfUnmodifiedSince;
+
+            if (!string.IsNullOrWhiteSpace(currencyRequestETag) || currencyRequestLastModfied != null)
+            {
+                var match = true;
+                if (!string.IsNullOrWhiteSpace(currencyRequestETag) && currencyRequestETag == etag)
+                {
+                    match = false;
+                }
+
+                if (currencyRequestLastModfied != null && currencyRequestLastModfied.Value.ToString("r") == lastModified?.ToString("r"))
+                {
+                    match = false;
+                }
+
+                if (match)
+                {
+                    return ApiCondtionalMatchType.ConditionalConcurrencyNoMatch;
+                }
+            }
+
+            return ApiCondtionalMatchType.None;
         }
     }
 }

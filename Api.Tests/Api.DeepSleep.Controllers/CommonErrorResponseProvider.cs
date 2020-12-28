@@ -2,6 +2,7 @@
 {
     using Api.DeepSleep.Models;
     using global::DeepSleep;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -9,45 +10,32 @@
     /// 
     /// </summary>
     /// <seealso cref="DeepSleep.IApiErrorResponseProvider" />
-    public class CommonErrorResponseProvider : IApiErrorResponseProvider
+    public class CommonErrorResponseProvider : IValidationErrorResponseProvider
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
-
-        /// <summary>Initializes a new instance of the <see cref="CommonErrorResponseProvider"/> class.</summary>
-        /// <param name="apiRequestContextResolver">The API request context resolver.</param>
-        public CommonErrorResponseProvider(IApiRequestContextResolver apiRequestContextResolver)
-        {
-            this.apiRequestContextResolver = apiRequestContextResolver;
-        }
-
-        /// <summary>Processes the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Processes the specified errors.</summary>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public Task Process(ApiRequestContext context)
+        public Task<object> Process(IList<string> errors)
         {
-            var injectedContext = apiRequestContextResolver.GetContext();
-
-            if (injectedContext?.Response != null && injectedContext.Response.HasSuccessStatus() == false)
+            if ((errors?.Count ?? 0) > 0)
             {
-                if (injectedContext.Validation.Errors != null && injectedContext.Validation.Errors.Count > 0)
-                {
-                    var messages = injectedContext.Validation.Errors
-                        .Where(e => !string.IsNullOrWhiteSpace(e))
-                        .Select(e => BuildResponseMessageFromResource(e))
-                        .Where(e => e != null)
-                        .ToList();
+                var messages = errors
+                    .Where(e => !string.IsNullOrWhiteSpace(e))
+                    .Distinct()
+                    .Select(e => BuildResponseMessageFromResource(e))
+                    .Where(e => e != null)
+                    .ToList();
 
-                    if (messages.Count > 0)
+                if (messages.Count > 0)
+                {
+                    return Task.FromResult(new CommonErrorResponse
                     {
-                        injectedContext.Response.ResponseObject = new CommonErrorResponse
-                        {
-                            Messages = messages
-                        };
-                    }
+                        Messages = messages
+                    } as object);
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(null as object);
         }
 
         /// <summary>Builds the response message from resource.</summary>

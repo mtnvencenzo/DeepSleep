@@ -1,4 +1,4 @@
-﻿namespace Api.DeepSleep.Controllers.Binding
+﻿namespace Api.DeepSleep.Controllers.Authentication
 {
     public class AuthenticationController
     {

@@ -371,13 +371,13 @@ X-CorrelationId: {correlationId}";
         }
 
         [Theory]
-        [InlineData("0", false, 379)]
-        [InlineData("false", false, 379)]
-        [InlineData("False", false, 379)]
-        [InlineData("1", true, 377)]
-        [InlineData("true", true, 377)]
-        [InlineData("True", true, 377)]
-        public async Task HEAD_binding_simple_url_querystring_bool_vars_success(string value, bool expected, int expectedContentLength)
+        [InlineData("0", 379)]
+        [InlineData("false", 379)]
+        [InlineData("False", 379)]
+        [InlineData("1", 377)]
+        [InlineData("true", 377)]
+        [InlineData("True", 377)]
+        public async Task HEAD_binding_simple_url_querystring_bool_vars_success(string value, int expectedContentLength)
         {
             base.SetupEnvironment(services =>
             {
@@ -540,14 +540,14 @@ X-CorrelationId: {correlationId}";
         }
 
         [Theory]
-        [InlineData("4", SimpleUrlBindingEnum.Four, 897)]
-        [InlineData("8", SimpleUrlBindingEnum.Eight, 899)]
-        [InlineData("Eight", SimpleUrlBindingEnum.Eight, 899)]
-        [InlineData("Four", SimpleUrlBindingEnum.Four, 897)]
-        [InlineData("four", SimpleUrlBindingEnum.Four, 897)]
-        [InlineData("four,eight", SimpleUrlBindingEnum.Four | SimpleUrlBindingEnum.Eight, 911)]
-        [InlineData("12", SimpleUrlBindingEnum.Four | SimpleUrlBindingEnum.Eight, 911)]
-        public async Task HEAD_binding_simple_url_querystring_enum_values_success(string value, SimpleUrlBindingEnum expected, int expectedContentLength)
+        [InlineData("4", 897)]
+        [InlineData("8", 899)]
+        [InlineData("Eight", 899)]
+        [InlineData("Four", 897)]
+        [InlineData("four", 897)]
+        [InlineData("four,eight", 911)]
+        [InlineData("12", 911)]
+        public async Task HEAD_binding_simple_url_querystring_enum_values_success(string value, int expectedContentLength)
         {
             base.SetupEnvironment(services =>
             {

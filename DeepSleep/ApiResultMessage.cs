@@ -1,8 +1,11 @@
 ﻿namespace DeepSleep
 {
+    using System.Diagnostics;
+
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{Code} {Message}")]
     public class ApiResultMessage
     {
         /// <summary>Gets or sets the code.</summary>

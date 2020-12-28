@@ -2,6 +2,7 @@
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
     using FluentAssertions;
+    using global::Api.DeepSleep.Controllers.Authentication;
     using global::Api.DeepSleep.Controllers.Binding;
     using System;
     using System.Threading.Tasks;

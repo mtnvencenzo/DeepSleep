@@ -49,6 +49,23 @@
             };
         }
 
+        /// <summary>Gets the readable types.</summary>
+        /// <returns></returns>
+        public virtual IEnumerable<string> GetReadableTypes(IList<IFormatStreamReaderWriter> overridingFormatters)
+        {
+            var formatters = (overridingFormatters ?? this.GetFormatters())
+                .Where(f => f != null)
+                .Where(f => f.SupportsRead);
+
+            foreach (var f in formatters)
+            {
+                foreach (var type in f.ReadableMediaTypes ?? new List<string>())
+                {
+                    yield return type.ToLower();
+                }
+            };
+        }
+
         /// <summary>Gets the acceptable formatter.</summary>
         /// <param name="acceptHeader">The accept header.</param>
         /// <param name="formatterType">Type of the formatter.</param>

@@ -3,6 +3,7 @@
     using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -24,10 +25,12 @@
 
         /// <summary>Gets or sets the reader resolver.</summary>
         /// <value>The reader resolver.</value>
+        [JsonIgnore]
         public Func<ResolvedFormatterArguments, Task<FormatterReadOverrides>> ReaderResolver { get; set; }
 
         /// <summary>Gets or sets the writer resolver.</summary>
         /// <value>The writer resolver.</value>
+        [JsonIgnore]
         public Func<ResolvedFormatterArguments, Task<FormatterWriteOverrides>> WriterResolver { get; set; }
     }
 }

@@ -3,6 +3,7 @@
     using global::DeepSleep;
     using global::DeepSleep.Auth;
     using System;
+    using System.Security.Principal;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,27 +23,22 @@
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
-        public Task Authenticate(ApiRequestContext context)
+        public Task<AuthenticationResult> Authenticate(ApiRequestContext context)
         {
             var acceptable = "T0RrMlJqWXpNVFF0UmtReFF5MDBRamN5TFVJeE5qZ3RPVGxGTlRBek5URXdNVUkz";
             var authValue = context.Request.ClientAuthenticationInfo.AuthValue ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(authValue))
             {
-                context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, "EmptyStaticToken");
-                return Task.CompletedTask;
+                return Task.FromResult(new AuthenticationResult(false, "EmptyStaticToken"));
             }
 
             if (authValue != acceptable)
             {
-                context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(false, "InvalidStaticToken");
-                return Task.CompletedTask;
+                return Task.FromResult(new AuthenticationResult(false, "InvalidStaticToken"));
             }
 
-            context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
-            context.Request.ClientAuthenticationInfo.Principal = null;
-
-            return Task.CompletedTask;
+            return Task.FromResult(new AuthenticationResult(true, null as IPrincipal));
         }
 
         /// <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>

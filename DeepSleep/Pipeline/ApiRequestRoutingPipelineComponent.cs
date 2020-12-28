@@ -406,6 +406,27 @@
             }
 
 
+            // ------------------------------------
+            // Merge Validation Error Configuration
+            // ------------------------------------
+            if (endpointConfig?.ValidationErrorConfiguration != null || defaultConfig?.ValidationErrorConfiguration != null)
+            {
+                requestConfig.ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = endpointConfig?.ValidationErrorConfiguration?.UriBindingError
+                        ?? defaultConfig?.ValidationErrorConfiguration?.UriBindingError
+                        ?? systemConfig.ValidationErrorConfiguration?.UriBindingError,
+
+                    UriBindingValueError = endpointConfig?.ValidationErrorConfiguration?.UriBindingValueError
+                        ?? defaultConfig?.ValidationErrorConfiguration?.UriBindingValueError
+                        ?? systemConfig.ValidationErrorConfiguration?.UriBindingValueError
+                };
+            }
+            else
+            {
+                requestConfig.ValidationErrorConfiguration = systemConfig.ValidationErrorConfiguration;
+            }
+
 
             return requestConfig;
         }

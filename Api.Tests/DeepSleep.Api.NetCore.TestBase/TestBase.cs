@@ -46,8 +46,10 @@
             bool? expectedAuthenticationResult = null,
             string expectedAuthenticationScheme = null,
             string expectedAuthenticationValue = null,
-            long? expectedContentLength = null,
-            AuthenticationType expectedAuthenticatedBy = AuthenticationType.None)
+            AuthenticationType expectedAuthenticatedBy = AuthenticationType.None,
+            bool? expectedAuthorizationResult = null,
+            AuthorizationType expectedAuthorizedBy = AuthorizationType.None,
+            long? expectedContentLength = null)
         {
             apiContext.Should().NotBeNull();
             response.Should().NotBeNull();
@@ -199,6 +201,24 @@
                 apiContext.Request.ClientAuthenticationInfo.AuthResult.Should().NotBeNull();
                 apiContext.Request.ClientAuthenticationInfo.AuthResult.IsAuthenticated.Should().Be(expectedAuthenticationResult.Value);
             }
+
+            if (apiContext.Request.ClientAuthenticationInfo?.AuthResult?.IsAuthenticated == true)
+            {
+                if (!(apiContext.Configuration?.AllowAnonymous ?? false) && expectedAuthorizationResult.HasValue)
+                {
+                    apiContext.Request.ClientAuthorizationInfo.Should().NotBeNull();
+                    apiContext.Request.ClientAuthorizationInfo.AuthorizedBy.Should().Be(expectedAuthorizedBy);
+                    apiContext.Request.ClientAuthorizationInfo.AuthResult.Should().NotBeNull();
+                    apiContext.Request.ClientAuthorizationInfo.AuthResult.IsAuthorized.Should().Be(expectedAuthorizationResult.Value);
+                }
+            }
+            else
+            {
+                apiContext.Request.ClientAuthorizationInfo.Should().BeNull();
+            }
+
+            var jsonDump = apiContext.Dump();
+            jsonDump.Should().NotBeNullOrWhiteSpace();
         }
 
         protected Task<T> GetResponseData<T>(HttpResponse response)

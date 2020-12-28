@@ -1,18 +1,21 @@
 ﻿namespace DeepSleep
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Formatting.Converters;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading;
 
     /// <summary>The API request context.</summary>
-    [DebuggerDisplay("[{RequestInfo?.Method?.ToUpper()}] {PathBase}")]
+    [DebuggerDisplay("[{Request?.Method?.ToUpper()}] {PathBase}")]
     public class ApiRequestContext
     {
         /// <summary>Gets the items.</summary>
         /// <value>The items.</value>
-        public virtual IDictionary<string, object> Items { get; private set; } = new Dictionary<string, object>();
+        public virtual IDictionary<string, object> Items { get; internal set; } = new Dictionary<string, object>();
 
         /// <summary>Gets the request information.</summary>
         /// <value>The request information.</value>
@@ -40,10 +43,12 @@
 
         /// <summary>Gets or sets the request aborted.</summary>
         /// <value>The request aborted.</value>
+        [JsonIgnore]
         public virtual CancellationToken RequestAborted { get; set; } = new CancellationToken(false);
 
         /// <summary>Gets or sets the request services.</summary>
         /// <value>The request services.</value>
+        [JsonIgnore]
         public virtual IServiceProvider RequestServices { get; set; }
 
         /// <summary>Adds the response cookie.</summary>
@@ -57,10 +62,12 @@
 
         /// <summary>Gets or sets the register for dispose.</summary>
         /// <value>The register for dispose.</value>
+        [JsonIgnore]
         public Action<IDisposable> RegisterForDispose { get; set; }
 
         /// <summary>Gets or sets the length of the configure maximum request.</summary>
         /// <value>The length of the configure maximum request.</value>
+        [JsonIgnore]
         public Action<long> ConfigureMaxRequestLength { get; set; }
 
         /// <summary>Gets or sets the validation.</summary>
@@ -74,7 +81,7 @@
             return new DefaultApiRequestConfiguration
             {
                 AllowAnonymous = false,
-                ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider(),
+                ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider(),
                 CacheDirective = new HttpCacheDirective
                 {
                     Cacheability = HttpCacheType.NoCache,
@@ -114,8 +121,40 @@
                     WriterResolver = null,
                     AcceptHeaderOverride = null
                 },
-                EnableHeadForGetRequests = true
+                EnableHeadForGetRequests = true,
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "400.000001|'{paramName}' Is in an incorrect format and could not be bound.",
+                    UriBindingValueError = "400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}."
+                }
             };
+        }
+
+        /// <summary>Dumps this instance.</summary>
+        /// <returns></returns>
+        public string Dump()
+        {
+            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+                IgnoreReadOnlyProperties = false,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.Strict,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                WriteIndented = true,
+                //ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new ContentDispositionConverter());
+            settings.Converters.Add(new ContentTypeConverter());
+
+            string json = JsonSerializer.Serialize(this, settings);
+            return json;
         }
     }
 
@@ -124,6 +163,8 @@
     /// </summary>
     public static class ApiRequestContextExtensionMethods
     {
+        private static readonly object __itemSyncLock = new object();
+
         /// <summary>Validations the state.</summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
@@ -174,7 +215,7 @@
                 context.Validation.Errors = new List<string>();
             }
 
-            if (error != null)
+            if (!string.IsNullOrWhiteSpace(error))
             {
                 context.Validation.Errors.Add(error);
             }
@@ -198,196 +239,103 @@
             return context;
         }
 
-        /// <summary>Adds the item.</summary>
-        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <summary>Upserts the item.</summary>
         /// <typeparam name="TItem">The type of the item.</typeparam>
-        /// <param name="request">The request.</param>
-        /// <param name="contextKey">The context key.</param>
+        /// <param name="context">The context.</param>
         /// <param name="key">The key.</param>
         /// <param name="item">The item.</param>
         /// <returns></returns>
-        public static ApiRequestContext AddItem<TKey, TItem>(this ApiRequestContext request, string contextKey, TKey key, TItem item)
+        public static ApiRequestContext UpsertItem<TItem>(this ApiRequestContext context, string key, TItem item)
         {
-            RequestContextItemGroup<TKey, TItem> itemGroup;
-            if (!request.TryGetItemGroup(contextKey, out itemGroup))
+            lock (__itemSyncLock)
             {
-                itemGroup = new RequestContextItemGroup<TKey, TItem>();
-                request.Items.Add(contextKey, itemGroup);
+                if (context == null)
+                {
+                    return context;
+                }
+
+                if (context.Items == null)
+                {
+                    context.Items = new Dictionary<string, object>();
+                }
+
+                if (context.Items.ContainsKey(key))
+                {
+                    context.Items[key] = item;
+                }
+                else
+                {
+                    context.Items.Add(key, item);
+                }
             }
 
-            if (!itemGroup.Items.ContainsKey(key))
-            {
-                itemGroup.Items.Add(key, item);
-            }
+            return context;
+        }
 
-            return request;
+        /// <summary>Tries the add item.</summary>
+        /// <typeparam name="TItem">The type of the item.</typeparam>
+        /// <param name="context">The context.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        public static bool TryAddItem<TItem>(this ApiRequestContext context, string key, TItem item)
+        {
+            lock (__itemSyncLock)
+            {
+                if (context == null)
+                {
+                    return false;
+                }
+
+                if (context.Items == null)
+                {
+                    context.Items = new Dictionary<string, object>();
+                }
+
+                if (context.Items.ContainsKey(key))
+                {
+                    return false;
+                }
+                else
+                {
+                    context.Items.Add(key, item);
+                    return true;
+                }
+            }
         }
 
         /// <summary>Tries the get item.</summary>
-        /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TItem">The type of the item.</typeparam>
-        /// <param name="request">The request.</param>
-        /// <param name="contextKey">The context key.</param>
+        /// <param name="context">The context.</param>
         /// <param name="key">The key.</param>
         /// <param name="item">The item.</param>
-        /// <returns>The <see cref="bool" />.</returns>
-        public static bool TryGetItem<TKey, TItem>(this ApiRequestContext request, string contextKey, TKey key, out TItem item)
-        {
-            item = default;
-
-            RequestContextItemGroup<TKey, TItem> itemGroup;
-            if (!request.TryGetItemGroup(contextKey, out itemGroup))
-            {
-                itemGroup = new RequestContextItemGroup<TKey, TItem>();
-                request.Items.Add(contextKey, itemGroup);
-            }
-
-            if (!itemGroup.Items.ContainsKey(key))
-            {
-                return false;
-            }
-
-            item = itemGroup.Items[key];
-            return true;
-        }
-
-        /// <summary>Determines whether [is conditional request match] [the specified response].</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="response">The response.</param>
         /// <returns></returns>
-        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, ApiResponseInfo response)
+        public static bool TryGetItem<TItem>(this ApiRequestContext context, string key, out TItem item)
         {
-            var etag = response?.Headers.GetValue("ETag");
-            var lastModifiedRaw = response?.Headers.GetValue("Last-Modified");
-
-            DateTimeOffset? lastModified = null;
-            if (DateTimeOffset.TryParse(lastModifiedRaw, out var parsed))
+            lock (__itemSyncLock)
             {
-                lastModified = parsed;
-            }
+                item = default;
 
-            return IsConditionalRequestMatch(context, etag, lastModified);
-        }
-
-        /// <summary>Determines whether [is conditional request match] [the specified etag].</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="etag">The etag.</param>
-        /// <param name="lastModified">The last modified.</param>
-        /// <returns></returns>
-        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestContext context, string etag, DateTimeOffset? lastModified)
-        {
-            var condtionalRequestETag = context.Request.IfMatch;
-            var condtionalRequestLastModfied = context.Request.IfModifiedSince;
-
-            // Conditional Get Request
-            if (!string.IsNullOrWhiteSpace(condtionalRequestETag) || condtionalRequestLastModfied != null)
-            {
-                var match = true;
-                if (!string.IsNullOrWhiteSpace(condtionalRequestETag) && condtionalRequestETag != etag)
+                if (context?.Items == null)
                 {
-                    match = false;
+                    return false;
                 }
 
-                if (condtionalRequestLastModfied != null && condtionalRequestLastModfied.Value.ToString("r") != lastModified?.ToString("r"))
+                if (context.Items.ContainsKey(key))
                 {
-                    match = false;
-                }
-
-                if (match)
-                {
-                    return ApiCondtionalMatchType.ConditionalGetMatch;
+                    try
+                    {
+                        item = (TItem)context.Items[key];
+                        return true;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
             }
 
-            // Concurrency Request
-            var currencyRequestETag = context.Request.IfNoneMatch;
-            var currencyRequestLastModfied = context.Request.IfUnmodifiedSince;
-
-            if (!string.IsNullOrWhiteSpace(currencyRequestETag) || currencyRequestLastModfied != null)
-            {
-                var match = true;
-                if (!string.IsNullOrWhiteSpace(currencyRequestETag) && currencyRequestETag == etag)
-                {
-                    match = false;
-                }
-
-                if (currencyRequestLastModfied != null && currencyRequestLastModfied.Value.ToString("r") == lastModified?.ToString("r"))
-                {
-                    match = false;
-                }
-
-                if (match)
-                {
-                    return ApiCondtionalMatchType.ConditionalConcurrencyNoMatch;
-                }
-            }
-
-            return ApiCondtionalMatchType.None;
-        }
-
-        /// <summary>Sets the HTTP status.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="status">The status.</param>
-        /// <returns></returns>
-        public static ApiRequestContext SetHttpStatus(this ApiRequestContext context, int status)
-        {
-            if (context == null)
-                return context;
-
-            if (context.Response == null)
-            {
-                context.Response = new ApiResponseInfo();
-            }
-
-            context.Response.StatusCode = status;
-            return context;
-        }
-
-        /// <summary>Sets the HTTP header.</summary>
-        /// <param name="context">The context.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public static ApiRequestContext SetHttpHeader(this ApiRequestContext context, string name, string value)
-        {
-            if (context == null)
-                return context;
-
-            if (context.Response == null)
-            {
-                context.Response = new ApiResponseInfo();
-            }
-
-            if (context.Response.Headers == null)
-            {
-                context.Response.Headers = new List<ApiHeader>();
-            }
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                context.Response.AddHeader(name, value);
-            }
-
-            return context;
-        }
-
-        /// <summary>Tries the get item group.</summary>
-        /// <typeparam name="TItem">The type of the item.</typeparam>
-        /// <param name="request">The request.</param>
-        /// <param name="contextKey">The context key.</param>
-        /// <param name="item">The item.</param>
-        /// <returns>The <see cref="bool" />.</returns>
-        private static bool TryGetItemGroup<TItem>(this ApiRequestContext request, string contextKey, out TItem item)
-        {
-            item = default;
-
-            if (!request.Items.ContainsKey(contextKey))
-            {
-                return false;
-            }
-
-            item = (TItem)request.Items[contextKey];
-            return true;
+            return false;
         }
     }
 }

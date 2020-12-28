@@ -1,8 +1,9 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
-    using DeepSleep.Resources;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -93,6 +94,8 @@
                     {
                         IFormatStreamReaderWriter formatter = null;
 
+                        var formatterTypes = context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes ?? formatterFactory?.GetReadableTypes(null) ?? new List<string>();
+
                         if (formatterFactory != null)
                         {
                             formatter = await formatterFactory.GetContentTypeFormatter(
@@ -103,7 +106,7 @@
 
                         if (context.Configuration.ReadWriteConfiguration?.ReaderResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context, formatter)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
@@ -112,12 +115,29 @@
                                     formatterType: out var _,
                                     readableFormatters: overrides.Formatters,
                                     readableMediaTypes: context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
+
+                                formatterTypes = overrides.Formatters
+                                    .Where(f => f != null)
+                                    .Where(f => f.SupportsRead)
+                                    .Where(f => f.ReadableMediaTypes != null)
+                                    .SelectMany(f => f.ReadableMediaTypes)
+                                    .Distinct()
+                                    .ToList();
+
+                                formatterTypes = context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes ?? formatterTypes ?? new List<string>();
+                            }
+                            else
+                            {
+                                formatterTypes = context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes ?? new List<string>();
                             }
                         }
+
+
 
                         if (formatter == null)
                         {
                             context.Response.StatusCode = 415;
+                            context.Response.Headers.Add(new ApiHeader("X-Allow-Content-Types", string.Join(", ", formatterTypes)));
                             return false;
                         }
 

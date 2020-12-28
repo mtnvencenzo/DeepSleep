@@ -181,7 +181,6 @@
                 json = Encoding.UTF8.GetString(ms.ToArray());
             }
 
-            //System.Diagnostics.Debug.Write(json);
 
             if (string.IsNullOrWhiteSpace(json))
             {
@@ -190,6 +189,7 @@
                     : "{}";
             }
 
+            //System.Diagnostics.Debug.Write(json);
 
             var obj = JsonSerializer.Deserialize(json, objType, JsonReaderSerializationOptions.ReaderOptions);
             return obj;

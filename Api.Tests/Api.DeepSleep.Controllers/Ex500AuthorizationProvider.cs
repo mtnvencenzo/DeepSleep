@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public Task Authorize(ApiRequestContext context)
+        public Task<AuthorizationResult> Authorize(ApiRequestContext context)
         {
             throw new Exception();
         }

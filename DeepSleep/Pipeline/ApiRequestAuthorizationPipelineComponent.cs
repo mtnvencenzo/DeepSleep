@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Auth;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -51,44 +50,88 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (!(context.Configuration?.AllowAnonymous ?? false) && !string.IsNullOrWhiteSpace(context.Configuration?.AuthorizationConfig?.Policy))
+                if (!(context.Configuration?.AllowAnonymous ?? false))
                 {
-                    var providers = context.RequestServices
-                        .GetServices<IAuthorizationProvider>()
-                        .ToList();
-
-                    IAuthorizationProvider authProvider = null;
-
-                    try
+                    if (!string.IsNullOrWhiteSpace(context.Configuration?.AuthorizationConfig?.Policy))
                     {
-                        authProvider = providers.FirstOrDefault(p => p.CanHandleAuthPolicy(context.Configuration.AuthorizationConfig.Policy));
-                    }
-                    catch
-                    {
-                    }
+                        var providers = context.RequestServices
+                            .GetServices<IAuthorizationProvider>()
+                            .ToList();
 
-                    if (authProvider != null)
+                        var authProvider = providers
+                            .FirstOrDefault(p => p.CanHandleAuthPolicy(context.Configuration.AuthorizationConfig.Policy));
+
+                        if (authProvider != null)
+                        {
+                            if (context.Request.ClientAuthorizationInfo == null)
+                            {
+                                context.Request.ClientAuthorizationInfo = new ClientAuthorization
+                                {
+                                    AuthorizedBy = AuthorizationType.Provider
+                                };
+                            }
+                            else
+                            {
+                                context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Provider;
+                            }
+
+                            context.Request.ClientAuthorizationInfo.AuthResult = await authProvider.Authorize(context).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            if (context.Request.ClientAuthorizationInfo == null)
+                            {
+                                context.Request.ClientAuthorizationInfo = new ClientAuthorization
+                                {
+                                    AuthorizedBy = AuthorizationType.None
+                                };
+                            }
+                            else
+                            {
+                                context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.None;
+                            }
+                        }
+
+                        context.Request.ClientAuthorizationInfo.AuthResult = context.Request.ClientAuthorizationInfo.AuthResult ?? new AuthorizationResult(false);
+                        var result = context.Request.ClientAuthorizationInfo.AuthResult;
+
+                        if (!result?.IsAuthorized ?? false)
+                        {
+                            context.Response.StatusCode = 403;
+                            return false;
+                        }
+                    }
+                    else
                     {
                         if (context.Request.ClientAuthorizationInfo == null)
                         {
-                            context.Request.ClientAuthorizationInfo = new ClientAuthorization();
+                            context.Request.ClientAuthorizationInfo = new ClientAuthorization
+                            {
+                                AuthorizedBy = AuthorizationType.None,
+                                AuthResult = new AuthorizationResult(true)
+                            };
                         }
-
-                        await authProvider.Authorize(context).ConfigureAwait(false);
-                    }
-
-                    var result = context.Request?.ClientAuthorizationInfo?.AuthResult;
-
-                    if (result == null || !result.IsAuthorized)
-                    {
-                        if (authProvider == null)
+                        else
                         {
-                            throw new Exception($"No authorization providers established for authenticated route using policy '{context.Configuration.AuthorizationConfig.Policy}'");
+                            context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.None;
+                            context.Request.ClientAuthorizationInfo.AuthResult = new AuthorizationResult(true);
                         }
-
-                        context.Response.StatusCode = 403;
-
-                        return false;
+                    }
+                }
+                else
+                {
+                    if (context.Request.ClientAuthorizationInfo == null)
+                    {
+                        context.Request.ClientAuthorizationInfo = new ClientAuthorization
+                        {
+                            AuthorizedBy = AuthorizationType.Anonymous,
+                            AuthResult = new AuthorizationResult(true)
+                        };
+                    }
+                    else
+                    {
+                        context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Anonymous;
+                        context.Request.ClientAuthorizationInfo.AuthResult = new AuthorizationResult(true);
                     }
                 }
 

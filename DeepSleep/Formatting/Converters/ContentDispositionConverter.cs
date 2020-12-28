@@ -45,7 +45,7 @@
         /// <param name="options">An object that specifies serialization options to use.</param>
         public override void Write(Utf8JsonWriter writer, ContentDispositionHeader value, JsonSerializerOptions options)
         {
-            if (!string.IsNullOrWhiteSpace(value.ToString()))
+            if (!string.IsNullOrWhiteSpace(value?.ToString()))
             {
                 writer.WriteStringValue(value.ToString());
             }

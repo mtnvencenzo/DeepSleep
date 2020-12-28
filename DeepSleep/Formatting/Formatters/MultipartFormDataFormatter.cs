@@ -105,26 +105,23 @@
             return customMultipart;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
         public virtual async Task<long> WriteType(Stream stream, object obj, Action<long> preWriteCallback = null)
         {
             return await WriteType(stream, obj, new FormatterOptions(), preWriteCallback).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="obj"></param>
-        /// <param name="options"></param>
-        /// <param name="preWriteCallback"></param>
+        /// <summary>Writes the type.</summary>
+        /// <param name="stream">The stream.</param>
+        /// <param name="obj">The object.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public virtual Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null)
         {
             throw new NotSupportedException($"{nameof(MultipartFormDataFormatter)} does not support writing.");

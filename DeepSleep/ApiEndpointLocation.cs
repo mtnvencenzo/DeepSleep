@@ -2,13 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{Controller?.Name} {Endpoint}")]
     public class ApiEndpointLocation
     {
         private MethodInfo methodInfo;
@@ -19,6 +22,7 @@
 
         /// <summary>Gets or sets the controller.</summary>
         /// <value>The controller.</value>
+        [JsonIgnore]
         public Type Controller { get; set; }
 
         /// <summary>Gets or sets the endpoint.</summary>

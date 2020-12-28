@@ -12,8 +12,6 @@
 
     public class SimpleUrlBinding_GetTests : PipelineTestBase
     {
-        private readonly string query_url = "/binding/simple/url";
-
         // --- SUCCESS QUERY STRING BINDING
         // -------------------------------
 
@@ -107,7 +105,7 @@
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -262,7 +260,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -416,7 +414,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -504,7 +502,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -659,7 +657,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -819,7 +817,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -932,7 +930,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -1006,7 +1004,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url} HTTP/1.1
+GET https://{host}/binding/simple/url HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -1082,7 +1080,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -1160,7 +1158,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -1603,7 +1601,7 @@ X-CorrelationId: {correlationId}";
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-GET https://{host}{query_url}{qs} HTTP/1.1
+GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
@@ -1631,8 +1629,96 @@ X-CorrelationId: {correlationId}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("400.000005");
+            data.Messages[0].ErrorCode.Should().Be("400.000002");
             data.Messages[0].ErrorMessageStr.Should().Be($"Uri type conversion for '{expectedVarName}' with value '{value}' could not be converted to type {expectedType.Name}.");
+        }
+
+        [Theory]
+        [InlineData("CharVar", "aa", 0)]
+        public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail_with_empty_configured_error(string varName, string value, int expectedContentLength)
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+GET https://{host}/binding/simple/url/empty/binding/error{qs} HTTP/1.1
+Host: {host}
+Connection: keep-alive
+User-Agent: UnitTest/1.0 DEV
+Accept: {applicationJson}
+X-CorrelationId: {correlationId}";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 400,
+                shouldHaveResponse: false,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                expectedContentLength: expectedContentLength,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                    { "X-CorrelationId", $"{correlationId}"}
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().BeNull();
+
+            apiContext.Validation.Errors.Should().NotBeNull();
+            apiContext.Validation.Errors.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData("CharVar", "aa", 68)]
+        public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail_with_custom_configured_error(string varName, string value, int expectedContentLength)
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+GET https://{host}/binding/simple/url/custom/binding/error{qs} HTTP/1.1
+Host: {host}
+Connection: keep-alive
+User-Agent: UnitTest/1.0 DEV
+Accept: {applicationJson}
+X-CorrelationId: {correlationId}";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 400,
+                shouldHaveResponse: true,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                expectedContentLength: expectedContentLength,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                    { "X-CorrelationId", $"{correlationId}"}
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+
+            data.Messages[0].ErrorCode.Should().Be("100");
+            data.Messages[0].ErrorMessageStr.Should().Be($"Test charVar.");
+
+            apiContext.Validation.Errors.Should().NotBeNull();
+            apiContext.Validation.Errors.Should().HaveCount(1);
         }
     }
 }

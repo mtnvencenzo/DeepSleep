@@ -1123,7 +1123,7 @@
                 {
                     if (!httpcontext.Response.Headers.ContainsKey(h.Name))
                     {
-                        httpcontext.Response.Headers.Add(h.Name, context.Response.GetHeaderValues(h.Name));
+                        httpcontext.Response.Headers.Add(h.Name, context.Response.GetHeaderValues(h.Name).ToArray());
                     }
                 });
 

@@ -65,9 +65,6 @@
         /// <returns></returns>
         public static string GetValue(this IEnumerable<ApiHeader> headers, string name)
         {
-            if (headers == null)
-                return string.Empty;
-
             return headers.GetHeader(name)?.Value ?? string.Empty;
         }
 

@@ -65,7 +65,7 @@
 
                     if (string.Equals(context.Request.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.Request.IsHeadRequest() == false)
                     {
-                        isConditionalRequestMatch = context.IsConditionalRequestMatch(context.Response);
+                        isConditionalRequestMatch = context.Request.IsConditionalRequestMatch(context.Response);
                     }
 
                     if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
@@ -82,7 +82,7 @@
 
                         if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, options)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {

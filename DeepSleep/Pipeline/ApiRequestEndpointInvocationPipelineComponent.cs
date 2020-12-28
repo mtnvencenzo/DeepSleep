@@ -96,7 +96,6 @@
                     // -----------------------------------------------------
                     // Invoke the controller method with the parameters list
                     // -----------------------------------------------------
-                    //logger?.LogInformation($"Invoking controller method {context.Request.InvocationContext.Controller.GetType().FullName}::{context.Request.InvocationContext.ControllerMethod.Name}");
 
                     object endpointResponse;
 

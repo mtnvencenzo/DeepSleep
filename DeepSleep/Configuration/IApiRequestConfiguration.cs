@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -18,7 +19,8 @@
 
         /// <summary>Gets or sets the API error response provider.</summary>
         /// <value>The API error response provider.</value>
-        Func<IServiceProvider, IApiErrorResponseProvider> ApiErrorResponseProvider { get; set; }
+        [JsonIgnore]
+        Func<IServiceProvider, IValidationErrorResponseProvider> ApiErrorResponseProvider { get; set; }
 
         /// <summary>Gets or sets a value indicating whether [allow anonymous].</summary>
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
@@ -78,5 +80,9 @@
         /// <summary>Gets or sets the read write configuration.</summary>
         /// <value>The read write configuration.</value>
         ApiReadWriteConfiguration ReadWriteConfiguration { get; set; }
+
+        /// <summary>Gets or sets the validation error configuration.</summary>
+        /// <value>The validation error configuration.</value>
+        ApiValidationErrorConfiguration ValidationErrorConfiguration { get; set; }
     }
 }

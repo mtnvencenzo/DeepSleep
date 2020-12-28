@@ -22,7 +22,7 @@
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
-        public Task Authenticate(ApiRequestContext context)
+        public Task<AuthenticationResult> Authenticate(ApiRequestContext context)
         {
             throw new ApiNotImplementedException();
         }

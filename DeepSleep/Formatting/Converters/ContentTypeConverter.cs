@@ -4,14 +4,17 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class MediaHeaderValueWithParametersConverter : JsonConverter<MediaHeaderValueWithParameters>
+    /// <summary>
+    /// 
+    /// </summary>
+    internal class ContentTypeConverter : JsonConverter<ContentTypeHeader>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
         /// <param name="typeToConvert">The type to convert.</param>
         /// <param name="options">An object that specifies serialization options to use.</param>
         /// <returns>The converted value.</returns>
-        public override MediaHeaderValueWithParameters Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override ContentTypeHeader Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType == JsonTokenType.Null)
             {
@@ -29,7 +32,7 @@
 
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    return new MediaHeaderValueWithParameters(value);
+                    return new ContentTypeHeader(value);
                 }
             }
 
@@ -40,9 +43,9 @@
         /// <param name="writer">The writer to write to.</param>
         /// <param name="value">The value to convert to JSON.</param>
         /// <param name="options">An object that specifies serialization options to use.</param>
-        public override void Write(Utf8JsonWriter writer, MediaHeaderValueWithParameters value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, ContentTypeHeader value, JsonSerializerOptions options)
         {
-            if (!string.IsNullOrWhiteSpace(value.ToString()))
+            if (!string.IsNullOrWhiteSpace(value?.ToString()))
             {
                 writer.WriteStringValue(value.ToString());
             }

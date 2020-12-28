@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.OpenApi.NetCore</id>
-    <version>0.0.2-beta.24</version>
+    <version>0.0.2-beta.25</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -14,6 +14,21 @@
     <copyright>Copyright 2020</copyright>
     <tags>deepsleep api openapi rest</tags>
     <dependencies>
+      <group targetFramework="netcoreapp2.0">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="netcoreapp2.1">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="netcoreapp2.2">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
       <group targetFramework="netcoreapp3.0">
         <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
@@ -24,17 +39,39 @@
         <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
+      <group targetFramework="net5.0">
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep.OpenApi" version="0.0.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+      </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.dll" target="lib\netcoreapp3.0" />
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.xml" target="lib\netcoreapp3.0" />
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp3.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.openapi.netcore.dll" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.openapi.netcore.xml" target="lib\net5.0" />
+    <file src="..\bin\Release\net5.0\deepsleep.openapi.netcore.pdb" target="lib\net5.0" />
 
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.openapi.netcore.dll" target="lib\netcoreapp3.1" />
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.openapi.netcore.xml" target="lib\netcoreapp3.1" />
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp3.1" />
+
+    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.dll" target="lib\netcoreapp3.0" />
+    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.xml" target="lib\netcoreapp3.0" />
+    <file src="..\bin\Release\netcoreapp3.0\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp3.0" />
+
+    <file src="..\bin\Release\netcoreapp2.2\deepsleep.openapi.netcore.dll" target="lib\netcoreapp2.2" />
+    <file src="..\bin\Release\netcoreapp2.2\deepsleep.openapi.netcore.xml" target="lib\netcoreapp2.2" />
+    <file src="..\bin\Release\netcoreapp2.2\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp2.2" />
+
+    <file src="..\bin\Release\netcoreapp2.1\deepsleep.openapi.netcore.dll" target="lib\netcoreapp2.1" />
+    <file src="..\bin\Release\netcoreapp2.1\deepsleep.openapi.netcore.xml" target="lib\netcoreapp2.1" />
+    <file src="..\bin\Release\netcoreapp2.1\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp2.1" />
+
+    <file src="..\bin\Release\netcoreapp2.0\deepsleep.openapi.netcore.dll" target="lib\netcoreapp2.0" />
+    <file src="..\bin\Release\netcoreapp2.0\deepsleep.openapi.netcore.xml" target="lib\netcoreapp2.0" />
+    <file src="..\bin\Release\netcoreapp2.0\deepsleep.openapi.netcore.pdb" target="lib\netcoreapp2.0" />
     
     <file src="..\.pack\deepsleep_openapi.png" target="images\" />
+    
   </files>
 </package>

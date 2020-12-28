@@ -33,7 +33,7 @@
             ReaderOptions.Converters.Add(new DateTimeOffsetConverter());
             ReaderOptions.Converters.Add(new ObjectConverter());
             ReaderOptions.Converters.Add(new ContentDispositionConverter());
-            ReaderOptions.Converters.Add(new MediaHeaderValueWithParametersConverter());
+            ReaderOptions.Converters.Add(new ContentTypeConverter());
         }
     }
 }

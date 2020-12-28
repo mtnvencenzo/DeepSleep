@@ -83,7 +83,7 @@
                             context.Request.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Provider;
                         }
 
-                        await authProvider.Authenticate(context).ConfigureAwait(false);
+                        context.Request.ClientAuthenticationInfo.AuthResult = await authProvider.Authenticate(context).ConfigureAwait(false);
                     }
                     else
                     {
@@ -101,15 +101,11 @@
                     }
 
                     context.Request.ClientAuthenticationInfo.AuthResult = context.Request.ClientAuthenticationInfo.AuthResult ?? new AuthenticationResult(false);
+                    context.Request.ClientAuthenticationInfo.Principal = context.Request.ClientAuthenticationInfo.AuthResult.Principal;
+
                     var result = context.Request.ClientAuthenticationInfo.AuthResult;
-
-                    if (!result.IsAuthenticated)
+                    if (!result?.IsAuthenticated ?? false)
                     {
-                        if (providers.FirstOrDefault() == null)
-                        {
-                            throw new Exception("No authentication providers established for authenticated route");
-                        }
-
                         var challenges = new List<string>();
                         foreach (var p in providers)
                         {

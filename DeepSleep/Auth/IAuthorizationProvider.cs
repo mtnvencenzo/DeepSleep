@@ -7,8 +7,8 @@
     {
         /// <summary>Authorizes the specified context.</summary>
         /// <param name="context">The context.</param>
-        /// <returns>The <see cref="Task" />.</returns>
-        Task Authorize(ApiRequestContext context);
+        /// <returns></returns>
+        Task<AuthorizationResult> Authorize(ApiRequestContext context);
 
         /// <summary>Determines whether this instance [can handle authorization policy] the specified scheme.</summary>
         /// <param name="policy">The policy.</param>

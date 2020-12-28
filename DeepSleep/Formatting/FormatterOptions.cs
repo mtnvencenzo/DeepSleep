@@ -2,6 +2,7 @@
 {
     using System.Globalization;
     using System.Text;
+    using System.Text.Json.Serialization;
     using System.Threading;
 
     /// <summary>
@@ -27,10 +28,12 @@
 
         /// <summary>Gets or sets the encoding.</summary>
         /// <value>The encoding.</value>
+        [JsonIgnore]
         public Encoding Encoding { get; set; }
 
         /// <summary>Gets or sets the culture.</summary>
         /// <value>The culture.</value>
+        [JsonIgnore]
         public CultureInfo Culture { get; set; }
     }
 }

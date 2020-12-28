@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -15,10 +16,12 @@
 
         /// <summary>Gets or sets the method.</summary>
         /// <value>The method.</value>
+        [JsonIgnore]
         public MethodInfo ControllerMethod { get; set; }
 
         /// <summary>Gets or sets the URI model.</summary>
         /// <value>The URI model.</value>
+        [JsonIgnore]
         public Type UriModelType { get; set; }
 
         /// <summary>Gets or sets the URI model.</summary>
@@ -27,10 +30,12 @@
 
         /// <summary>Represents simple parameters on the endpoint method.
         /// </summary>
+        [JsonIgnore]
         public IDictionary<ParameterInfo, object> SimpleParameters { get; set; } = new Dictionary<ParameterInfo, object>();
 
         /// <summary>Gets or sets the body model.</summary>
         /// <value>The body model.</value>
+        [JsonIgnore]
         public Type BodyModelType { get; set; }
 
         /// <summary>Gets or sets the body model.</summary>

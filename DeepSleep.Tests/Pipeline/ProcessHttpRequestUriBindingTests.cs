@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.TestArtifacts;
     using FluentAssertions;
@@ -755,6 +756,13 @@
                             { "IntProp", "abc" }
                         }
                     }
+                },
+                Configuration = new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        UriBindingError = "400.000001|'LongProp' Is in an incorrect format and could not be bound."
+                    }
                 }
             };
 
@@ -770,10 +778,57 @@
             context.Runtime.Should().NotBeNull();
             context.Validation.Errors.Should().NotBeNull();
             context.Validation.Errors.Should().HaveCount(1);
-            context.Validation.Errors[0].Should().StartWith("400.000004|");
-            context.Validation.Errors[0].Should().Be("400.000004|'LongProp' Is in an incorrect format and could not be bound.");
+            context.Validation.Errors[0].Should().Be("400.000001|'LongProp' Is in an incorrect format and could not be bound.");
         }
 
-        private string UrlEncode(string val) => HttpUtility.UrlEncode(val);
+        [Fact]
+        public async void returns_false_and_no_errors_for_empty_binding_error()
+        {
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new System.Threading.CancellationToken(false),
+                Request = new ApiRequestInfo
+                {
+                    InvocationContext = new ApiInvocationContext
+                    {
+                        UriModelType = typeof(StandardModel)
+                    },
+                    QueryVariables = new Dictionary<string, string>
+                    {
+                        { "LongProp", "def" },
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        RouteVariables = new Dictionary<string, string>
+                        {
+                            { "IntProp", "abc" }
+                        }
+                    }
+                },
+                Configuration = new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        UriBindingError = ""
+                    }
+                }
+            };
+
+            var processed = await context.ProcessHttpRequestUriBinding(new FormUrlEncodedObjectSerializer()).ConfigureAwait(false);
+            processed.Should().BeFalse();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(400);
+            context.Routing.Should().NotBeNull();
+            context.Request.InvocationContext.UriModel.Should().BeNull();
+
+            context.Runtime.Should().NotBeNull();
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
+        }
     }
 }

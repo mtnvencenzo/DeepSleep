@@ -13,6 +13,10 @@
         /// <returns></returns>
         IEnumerable<string> GetWriteableTypes(IList<IFormatStreamReaderWriter> overridingFormatters);
 
+        /// <summary>Gets the readably types.</summary>
+        /// <returns></returns>
+        IEnumerable<string> GetReadableTypes(IList<IFormatStreamReaderWriter> overridingFormatters);
+
         /// <summary>Gets the acceptable formatter.</summary>
         /// <param name="acceptHeader">The accept header.</param>
         /// <param name="formatterType">Type of the formatter.</param>

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Auth
 {
     using System.Collections.Generic;
+    using System.Security.Principal;
 
     /// <summary>
     /// 
@@ -23,6 +24,16 @@
             IsAuthenticated = isAuthenticated;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="AuthenticationResult"/> class.</summary>
+        /// <param name="isAuthenticated">if set to <c>true</c> [is authenticated].</param>
+        /// <param name="principal">The principal.</param>
+        public AuthenticationResult(bool isAuthenticated, IPrincipal principal)
+            : this()
+        {
+            IsAuthenticated = isAuthenticated;
+            Principal = principal;
+        }
+
         /// <summary>Initializes a new instance of the <see cref="AuthenticationResult"/> class.
         /// </summary>
         public AuthenticationResult()
@@ -37,6 +48,10 @@
         /// <summary>Gets or sets a value indicating whether this instance is authenticated.</summary>
         /// <value><c>true</c> if this instance is authenticated; otherwise, <c>false</c>.</value>
         public bool IsAuthenticated { get; set; }
+
+        /// <summary>Gets or sets the principal.</summary>
+        /// <value>The principal.</value>
+        public IPrincipal Principal { get; private set; }
     }
 
     /// <summary></summary>

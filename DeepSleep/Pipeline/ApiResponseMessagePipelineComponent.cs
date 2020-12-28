@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -48,19 +49,17 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if ((context.Validation?.Errors?.Count ?? 0) > 0)
+                if (context.Response != null && context.Response.ResponseObject == null && context.Response.HasSuccessStatus() == false)
                 {
-                    context.Validation.Errors = context.Validation.Errors
-                        .Distinct()
-                        .ToList();
-
                     if (context.Configuration?.ApiErrorResponseProvider != null)
                     {
                         var provider = context.Configuration.ApiErrorResponseProvider(context.RequestServices);
 
                         if (provider != null)
                         {
-                            await provider.Process(context).ConfigureAwait(false);
+                            var errors = context.Validation?.Errors ?? new List<string>();
+
+                            context.Response.ResponseObject = await provider.Process(errors).ConfigureAwait(false);
                         }
                     }
                 }

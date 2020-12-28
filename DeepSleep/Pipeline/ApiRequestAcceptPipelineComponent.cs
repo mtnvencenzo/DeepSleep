@@ -74,7 +74,7 @@
 
                     if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                     {
-                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context, formatter, null)).ConfigureAwait(false);
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
 
                         overridingFormatters = overrides?.Formatters;
 

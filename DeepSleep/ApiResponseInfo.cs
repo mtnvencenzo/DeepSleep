@@ -3,10 +3,12 @@
     using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Text;
 
     /// <summary>The API response info.
     /// </summary>
+    [DebuggerDisplay("{StatusCode}")]
     public class ApiResponseInfo
     {
         /// <summary>Gets or sets the status code.</summary>
@@ -48,25 +50,6 @@
         /// <summary>The response writer formatting options available to write the response
         /// </summary>
         public virtual IFormatStreamOptions ResponseWriterOptions { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public virtual string Dump()
-        {
-            var builder = new StringBuilder();
-
-            if (this.Headers != null)
-            {
-                foreach (var header in this.Headers)
-                {
-                    builder.AppendLine($"{header.Name}: {header.Value}");
-                }
-            }
-
-            return builder.ToString();
-        }
     }
 
     /// <summary>
@@ -89,34 +72,12 @@
             return response.StatusCode.IsBetween(200, 299);
         }
 
-        /// <summary>Adds the header.</summary>
-        /// <param name="response">The response.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value)
-        {
-            if (response == null)
-                return response;
-
-            if (response.Headers == null)
-            {
-                response.Headers = new List<ApiHeader>();
-            }
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                response.Headers.Add(new ApiHeader(name, value));
-            }
-
-            return response;
-        }
 
         /// <summary>Gets the header values.</summary>
         /// <param name="response">The response.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static string[] GetHeaderValues(this ApiResponseInfo response, string name)
+        public static IList<string> GetHeaderValues(this ApiResponseInfo response, string name)
         {
             if (response == null || string.IsNullOrWhiteSpace(name))
                 return new string[] { };
@@ -134,7 +95,7 @@
                 }
             });
 
-            return values.ToArray();
+            return values;
         }
 
         /// <summary>
@@ -176,6 +137,69 @@
                 {
                     response.Headers.Add(new ApiHeader("Last-Modified", lastModified.Value.ToString("r")));
                 }
+            }
+
+            return response;
+        }
+
+        /// <summary>Sets the HTTP status.</summary>
+        /// <param name="response">The response.</param>
+        /// <param name="status">The status.</param>
+        /// <returns></returns>
+        public static ApiResponseInfo SetHttpStatus(this ApiResponseInfo response, int status)
+        {
+            if (response == null)
+            {
+                response = new ApiResponseInfo();
+            }
+
+            response.StatusCode = status;
+            return response;
+        }
+
+        /// <summary>Adds the header.</summary>
+        /// <param name="response">The response.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value)
+        {
+            if (response == null)
+                return response;
+
+            if (response.Headers == null)
+            {
+                response.Headers = new List<ApiHeader>();
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                response.Headers.Add(new ApiHeader(name, value));
+            }
+
+            return response;
+        }
+
+        /// <summary>Sets the HTTP header.</summary>
+        /// <param name="response">The response.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static ApiResponseInfo SetHttpHeader(this ApiResponseInfo response, string name, string value)
+        {
+            if (response == null)
+            {
+                response = new ApiResponseInfo();
+            }
+
+            if (response.Headers == null)
+            {
+                response.Headers = new List<ApiHeader>();
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                response.AddHeader(name, value);
             }
 
             return response;

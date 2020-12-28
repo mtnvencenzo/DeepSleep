@@ -46,7 +46,8 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" }
+                    { "X-CorrelationId", $"{correlationId}" },
+                    { "X-Allow-Content-Types", "application/xml, other/xml" }
                 });
         }
 
@@ -139,7 +140,8 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" }
+                    { "X-CorrelationId", $"{correlationId}" },
+                    { "X-Allow-Content-Types", "other/xml" }
                 });
         }
 

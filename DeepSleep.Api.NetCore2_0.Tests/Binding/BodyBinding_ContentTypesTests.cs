@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class BodyBinding_ContentTypes : PipelineTestBase
+    public class BodyBinding_ContentTypesTests : PipelineTestBase
     {
         [Theory]
         [InlineData("post")]

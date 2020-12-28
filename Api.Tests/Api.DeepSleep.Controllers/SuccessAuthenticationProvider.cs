@@ -22,10 +22,9 @@
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
-        public Task Authenticate(ApiRequestContext context)
+        public Task<AuthenticationResult> Authenticate(ApiRequestContext context)
         {
-            context.Request.ClientAuthenticationInfo.AuthResult = new AuthenticationResult(true);
-            return Task.CompletedTask;
+            return Task.FromResult(new AuthenticationResult(true));
         }
 
         /// <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>

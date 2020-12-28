@@ -2120,7 +2120,7 @@
         }
 
         [Fact]
-        public async void request_config___endpointheadervalidationconfig_default_notnull_returns_expected()
+        public async void request_config___endpoint_headervalidationconfig_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2167,6 +2167,237 @@
             context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
         }
 
+        [Fact]
+        public async void request_config___endpoint_validationerrorconfig_null_default_null_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = null
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = null
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo()
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("400.000001|'{paramName}' Is in an incorrect format and could not be bound.");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.");
+        }
+
+        [Fact]
+        public async void request_config___endpoint_validationerrorconfig_notnull_default_null_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = null
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override",
+                    UriBindingValueError = "UriBindingValueError - Override"
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo()
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
+        }
+
+        [Fact]
+        public async void request_config___endpoint_validationerrorconfig_null_default_notnull_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override",
+                    UriBindingValueError = "UriBindingValueError - Override"
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = null
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo()
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
+        }
+
+        [Fact]
+        public async void request_config___endpoint_validationerrorconfig_default_notnull_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override",
+                    UriBindingValueError = "UriBindingValueError - Override"
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override - Endpoint",
+                    UriBindingValueError = "UriBindingValueError - Override - Endpoint"
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override - Endpoint");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override - Endpoint");
+        }
+
+        [Fact]
+        public async void request_config___endpoint_validationerrorconfig_default_notnull_endpoint_mixed_null_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override",
+                    UriBindingValueError = "UriBindingValueError - Override"
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                {
+                    UriBindingError = "UriBindingError - Override - Endpoint",
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override - Endpoint");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
+        }
 
         private void AssertConfiguration(IApiRequestConfiguration request, IApiRequestConfiguration endpoint, IApiRequestConfiguration def)
         {
@@ -2238,7 +2469,7 @@
 
 
             // -------------------
-            // Cross Origin Configuration
+            // Cache Directive Configuration
             // -------------------
             request.CacheDirective.Cacheability.Should().Be(endpoint?.CacheDirective?.Cacheability ?? def?.CacheDirective?.Cacheability ?? system.CacheDirective.Cacheability);
             request.CacheDirective.CacheLocation.Should().Be(endpoint?.CacheDirective?.CacheLocation ?? def?.CacheDirective?.CacheLocation ?? system.CacheDirective.CacheLocation);
@@ -2296,6 +2527,12 @@
                 request.SupportedLanguages[i].Should().Be(endpoint?.SupportedLanguages?[i] ?? def?.SupportedLanguages?[i] ?? system.SupportedLanguages[i]);
             }
 
+            // ------------------------------
+            // Validation Error Configuration
+            // ------------------------------
+            request.ValidationErrorConfiguration.UriBindingValueError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingValueError ?? def?.ValidationErrorConfiguration?.UriBindingValueError ?? system.ValidationErrorConfiguration.UriBindingValueError);
+            request.ValidationErrorConfiguration.UriBindingError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingError ?? def?.ValidationErrorConfiguration?.UriBindingError ?? system.ValidationErrorConfiguration.UriBindingError);
+
 
             // making sure references are not the same
             request.Should().NotBeSameAs(system);
@@ -2306,6 +2543,8 @@
             request.HeaderValidationConfig.Should().NotBeSameAs(system.HeaderValidationConfig);
             request.SupportedAuthenticationSchemes.Should().NotBeSameAs(system.SupportedAuthenticationSchemes);
             request.SupportedLanguages.Should().NotBeSameAs(system.SupportedLanguages);
+            request.ReadWriteConfiguration.Should().NotBeSameAs(system.ReadWriteConfiguration);
+            request.ValidationErrorConfiguration.Should().NotBeSameAs(system.ValidationErrorConfiguration);
         }
 
         private ApiRequestInfo GetRequestInfo(string method = "GET")

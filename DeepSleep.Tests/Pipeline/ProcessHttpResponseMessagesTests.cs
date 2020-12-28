@@ -55,7 +55,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
                 }
             };
 
@@ -63,7 +63,6 @@
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().NotBeNull();
             context.Response.ResponseObject.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeAssignableTo<ApiResult>();
 
@@ -93,7 +92,7 @@
                 Runtime = null,
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
                 }
             };
 
@@ -116,7 +115,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
                 }
             };
 
@@ -139,7 +138,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
                 }
             };
 

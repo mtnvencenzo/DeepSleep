@@ -6,12 +6,7 @@
     /// </summary>
     internal static class DateTimeExtensions
     {
-        #region Static Fields
-
-        /// <summary></summary>
         internal static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        #endregion
 
         /// <summary>Toes the UTC date.</summary>
         /// <param name="unixTime">The UNIX time.</param>

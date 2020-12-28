@@ -131,7 +131,7 @@
             settings.Converters.Add(new TimeSpanConverter());
             settings.Converters.Add(new NullableTimeSpanConverter());
             settings.Converters.Add(new ContentDispositionConverter());
-            settings.Converters.Add(new MediaHeaderValueWithParametersConverter());
+            settings.Converters.Add(new ContentTypeConverter());
 
             return settings;
         }
