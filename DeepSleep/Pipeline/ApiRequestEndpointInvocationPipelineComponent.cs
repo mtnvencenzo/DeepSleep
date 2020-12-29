@@ -138,7 +138,26 @@
                         }
                     }
 
-                    context.Response.ResponseObject = endpointResponse;
+                    if (endpointResponse as IApiResponse != null)
+                    {
+                        context.Response.ResponseObject = ((IApiResponse)endpointResponse).Response;
+                        context.Response.StatusCode = ((IApiResponse)endpointResponse).StatusCode;
+                        context.Runtime.Internals.IsOverridingStatusCode = true;
+
+                        var headers = ((IApiResponse)endpointResponse).Headers;
+
+                        if (headers != null)
+                        {
+                            headers
+                                .Where(h => h != null)
+                                .ToList()
+                                .ForEach(h => context.Response.AddHeader(h.Name, h.Value));
+                        }
+                    }
+                    else
+                    {
+                        context.Response.ResponseObject = endpointResponse;
+                    }
                 }
 
                 return true;

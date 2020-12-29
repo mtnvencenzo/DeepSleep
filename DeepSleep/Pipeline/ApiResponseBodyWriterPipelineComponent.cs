@@ -115,7 +115,7 @@
 
                 if (!isWriteableResponse)
                 {
-                    if (context.Response.HasSuccessStatus() && context.Response.StatusCode != 202)
+                    if (context.Response.HasSuccessStatus() && context.Response.StatusCode != 202 && !(context.Runtime?.Internals?.IsOverridingStatusCode ?? false))
                     {
                         context.Response.StatusCode = 204;
                     }

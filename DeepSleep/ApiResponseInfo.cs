@@ -72,7 +72,6 @@
             return response.StatusCode.IsBetween(200, 299);
         }
 
-
         /// <summary>Gets the header values.</summary>
         /// <param name="response">The response.</param>
         /// <param name="name">The name.</param>
