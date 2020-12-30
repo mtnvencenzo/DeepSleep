@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Configuration
 {
+    using DeepSleep.Discovery;
     using DeepSleep.Formatting;
     using DeepSleep.Validation;
     using System;
@@ -11,9 +12,9 @@
     /// </summary>
     public interface IApiServiceConfiguration
     {
-        /// <summary>Gets or sets the routing table.</summary>
-        /// <value>The routing table.</value>
-        IApiRoutingTable RoutingTable { get; set; }
+        /// <summary>Gets or sets the discovery strategies.</summary>
+        /// <value>The discovery strategies.</value>
+        IList<IRouteDiscoveryStrategy> DiscoveryStrategies { get; set; }
 
         /// <summary>Gets or sets the API validation provider.</summary>
         /// <value>The API validation provider.</value>

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.NetCore
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Discovery;
     using DeepSleep.Formatting;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
@@ -15,7 +16,7 @@
     {
         /// <summary>Gets or sets the routing table.</summary>
         /// <value>The routing table.</value>
-        public IApiRoutingTable RoutingTable { get; set; }
+        public IList<IRouteDiscoveryStrategy> DiscoveryStrategies { get; set; }
 
         /// <summary>Gets or sets the API validation provider.</summary>
         /// <value>The API validation provider.</value>

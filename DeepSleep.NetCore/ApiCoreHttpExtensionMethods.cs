@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Versioning;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// 
@@ -26,11 +27,56 @@
             var ret = builder
                 .UseApiRequestContext();
 
+            var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
+            var routingTable = builder.ApplicationServices.GetService<IApiRoutingTable>();
+
+            if (config.DiscoveryStrategies != null)
+            {
+                foreach (var strategy in config.DiscoveryStrategies)
+                {
+                    if (strategy == null)
+                    {
+                        continue;
+                    }
+
+                    var task = Task.Run(async () =>
+                    {
+                        return await strategy.DiscoverRoutes(builder.ApplicationServices).ConfigureAwait(false);
+                    });
+
+                    var registrations = task.Result;
+
+                    foreach (var registration in registrations)
+                    {
+                        if (registration == null)
+                        {
+                            continue;
+                        }
+
+                        routingTable.AddRoute(
+                            template: registration.Template,
+                            httpMethod: registration.HttpMethod,
+                            controller: registration.Location.Controller,
+                            endpoint: registration.Location.Endpoint,
+                            config: registration.Configuration);
+                    }
+                }
+            }
+
+
+            if (config as DefaultApiServiceConfiguration != null)
+            {
+                if (((DefaultApiServiceConfiguration)config).UsePingEndpoint)
+                {
+                    AddPingEndpoint(routingTable);
+                }
+            }
+
+
 #if DEBUG
             try
             {
-                var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
-                WriteDeepsleepToConsole(config);
+                WriteDeepsleepToConsole(routingTable);
             }
             catch { }
 #endif
@@ -44,6 +90,8 @@
         /// <returns></returns>
         public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
         {
+            var routingTable = new DefaultApiRoutingTable();
+
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
                 .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
@@ -58,19 +106,8 @@
                 .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
-                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config);
-
-            config.RoutingTable = config.RoutingTable ?? GetDefaultRoutingTable();
-
-            if (config as DefaultApiServiceConfiguration != null)
-            {
-                if (((DefaultApiServiceConfiguration)config).UsePingEndpoint)
-                {
-                    AddPingEndpoint(config.RoutingTable);
-                }
-            }
-
-            services.AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => config.RoutingTable);
+                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
+                .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
 
             return services;
         }
@@ -130,8 +167,8 @@
         }
 
         /// <summary>Writes the deepsleep to console.</summary>
-        /// <param name="config">The configuration.</param>
-        private static void WriteDeepsleepToConsole(IApiServiceConfiguration config)
+        /// <param name="routingTable">The routing table.</param>
+        private static void WriteDeepsleepToConsole(IApiRoutingTable routingTable)
         {
             var deepSleepNetCoreAssembly = Assembly.GetExecutingAssembly();
 
@@ -193,11 +230,11 @@
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"Endpoints: ");
             Console.ForegroundColor = existingColor;
-            Console.WriteLine($"{config?.RoutingTable?.GetRoutes()?.Count ?? 0}");
+            Console.WriteLine($"{routingTable?.GetRoutes()?.Count ?? 0}");
             Console.WriteLine($"------------------------------------------------");
             Console.WriteLine($"");
 
-            var routes = (config?.RoutingTable?.GetRoutes() ?? new List<ApiRoutingItem>())
+            var routes = (routingTable?.GetRoutes() ?? new List<ApiRoutingItem>())
                 .OrderBy(r => r.Template)
                 .ToList();
 

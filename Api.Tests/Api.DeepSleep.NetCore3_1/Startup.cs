@@ -53,7 +53,7 @@ namespace Api.DeepSleep.NetCore3_1
                 .UseOpenApiServices()
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
-                    RoutingTable = ServiceStartup.InitialzeRoutes(),
+                    DiscoveryStrategies = ServiceStartup.DiscoverRoutes(),
                     ApiValidationProvider = ServiceStartup.DefaultValidationProvider(this.serviceProvider),
                     DefaultRequestConfiguration = ServiceStartup.DefaultRequestConfiguration(),
                     UsePingEndpoint = true

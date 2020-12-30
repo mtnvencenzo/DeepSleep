@@ -28,6 +28,13 @@
         /// <param name="endpoint">The endpoint.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
+        /// <exception cref="Exception">
+        /// Route '{httpMethod} {template}' already has been added.
+        /// or
+        /// Controller must be specified
+        /// or
+        /// </exception>
+        /// <exception cref="MissingMethodException"></exception>
         IApiRoutingTable AddRoute(string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config);
     }
 }
