@@ -38,6 +38,10 @@
         /// <value>The paths to exclude.</value>
         public IList<string> ExcludePaths { get; set; }
 
+        /// <summary>Gets or sets a value indicating whether [write console header].</summary>
+        /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>
+        public bool WriteConsoleHeader { get; set; } = false;
+
         /// <summary>Gets the default request pipeline.</summary>
         /// <returns></returns>
         internal static IApiRequestPipeline GetDefaultRequestPipeline()

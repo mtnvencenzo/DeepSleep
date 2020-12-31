@@ -56,7 +56,8 @@ namespace Api.DeepSleep.NetCore3_1
                     DiscoveryStrategies = ServiceStartup.DiscoverRoutes(),
                     ApiValidationProvider = ServiceStartup.DefaultValidationProvider(this.serviceProvider),
                     DefaultRequestConfiguration = ServiceStartup.DefaultRequestConfiguration(),
-                    UsePingEndpoint = true
+                    UsePingEndpoint = true,
+                    WriteConsoleHeader = false
                 });
 
 

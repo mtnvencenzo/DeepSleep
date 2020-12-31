@@ -35,5 +35,9 @@
         /// <summary>Gets or sets the exclude paths.</summary>
         /// <value>The exclude paths.</value>
         IList<string> ExcludePaths { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether [write console header].</summary>
+        /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>
+        bool WriteConsoleHeader { get; set; }
     }
 }

@@ -12,6 +12,7 @@
     /// <summary>
     /// 
     /// </summary>
+    /// <seealso cref="DeepSleep.Configuration.IApiServiceConfiguration" />
     public class DefaultApiServiceConfiguration : IApiServiceConfiguration
     {
         /// <summary>Gets or sets the routing table.</summary>
@@ -41,6 +42,10 @@
         /// <summary>
         /// </summary>
         public bool UsePingEndpoint { get; set; } = true;
+
+        /// <summary>Gets or sets a value indicating whether [write console header].</summary>
+        /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>
+        public bool WriteConsoleHeader { get; set; } = true;
 
         /// <summary>Gets the default request pipeline.</summary>
         /// <returns></returns>

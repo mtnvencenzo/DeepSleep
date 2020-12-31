@@ -75,11 +75,14 @@
                 }
             }
 
-            try
+            if (config.WriteConsoleHeader)
             {
-                WriteDeepsleepToConsole(routingTable);
+                try
+                {
+                    WriteDeepsleepToConsole(routingTable);
+                }
+                catch { }
             }
-            catch { }
 
             return ret;
         }
