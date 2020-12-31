@@ -8,6 +8,13 @@
 
     public class DelegatedDiscoveryController : IRouteRegistrationProvider
     {
+        private readonly IApiRequestContextResolver apiRequestContextResolver;
+
+        public DelegatedDiscoveryController(IApiRequestContextResolver apiRequestContextResolver)
+        {
+            this.apiRequestContextResolver = apiRequestContextResolver ?? throw new ArgumentNullException(nameof(apiRequestContextResolver));
+        }
+
         public DelegatedDiscoveryModel Get()
         {
             return new DelegatedDiscoveryModel();

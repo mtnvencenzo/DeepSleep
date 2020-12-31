@@ -66,9 +66,11 @@
                         {
                             IRouteRegistrationProvider instance = null;
 
+                            var fullyQualifiedType = Type.GetType(type.AssemblyQualifiedName);
+
                             try
                             {
-                                instance = serviceProvider?.GetService(type) as IRouteRegistrationProvider;
+                                instance = serviceProvider?.GetService(fullyQualifiedType) as IRouteRegistrationProvider;
                             }
                             catch { }
 
@@ -76,7 +78,7 @@
                             {
                                 try
                                 {
-                                    instance = Activator.CreateInstance(type) as IRouteRegistrationProvider;
+                                    instance = Activator.CreateInstance(fullyQualifiedType) as IRouteRegistrationProvider;
                                 }
                                 catch { }
                             }

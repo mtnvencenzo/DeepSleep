@@ -3,6 +3,7 @@
     using Api.DeepSleep.Controllers.Authentication;
     using Api.DeepSleep.Controllers.Authorization;
     using Api.DeepSleep.Controllers.Binding;
+    using Api.DeepSleep.Controllers.Discovery;
     using Api.DeepSleep.Controllers.Exceptions;
     using Api.DeepSleep.Controllers.Formatters;
     using Api.DeepSleep.Controllers.HelperResponses;
@@ -38,6 +39,7 @@
             services.AddTransient<MethodNotFoundController>();
             services.AddTransient<ItemsController>();
             services.AddTransient<ContextDumpController>();
+            services.AddTransient<DelegatedDiscoveryController>();
 
             // Only one of these to check both injection and no-injection resolution
             services.AddTransient<NotImplementedExceptionThrowValidator>();
@@ -1203,7 +1205,8 @@
             {
                 discoveryStrategy,
                 new DelegatedRouteDiscoveryStrategy(
-                    assemblyDirectoryPath: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                    assemblyDirectoryPath: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    assemblyMatchPattern: "Api.DeepSleep.Controllers.dll")
             };
         }
 
