@@ -72,14 +72,11 @@
                 }
             }
 
-
-#if DEBUG
             try
             {
                 WriteDeepsleepToConsole(routingTable);
             }
             catch { }
-#endif
 
             return ret;
         }
