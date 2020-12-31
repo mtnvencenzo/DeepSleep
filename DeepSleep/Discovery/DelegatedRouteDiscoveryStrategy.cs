@@ -85,7 +85,7 @@
                             {
                                 if (instance != null)
                                 {
-                                    var instanceRegistrations = await instance.GetRoutes().ConfigureAwait(false);
+                                    var instanceRegistrations = await instance.GetRoutes(serviceProvider).ConfigureAwait(false);
 
                                     if (instanceRegistrations != null)
                                     {

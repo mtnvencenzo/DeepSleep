@@ -2,6 +2,7 @@
 {
     using global::DeepSleep;
     using global::DeepSleep.Discovery;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@
             return new DelegatedDiscoveryModel();
         }
 
-        Task<IList<ApiRouteRegistration>> IRouteRegistrationProvider.GetRoutes()
+        Task<IList<ApiRouteRegistration>> IRouteRegistrationProvider.GetRoutes(IServiceProvider serviceProvider)
         {
             return Task.FromResult(new List<ApiRouteRegistration>
             {
