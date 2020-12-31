@@ -41,7 +41,10 @@
 
                     var task = Task.Run(async () =>
                     {
-                        return await strategy.DiscoverRoutes(builder.ApplicationServices).ConfigureAwait(false);
+                        using (var scope = builder.ApplicationServices.CreateScope())
+                        {
+                            return await strategy.DiscoverRoutes(scope.ServiceProvider).ConfigureAwait(false);
+                        }
                     });
 
                     var registrations = task.Result;

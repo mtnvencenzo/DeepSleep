@@ -52,63 +52,57 @@
 
             foreach (var file in files)
             {
+                Assembly assembly = null;
+
                 try
                 {
-                    var assembly = Assembly.LoadFile(file);
+                    assembly = Assembly.LoadFile(file);
+                }
+                catch { }
 
-                    if (assembly != null)
+
+                if (assembly != null)
+                {
+                    var types = assembly
+                        .GetTypes()
+                        .Where(t => t.GetInterface(nameof(IRouteRegistrationProvider)) != null);
+
+                    foreach (var type in types)
                     {
-                        var types = assembly
-                            .GetTypes()
-                            .Where(t => t.GetInterface(nameof(IRouteRegistrationProvider)) != null);
+                        IRouteRegistrationProvider instance = null;
 
-                        foreach (var type in types)
+                        var fullyQualifiedType = Type.GetType(type.AssemblyQualifiedName);
+
+                        instance = serviceProvider?.GetService(fullyQualifiedType) as IRouteRegistrationProvider;
+
+                        if (instance == null)
                         {
-                            IRouteRegistrationProvider instance = null;
-
-                            var fullyQualifiedType = Type.GetType(type.AssemblyQualifiedName);
-
                             try
                             {
-                                instance = serviceProvider?.GetService(fullyQualifiedType) as IRouteRegistrationProvider;
-                            }
-                            catch { }
-
-                            if (instance == null)
-                            {
-                                try
-                                {
-                                    instance = Activator.CreateInstance(fullyQualifiedType) as IRouteRegistrationProvider;
-                                }
-                                catch { }
-                            }
-
-                            try
-                            {
-                                if (instance != null)
-                                {
-                                    var instanceRegistrations = await instance.GetRoutes(serviceProvider).ConfigureAwait(false);
-
-                                    if (instanceRegistrations != null)
-                                    {
-                                        foreach (var registration in instanceRegistrations)
-                                        {
-                                            if (registration == null)
-                                            {
-                                                continue;
-                                            }
-
-                                            registrations.Add(registration);
-                                        }
-                                    }
-                                }
-
+                                instance = Activator.CreateInstance(fullyQualifiedType) as IRouteRegistrationProvider;
                             }
                             catch { }
                         }
+
+                        if (instance != null)
+                        {
+                            var instanceRegistrations = await instance.GetRoutes(serviceProvider).ConfigureAwait(false);
+
+                            if (instanceRegistrations != null)
+                            {
+                                foreach (var registration in instanceRegistrations)
+                                {
+                                    if (registration == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    registrations.Add(registration);
+                                }
+                            }
+                        }
                     }
                 }
-                catch { }
             }
 
             return registrations;
