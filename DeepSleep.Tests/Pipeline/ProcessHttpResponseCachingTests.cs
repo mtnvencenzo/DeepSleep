@@ -51,7 +51,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -91,7 +91,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -129,7 +129,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -165,7 +165,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -204,7 +204,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -240,7 +240,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -279,7 +279,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -321,7 +321,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 
@@ -364,7 +364,7 @@
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
-            var expires = DateTime.Parse(context.Response.Headers[1].Value);
+            var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
             expires.Year.Should().Be(now.Year - 1);
         }
 

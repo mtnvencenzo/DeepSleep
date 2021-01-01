@@ -39,9 +39,9 @@
         /// <value>The paths to exclude.</value>
         public IList<string> ExcludePaths { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public bool UsePingEndpoint { get; set; } = true;
+        /// <summary>Gets or sets the ping endpoint.</summary>
+        /// <value>The ping endpoint.</value>
+        public EndpointUsage PingEndpoint { get; set; } = new EndpointUsage { Enabled = true, RelativePath = "ping" };
 
         /// <summary>Gets or sets a value indicating whether [write console header].</summary>
         /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>

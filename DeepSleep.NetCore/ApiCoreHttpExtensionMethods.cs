@@ -69,9 +69,9 @@
 
             if (config as DefaultApiServiceConfiguration != null)
             {
-                if (((DefaultApiServiceConfiguration)config).UsePingEndpoint)
+                if (((DefaultApiServiceConfiguration)config).PingEndpoint?.Enabled == true)
                 {
-                    AddPingEndpoint(routingTable);
+                    AddPingEndpoint(routingTable, ((DefaultApiServiceConfiguration)config).PingEndpoint.RelativePath);
                 }
             }
 
@@ -133,10 +133,13 @@
 
         /// <summary>Adds the ping endpoint.</summary>
         /// <param name="table">The table.</param>
-        private static void AddPingEndpoint(IApiRoutingTable table)
+        /// <param name="path">The path.</param>
+        private static void AddPingEndpoint(IApiRoutingTable table, string path)
         {
+            string template = path ?? "ping";
+
             table.AddRoute(
-               template: $"ping",
+               template: template,
                httpMethod: "GET",
                controller: typeof(PingController),
                endpoint: nameof(PingController.Ping),
