@@ -54,12 +54,12 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                var fallBackLanguage = !string.IsNullOrWhiteSpace(context.Configuration?.FallBackLanguage)
-                    ? context.Configuration.FallBackLanguage
+                var fallBackLanguage = !string.IsNullOrWhiteSpace(context.Configuration?.LanguageSupport?.FallBackLanguage)
+                    ? context.Configuration.LanguageSupport.FallBackLanguage
                     : CultureInfo.CurrentUICulture.Name;
 
-                var supportedLanguages = context.Configuration?.SupportedLanguages != null
-                    ? context.Configuration.SupportedLanguages
+                var supportedLanguages = context.Configuration?.LanguageSupport?.SupportedLanguages != null
+                    ? context.Configuration.LanguageSupport.SupportedLanguages
                     : new string[] { };
 
                 var acceptedLanguage = GetAcceptedSupportedLanguage(supportedLanguages, context.Request?.AcceptLanguage?.Values);
@@ -67,9 +67,8 @@
                 if (string.IsNullOrWhiteSpace(acceptedLanguage))
                 {
                     acceptedLanguage = GetAcceptedSupportedLanguage(
-                        supportedLanguages: supportedLanguages, 
-                        acceptLanguages: new LanguageValueWithQuality[] { new LanguageValueWithQuality(fallBackLanguage, 1.0f) }
-                    );
+                        supportedLanguages: supportedLanguages,
+                        acceptLanguages: new AcceptLanguageHeader($"{fallBackLanguage}").Values);
                 }
 
 
@@ -93,8 +92,7 @@
                 }
                 else
                 {
-                    var culture = new CultureInfo(acceptedLanguage);
-                    context.Request.AcceptCulture = culture;
+                    context.Request.AcceptCulture = new CultureInfo(acceptedLanguage);
                 }
 
                 return Task.FromResult(true);

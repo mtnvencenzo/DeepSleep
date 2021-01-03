@@ -18,7 +18,7 @@
         private readonly ConnectionInfo connectionInfo;
         private readonly FeatureCollection features;
 
-        public MockHttpContext(IServiceProvider serviceProvider, string request)
+        public MockHttpContext(IServiceProvider serviceProvider, string request, bool includeContentLength = true)
         {
             RequestAborted = new CancellationToken();
             TraceIdentifier = $"UT-{Guid.NewGuid()}";
@@ -26,7 +26,7 @@
             Items = new Dictionary<object, object>();
 
             this.features = new FeatureCollection();
-            this.httpRequest = MockHttpRequest.FromHttpRequestString(this, request);
+            this.httpRequest = MockHttpRequest.FromHttpRequestString(this, request, includeContentLength);
             this.connectionInfo = BuildConnectionInfo();
             this.httpResponse = new MockHttpResponse(this);
         }

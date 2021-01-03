@@ -59,32 +59,6 @@
             context.Response.ResponseObject.Should().BeNull();
         }
 
-        [Fact]
-        public async void ReturnsTrueWhenHeaderConfigurationIsNull()
-        {
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                Request = new ApiRequestInfo
-                {
-                    Headers = new List<ApiHeader>
-                    {
-                        new ApiHeader("X-Header1", "MyValue1"),
-                        new ApiHeader("X-Header2", "MyValue2")
-                    }
-                },
-                Configuration = new DefaultApiRequestConfiguration
-                {
-                    HeaderValidationConfig = null
-                }
-            };
-
-            var processed = await context.ProcessHttpRequestHeaderValidation().ConfigureAwait(false);
-            processed.Should().BeTrue();
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-        }
-
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
@@ -104,7 +78,7 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                    RequestValidation = new ApiRequestValidationConfiguration
                     {
                         MaxHeaderLength = maxHeaderLength
                     }
@@ -134,7 +108,7 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                    RequestValidation = new ApiRequestValidationConfiguration
                     {
                         MaxHeaderLength = 10
                     }

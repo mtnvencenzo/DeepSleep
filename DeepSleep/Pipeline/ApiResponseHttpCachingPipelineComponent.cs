@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using System;
     using System.Threading.Tasks;
 
@@ -71,7 +72,10 @@
                             context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(directive.ExpirationSeconds.Value).ToString("r"));
 
                             // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
-                            context.Response.AddHeader("Vary", "Accept, Accept-Encoding, Accept-Language");
+                            context.Response.AddHeader(
+                                name: "Vary", 
+                                value: "Accept, Accept-Encoding, Accept-Language", 
+                                append: true);
 
                             return Task.FromResult(true);
                         }

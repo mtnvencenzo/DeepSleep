@@ -48,9 +48,9 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if(context.Configuration?.MaxRequestUriLength > 0 && !string.IsNullOrWhiteSpace(context.Request?.RequestUri))
+                if(context.Configuration?.RequestValidation?.MaxRequestUriLength > 0 && !string.IsNullOrWhiteSpace(context.Request?.RequestUri))
                 {
-                    if (context.Request.RequestUri.Length > context.Configuration.MaxRequestUriLength)
+                    if (context.Request.RequestUri.Length > context.Configuration.RequestValidation.MaxRequestUriLength)
                     {
                         context.Response.StatusCode = 414;
                         return Task.FromResult(false);

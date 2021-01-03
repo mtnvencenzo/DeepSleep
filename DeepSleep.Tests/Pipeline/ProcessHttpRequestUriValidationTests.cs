@@ -34,7 +34,10 @@
                 Request = null,
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = 1
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = 1
+                    }
                 }
             };
 
@@ -60,7 +63,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = 1
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = 1
+                    }
                 }
             };
 
@@ -85,7 +91,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = url.Length
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = url.Length
+                    }
                 }
             };
 
@@ -110,7 +119,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = null
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = null
+                    }
                 }
             };
 
@@ -135,7 +147,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = -1
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = -1
+                    }
                 }
             };
 
@@ -161,7 +176,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = 0
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = 0
+                    }
                 }
             };
 
@@ -186,7 +204,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = 0
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = 0
+                    }
                 }
             };
 
@@ -211,7 +232,10 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    MaxRequestUriLength = url.Length - 1
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestUriLength = url.Length - 1
+                    }
                 }
             };
 

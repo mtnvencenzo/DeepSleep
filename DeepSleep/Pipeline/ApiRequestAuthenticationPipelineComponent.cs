@@ -116,7 +116,14 @@
                         };
 
                         context.Response.StatusCode = 401;
-                        challenges.ForEach(c => context.Response.AddHeader("WWW-Authenticate", c));
+                        challenges.ForEach(c =>
+                        {
+                            context.Response.AddHeader(
+                                name: "WWW-Authenticate", 
+                                value: c, 
+                                append: false, 
+                                allowMultiple: true);
+                        });
 
                         return false;
                     }

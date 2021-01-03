@@ -53,7 +53,7 @@ namespace Api.DeepSleep.NetCore2_0
                 .UseOpenApiServices()
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
-                    DiscoveryStrategies = ServiceStartup.DiscoverRoutes(),
+                    DiscoveryStrategies = ServiceStartup.DiscoveryStrategies(),
                     ApiValidationProvider = ServiceStartup.DefaultValidationProvider(this.serviceProvider),
                     DefaultRequestConfiguration = ServiceStartup.DefaultRequestConfiguration(),
                     PingEndpoint = new EndpointUsage

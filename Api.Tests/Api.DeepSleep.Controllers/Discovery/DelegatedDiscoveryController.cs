@@ -24,18 +24,11 @@
         {
             return Task.FromResult(new List<ApiRouteRegistration>
             {
-                new ApiRouteRegistration
-                {
-                    Template = "discovery/delegated",
-                    HttpMethod = "GET",
-                    Location = new ApiEndpointLocation
-                    {
-                        Controller = this.GetType(),
-                        Endpoint = nameof(Get),
-                        HttpMethod = "GET"
-                    },
-                    Configuration = null
-                }
+                new ApiRouteRegistration(
+                    template: "discovery/delegated",
+                    httpMethod: "GET",
+                    controller: this.GetType(),
+                    endpoint: nameof(Get))
             } as IList<ApiRouteRegistration>);
         }
     }

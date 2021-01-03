@@ -50,7 +50,7 @@
             {
                 if (context.Request.Headers != null)
                 {
-                    var maxHeaderLength = context.Configuration?.HeaderValidationConfig?.MaxHeaderLength ?? 0;
+                    var maxHeaderLength = context.Configuration?.RequestValidation?.MaxHeaderLength ?? 0;
 
                     if (maxHeaderLength > 0)
                     {

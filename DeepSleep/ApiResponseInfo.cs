@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
 
     /// <summary>The API response info.
@@ -116,26 +117,20 @@
 
             if (!string.IsNullOrWhiteSpace(etag))
             {
-                if (response.Headers.HasHeader("ETag"))
-                {
-                    response.Headers.SetValue("ETag", etag);
-                }
-                else
-                {
-                    response.Headers.Add(new ApiHeader("ETag", etag));
-                }
+                response.AddHeader(
+                    name: "ETag", 
+                    value: etag, 
+                    append: false, 
+                    allowMultiple: false);
             }
 
             if (lastModified != null)
             {
-                if (response.Headers.HasHeader("Last-Modified"))
-                {
-                    response.Headers.SetValue("Last-Modified", lastModified.Value.ToString("r"));
-                }
-                else
-                {
-                    response.Headers.Add(new ApiHeader("Last-Modified", lastModified.Value.ToString("r")));
-                }
+                response.AddHeader(
+                    name: "Last-Modified",
+                    value: lastModified.Value.ToString("r"),
+                    append: false,
+                    allowMultiple: false);
             }
 
             return response;
@@ -160,8 +155,10 @@
         /// <param name="response">The response.</param>
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
+        /// <param name="append">if set to <c>true</c> [append].</param>
+        /// <param name="allowMultiple">if set to <c>true</c> [allow multiple].</param>
         /// <returns></returns>
-        public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value)
+        public static ApiResponseInfo AddHeader(this ApiResponseInfo response, string name, string value, bool append = false, bool allowMultiple = false)
         {
             if (response == null)
                 return response;
@@ -173,32 +170,32 @@
 
             if (!string.IsNullOrWhiteSpace(name))
             {
-                response.Headers.Add(new ApiHeader(name, value));
-            }
+                var existing = response.Headers.FirstOrDefault(h => string.Equals(name, h.Name, StringComparison.OrdinalIgnoreCase));
 
-            return response;
-        }
+                if (append)
+                {
+                    if (existing != null && !string.IsNullOrWhiteSpace(value))
+                    {
+                        var newValue = string.IsNullOrWhiteSpace(existing.Value)
+                            ? value
+                            : $"{existing.Value}, {value}";
 
-        /// <summary>Sets the HTTP header.</summary>
-        /// <param name="response">The response.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public static ApiResponseInfo SetHttpHeader(this ApiResponseInfo response, string name, string value)
-        {
-            if (response == null)
-            {
-                response = new ApiResponseInfo();
-            }
+                        existing.Value = newValue;
+                    }
+                    else
+                    {
+                        response.Headers.Add(new ApiHeader(name, value));
+                    }
+                }
+                else
+                {
+                    if (existing != null && !allowMultiple)
+                    {
+                        response.Headers.Remove(existing);
+                    }
 
-            if (response.Headers == null)
-            {
-                response.Headers = new List<ApiHeader>();
-            }
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                response.AddHeader(name, value);
+                    response.Headers.Add(new ApiHeader(name, value));
+                }
             }
 
             return response;

@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Api.NetCore2_0.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Api.NetCore.TestBase", "Api.Tests\DeepSleep.Api.NetCore.TestBase\DeepSleep.Api.NetCore.TestBase.csproj", "{2B31643A-2FCC-4A62-A906-627CEFE51667}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.NetCore.Tests", "DeepSleep.NetCore.Tests\DeepSleep.NetCore.Tests.csproj", "{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{2B31643A-2FCC-4A62-A906-627CEFE51667}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B31643A-2FCC-4A62-A906-627CEFE51667}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B31643A-2FCC-4A62-A906-627CEFE51667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +141,7 @@ Global
 		{E65D3E23-8AA1-4442-A6A0-53477312DEE0} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{1F251F05-F6AF-4CE4-A8E7-35B739BA9089} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{2B31643A-2FCC-4A62-A906-627CEFE51667} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
+		{BDFB0251-CFF0-4CD9-BC4C-54A3EA252E53} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8628A44-548F-4E07-8852-1C13652D7637}

@@ -56,43 +56,14 @@
         /// <exception cref="MissingMethodException"></exception>
         public StaticRouteDiscoveryStrategy AddRoute(string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
         {
-            if (this.registrations.Exists(r => string.Equals(r.Template, template, StringComparison.OrdinalIgnoreCase) &&
-                 string.Equals(r.HttpMethod, httpMethod, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new Exception($"Route '{httpMethod} {template}' already has been added.");
-            }
+            var registration = new ApiRouteRegistration(
+                template: template,
+                httpMethod: httpMethod,
+                controller: controller,
+                endpoint: endpoint,
+                config: config);
 
-            if (controller == null)
-            {
-                throw new Exception("Controller must be specified");
-            }
-
-            var method = controller.GetMethod(endpoint, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-
-            if (method == null)
-            {
-                throw new MissingMethodException(string.Format("Endpoint '{0}' does not exist on controller '{1}'", endpoint, controller.FullName));
-            }
-
-            if (string.IsNullOrWhiteSpace(httpMethod))
-            {
-                throw new Exception(string.Format("Http method not specified", endpoint, controller.FullName));
-            }
-
-            var item = new ApiRouteRegistration
-            {
-                Template = template,
-                HttpMethod = httpMethod.ToUpper(),
-                Configuration = config,
-                Location = new ApiEndpointLocation
-                {
-                    Controller = Type.GetType(controller.AssemblyQualifiedName),
-                    Endpoint = endpoint,
-                    HttpMethod = httpMethod.ToUpper()
-                }
-            };
-
-            registrations.Add(item);
+            registrations.Add(registration);
             return this;
         }
     }

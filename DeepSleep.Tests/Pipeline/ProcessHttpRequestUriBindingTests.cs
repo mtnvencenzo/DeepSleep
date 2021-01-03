@@ -761,7 +761,7 @@
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
-                        UriBindingError = "400.000001|'LongProp' Is in an incorrect format and could not be bound."
+                        UriBindingError = "400.000001|'LongProp' is in an incorrect format and could not be bound."
                     }
                 }
             };
@@ -778,7 +778,7 @@
             context.Runtime.Should().NotBeNull();
             context.Validation.Errors.Should().NotBeNull();
             context.Validation.Errors.Should().HaveCount(1);
-            context.Validation.Errors[0].Should().Be("400.000001|'LongProp' Is in an incorrect format and could not be bound.");
+            context.Validation.Errors[0].Should().Be("400.000001|'LongProp' is in an incorrect format and could not be bound.");
         }
 
         [Fact]

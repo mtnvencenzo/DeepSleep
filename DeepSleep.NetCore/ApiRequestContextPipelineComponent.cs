@@ -228,7 +228,8 @@
             bool isInUtc = false;
             bool hasLocalOffSet = false;
 
-            if (processedVal.Contains("GMT", StringComparison.OrdinalIgnoreCase) || processedVal.EndsWith("00:00") || processedVal.EndsWith("0000"))
+
+            if (processedVal.ToLowerInvariant().Contains("gmt") || processedVal.EndsWith("00:00") || processedVal.EndsWith("0000"))
             {
                 isInUtc = true;
             }
@@ -1094,7 +1095,12 @@
                 var responseDate = DateTimeOffset.UtcNow;
                 context.Response.Date = responseDate;
 
-                context.Response.AddHeader("Date", responseDate.ToString("r"));
+                context.Response.AddHeader(
+                    name: "Date",
+                    value: responseDate.ToString("r"),
+                    append: false,
+                    allowMultiple: false);
+
                 httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
                 // Sync up the expir header for nocache requests with the date header being used
@@ -1129,11 +1135,19 @@
 
                 if (context.Response.ResponseWriter != null && context.Response.ResponseWriterOptions != null)
                 {
-                    context.Response.AddHeader("Content-Type", context.Response.ContentType.ToString());
+                    context.Response.AddHeader(
+                        name: "Content-Type",
+                        value: context.Response.ContentType.ToString(),
+                        append: false,
+                        allowMultiple: false);
 
                     if (!string.IsNullOrWhiteSpace(context.Response.ContentLanguage))
                     {
-                        context.Response.AddHeader("Content-Language", context.Response.ContentLanguage);
+                        context.Response.AddHeader(
+                            name: "Content-Language",
+                            value: context.Response.ContentLanguage,
+                            append: false,
+                            allowMultiple: false);
                     }
 
                     if (!context.Request.IsHeadRequest())
@@ -1145,7 +1159,13 @@
                             (l) =>
                             {
                                 context.Response.ContentLength = l;
-                                context.Response.AddHeader("Content-Length", l.ToString(CultureInfo.InvariantCulture));
+
+                                context.Response.AddHeader(
+                                    name: "Content-Length",
+                                    value: l.ToString(CultureInfo.InvariantCulture),
+                                    append: false,
+                                    allowMultiple: false);
+
                                 addHeadersToResponse();
                             }).ConfigureAwait(false);
 
@@ -1162,7 +1182,13 @@
 
                             context.Response.ResponseObject = null;
                             context.Response.ContentLength = ms.Length;
-                            context.Response.AddHeader("Content-Length", ms.Length.ToString(CultureInfo.InvariantCulture));
+
+                            context.Response.AddHeader(
+                                name: "Content-Length",
+                                value: ms.Length.ToString(CultureInfo.InvariantCulture),
+                                append: false,
+                                allowMultiple: false);
+
                             addHeadersToResponse();
                         }
                     }

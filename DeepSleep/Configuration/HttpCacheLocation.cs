@@ -1,4 +1,4 @@
-﻿namespace DeepSleep
+﻿namespace DeepSleep.Configuration
 {
     /// <summary>
     /// 

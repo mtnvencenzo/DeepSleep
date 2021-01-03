@@ -68,11 +68,11 @@
 
                 context.Configuration = MergeConfigurations(context, defaultRequestConfig, context.Routing?.Route?.Configuration);
 
-                if (context.Configuration?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
+                if (context.Configuration?.RequestValidation?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
                 {
                     try
                     {
-                        context.ConfigureMaxRequestLength(context.Configuration.MaxRequestLength.Value);
+                        context.ConfigureMaxRequestLength(context.Configuration.RequestValidation.MaxRequestLength.Value);
                     }
                     catch { }
                 }
@@ -247,26 +247,6 @@
                 ?? defaultConfig?.Deprecated
                 ?? systemConfig.Deprecated;
 
-            requestConfig.AllowRequestBodyWhenNoModelDefined = endpointConfig?.AllowRequestBodyWhenNoModelDefined
-                ?? defaultConfig?.AllowRequestBodyWhenNoModelDefined
-                ?? systemConfig.AllowRequestBodyWhenNoModelDefined;
-
-            requestConfig.RequireContentLengthOnRequestBodyRequests = endpointConfig?.RequireContentLengthOnRequestBodyRequests
-                ?? defaultConfig?.RequireContentLengthOnRequestBodyRequests
-                ?? systemConfig.RequireContentLengthOnRequestBodyRequests;
-
-            requestConfig.FallBackLanguage = endpointConfig?.FallBackLanguage
-                ?? defaultConfig?.FallBackLanguage
-                ?? systemConfig.FallBackLanguage;
-
-            requestConfig.MaxRequestLength = endpointConfig?.MaxRequestLength
-                ?? defaultConfig?.MaxRequestLength
-                ?? systemConfig.MaxRequestLength;
-
-            requestConfig.MaxRequestUriLength = endpointConfig?.MaxRequestUriLength
-                ?? defaultConfig?.MaxRequestUriLength
-                ?? systemConfig.MaxRequestUriLength;
-
             requestConfig.IncludeRequestIdHeaderInResponse = endpointConfig?.IncludeRequestIdHeaderInResponse
                 ?? defaultConfig?.IncludeRequestIdHeaderInResponse
                 ?? systemConfig.IncludeRequestIdHeaderInResponse;
@@ -275,16 +255,64 @@
                 ?? defaultConfig?.EnableHeadForGetRequests
                 ?? systemConfig.EnableHeadForGetRequests;
 
-            requestConfig.SupportedLanguages = new List<string>(endpointConfig?.SupportedLanguages ?? defaultConfig?.SupportedLanguages ?? systemConfig.SupportedLanguages);
-
             requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
+
+            // ----------------------------
+            // Language Support Validation
+            // ----------------------------
+            if (endpointConfig?.LanguageSupport != null || defaultConfig?.LanguageSupport != null)
+            {
+                requestConfig.LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    FallBackLanguage = endpointConfig?.LanguageSupport?.FallBackLanguage
+                        ?? defaultConfig?.LanguageSupport?.FallBackLanguage
+                        ?? systemConfig.LanguageSupport?.FallBackLanguage,
+
+                    SupportedLanguages = new List<string>(endpointConfig?.LanguageSupport?.SupportedLanguages
+                        ?? defaultConfig?.LanguageSupport?.SupportedLanguages
+                        ?? systemConfig.LanguageSupport?.SupportedLanguages)
+                };
+            }
+            else
+            {
+                requestConfig.LanguageSupport = systemConfig.LanguageSupport;
+            }
+
+            // ----------------------------
+            // Merge Request Validation
+            // ----------------------------
+            if (endpointConfig?.RequestValidation != null || defaultConfig?.RequestValidation != null)
+            {
+                requestConfig.RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxHeaderLength = endpointConfig?.RequestValidation?.MaxHeaderLength
+                        ?? defaultConfig?.RequestValidation?.MaxHeaderLength
+                        ?? systemConfig.RequestValidation?.MaxHeaderLength,
+                    MaxRequestUriLength = endpointConfig?.RequestValidation?.MaxRequestUriLength
+                        ?? defaultConfig?.RequestValidation?.MaxRequestUriLength
+                        ?? systemConfig.RequestValidation?.MaxRequestUriLength,
+                    MaxRequestLength = endpointConfig?.RequestValidation?.MaxRequestLength
+                        ?? defaultConfig?.RequestValidation?.MaxRequestLength
+                        ?? systemConfig.RequestValidation?.MaxRequestLength,
+                    AllowRequestBodyWhenNoModelDefined = endpointConfig?.RequestValidation?.AllowRequestBodyWhenNoModelDefined
+                        ?? defaultConfig?.RequestValidation?.AllowRequestBodyWhenNoModelDefined
+                        ?? systemConfig.RequestValidation?.AllowRequestBodyWhenNoModelDefined,
+                    RequireContentLengthOnRequestBodyRequests = endpointConfig?.RequestValidation?.RequireContentLengthOnRequestBodyRequests
+                        ?? defaultConfig?.RequestValidation?.RequireContentLengthOnRequestBodyRequests
+                        ?? systemConfig.RequestValidation?.RequireContentLengthOnRequestBodyRequests
+                };
+            }
+            else
+            {
+                requestConfig.RequestValidation = systemConfig.RequestValidation;
+            }
 
             // ----------------------------
             // Merge Cache Directive
             // ----------------------------
             if (endpointConfig?.CacheDirective != null || defaultConfig?.CacheDirective != null)
             {
-                requestConfig.CacheDirective = new HttpCacheDirective
+                requestConfig.CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = endpointConfig?.CacheDirective?.Cacheability
                         ?? defaultConfig?.CacheDirective?.Cacheability
@@ -327,30 +355,13 @@
             }
 
 
-            // ----------------------------
-            // Merge Header Validation Configuration
-            // ----------------------------
-            if (defaultConfig?.HeaderValidationConfig != null || endpointConfig?.HeaderValidationConfig != null)
-            {
-                requestConfig.HeaderValidationConfig = new ApiHeaderValidationConfiguration
-                {
-                    MaxHeaderLength = endpointConfig?.HeaderValidationConfig?.MaxHeaderLength
-                        ?? defaultConfig?.HeaderValidationConfig?.MaxHeaderLength
-                        ?? systemConfig.HeaderValidationConfig.MaxHeaderLength
-                };
-            }
-            else
-            {
-                requestConfig.HeaderValidationConfig = systemConfig.HeaderValidationConfig;
-            }
-
 
             // -----------------------------------
             // Merge Resource Authorization Configuration
             // -----------------------------------
             if (endpointConfig?.AuthorizationConfig != null || defaultConfig?.AuthorizationConfig != null)
             {
-                requestConfig.AuthorizationConfig = new ResourceAuthorizationConfiguration
+                requestConfig.AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = endpointConfig?.AuthorizationConfig?.Policy
                         ?? defaultConfig?.AuthorizationConfig?.Policy

@@ -303,7 +303,7 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    CacheDirective = new HttpCacheDirective
+                    CacheDirective = new ApiCacheDirectiveConfiguration
                     {
                         Cacheability = HttpCacheType.NoCache,
                         ExpirationSeconds = 100
@@ -346,7 +346,7 @@
                 },
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    CacheDirective = new HttpCacheDirective
+                    CacheDirective = new ApiCacheDirectiveConfiguration
                     {
                         Cacheability = HttpCacheType.Cacheable,
                         ExpirationSeconds = 0
@@ -375,7 +375,7 @@
         [InlineData("HEAD")]
         public async void ReturnsTrueAndCorrectHeadersForCachableRequestMethodAndPrivateCacheLocation(string method)
         {
-            var cacheDirective = new HttpCacheDirective
+            var cacheDirective = new ApiCacheDirectiveConfiguration
             {
                 Cacheability = HttpCacheType.Cacheable,
                 CacheLocation = HttpCacheLocation.Private,
@@ -425,7 +425,7 @@
         [InlineData("HEAD")]
         public async void ReturnsTrueAndCorrectHeadersForCachableRequestMethodAndPublicCacheLocation(string method)
         {
-            var cacheDirective = new HttpCacheDirective
+            var cacheDirective = new ApiCacheDirectiveConfiguration
             {
                 Cacheability = HttpCacheType.Cacheable,
                 CacheLocation = HttpCacheLocation.Public,

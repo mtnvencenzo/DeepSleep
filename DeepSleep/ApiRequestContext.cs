@@ -83,7 +83,11 @@
             {
                 AllowAnonymous = false,
                 ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider(),
-                CacheDirective = new HttpCacheDirective
+                Deprecated = false,
+                EnableHeadForGetRequests = true,
+                SupportedAuthenticationSchemes = new List<string>(),
+                IncludeRequestIdHeaderInResponse = true,
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = HttpCacheType.NoCache,
                     CacheLocation = HttpCacheLocation.Private,
@@ -97,23 +101,23 @@
                     ExposeHeaders = new List<string>(),
                     MaxAgeSeconds = 600
                 },
-                Deprecated = false,
-                FallBackLanguage = null,
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                RequestValidation = new ApiRequestValidationConfiguration
                 {
-                    MaxHeaderLength = 0
+                    AllowRequestBodyWhenNoModelDefined = false,
+                    RequireContentLengthOnRequestBodyRequests = true,
+                    MaxRequestLength = null,
+                    MaxRequestUriLength = 0,
+                    MaxHeaderLength = 0,
                 },
-                AllowRequestBodyWhenNoModelDefined = false,
-                RequireContentLengthOnRequestBodyRequests = true,
-                MaxRequestLength = null,
-                MaxRequestUriLength = 0,
-                SupportedLanguages = new List<string>(),
-                SupportedAuthenticationSchemes = new List<string>(),
-                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    FallBackLanguage = null,
+                    SupportedLanguages = new List<string>(),
+                },
+                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = null
                 },
-                IncludeRequestIdHeaderInResponse = true,
                 ReadWriteConfiguration = new ApiReadWriteConfiguration
                 {
                     ReadableMediaTypes = null,
@@ -122,10 +126,9 @@
                     WriterResolver = null,
                     AcceptHeaderOverride = null
                 },
-                EnableHeadForGetRequests = true,
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
-                    UriBindingError = "400.000001|'{paramName}' Is in an incorrect format and could not be bound.",
+                    UriBindingError = "400.000001|'{paramName}' is in an incorrect format and could not be bound.",
                     UriBindingValueError = "400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}."
                 }
             };

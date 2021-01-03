@@ -59,7 +59,7 @@
                 {
                     if (!context.Request.ContentLength.HasValue)
                     {
-                        if (context.Configuration?.RequireContentLengthOnRequestBodyRequests ?? true)
+                        if (context.Configuration?.RequestValidation?.RequireContentLengthOnRequestBodyRequests ?? true)
                         {
                             context.Response.StatusCode = 411;
                             return false;
@@ -68,13 +68,13 @@
 
                     if (context.Request.ContentLength > 0 && string.IsNullOrWhiteSpace(context.Request.ContentType))
                     {
-                        context.Response.StatusCode = 450;
+                        context.Response.StatusCode = 415;
                         return false;
                     }
 
-                    if (context.Configuration?.MaxRequestLength > 0 && context.Request.ContentLength > 0)
+                    if (context.Configuration?.RequestValidation?.MaxRequestLength > 0 && context.Request.ContentLength > 0)
                     {
-                        if (context.Request.ContentLength > context.Configuration.MaxRequestLength)
+                        if (context.Request.ContentLength > context.Configuration.RequestValidation.MaxRequestLength)
                         {
                             context.Response.StatusCode = 413;
                             return false;
@@ -83,7 +83,7 @@
 
                     if (context.Request.ContentLength > 0 && context.Request.InvocationContext?.BodyModelType == null)
                     {
-                        if (!(context.Configuration?.AllowRequestBodyWhenNoModelDefined ?? false))
+                        if (!(context.Configuration?.RequestValidation?.AllowRequestBodyWhenNoModelDefined ?? false))
                         {
                             context.Response.StatusCode = 413;
                             return false;
@@ -137,7 +137,13 @@
                         if (formatter == null)
                         {
                             context.Response.StatusCode = 415;
-                            context.Response.Headers.Add(new ApiHeader("X-Allow-Content-Types", string.Join(", ", formatterTypes)));
+
+                            context.Response.AddHeader(
+                                name: "X-Allow-Content-Types",
+                                value: string.Join(", ", formatterTypes),
+                                append: false,
+                                allowMultiple: false);
+
                             return false;
                         }
 

@@ -70,7 +70,7 @@
             }
         }
 
-        public static MockHttpRequest FromHttpRequestString(HttpContext context, string http)
+        public static MockHttpRequest FromHttpRequestString(HttpContext context, string http, bool includeContentLength = true)
         {
             var httpLines = http.Split(System.Environment.NewLine);
             var method = null as string;
@@ -192,14 +192,20 @@
 
                 if (!headers.Any(h => h.name == "Content-Length"))
                 {
-                    headers.Add(("Content-Length", $"{lenth}"));
+                    if (includeContentLength)
+                    {
+                        headers.Add(("Content-Length", $"{lenth}"));
+                    }
                 }
             }
             else if (method.ToLower() == "post" || method.ToLower() == "put" || method.ToLower() == "patch")
             {
                 if (!headers.Any(h => h.name == "Content-Length"))
                 {
-                    headers.Add(("Content-Length", "0"));
+                    if (includeContentLength)
+                    {
+                        headers.Add(("Content-Length", "0"));
+                    }
                 }
             }
 

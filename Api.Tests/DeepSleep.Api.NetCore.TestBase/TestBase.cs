@@ -5,6 +5,7 @@
     using FluentAssertions;
     using Microsoft.AspNetCore.Http;
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.Json;
@@ -46,6 +47,9 @@
             bool? expectedAuthenticationResult = null,
             string expectedAuthenticationScheme = null,
             string expectedAuthenticationValue = null,
+            string expectedCacheControlValue = null,
+            int? expectedExpiresSecondsAdd = null,
+            string expectedCulture = null,
             AuthenticationType expectedAuthenticatedBy = AuthenticationType.None,
             bool? expectedAuthorizationResult = null,
             AuthorizationType expectedAuthorizedBy = AuthorizationType.None,
@@ -115,14 +119,18 @@
             if (response.StatusCode < 500 && apiContext.Request.IsCorsPreflightRequest() == false)
             {
                 response.Headers.Should().ContainKey("Cache-Control");
-                response.Headers["Cache-Control"].Should().Equal(this.cacheControlNoCache);
+                response.Headers["Cache-Control"].Should().Equal(expectedCacheControlValue ?? this.cacheControlNoCache);
                 apiContext.Response.Headers.HasHeader("Cache-Control").Should().BeTrue();
-                apiContext.Response.Headers.GetHeader("Cache-Control").Value.Should().Be(this.cacheControlNoCache);
+                apiContext.Response.Headers.GetHeader("Cache-Control").Value.Should().Be(expectedCacheControlValue ?? this.cacheControlNoCache);
+
+                var expectedExpiresValue = expectedExpiresSecondsAdd.HasValue
+                    ? apiContext.Response.Date?.AddSeconds(expectedExpiresSecondsAdd.Value).ToString("r")
+                    : apiContext.Response.Date?.AddYears(-1).ToString("r");
 
                 response.Headers.Should().ContainKey("Expires");
-                response.Headers["Expires"].Should().Equal(apiContext.Response.Date?.AddYears(-1).ToString("r"));
+                response.Headers["Expires"].Should().Equal(expectedExpiresValue);
                 apiContext.Response.Headers.HasHeader("Expires").Should().BeTrue();
-                apiContext.Response.Headers.GetHeader("Expires").Value.Should().Be(apiContext.Response.Date?.AddYears(-1).ToString("r"));
+                apiContext.Response.Headers.GetHeader("Expires").Value.Should().Be(expectedExpiresValue);
             }
 
             if (shouldHaveResponse)
@@ -216,6 +224,8 @@
             {
                 apiContext.Request.ClientAuthorizationInfo.Should().BeNull();
             }
+
+            apiContext.Request.AcceptCulture?.Name.Should().Be(expectedCulture ?? CultureInfo.CurrentUICulture.Name);
 
             var jsonDump = apiContext.Dump();
             jsonDump.Should().NotBeNullOrWhiteSpace();

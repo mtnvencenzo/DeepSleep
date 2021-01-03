@@ -1,8 +1,9 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Configuration;
+    using DeepSleep.Discovery;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -28,69 +29,86 @@
         }
 
         /// <summary>Adds the route.</summary>
-        /// <param name="template">The template.</param>
-        /// <param name="httpMethod">The HTTP method.</param>
-        /// <param name="controller">The controller.</param>
-        /// <param name="endpoint">The endpoint.</param>
-        /// <returns></returns>
-        public IApiRoutingTable AddRoute(string template, string httpMethod, Type controller, string endpoint)
-        {
-            return AddRoute(template, httpMethod, controller, endpoint, null);
-        }
-
-        /// <summary>Adds the route.</summary>
-        /// <param name="template">The template.</param>
-        /// <param name="httpMethod">The HTTP method.</param>
-        /// <param name="controller">The controller.</param>
-        /// <param name="endpoint">The endpoint.</param>
-        /// <param name="config">The configuration.</param>
+        /// <param name="registration">The registration.</param>
         /// <returns></returns>
         /// <exception cref="Exception">
-        /// Route '{httpMethod} {template}' already has been added.
+        /// Route '{registration.HttpMethod} {registration.Template}' already has been added.
         /// or
         /// Controller must be specified
         /// or
         /// </exception>
         /// <exception cref="MissingMethodException"></exception>
-        public IApiRoutingTable AddRoute(string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
+        public virtual IApiRoutingTable AddRoute(ApiRouteRegistration registration)
         {
-            if (this.routes.Exists(r => string.Equals(r.Template, template, StringComparison.OrdinalIgnoreCase) &&
-                 string.Equals(r.HttpMethod, httpMethod, StringComparison.OrdinalIgnoreCase)))
+            if (registration == null)
             {
-                throw new Exception($"Route '{httpMethod} {template}' already has been added.");
+                return this;
             }
 
-            if (controller == null)
+            if (registration.Location?.Controller == null)
             {
                 throw new Exception("Controller must be specified");
             }
 
-            var method = controller.GetMethod(endpoint, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
+            if (string.IsNullOrWhiteSpace(registration.Location.Endpoint))
+            {
+                throw new Exception("Endpoint must be specified");
+            }
+
+            if (string.IsNullOrWhiteSpace(registration.HttpMethod))
+            {
+                throw new Exception(string.Format("Http method not specified on {1}:{0}", registration.Location.Endpoint, registration.Location.Controller.FullName));
+            }
+
+            var existing = this.routes
+                .Where(r => string.Equals(r.Template, registration.Template, StringComparison.OrdinalIgnoreCase))
+                .Where(r => string.Equals(r.HttpMethod, registration.HttpMethod, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault();
+
+            if (existing != null)
+            {
+                throw new Exception($"Route '{registration.HttpMethod} {registration.Template}' already has been added.");
+            }
+
+
+            var method = registration.Location.Controller.GetMethod(
+                name: registration?.Location?.Endpoint, 
+                bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
 
             if (method == null)
             {
-                throw new MissingMethodException(string.Format("Endpoint '{0}' does not exist on controller '{1}'", endpoint, controller.FullName));
-            }
-
-            if (string.IsNullOrWhiteSpace(httpMethod))
-            {
-                throw new Exception(string.Format("Http method not specified", endpoint, controller.FullName));
+                throw new MissingMethodException(string.Format("Endpoint '{0}' does not exist on controller '{1}'", registration.Location.Endpoint, registration.Location.Controller.FullName));
             }
 
             var item = new ApiRoutingItem
             {
-                Template = template,
-                HttpMethod = httpMethod.ToUpper(),
-                Configuration = config,
+                Template = registration.Template,
+                HttpMethod = registration.HttpMethod.ToUpper(),
+                Configuration = registration.Configuration,
                 Location = new ApiEndpointLocation
                 {
-                    Controller = Type.GetType(controller.AssemblyQualifiedName),
-                    Endpoint = endpoint,
-                    HttpMethod = httpMethod.ToUpper()
+                    Controller = Type.GetType(registration.Location.Controller.AssemblyQualifiedName),
+                    Endpoint = registration.Location.Endpoint,
+                    HttpMethod = registration.HttpMethod.ToUpper()
                 }
             };
 
             routes.Add(item);
+            return this;
+        }
+
+        /// <summary>Adds the routes.</summary>
+        /// <param name="registrations">The registrations.</param>
+        /// <returns></returns>
+        public virtual IApiRoutingTable AddRoutes(IList<ApiRouteRegistration> registrations)
+        {
+            if (registrations == null)
+            {
+                return this;
+            }
+
+            registrations.ForEach(r => this.AddRoute(r));
+
             return this;
         }
     }

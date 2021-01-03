@@ -75,8 +75,11 @@ namespace DeepSleep.Tests.Pipeline
             {
                 Configuration = new DefaultApiRequestConfiguration
                 {
-                    FallBackLanguage = fallBackLanguage,
-                    SupportedLanguages = supported?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                    LanguageSupport = new ApiLanguageSupportConfiguration
+                    {
+                        FallBackLanguage = fallBackLanguage,
+                        SupportedLanguages = supported?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                    }
                 },
                 Request = new ApiRequestInfo
                 {

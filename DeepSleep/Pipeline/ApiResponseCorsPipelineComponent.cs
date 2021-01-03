@@ -96,7 +96,10 @@
                         context.Response.AddHeader("Access-Control-Expose-Headers", string.Join(", ", exposeHeaders));
                     }
 
-                    context.Response.AddHeader("Vary", "Origin");
+                    context.Response.AddHeader(
+                        name: "Vary", 
+                        value: "Origin", 
+                        append: true);
                 }
 
                 return Task.FromResult(true);

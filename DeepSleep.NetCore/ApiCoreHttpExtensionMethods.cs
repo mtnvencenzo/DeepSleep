@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.NetCore
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Discovery;
     using DeepSleep.Formatting;
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.NetCore.Controllers;
@@ -29,40 +30,33 @@
 
             var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
             var routingTable = builder.ApplicationServices.GetService<IApiRoutingTable>();
+            var discoveryStrategies = config?.DiscoveryStrategies ?? DiscoveryStrategies.Default();
 
-            if (config.DiscoveryStrategies != null)
+            foreach (var strategy in discoveryStrategies)
             {
-                foreach (var strategy in config.DiscoveryStrategies)
+                if (strategy == null)
                 {
-                    if (strategy == null)
+                    continue;
+                }
+
+                var task = Task.Run(async () =>
+                {
+                    using (var scope = builder.ApplicationServices.CreateScope())
+                    {
+                        return await strategy.DiscoverRoutes(scope.ServiceProvider).ConfigureAwait(false);
+                    }
+                });
+
+                var registrations = task.Result;
+
+                foreach (var registration in registrations)
+                {
+                    if (registration == null)
                     {
                         continue;
                     }
 
-                    var task = Task.Run(async () =>
-                    {
-                        using (var scope = builder.ApplicationServices.CreateScope())
-                        {
-                            return await strategy.DiscoverRoutes(scope.ServiceProvider).ConfigureAwait(false);
-                        }
-                    });
-
-                    var registrations = task.Result;
-
-                    foreach (var registration in registrations)
-                    {
-                        if (registration == null)
-                        {
-                            continue;
-                        }
-
-                        routingTable.AddRoute(
-                            template: registration.Template,
-                            httpMethod: registration.HttpMethod,
-                            controller: registration.Location.Controller,
-                            endpoint: registration.Location.Endpoint,
-                            config: registration.Configuration);
-                    }
+                    routingTable.AddRoute(registration);
                 }
             }
 
@@ -75,7 +69,7 @@
                 }
             }
 
-            if (config.WriteConsoleHeader)
+            if (config?.WriteConsoleHeader ?? true)
             {
                 try
                 {
@@ -94,13 +88,13 @@
         public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
         {
             var routingTable = new DefaultApiRoutingTable();
-
+            
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
                 .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
-                .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config.ApiValidationProvider ?? GetDefaultValidationProvider(p))
-                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
+                .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config?.ApiValidationProvider ?? GetDefaultValidationProvider(p))
+                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config?.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
@@ -108,7 +102,7 @@
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
                 .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config?.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
                 .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
 
@@ -138,7 +132,7 @@
         {
             string template = path ?? "ping";
 
-            table.AddRoute(
+            table.AddRoute(new ApiRouteRegistration(
                template: template,
                httpMethod: "GET",
                controller: typeof(PingController),
@@ -146,7 +140,7 @@
                config: new DefaultApiRequestConfiguration
                {
                    AllowAnonymous = true,
-                   CacheDirective = new HttpCacheDirective
+                   CacheDirective = new ApiCacheDirectiveConfiguration
                    {
                        Cacheability = HttpCacheType.NoCache,
                        CacheLocation = HttpCacheLocation.Private,
@@ -157,7 +151,7 @@
                        AllowedOrigins = new string[] { "*" }
                    },
                    Deprecated = false
-               });
+               }));
         }
 
         /// <summary>Gets the default json formatting configuration
@@ -174,7 +168,7 @@
 
         /// <summary>Writes the deepsleep to console.</summary>
         /// <param name="routingTable">The routing table.</param>
-        private static void WriteDeepsleepToConsole(IApiRoutingTable routingTable)
+        internal static void WriteDeepsleepToConsole(IApiRoutingTable routingTable)
         {
             var deepSleepNetCoreAssembly = Assembly.GetExecutingAssembly();
 
@@ -256,7 +250,11 @@
 
             Console.WriteLine("");
 
-            MayTheFourth();
+            var now = DateTime.Now;
+            if (now.Month == 5 && now.Day == 4)
+            {
+                MayTheFourth();
+            }
 
             Console.WriteLine();
         }
@@ -287,36 +285,31 @@
         }
 
         /// <summary>Mays the fourth.</summary>
-        private static void MayTheFourth()
+        internal static void MayTheFourth()
         {
-            var now = DateTime.Now;
+            var existingColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
 
-            if (now.Month == 5 && now.Day == 4)
-            {
-                var existingColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-
-                Console.WriteLine(@"                       _.-'~~~~~~`-._");
-                Console.WriteLine(@"                      /      ||      \");
-                Console.WriteLine(@"                     /       ||       \");
-                Console.WriteLine(@"                    |        ||        |");
-                Console.WriteLine(@"                    | _______||_______ |");
-                Console.WriteLine(@"                    |/ ----- \/ ----- \|");
-                Console.WriteLine(@"                   /  (     )  (     )  \");
-                Console.WriteLine(@"                  / \  ----- () -----  / \");
-                Console.WriteLine(@"                 /   \      /||\      /   \");
-                Console.WriteLine(@"                /     \    /||||\    /     \");
-                Console.WriteLine(@"               /       \  /||||||\  /       \");
-                Console.WriteLine(@"              /_        \o========o/        _\");
-                Console.WriteLine(@"                `--...__|`-._  _.-'|__...--'");
-                Console.WriteLine(@"                        |    `'    |");
+            Console.WriteLine(@"                       _.-'~~~~~~`-._");
+            Console.WriteLine(@"                      /      ||      \");
+            Console.WriteLine(@"                     /       ||       \");
+            Console.WriteLine(@"                    |        ||        |");
+            Console.WriteLine(@"                    | _______||_______ |");
+            Console.WriteLine(@"                    |/ ----- \/ ----- \|");
+            Console.WriteLine(@"                   /  (     )  (     )  \");
+            Console.WriteLine(@"                  / \  ----- () -----  / \");
+            Console.WriteLine(@"                 /   \      /||\      /   \");
+            Console.WriteLine(@"                /     \    /||||\    /     \");
+            Console.WriteLine(@"               /       \  /||||||\  /       \");
+            Console.WriteLine(@"              /_        \o========o/        _\");
+            Console.WriteLine(@"                `--...__|`-._  _.-'|__...--'");
+            Console.WriteLine(@"                        |    `'    |");
 
 
-                Console.WriteLine("");
-                Console.WriteLine(@"                  May the 4th be with you!");
-                Console.WriteLine("");
-                Console.ForegroundColor = existingColor;
-            }
+            Console.WriteLine("");
+            Console.WriteLine(@"                 May the fourth be with you!");
+            Console.WriteLine("");
+            Console.ForegroundColor = existingColor;
         }
     }
 }

@@ -83,7 +83,7 @@
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public async void body_binding___returns_false_and_422_status_for_missing_contenttype_and_has_content(string contentType)
+        public async void body_binding___returns_false_and_415_status_for_missing_contenttype_and_has_content(string contentType)
         {
             var context = new ApiRequestContext
             {
@@ -101,7 +101,7 @@
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
-            context.Response.StatusCode.Should().Be(450);
+            context.Response.StatusCode.Should().Be(415);
         }
 
         [Fact]
@@ -269,7 +269,10 @@
                     },
                     Configuration = new DefaultApiRequestConfiguration
                     {
-                        MaxRequestLength = 1
+                        RequestValidation = new ApiRequestValidationConfiguration
+                        {
+                            MaxRequestLength = 1
+                        }
                     }
                 };
 

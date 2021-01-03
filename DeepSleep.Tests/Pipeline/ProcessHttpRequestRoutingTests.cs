@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Discovery;
     using DeepSleep.Formatting;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.Mocks;
@@ -140,12 +141,12 @@
         {
             var routingTable = GetRoutingTable(null);
 
-            routingTable = routingTable.AddRoute(
+            routingTable = routingTable.AddRoute(new ApiRouteRegistration(
                 template: "test/{id}/name",
                 httpMethod: head,
                 controller: typeof(MockController),
                 endpoint: nameof(MockController.Head),
-                config: null);
+                config: null));
 
             var routeResolver = new DefaultRouteResolver();
 
@@ -396,12 +397,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                AllowRequestBodyWhenNoModelDefined = def
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    AllowRequestBodyWhenNoModelDefined = def
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                AllowRequestBodyWhenNoModelDefined = endpoint
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    AllowRequestBodyWhenNoModelDefined = endpoint
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -427,7 +434,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.AllowRequestBodyWhenNoModelDefined.Should().Be(expected);
+            context.Configuration.RequestValidation.AllowRequestBodyWhenNoModelDefined.Should().Be(expected);
         }
 
         [Theory]
@@ -861,12 +868,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                FallBackLanguage = def
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    FallBackLanguage = def
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                FallBackLanguage = endpoint
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    FallBackLanguage = endpoint
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -892,7 +905,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.FallBackLanguage.Should().Be(expected);
+            context.Configuration.LanguageSupport.FallBackLanguage.Should().Be(expected);
         }
 
         [Theory]
@@ -906,12 +919,18 @@
 
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestLength = def
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestLength = def
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestLength = endpoint
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestLength = endpoint
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -938,7 +957,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.MaxRequestLength.Should().Be(expected);
+            context.Configuration.RequestValidation.MaxRequestLength.Should().Be(expected);
 
             if (expected != null)
             {
@@ -955,7 +974,10 @@
         {
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestLength = 10
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestLength = 10
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -982,7 +1004,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, null);
 
-            context.Configuration.MaxRequestLength.Should().Be(10);
+            context.Configuration.RequestValidation.MaxRequestLength.Should().Be(10);
         }
 
         [Fact]
@@ -992,7 +1014,10 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestLength = 10
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestLength = 10
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1022,7 +1047,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, null);
 
-            context.Configuration.MaxRequestLength.Should().Be(10);
+            context.Configuration.RequestValidation.MaxRequestLength.Should().Be(10);
             hasSet.Should().Be(true);
         }
 
@@ -1035,12 +1060,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestUriLength = def
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestUriLength = def
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                MaxRequestUriLength = endpoint
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    MaxRequestUriLength = endpoint
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1066,7 +1097,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.MaxRequestUriLength.Should().Be(expected);
+            context.Configuration.RequestValidation.MaxRequestUriLength.Should().Be(expected);
         }
 
 
@@ -1081,12 +1112,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                RequireContentLengthOnRequestBodyRequests = def
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    RequireContentLengthOnRequestBodyRequests = def
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                RequireContentLengthOnRequestBodyRequests = endpoint
+                RequestValidation = new ApiRequestValidationConfiguration
+                {
+                    RequireContentLengthOnRequestBodyRequests = endpoint
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1112,7 +1149,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.RequireContentLengthOnRequestBodyRequests.Should().Be(expected);
+            context.Configuration.RequestValidation.RequireContentLengthOnRequestBodyRequests.Should().Be(expected);
         }
 
         [Fact]
@@ -1125,7 +1162,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = "TestPolicy"
                 }
@@ -1163,7 +1200,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = "TestPolicyDefault"
                 }
@@ -1210,7 +1247,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = def
                 }
@@ -1218,7 +1255,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                AuthorizationConfig = new ResourceAuthorizationConfiguration
+                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
                     Policy = endpoint
                 }
@@ -1384,12 +1421,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = null
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = null
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = new string[] { "test1", "test2" }
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = new string[] { "test1", "test2" }
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1413,12 +1456,12 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.SupportedLanguages.Should().NotBeNull();
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().HaveCount(2);
-            context.Configuration.SupportedLanguages[0].Should().Be("test1");
-            context.Configuration.SupportedLanguages[1].Should().Be("test2");
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(defaultConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(endpointConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.LanguageSupport.SupportedLanguages[0].Should().Be("test1");
+            context.Configuration.LanguageSupport.SupportedLanguages[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1426,12 +1469,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = new string[] { "test1", "test2" }
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = new string[] { "test1", "test2" }
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = null
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = null
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1455,12 +1504,12 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.SupportedLanguages.Should().NotBeNull();
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().HaveCount(2);
-            context.Configuration.SupportedLanguages[0].Should().Be("test1");
-            context.Configuration.SupportedLanguages[1].Should().Be("test2");
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(defaultConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(endpointConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.LanguageSupport.SupportedLanguages[0].Should().Be("test1");
+            context.Configuration.LanguageSupport.SupportedLanguages[1].Should().Be("test2");
         }
 
         [Fact]
@@ -1468,12 +1517,18 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = new string[] { "test1", "test2" }
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = new string[] { "test1", "test2" }
+                }
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                SupportedLanguages = new string[] { "test3", "test4" }
+                LanguageSupport = new ApiLanguageSupportConfiguration
+                {
+                    SupportedLanguages = new string[] { "test3", "test4" }
+                }
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -1497,12 +1552,12 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.SupportedLanguages.Should().NotBeNull();
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
-            context.Configuration.SupportedLanguages.Should().HaveCount(2);
-            context.Configuration.SupportedLanguages[0].Should().Be("test3");
-            context.Configuration.SupportedLanguages[1].Should().Be("test4");
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeNull();
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(defaultConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().NotBeSameAs(endpointConfig.LanguageSupport.SupportedLanguages);
+            context.Configuration.LanguageSupport.SupportedLanguages.Should().HaveCount(2);
+            context.Configuration.LanguageSupport.SupportedLanguages[0].Should().Be("test3");
+            context.Configuration.LanguageSupport.SupportedLanguages[1].Should().Be("test4");
         }
 
         [Fact]
@@ -1515,7 +1570,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = HttpCacheType.Cacheable,
                     CacheLocation = HttpCacheLocation.Public,
@@ -1545,8 +1600,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
             context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
@@ -1557,7 +1612,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = HttpCacheType.Cacheable,
                     CacheLocation = HttpCacheLocation.Public,
@@ -1592,8 +1647,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
             context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
@@ -1608,7 +1663,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = def
                 }
@@ -1616,7 +1671,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = endpoint
                 }
@@ -1660,7 +1715,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     CacheLocation = def
                 }
@@ -1668,7 +1723,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     CacheLocation = endpoint
                 }
@@ -1712,7 +1767,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     ExpirationSeconds = def
                 }
@@ -1720,7 +1775,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                CacheDirective = new HttpCacheDirective
+                CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     ExpirationSeconds = endpoint
                 }
@@ -1790,8 +1845,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CrossOriginConfig.Should().NotBeNull();
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.CrossOriginConfig);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(true);
             context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(600);
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
@@ -1846,8 +1901,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CrossOriginConfig.Should().NotBeNull();
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.CrossOriginConfig);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
             context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(100);
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
@@ -1906,8 +1961,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CrossOriginConfig.Should().NotBeNull();
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.CrossOriginConfig);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
             context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(150);
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
@@ -1975,8 +2030,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CrossOriginConfig.Should().NotBeNull();
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.SupportedLanguages);
-            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.SupportedLanguages);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.CrossOriginConfig);
+            context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(false);
             context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(100);
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
@@ -1998,12 +2053,10 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = null
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -2027,10 +2080,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(0);
+            context.Configuration.RequestValidation.MaxHeaderLength.Should().Be(0);
         }
 
         [Fact]
@@ -2038,12 +2088,11 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = null
             };
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                RequestValidation = new ApiRequestValidationConfiguration
                 {
                     MaxHeaderLength = 200
                 }
@@ -2070,10 +2119,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.RequestValidation.MaxHeaderLength.Should().Be(200);
         }
 
         [Fact]
@@ -2081,7 +2127,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                RequestValidation = new ApiRequestValidationConfiguration
                 {
                     MaxHeaderLength = 200
                 }
@@ -2089,7 +2135,6 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
@@ -2113,10 +2158,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.RequestValidation.MaxHeaderLength.Should().Be(200);
         }
 
         [Fact]
@@ -2124,7 +2166,7 @@
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                RequestValidation = new ApiRequestValidationConfiguration
                 {
                     MaxHeaderLength = 100
                 }
@@ -2132,7 +2174,7 @@
 
             var endpointConfig = new DefaultApiRequestConfiguration
             {
-                HeaderValidationConfig = new ApiHeaderValidationConfiguration
+                RequestValidation = new ApiRequestValidationConfiguration
                 {
                     MaxHeaderLength = 200
                 }
@@ -2161,10 +2203,7 @@
             // Assert the request's configuration
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
-            context.Configuration.HeaderValidationConfig.Should().NotBeNull();
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.Configuration.HeaderValidationConfig.MaxHeaderLength.Should().Be(200);
+            context.Configuration.RequestValidation.MaxHeaderLength.Should().Be(200);
         }
 
         [Fact]
@@ -2202,9 +2241,9 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("400.000001|'{paramName}' Is in an incorrect format and could not be bound.");
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("400.000001|'{paramName}' is in an incorrect format and could not be bound.");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.");
         }
 
@@ -2247,8 +2286,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
             context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
         }
@@ -2292,8 +2331,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
             context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
         }
@@ -2343,8 +2382,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
             context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override - Endpoint");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override - Endpoint");
         }
@@ -2393,8 +2432,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.HeaderValidationConfig);
-            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.HeaderValidationConfig);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
+            context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
             context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("UriBindingError - Override - Endpoint");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
         }
@@ -2404,13 +2443,30 @@
             var system = ApiRequestContext.GetDefaultRequestConfiguration();
 
             request.AllowAnonymous.Should().Be(endpoint?.AllowAnonymous ?? def?.AllowAnonymous ?? system.AllowAnonymous);
-            request.AllowRequestBodyWhenNoModelDefined.Should().Be(endpoint?.AllowRequestBodyWhenNoModelDefined ?? def?.AllowRequestBodyWhenNoModelDefined ?? system.AllowRequestBodyWhenNoModelDefined);
             request.Deprecated.Should().Be(endpoint?.Deprecated ?? def?.Deprecated ?? system.Deprecated);
-            request.FallBackLanguage.Should().Be(endpoint?.FallBackLanguage ?? def?.FallBackLanguage ?? system.FallBackLanguage);
-            request.MaxRequestLength.Should().Be(endpoint?.MaxRequestLength ?? def?.MaxRequestLength ?? system.MaxRequestLength);
-            request.MaxRequestUriLength.Should().Be(endpoint?.MaxRequestUriLength ?? def?.MaxRequestUriLength ?? system.MaxRequestUriLength);
-            request.RequireContentLengthOnRequestBodyRequests.Should().Be(endpoint?.RequireContentLengthOnRequestBodyRequests ?? def?.RequireContentLengthOnRequestBodyRequests ?? system.RequireContentLengthOnRequestBodyRequests);
             request.IncludeRequestIdHeaderInResponse.Should().Be(endpoint?.IncludeRequestIdHeaderInResponse ?? def?.IncludeRequestIdHeaderInResponse ?? system.IncludeRequestIdHeaderInResponse);
+
+            // -------------------
+            // Language Support Configuration
+            // -------------------
+            request.LanguageSupport.FallBackLanguage.Should().Be(endpoint?.LanguageSupport?.FallBackLanguage ?? def?.LanguageSupport?.FallBackLanguage ?? system.LanguageSupport.FallBackLanguage);
+
+            request.LanguageSupport.SupportedLanguages.Count.Should().Be(endpoint?.LanguageSupport?.SupportedLanguages?.Count ?? def?.LanguageSupport?.SupportedLanguages?.Count ?? system.LanguageSupport.SupportedLanguages.Count);
+            for (int i = 0; i < request.LanguageSupport.SupportedLanguages.Count; i++)
+            {
+                request.LanguageSupport.SupportedLanguages[i].Should().Be(endpoint?.LanguageSupport?.SupportedLanguages?[i] ?? def?.LanguageSupport?.SupportedLanguages?[i] ?? system.LanguageSupport.SupportedLanguages[i]);
+            }
+
+
+            // -------------------
+            // Request Validation Configuration
+            // -------------------
+            request.RequestValidation.MaxRequestLength.Should().Be(endpoint?.RequestValidation?.MaxRequestLength ?? def?.RequestValidation?.MaxRequestLength ?? system.RequestValidation.MaxRequestLength);
+            request.RequestValidation.MaxRequestUriLength.Should().Be(endpoint?.RequestValidation?.MaxRequestUriLength ?? def?.RequestValidation?.MaxRequestUriLength ?? system.RequestValidation.MaxRequestUriLength);
+            request.RequestValidation.MaxHeaderLength.Should().Be(endpoint?.RequestValidation?.MaxHeaderLength ?? def?.RequestValidation?.MaxHeaderLength ?? system.RequestValidation.MaxHeaderLength);
+            request.RequestValidation.RequireContentLengthOnRequestBodyRequests.Should().Be(endpoint?.RequestValidation?.RequireContentLengthOnRequestBodyRequests ?? def?.RequestValidation?.RequireContentLengthOnRequestBodyRequests ?? system.RequestValidation.RequireContentLengthOnRequestBodyRequests);
+            request.RequestValidation.AllowRequestBodyWhenNoModelDefined.Should().Be(endpoint?.RequestValidation?.AllowRequestBodyWhenNoModelDefined ?? def?.RequestValidation?.AllowRequestBodyWhenNoModelDefined ?? system.RequestValidation.AllowRequestBodyWhenNoModelDefined);
+
 
             // ------------------------
             // Read Write Configuration
@@ -2502,12 +2558,6 @@
             }
 
 
-            // ------------------------
-            // Header Validation Configuration
-            // ------------------------
-            request.HeaderValidationConfig.MaxHeaderLength.Should().Be(endpoint?.HeaderValidationConfig?.MaxHeaderLength ?? def?.HeaderValidationConfig?.MaxHeaderLength ?? system.HeaderValidationConfig.MaxHeaderLength);
-
-
             // --------------------------------
             // Supported Authentication Schemes
             // --------------------------------
@@ -2515,16 +2565,6 @@
             for (int i = 0; i < request.SupportedAuthenticationSchemes.Count; i++)
             {
                 request.SupportedAuthenticationSchemes[i].Should().Be(endpoint?.SupportedAuthenticationSchemes?[i] ?? def?.SupportedAuthenticationSchemes?[i] ?? system.SupportedAuthenticationSchemes[i]);
-            }
-
-
-            // --------------------------------
-            // Supported Languages
-            // --------------------------------
-            request.SupportedLanguages.Count.Should().Be(endpoint?.SupportedLanguages?.Count ?? def?.SupportedLanguages?.Count ?? system.SupportedLanguages.Count);
-            for (int i = 0; i < request.SupportedLanguages.Count; i++)
-            {
-                request.SupportedLanguages[i].Should().Be(endpoint?.SupportedLanguages?[i] ?? def?.SupportedLanguages?[i] ?? system.SupportedLanguages[i]);
             }
 
             // ------------------------------
@@ -2540,9 +2580,8 @@
             request.AuthorizationConfig.Should().NotBeSameAs(system.AuthorizationConfig);
             request.CacheDirective.Should().NotBeSameAs(system.CacheDirective);
             request.CrossOriginConfig.Should().NotBeSameAs(system.CrossOriginConfig);
-            request.HeaderValidationConfig.Should().NotBeSameAs(system.HeaderValidationConfig);
             request.SupportedAuthenticationSchemes.Should().NotBeSameAs(system.SupportedAuthenticationSchemes);
-            request.SupportedLanguages.Should().NotBeSameAs(system.SupportedLanguages);
+            request.LanguageSupport.Should().NotBeSameAs(system.LanguageSupport);
             request.ReadWriteConfiguration.Should().NotBeSameAs(system.ReadWriteConfiguration);
             request.ValidationErrorConfiguration.Should().NotBeSameAs(system.ValidationErrorConfiguration);
         }
@@ -2560,12 +2599,12 @@
         {
             var routingTable = new DefaultApiRoutingTable();
 
-            return routingTable.AddRoute(
+            return routingTable.AddRoute(new ApiRouteRegistration(
                 template: "test/{id}/name",
                 httpMethod: "GET",
                 controller: typeof(MockController),
                 endpoint: nameof(MockController.Get),
-                config: routeConfig);
+                config: routeConfig));
         }
     }
 }

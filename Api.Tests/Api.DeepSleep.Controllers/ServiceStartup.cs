@@ -40,6 +40,8 @@
             services.AddTransient<ItemsController>();
             services.AddTransient<ContextDumpController>();
             services.AddTransient<DelegatedDiscoveryController>();
+            services.AddTransient<AttributeDiscoveryController>();
+            services.AddTransient<AttributeDiscoveryErrorResponseProviderController>();
 
             // Only one of these to check both injection and no-injection resolution
             services.AddTransient<NotImplementedExceptionThrowValidator>();
@@ -64,18 +66,18 @@
             services.AddScoped<CustomXmlFormatStreamReaderWriter>();
         }
 
-        public static IList<IRouteDiscoveryStrategy> DiscoverRoutes()
+        public static IList<IRouteDiscoveryStrategy> DiscoveryStrategies()
         {
-            var discoveryStrategy = new StaticRouteDiscoveryStrategy();
+            var staticDiscovery = new StaticRouteDiscoveryStrategy();
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: $"binding/simple/url",
                 httpMethod: "GET",
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: $"binding/simple/url/empty/binding/error",
                 httpMethod: "GET",
                 controller: typeof(SimpleUrlBindingController),
@@ -88,7 +90,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: $"binding/simple/url/custom/binding/error",
                 httpMethod: "GET",
                 controller: typeof(SimpleUrlBindingController),
@@ -101,49 +103,49 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/url/{stringVar}/resource",
                 httpMethod: "GET",
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithRoute),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/url/{stringVar}/mixed",
                 httpMethod: "GET",
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithMixed),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "formatters/multipart/formdata",
                 httpMethod: "POST",
                 controller: typeof(MultipartController),
                 endpoint: nameof(MultipartController.Post),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "formatters/multipart/formdata/custom",
                 httpMethod: "POST",
                 controller: typeof(MultipartController),
                 endpoint: nameof(MultipartController.PostCustom),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/notimplemented",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplemented),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/validator/notimplemented",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplementedFromValidator),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authentication/notimplemented",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -154,7 +156,7 @@
                     SupportedAuthenticationSchemes = new List<string> { "EX-501" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authorization/notimplemented",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -163,27 +165,27 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "EX-501"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/badgateway",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGateway),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/validator/badgateway",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGatewayFromValidator),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authentication/badgateway",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -194,7 +196,7 @@
                     SupportedAuthenticationSchemes = new List<string> { "EX-502" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authorization/badgateway",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -203,27 +205,27 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "EX-502"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/gatewaytimeout",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeout),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/validator/gatewaytimeout",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeoutFromValidator),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authentication/gatewaytimeout",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -234,7 +236,7 @@
                     SupportedAuthenticationSchemes = new List<string> { "EX-504" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authorization/gatewaytimeout",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -243,27 +245,27 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "EX-504"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/serviceunavailable",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailable),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/validator/serviceunavailable",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailableFromValidator),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authentication/serviceunavailable",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -274,7 +276,7 @@
                     SupportedAuthenticationSchemes = new List<string> { "EX-503" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authorization/serviceunavailable",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -283,27 +285,27 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "EX-503"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/unhandled",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.Unhandled),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/validator/unhandled",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.UnhandledFromValidator),
                 config: new DefaultApiRequestConfiguration());
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authentication/unhandled",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -314,7 +316,7 @@
                     SupportedAuthenticationSchemes = new List<string> { "EX-500" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "exceptions/authorization/unhandled",
                 httpMethod: "GET",
                 controller: typeof(ExceptionController),
@@ -323,116 +325,125 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "EX-500"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/max/request/length",
                 httpMethod: "POST",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PostForMaxRequestLength),
                 config: new DefaultApiRequestConfiguration
                 {
-                    MaxRequestLength = 5
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestLength = 5
+                    }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/max/request/length",
                 httpMethod: "PUT",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PutForMaxRequestLength),
                 config: new DefaultApiRequestConfiguration
                 {
-                    MaxRequestLength = 5
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestLength = 5
+                    }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/max/request/length",
                 httpMethod: "PATCH",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PatchForMaxRequestLength),
                 config: new DefaultApiRequestConfiguration
                 {
-                    MaxRequestLength = 5
+                    RequestValidation = new ApiRequestValidationConfiguration
+                    {
+                        MaxRequestLength = 5
+                    }
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/bad/request/format",
                 httpMethod: "POST",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PostForBadRequestFormat));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/bad/request/format",
                 httpMethod: "PUT",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PutForBadRequestFormat));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/body/bad/request/format",
                 httpMethod: "PATCH",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PatchForBadRequestFormat));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/post",
                 httpMethod: "POST",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.SimplePost));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/put",
                 httpMethod: "PUT",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.SimplePut));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/patch",
                 httpMethod: "PATCH",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.SimplePatch));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/simple/multipart",
                 httpMethod: "POST",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.SimpleMultipart));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "binding/multipart/custom",
                 httpMethod: "POST",
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.MultipartCustom));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "formatters/accept",
                 httpMethod: "GET",
                 controller: typeof(AcceptController),
                 endpoint: nameof(AcceptController.Get));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/request/id",
                 httpMethod: "GET",
                 controller: typeof(RequestIdController),
                 endpoint: nameof(RequestIdController.Get));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/request/id/exception",
                 httpMethod: "GET",
                 controller: typeof(RequestIdController),
                 endpoint: nameof(RequestIdController.GetException));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/request/id/nocontent",
                 httpMethod: "GET",
                 controller: typeof(RequestIdController),
                 endpoint: nameof(RequestIdController.GetNoContent));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/request/id/disabled",
                 httpMethod: "GET",
                 controller: typeof(RequestIdController),
@@ -442,7 +453,7 @@
                     IncludeRequestIdHeaderInResponse = false
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/acceptheaderoverride/xml",
                 httpMethod: "GET",
                 controller: typeof(ReadWriteConfigurationController),
@@ -455,7 +466,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/acceptheaderoverride/406",
                 httpMethod: "GET",
                 controller: typeof(ReadWriteConfigurationController),
@@ -469,7 +480,7 @@
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/writeabletypes/text-xml",
                 httpMethod: "GET",
                 controller: typeof(ReadWriteConfigurationController),
@@ -483,7 +494,7 @@
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/readabletypes/text-xml",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -496,7 +507,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/writeresolver/text-xml",
                 httpMethod: "GET",
                 controller: typeof(ReadWriteConfigurationController),
@@ -519,7 +530,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                  template: "pipeline/readwrite/configuration/writeresolver/none",
                  httpMethod: "GET",
                  controller: typeof(ReadWriteConfigurationController),
@@ -535,7 +546,7 @@
                      }
                  });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                  template: "pipeline/readwrite/configuration/writeresolver/writeabletypes",
                  httpMethod: "GET",
                  controller: typeof(ReadWriteConfigurationController),
@@ -559,7 +570,7 @@
                      }
                  });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/readresolver/xml",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -582,7 +593,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/readresolver/plaintext",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -612,7 +623,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/readresolver/all/plus/plaintext",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -639,7 +650,7 @@
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "pipeline/readwrite/configuration/readresolver/readabletypes",
                 httpMethod: "POST",
                 controller: typeof(ReadWriteConfigurationController),
@@ -664,7 +675,7 @@
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authentication/single/supported/schemes",
                 httpMethod: "GET",
                 controller: typeof(AuthenticationController),
@@ -675,7 +686,7 @@
                     SupportedAuthenticationSchemes = new string[] { "Token" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authentication/multiple/supported/schemes",
                 httpMethod: "GET",
                 controller: typeof(AuthenticationController),
@@ -686,7 +697,7 @@
                     SupportedAuthenticationSchemes = new string[] { "Token", "Token2" }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authentication/not/defined/supported/schemes",
                 httpMethod: "GET",
                 controller: typeof(AuthenticationController),
@@ -696,7 +707,7 @@
                     AllowAnonymous = false
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authentication/empty/defined/supported/scheme",
                 httpMethod: "GET",
                 controller: typeof(AuthenticationController),
@@ -707,7 +718,7 @@
                     SupportedAuthenticationSchemes = new string[] { }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authentication/anonymous/allowed",
                 httpMethod: "GET",
                 controller: typeof(AuthenticationController),
@@ -717,7 +728,7 @@
                     AllowAnonymous = true
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/disabled",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -727,7 +738,7 @@
                     EnableHeadForGetRequests = false
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/disabled/maxage",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -742,7 +753,7 @@
                 });
 
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/disabled/origin",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -756,7 +767,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/disabled/exposeheaders",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -770,7 +781,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/disabled/allowheaders",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -784,7 +795,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/enabled",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -798,7 +809,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/enabled/maxage",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -813,7 +824,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/enabled/origin",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -828,7 +839,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/enabled/exposeheaders",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -844,7 +855,7 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/enabled/allowheaders",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -859,19 +870,19 @@
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/configured/default",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithDefaultEnableHead));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/explicit",
                 httpMethod: "HEAD",
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.ExplicitHead));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "head/explicit",
                 httpMethod: "GET",
                 controller: typeof(EnableHeadController),
@@ -881,7 +892,7 @@
                     EnableHeadForGetRequests = false
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "method/not/found",
                 httpMethod: "GET",
                 controller: typeof(MethodNotFoundController),
@@ -891,13 +902,13 @@
                     EnableHeadForGetRequests = true
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "method/not/found",
                 httpMethod: "PUT",
                 controller: typeof(MethodNotFoundController),
                 endpoint: nameof(MethodNotFoundController.Put));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "method/not/found/nohead",
                 httpMethod: "GET",
                 controller: typeof(MethodNotFoundController),
@@ -907,13 +918,13 @@
                     EnableHeadForGetRequests = false
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "method/not/found/nohead",
                 httpMethod: "PUT",
                 controller: typeof(MethodNotFoundController),
                 endpoint: nameof(MethodNotFoundController.PutNoHead));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "route/not/found",
                 httpMethod: "GET",
                 controller: typeof(NotFoundController),
@@ -923,7 +934,7 @@
                     EnableHeadForGetRequests = true
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authorization/anonymous/allowed",
                 httpMethod: "GET",
                 controller: typeof(AuthorizationController),
@@ -933,7 +944,7 @@
                     AllowAnonymous = true
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authorization/policy/configured/success/provider",
                 httpMethod: "GET",
                 controller: typeof(AuthorizationController),
@@ -942,13 +953,13 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "Default"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authorization/policy/configured/failing/provider",
                 httpMethod: "GET",
                 controller: typeof(AuthorizationController),
@@ -957,13 +968,13 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "DefaultFail"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "authorization/policy/configured/no/provider",
                 httpMethod: "GET",
                 controller: typeof(AuthorizationController),
@@ -972,229 +983,229 @@
                 {
                     AllowAnonymous = false,
                     SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ResourceAuthorizationConfiguration
+                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                     {
                         Policy = "Default1"
                     }
                 });
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "context/items",
                 httpMethod: "GET",
                 controller: typeof(ItemsController),
                 endpoint: nameof(ItemsController.GetWithItems));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "context/dump",
                 httpMethod: "GET",
                 controller: typeof(ContextDumpController),
                 endpoint: nameof(ContextDumpController.GetDump));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "context/dump",
                 httpMethod: "POST",
                 controller: typeof(ContextDumpController),
                 endpoint: nameof(ContextDumpController.PostDump));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/ok",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Ok));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/ok/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Ok_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/ok/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Ok_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/created",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Created));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/created/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Created_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/created/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Created_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/accepted",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Accepted));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/accepted/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Accepted_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/accepted/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Accepted_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/nocontent",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.NoContent));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/nocontent/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.NoContent_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/badrequest",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.BadRequest));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/badrequest/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.BadRequest_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/badrequest/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.BadRequest_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/unauthorized",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Unauthorized));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/unauthorized/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Unauthorized_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/unauthorized/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Unauthorized_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/forbidden",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Forbidden));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/forbidden/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Forbidden_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/forbidden/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Forbidden_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/notfound",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.NotFound));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/notfound/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.NotFound_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/notfound/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.NotFound_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/conflict",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Conflict));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/conflict/null",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Conflict_Null));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/conflict/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Conflict_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/movedpermanently",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.MovedPermanently));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/movedpermanently/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.MovedPermanently_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/found",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Found));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/found/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.Found_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/permanentredirect",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.PermanentRedirect));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/permanentredirect/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.PermanentRedirect_Headers));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/temporaryredirect",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.TemporaryRedirect));
 
-            discoveryStrategy.AddRoute(
+            staticDiscovery.AddRoute(
                 template: "helper/responses/temporaryredirect/headers",
                 httpMethod: "GET",
                 controller: typeof(HelperResponsesController),
@@ -1203,10 +1214,14 @@
 
             return new List<IRouteDiscoveryStrategy>
             {
-                discoveryStrategy,
+                staticDiscovery,
                 new DelegatedRouteDiscoveryStrategy(
                     assemblyDirectoryPath: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    assemblyMatchPattern: "Api.DeepSleep.Controllers.dll")
+                    assemblyMatchPattern: "Api.DeepSleep.Controllers.dll"),
+                new AttributeRouteDiscoveryStrategy(
+                    assemblyDirectoryPath: Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    assemblyMatchPattern: "Api.DeepSleep.Controllers.dll"
+                )
             };
         }
 

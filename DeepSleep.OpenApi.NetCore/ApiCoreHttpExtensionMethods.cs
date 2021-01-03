@@ -1,9 +1,11 @@
 ﻿namespace DeepSleep.OpenApi.NetCore
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Discovery;
     using DeepSleep.OpenApi.NetCore.Controllers;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
     using System.Collections.Generic;
 
 
@@ -28,20 +30,20 @@
 
             var table = builder.ApplicationServices.GetRequiredService<IApiRoutingTable>();
 
-            table.AddRoute(
-               template: routeTemplate,
-               httpMethod: "GET",
-               controller: typeof(OpenApiController),
-               endpoint: nameof(OpenApiController.Doc),
-               config: new DefaultApiRequestConfiguration
-               {
-                   AllowAnonymous = true,
-                   ReadWriteConfiguration = new ApiReadWriteConfiguration
-                   {
-                       AcceptHeaderOverride = "application/json; q=1.0, test/json; q=0.9",
-                       WriteableMediaTypes = new List<string> { "application/json", "test/json" }
-                   }
-               });
+            table.AddRoute(new ApiRouteRegistration(
+                template: routeTemplate,
+                httpMethod: "GET",
+                controller: Type.GetType(typeof(OpenApiController).AssemblyQualifiedName),
+                endpoint: nameof(OpenApiController.Doc),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = true,
+                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    {
+                        AcceptHeaderOverride = "application/json; q=1.0, test/json; q=0.9",
+                        WriteableMediaTypes = new List<string> { "application/json", "test/json" }
+                    }
+                }));
 
             return builder;
         }

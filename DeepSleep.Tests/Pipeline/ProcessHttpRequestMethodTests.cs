@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
+    using DeepSleep.Discovery;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using System.Collections.Generic;
@@ -148,7 +149,12 @@
 
             var resolver = new DefaultRouteResolver();
             var routes = new DefaultApiRoutingTable();
-            routes.AddRoute("test/path", "GET", typeof(Mocks.MockController), nameof(Mocks.MockController.Get));
+
+            routes.AddRoute(new ApiRouteRegistration(
+                template: "test/path",
+                httpMethod: "GET",
+                controller: typeof(Mocks.MockController),
+                endpoint: nameof(Mocks.MockController.Get)));
 
 
             var processed = await context.ProcessHttpRequestMethod(routes, resolver, null).ConfigureAwait(false);

@@ -1,7 +1,7 @@
-﻿namespace DeepSleep
+﻿namespace DeepSleep.Configuration
 {
     /// <summary>Defines how a particular HTTP resource should be handled within HTTp Cacheing.</summary>
-    public class HttpCacheDirective
+    public class ApiCacheDirectiveConfiguration
     {
         /// <summary>Gets or sets the cacheability.</summary>
         /// <value>The cacheability.</value>
