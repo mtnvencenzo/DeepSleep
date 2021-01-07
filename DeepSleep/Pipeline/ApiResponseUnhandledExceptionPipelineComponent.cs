@@ -27,7 +27,9 @@
             }
             catch (Exception ex)
             {
-                var context = contextResolver.GetContext();
+                var context = contextResolver
+                     .GetContext()
+                     .SetThreadCulure();
 
                 var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
 

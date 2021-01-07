@@ -77,7 +77,7 @@ Accept: {applicationJson}";
                 expectedExpiresSecondsAdd: 120,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "Vary", "Accept, Accept-Encoding, Accept-Language" }
+                    { "Vary", "Test, Something" }
                 });
 
             var data = await base.GetResponseData<AttributeDiscoveryModel>(response).ConfigureAwait(false);

@@ -16,35 +16,35 @@ namespace DeepSleep.OpenApi.Tests
             var table = new DefaultApiRoutingTable();
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/basic/EndpointNoParams/{id}",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(BasicController),
                 endpoint: nameof(BasicController.EndpointNoParams),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/basic/EndpointNoParams/{id}",
-                httpMethod: "PATCH",
+                httpMethods: new[] { "PATCH" },
                 controller: typeof(BasicController),
                 endpoint: nameof(BasicController.EndpointNoParamsPatch),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "test/basic/EndpointNoParams/{id}",
-                httpMethod: "POST",
+                httpMethods: new[] { "POST" },
                 controller: typeof(BasicController),
                 endpoint: nameof(BasicController.EndpointNoParamsPatch),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/basic/EndpointWithRouteParam/{name}",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(BasicController),
                 endpoint: nameof(BasicController.EndpointWithRouteParam),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/basic/EndpointWithBodyParam",
-                httpMethod: "POST",
+                httpMethods: new[] { "POST" },
                 controller: typeof(BasicController),
                 endpoint: nameof(BasicController.EndpointWithBodyParam),
                 config: new DefaultApiRequestConfiguration()));
@@ -68,28 +68,28 @@ namespace DeepSleep.OpenApi.Tests
             var table = new DefaultApiRoutingTable();
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/list",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(ListController),
                 endpoint: nameof(ListController.List),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/list1",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(ListController),
                 endpoint: nameof(ListController.List1),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/list2",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(ListController),
                 endpoint: nameof(ListController.List2),
                 config: new DefaultApiRequestConfiguration()));
 
             table.AddRoute(new ApiRouteRegistration(
                 template: "/test/list/container",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(ListController),
                 endpoint: nameof(ListController.ListContainer),
                 config: new DefaultApiRequestConfiguration()));

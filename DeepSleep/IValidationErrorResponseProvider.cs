@@ -8,9 +8,10 @@
     /// </summary>
     public interface IValidationErrorResponseProvider
     {
-        /// <summary>Processes the specified errors.</summary>
+        /// <summary>Processes the specified context.</summary>
+        /// <param name="context">The context.</param>
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        Task<object> Process(IList<string> errors);
+        Task<object> Process(ApiRequestContext context, IList<string> errors);
     }
 }

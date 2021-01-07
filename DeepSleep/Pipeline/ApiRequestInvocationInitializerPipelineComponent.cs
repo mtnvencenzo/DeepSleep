@@ -23,7 +23,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             if (await context.ProcessHttpEndpointInitialization().ConfigureAwait(false))
             {
@@ -68,9 +70,8 @@
                     throw new Exception("Routing item's endpoint name is null");
                 }
 
-                MethodInfo method = context.Routing.Route.Location.GetEndpointMethod();
-                object endpointController = null;
 
+                object endpointController = null;
 
                 if (context.RequestServices != null)
                 {
@@ -78,11 +79,8 @@
                     {
                         endpointController = context.RequestServices.GetService(context.Routing.Route.Location.Controller);
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
-
 
                 if (endpointController == null)
                 {
@@ -107,16 +105,17 @@
                     }
                 }
 
-                var uriParameter = context.Routing.Route.Location.GetUriParameter();
-                var bodyParameter = context.Routing.Route.Location.GetBodyParameter();
-                var simpleParameters = context.Routing.Route.Location.GetSimpleParameters();
+                var simpleParameters = new Dictionary<ParameterInfo, object>();
+
+                if (context.Routing.Route.Location.SimpleParameters != null)
+                {
+                    simpleParameters = context.Routing.Route.Location.SimpleParameters
+                        .ToDictionary((k) => k, (k) => null as object);
+                }
 
                 context.Request.InvocationContext = new ApiInvocationContext
                 {
-                    Controller = endpointController,
-                    ControllerMethod = method,
-                    UriModelType = uriParameter?.ParameterType,
-                    BodyModelType = bodyParameter?.ParameterType,
+                    ControllerInstance = endpointController,
                     SimpleParameters = simpleParameters
                 };
 

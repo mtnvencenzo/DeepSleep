@@ -26,7 +26,9 @@
             }
             finally
             {
-                var context = contextResolver.GetContext();
+                var context = contextResolver
+                     .GetContext()
+                     .SetThreadCulure();
 
                 var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
 

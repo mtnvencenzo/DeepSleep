@@ -6,7 +6,6 @@
     using FluentAssertions;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Web;
     using Xunit;
 
     /// <summary>
@@ -58,7 +57,21 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = null
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -80,7 +93,21 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -90,8 +117,6 @@
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().BeNull();
             context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
@@ -105,7 +130,21 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -115,8 +154,6 @@
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().BeNull();
             context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
@@ -130,7 +167,21 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -140,8 +191,6 @@
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().BeNull();
             context.Request.InvocationContext.UriModel.Should().NotBeNull();
         }
 
@@ -155,7 +204,22 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(NonDefaultConstructorModel)
+                        //UriModelType = typeof(NonDefaultConstructorModel)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(NonDefaultConstructorModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -175,7 +239,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -204,7 +267,16 @@
                             { "TimeSpanProp", "10:00:00" },
                             { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -254,7 +326,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -264,7 +335,16 @@
                         RouteVariables = new Dictionary<string, string>
                         {
                             { "DateTimeProp", date }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -300,7 +380,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                        //UriModelType = typeof(StandardModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -310,7 +390,16 @@
                         RouteVariables = new Dictionary<string, string>
                         {
                             { "BoolProp", boolValue }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -346,7 +435,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardNullableModel)
+                        //UriModelType = typeof(StandardNullableModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -374,7 +463,16 @@
                             { "TimeSpanProp", "10:00:00" },
                             { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardNullableModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -419,7 +517,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
                     {
@@ -443,6 +540,21 @@
                         { "TimeSpanProp", "10:00:00" },
                         { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                         { "EnumProp", "Item1" }
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -489,7 +601,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardNullableModel)
+                        //UriModelType = typeof(StandardNullableModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -517,7 +629,16 @@
                             { "TimeSpanProp", "10:00:00" },
                             { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardNullableModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -562,7 +683,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
                     {
@@ -614,7 +734,16 @@
                             { "TimeSpanProp", "10:00:00" },
                             { "GuidProp", "0F6AD742-3248-4229-B9A3-DC20EFA074D1" },
                             { "EnumProp", "Item1" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -661,7 +790,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
                     {
@@ -693,7 +821,16 @@
                             { "UIntProp", "23" },
                             { "ShortProp", "-2" },
                             { "UShortProp", "2" },
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -740,7 +877,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                        //UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
                     {
@@ -754,7 +891,16 @@
                         RouteVariables = new Dictionary<string, string>
                         {
                             { "IntProp", "abc" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 },
                 Configuration = new DefaultApiRequestConfiguration
@@ -791,7 +937,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        UriModelType = typeof(StandardModel)
+                        //UriModelType = typeof(StandardModel)
                     },
                     QueryVariables = new Dictionary<string, string>
                     {
@@ -805,7 +951,16 @@
                         RouteVariables = new Dictionary<string, string>
                         {
                             { "IntProp", "abc" }
-                        }
+                        },
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: typeof(StandardModel),
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 },
                 Configuration = new DefaultApiRequestConfiguration

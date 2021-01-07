@@ -52,12 +52,21 @@
         {
             var context = new ApiRequestContext
             {
-                RequestAborted = new System.Threading.CancellationToken(false),
+                RequestAborted = new CancellationToken(false),
                 Request = new ApiRequestInfo
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        ControllerMethod = null
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null)
                     }
                 }
             };
@@ -81,8 +90,8 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultEndpoint))
+                        ControllerInstance = controller,
+                        //ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultEndpoint))
                     }
                 }
             };
@@ -106,8 +115,8 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultTaskEndpoint))
+                        ControllerInstance = controller,
+                        //ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultTaskEndpoint))
                     }
                 }
             };
@@ -131,8 +140,17 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultGenericTaskEndpoint))
+                        ControllerInstance = controller,
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultGenericTaskEndpoint),
+                            httpMethod: null)
                     }
                 }
             };
@@ -158,8 +176,17 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultGenericTaskWithFullApiResponseEndpoint))
+                        ControllerInstance = controller,
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultGenericTaskWithFullApiResponseEndpoint),
+                            httpMethod: null)
                     }
                 }
             };
@@ -185,8 +212,17 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpoint))
+                        ControllerInstance = controller,
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultFullApiResponseEndpoint),
+                            httpMethod: null)
                     }
                 }
             };
@@ -212,8 +248,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed)),
+                        ControllerInstance = controller,
                         UriModel = new StandardModel
                         {
                             IntProp = 202
@@ -222,6 +257,16 @@
                         {
                             IntProp = 300
                         }
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed),
+                            httpMethod: null)
                     }
                 }
             };
@@ -247,8 +292,7 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed)),
+                        ControllerInstance = controller,
                         UriModel = new StandardModel
                         {
                             IntProp = 204
@@ -257,6 +301,16 @@
                         {
                             IntProp = 301
                         }
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed),
+                            httpMethod: null)
                     }
                 }
             };
@@ -292,10 +346,19 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters)),
+                        ControllerInstance = controller,
                         UriModel = uriModel,
                         BodyModel = bodyModel
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: controller.GetType(),
+                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters),
+                            httpMethod: null)
                     }
                 }
             };
@@ -331,12 +394,9 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        Controller = controller,
-                        ControllerMethod = controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters)),
+                        ControllerInstance = controller,
                         UriModel = uriModel,
                         BodyModel = bodyModel,
-                        UriModelType = typeof(StandardModel),
-                        BodyModelType = typeof(StandardNullableModel)
                     }
                 }
             };

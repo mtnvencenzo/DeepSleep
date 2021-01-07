@@ -142,6 +142,83 @@ X-CorrelationId: {correlationId}";
             data.BoolVar.Should().BeTrue();
         }
 
+        [Fact]
+        public async Task accept___xml_xaccexpt_header_successful()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+GET https://{host}/formatters/accept?xcorrelationid={correlationId} HTTP/1.1
+Host: {host}
+Connection: keep-alive
+User-Agent: UnitTest/1.0 DEV
+X-Accept: {applicationXml}";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 200,
+                expectedContentType: applicationXml,
+                shouldHaveResponse: true,
+                expectedContentLength: 1188,
+                expectedValidationState: ApiValidationState.Succeeded,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                    { "X-CorrelationId", $"{correlationId}"}
+                });
+
+            var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+
+            data.BoolVar.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task accept___xml_xaccexpt_query_successful()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var now = DateTime.UtcNow.ToString("r");
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+GET https://{host}/formatters/accept?xcorrelationid={correlationId}&xaccept={applicationXml} HTTP/1.1
+X-Date: {now}
+Host: {host}
+Connection: keep-alive
+User-Agent: UnitTest/1.0 DEV";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 200,
+                expectedContentType: applicationXml,
+                shouldHaveResponse: true,
+                expectedContentLength: 1188,
+                expectedValidationState: ApiValidationState.Succeeded,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                    { "X-CorrelationId", $"{correlationId}"}
+                });
+
+            var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+
+            data.BoolVar.Should().BeTrue();
+        }
+
         [Theory]
         [InlineData("application/xml", "application/xml")]
         [InlineData("text/xml", "text/xml")]

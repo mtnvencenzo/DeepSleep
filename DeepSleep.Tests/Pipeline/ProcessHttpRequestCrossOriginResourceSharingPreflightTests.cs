@@ -135,15 +135,15 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PUT" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PUT" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "PATCH" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = null });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "get" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "DelEte" });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = " " });
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PUT"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PUT"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PATCH"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "get"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "DelEte"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: " "));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: ""));
 
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
@@ -180,7 +180,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
 
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
@@ -233,7 +233,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
@@ -288,7 +288,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
@@ -334,7 +334,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation { HttpMethod = "POST" });
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();

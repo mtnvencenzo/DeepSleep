@@ -22,7 +22,9 @@
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
@@ -72,7 +74,8 @@
                     {
                         IFormatStreamOptions options = new FormatterOptions
                         {
-                            PrettyPrint = context.Request.PrettyPrint
+                            PrettyPrint = context.Request.PrettyPrint,
+                            Culture = context.Request.AcceptCulture
                         };
 
                         var formatter = await formatterFactory.GetAcceptableFormatter(

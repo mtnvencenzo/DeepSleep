@@ -21,7 +21,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var validationProvider = context?.RequestServices?.GetService<IApiValidationProvider>();
 
@@ -103,12 +105,12 @@
 
                     foreach (var validationInvoker in invokers)
                     {
-                        if (context.Request?.InvocationContext?.ControllerMethod != null)
+                        if (context.Routing.Route.Location.MethodInfo != null)
                         {
                             try
                             {
                                 var methodValidationResult = await validationInvoker.InvokeMethodValidation(
-                                    context.Request.InvocationContext.ControllerMethod,
+                                    context.Routing.Route.Location.MethodInfo,
                                     context).ConfigureAwait(false);
 
                                 if (!methodValidationResult)

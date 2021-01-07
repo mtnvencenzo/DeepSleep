@@ -46,7 +46,6 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("400.000001");
             data.Messages[0].ErrorMessageStr.Should().Be("'CustomInt' is in an incorrect format and could not be bound.");
         }
 
@@ -85,7 +84,6 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("400.000002");
             data.Messages[0].ErrorMessageStr.Should().Be("Uri type conversion for 'queryValue' with value 'abc' could not be converted to type Nullable`1.");
         }
 
@@ -194,7 +192,6 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("1");
             data.Messages[0].ErrorMessageStr.Should().Be("uriBindingError-test");
         }
 
@@ -233,7 +230,6 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("2");
             data.Messages[0].ErrorMessageStr.Should().Be("uriBindingValueError-test");
         }
 
@@ -272,7 +268,6 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("1");
             data.Messages[0].ErrorMessageStr.Should().Be("CustomInt");
         }
 
@@ -311,8 +306,213 @@ Accept: {applicationJson}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("2");
             data.Messages[0].ErrorMessageStr.Should().Be("queryValue-abc-Nullable`1");
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_default()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/default/deserialization/error HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 450,
+                shouldHaveResponse: true,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages.Should().HaveCount(1);
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_empty()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/empty/deserialization/error HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 450,
+                shouldHaveResponse: false,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_custom()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/custom/deserialization/error HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 450,
+                shouldHaveResponse: true,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages.Should().HaveCount(1);
+            data.Messages[0].ErrorMessageStr.Should().Be("Deserialization Failed");
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_450_statuscode()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/450/deserialization/error HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 450,
+                shouldHaveResponse: true,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages.Should().HaveCount(1);
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_400_statuscode()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/400/deserialization/error HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 400,
+                shouldHaveResponse: true,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages.Should().HaveCount(1);
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
         }
     }
 }

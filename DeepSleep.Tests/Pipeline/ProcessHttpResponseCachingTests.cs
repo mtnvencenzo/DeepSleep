@@ -379,7 +379,8 @@
             {
                 Cacheability = HttpCacheType.Cacheable,
                 CacheLocation = HttpCacheLocation.Private,
-                ExpirationSeconds = 1
+                ExpirationSeconds = 1,
+                VaryHeaderValue = "Accept, Accept-Encoding, Accept-Language"
             };
 
             var expiresDate = DateTime.Parse(DateTime.UtcNow.AddSeconds(cacheDirective.ExpirationSeconds.Value).ToString("r"));
@@ -429,7 +430,8 @@
             {
                 Cacheability = HttpCacheType.Cacheable,
                 CacheLocation = HttpCacheLocation.Public,
-                ExpirationSeconds = 1
+                ExpirationSeconds = 1,
+                VaryHeaderValue = "Accept, Accept-Encoding, Accept-Language"
             };
 
             var expiresDate = DateTime.Parse(DateTime.UtcNow.AddSeconds(cacheDirective.ExpirationSeconds.Value).ToString("r"));

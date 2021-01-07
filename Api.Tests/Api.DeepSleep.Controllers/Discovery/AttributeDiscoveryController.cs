@@ -12,7 +12,7 @@
             this.apiRequestContextResolver = apiRequestContextResolver ?? throw new ArgumentNullException(nameof(apiRequestContextResolver));
         }
 
-        [ApiRoute("GET", "discovery/attribute")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute")]
         [ApiRouteEnableHead]
         public AttributeDiscoveryModel Get()
         {

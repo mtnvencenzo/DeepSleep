@@ -19,7 +19,9 @@
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                .GetContext()
+                .SetThreadCulure();
 
             await context.ProcessHttpResponseDeprecated().ConfigureAwait(false);
         }

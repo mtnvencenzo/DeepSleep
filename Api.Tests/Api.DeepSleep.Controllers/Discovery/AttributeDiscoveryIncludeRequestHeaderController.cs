@@ -4,7 +4,7 @@
 
     public class AttributeDiscoveryIncludeRequestHeaderController
     {
-        [ApiRoute("GET", "discovery/attribute/includeRequestHeader/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteIncludeRequestIdHeader]
@@ -13,7 +13,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/includeRequestHeader/true")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/true")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteIncludeRequestIdHeader(includeRequestIdHeaderInResponse: true)]
@@ -22,7 +22,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/includeRequestHeader/false")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/false")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteIncludeRequestIdHeader(includeRequestIdHeaderInResponse: false)]

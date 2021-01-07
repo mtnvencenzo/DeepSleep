@@ -89,7 +89,7 @@
 
                         var registration = new ApiRouteRegistration(
                             template: apiRoute.Template,
-                            httpMethod: apiRoute.HttpMethod,
+                            httpMethods: apiRoute.HttpMethods,
                             controller: Type.GetType(method.DeclaringType.AssemblyQualifiedName),
                             endpoint: method.Name,
                             config: configuration);
@@ -161,7 +161,8 @@
             {
                 Cacheability = attribute.Cacheability,
                 CacheLocation = attribute.Location,
-                ExpirationSeconds = attribute.ExpirationSeconds
+                ExpirationSeconds = attribute.ExpirationSeconds,
+                VaryHeaderValue = attribute.VaryHeaderValue
             };
 
             return config;
@@ -214,7 +215,9 @@
             config.LanguageSupport = new ApiLanguageSupportConfiguration
             {
                 FallBackLanguage = attribute.FallbackLanguage,
-                SupportedLanguages = attribute.SupportedLanguages
+                SupportedLanguages = attribute.SupportedLanguages,
+                UseAcceptedLanguageAsThreadCulture = attribute.UseAcceptedLanguageAsThreadCulture,
+                UseAcceptedLanguageAsThreadUICulture = attribute.UseAcceptedLanguageAsThreadUICulture
             };
 
             return config;
@@ -267,7 +270,9 @@
             config.ValidationErrorConfiguration = new ApiValidationErrorConfiguration
             {
                 UriBindingError = attribute.UriBindingError,
-                UriBindingValueError = attribute.UriBindingValueError
+                UriBindingValueError = attribute.UriBindingValueError,
+                RequestDeserializationError = attribute.RequestDeserializationError,
+                UseCustomStatusForRequestDeserializationErrors = attribute.UseCustomStatusForRequestDeserializationErrors
             };
 
             return config;

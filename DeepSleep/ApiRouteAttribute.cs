@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -10,18 +11,18 @@
     public class ApiRouteAttribute : Attribute
     {
         /// <summary>Initializes a new instance of the <see cref="ApiRouteAttribute"/> class.</summary>
-        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="httpMethods">The HTTP methods.</param>
         /// <param name="template">The template.</param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="System.ArgumentException">
         /// httpMethod
         /// or
         /// template
         /// </exception>
-        public ApiRouteAttribute(string httpMethod, string template)
+        public ApiRouteAttribute(string[] httpMethods, string template)
         {
-            if (string.IsNullOrWhiteSpace(httpMethod))
+            if (httpMethods?.Length <= 0)
             {
-                throw new ArgumentException($"{nameof(httpMethod)} must be specified", nameof(httpMethod));
+                throw new ArgumentException($"{nameof(httpMethods)} must be specified", nameof(httpMethods));
             }
 
             if (string.IsNullOrWhiteSpace(template))
@@ -29,24 +30,24 @@
                 throw new ArgumentException($"{nameof(template)} must be specified", nameof(template));
             }
 
-            this.HttpMethod = httpMethod;
+            this.HttpMethods = httpMethods;
             this.Template = template;
         }
 
         /// <summary>Initializes a new instance of the <see cref="ApiRouteAttribute"/> class.</summary>
-        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="httpMethods">The HTTP methods.</param>
         /// <param name="template">The template.</param>
         /// <param name="deprecated">if set to <c>true</c> [deprecated].</param>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="System.ArgumentException">
         /// httpMethod
         /// or
         /// template
         /// </exception>
-        public ApiRouteAttribute(string httpMethod, string template, bool deprecated)
+        public ApiRouteAttribute(string[] httpMethods, string template, bool deprecated)
         {
-            if (string.IsNullOrWhiteSpace(httpMethod))
+            if (httpMethods?.Length <= 0)
             {
-                throw new ArgumentException($"{nameof(httpMethod)} must be specified", nameof(httpMethod));
+                throw new ArgumentException($"{nameof(httpMethods)} must be specified", nameof(httpMethods));
             }
 
             if (string.IsNullOrWhiteSpace(template))
@@ -54,14 +55,14 @@
                 throw new ArgumentException($"{nameof(template)} must be specified", nameof(template));
             }
 
-            this.HttpMethod = httpMethod;
+            this.HttpMethods = httpMethods;
             this.Template = template;
             this.Deprecated = deprecated;
         }
 
-        /// <summary>Gets the HTTP method.</summary>
-        /// <value>The HTTP method.</value>
-        public string HttpMethod { get; private set; }
+        /// <summary>Gets the HTTP methods.</summary>
+        /// <value>The HTTP methods.</value>
+        public IList<string> HttpMethods { get; private set; }
 
         /// <summary>Gets the template.</summary>
         /// <value>The template.</value>

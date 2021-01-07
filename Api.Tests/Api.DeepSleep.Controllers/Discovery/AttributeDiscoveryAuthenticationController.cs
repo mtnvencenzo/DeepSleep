@@ -4,35 +4,35 @@
 
     public class AttributeDiscoveryAuthenticationController
     {
-        [ApiRoute("GET", "discovery/attribute/authentication/allowanonymous/true")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/true")]
         [ApiRouteAuthentication(allowAnonymous: true)]
         public AttributeDiscoveryModel GetAuthenticationAnonymousTrue()
         {
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/authentication/allowanonymous/false")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/false")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         public AttributeDiscoveryModel GetAuthenticationAnonymousFalse()
         {
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/authentication/schemes/notspecified")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/notspecified")]
         [ApiRouteAuthentication(supportedAuthenticationSchemes: null)]
         public AttributeDiscoveryModel GetAuthenticationSchemesNotSpecified()
         {
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/authentication/schemes/specified/empty")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/specified/empty")]
         [ApiRouteAuthentication(supportedAuthenticationSchemes: new string[] {})]
         public AttributeDiscoveryModel GetAuthenticationSchemesSpecifiedEmpty()
         {
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/authentication/schemes/specified")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/specified")]
         [ApiRouteAuthentication(supportedAuthenticationSchemes: new[] { "Token" })]
         public AttributeDiscoveryModel GetAuthenticationSchemesSpecified()
         {

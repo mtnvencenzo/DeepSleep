@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -22,7 +23,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             if (await context.ProcessHttpRequestLocalization().ConfigureAwait(false))
             {
@@ -41,9 +44,6 @@
         /// <returns></returns>
         public static IApiRequestPipeline UseApiRequestLocalization(this IApiRequestPipeline pipeline)
         {
-            //CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            //CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-
             return pipeline.UsePipelineComponent<ApiRequestLocalizationPipelineComponent>();
         }
 
@@ -93,6 +93,16 @@
                 else
                 {
                     context.Request.AcceptCulture = new CultureInfo(acceptedLanguage);
+
+                    if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture == true)
+                    {
+                        context.Runtime.Internals.CurrentCulture = context.Request.AcceptCulture;
+                    }
+
+                    if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture == true)
+                    {
+                        context.Runtime.Internals.CurrentUICulture = context.Request.AcceptCulture;
+                    }
                 }
 
                 return Task.FromResult(true);

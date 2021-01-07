@@ -135,6 +135,14 @@
             return Task.FromResult(response);
         }
 
+        [ApiRoute(new[] { "GET" }, "helper/responses/badrequest/null/with/errors")]
+        public Task<IApiResponse> BadRequest_Null_WithErrors()
+        {
+            var response = ApiResponse.BadRequest(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
         public async Task<IApiResponse> BadRequest_Headers()
         {
             await Awaiter();
@@ -160,6 +168,14 @@
         public Task<IApiResponse> Unauthorized_Null()
         {
             var response = ApiResponse.Unauthorized();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/unauthorized/null/with/errors")]
+        public Task<IApiResponse> Unauthorized_Null_WithErrors()
+        {
+            var response = ApiResponse.Unauthorized(errors: new string[] { "Test-Error" });
 
             return Task.FromResult(response);
         }
@@ -193,6 +209,14 @@
             return Task.FromResult(response);
         }
 
+        [ApiRoute(new[] { "GET" }, "helper/responses/forbidden/null/with/errors")]
+        public Task<IApiResponse> Forbidden_Null_WithErrors()
+        {
+            var response = ApiResponse.Forbidden(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
         public async Task<IApiResponse> Forbidden_Headers()
         {
             await Awaiter();
@@ -222,6 +246,14 @@
             return Task.FromResult(response);
         }
 
+        [ApiRoute(new[] { "GET" }, "helper/responses/notfound/null/with/errors")]
+        public Task<IApiResponse> NotFound_Null_WithErrors()
+        {
+            var response = ApiResponse.NotFound(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
         public async Task<IApiResponse> NotFound_Headers()
         {
             await Awaiter();
@@ -247,6 +279,14 @@
         public Task<IApiResponse> Conflict_Null()
         {
             var response = ApiResponse.Conflict();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/conflict/null/with/errors")]
+        public Task<IApiResponse> Conflict_Null_WithErrors()
+        {
+            var response = ApiResponse.Conflict(errors: new string[] { "Test-Error" });
 
             return Task.FromResult(response);
         }
@@ -351,6 +391,205 @@
             return response;
         }
 
+        // UnhandledException Responses
+        // ------------
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/unhandledexception")]
+        public IApiResponse UnhandledException()
+        {
+            var response = ApiResponse.UnhandledException(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/unhandledexception/null")]
+        public Task<IApiResponse> UnhandledException_Null()
+        {
+            var response = ApiResponse.UnhandledException();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/unhandledexception/null/with/errors")]
+        public Task<IApiResponse> UnhandledException_Null_WithErrors()
+        {
+            var response = ApiResponse.UnhandledException(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/unhandledexception/headers")]
+        public async Task<IApiResponse> UnhandledException_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.UnhandledException(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
+
+        // NotImplemented Responses
+        // ------------
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/notimplemented")]
+        public IApiResponse NotImplemented()
+        {
+            var response = ApiResponse.NotImplemented(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/notimplemented/null")]
+        public Task<IApiResponse> NotImplemented_Null()
+        {
+            var response = ApiResponse.NotImplemented();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/notimplemented/null/with/errors")]
+        public Task<IApiResponse> NotImplemented_Null_WithErrors()
+        {
+            var response = ApiResponse.NotImplemented(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/notimplemented/headers")]
+        public async Task<IApiResponse> NotImplemented_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.NotImplemented(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
+
+        // BadGateway Responses
+        // ------------
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/badgateway")]
+        public IApiResponse BadGateway()
+        {
+            var response = ApiResponse.BadGateway(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/badgateway/null")]
+        public Task<IApiResponse> BadGateway_Null()
+        {
+            var response = ApiResponse.BadGateway();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/badgateway/null/with/errors")]
+        public Task<IApiResponse> BadGateway_Null_WithErrors()
+        {
+            var response = ApiResponse.BadGateway(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/badgateway/headers")]
+        public async Task<IApiResponse> BadGateway_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.BadGateway(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
+
+        // ServiceUnavailable Responses
+        // ------------
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/serviceunavailable")]
+        public IApiResponse ServiceUnavailable()
+        {
+            var response = ApiResponse.ServiceUnavailable(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/serviceunavailable/null")]
+        public Task<IApiResponse> ServiceUnavailable_Null()
+        {
+            var response = ApiResponse.ServiceUnavailable();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/serviceunavailable/null/with/errors")]
+        public Task<IApiResponse> ServiceUnavailable_Null_WithErrors()
+        {
+            var response = ApiResponse.ServiceUnavailable(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/serviceunavailable/headers")]
+        public async Task<IApiResponse> ServiceUnavailable_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.ServiceUnavailable(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
+
+        // GatewayTimeout Responses
+        // ------------
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/gatewaytimeout")]
+        public IApiResponse ServiceTimeout()
+        {
+            var response = ApiResponse.GatewayTimeout(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/gatewaytimeout/null")]
+        public Task<IApiResponse> GatewayTimeout_Null()
+        {
+            var response = ApiResponse.GatewayTimeout();
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/gatewaytimeout/null/with/errors")]
+        public Task<IApiResponse> GatewayTimeout_Null_WithErrors()
+        {
+            var response = ApiResponse.GatewayTimeout(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        [ApiRoute(new[] { "GET" }, "helper/responses/gatewaytimeout/headers")]
+        public async Task<IApiResponse> GatewayTimeout_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.GatewayTimeout(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
 
         private Task Awaiter()
         {

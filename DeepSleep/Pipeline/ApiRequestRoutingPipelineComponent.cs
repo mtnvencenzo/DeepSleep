@@ -21,7 +21,9 @@
         /// <param name="contextResolver">The context resolver.</param>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var routes = context?.RequestServices?.GetService<IApiRoutingTable>();
             var resolver = context?.RequestServices?.GetService<IUriRouteResolver>();
@@ -201,12 +203,15 @@
                         template = new ApiRoutingTemplate(route.Template);
                     }
 
-                    template.Locations.Add(new ApiEndpointLocation
-                    {
-                        Controller = route.Location.Controller,
-                        Endpoint = route.Location.Endpoint,
-                        HttpMethod = route.HttpMethod
-                    });
+                    template.Locations.Add(new ApiEndpointLocation(
+                        controller: route.Location.Controller,
+                        endpoint: route.Location.Endpoint,
+                        httpMethod: route.Location.HttpMethod,
+                        methodInfo: route.Location.MethodInfo,
+                        bodyParameterType: route.Location.BodyParameterType,
+                        uriParameterType: route.Location.UriParameterType,
+                        simpleParameters: route.Location.SimpleParameters,
+                        methodReturnType: route.Location.MethodReturnType));
                 }
             }
 
@@ -270,7 +275,15 @@
 
                     SupportedLanguages = new List<string>(endpointConfig?.LanguageSupport?.SupportedLanguages
                         ?? defaultConfig?.LanguageSupport?.SupportedLanguages
-                        ?? systemConfig.LanguageSupport?.SupportedLanguages)
+                        ?? systemConfig.LanguageSupport?.SupportedLanguages),
+
+                    UseAcceptedLanguageAsThreadCulture = endpointConfig?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture
+                        ?? defaultConfig?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture
+                        ?? systemConfig.LanguageSupport?.UseAcceptedLanguageAsThreadCulture,
+
+                    UseAcceptedLanguageAsThreadUICulture = endpointConfig?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture
+                        ?? defaultConfig?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture
+                        ?? systemConfig.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture
                 };
             }
             else
@@ -317,12 +330,18 @@
                     Cacheability = endpointConfig?.CacheDirective?.Cacheability
                         ?? defaultConfig?.CacheDirective?.Cacheability
                         ?? systemConfig.CacheDirective?.Cacheability,
+
                     CacheLocation = endpointConfig?.CacheDirective?.CacheLocation
                         ?? defaultConfig?.CacheDirective?.CacheLocation
                         ?? systemConfig.CacheDirective?.CacheLocation,
+
                     ExpirationSeconds = endpointConfig?.CacheDirective?.ExpirationSeconds
                         ?? defaultConfig?.CacheDirective?.ExpirationSeconds
-                        ?? systemConfig.CacheDirective?.ExpirationSeconds
+                        ?? systemConfig.CacheDirective?.ExpirationSeconds,
+
+                    VaryHeaderValue = endpointConfig?.CacheDirective?.VaryHeaderValue
+                        ?? defaultConfig?.CacheDirective?.VaryHeaderValue
+                        ?? systemConfig.CacheDirective?.VaryHeaderValue
                 };
             }
             else
@@ -430,7 +449,15 @@
 
                     UriBindingValueError = endpointConfig?.ValidationErrorConfiguration?.UriBindingValueError
                         ?? defaultConfig?.ValidationErrorConfiguration?.UriBindingValueError
-                        ?? systemConfig.ValidationErrorConfiguration?.UriBindingValueError
+                        ?? systemConfig.ValidationErrorConfiguration?.UriBindingValueError,
+
+                    RequestDeserializationError = endpointConfig?.ValidationErrorConfiguration?.RequestDeserializationError
+                        ?? defaultConfig?.ValidationErrorConfiguration?.RequestDeserializationError
+                        ?? systemConfig.ValidationErrorConfiguration?.RequestDeserializationError,
+
+                    UseCustomStatusForRequestDeserializationErrors = endpointConfig?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
+                        ?? defaultConfig?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
+                        ?? systemConfig.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
                 };
             }
             else

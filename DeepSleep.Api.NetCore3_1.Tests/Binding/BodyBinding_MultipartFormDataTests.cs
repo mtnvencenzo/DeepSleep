@@ -1,17 +1,9 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests.Binding
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
     using FluentAssertions;
     using global::Api.DeepSleep.Controllers.Binding;
-    using global::Api.DeepSleep.Models;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Moq;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Threading.Tasks;
     using Xunit;
 

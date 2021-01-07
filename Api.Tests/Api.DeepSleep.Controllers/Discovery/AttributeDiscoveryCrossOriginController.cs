@@ -5,7 +5,7 @@
 
     public class AttributeDiscoveryCrossOriginController
     {
-        [ApiRoute("GET", "discovery/attribute/crossorigin/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCrossOrigin()]
@@ -14,7 +14,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/crossorigin/default/with/caching")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/default/with/caching")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCacheDirective(location: HttpCacheLocation.Public, cacheability: HttpCacheType.Cacheable, expirationSeconds: 120)]
@@ -24,7 +24,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/crossorigin/specified/empty")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified/empty")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCrossOrigin(allowCredentials: false, allowedHeaders: new[] { "" }, allowedOrigins: new[] { "" }, exposeHeaders: new[] { "" }, maxAgeSeconds: 100)]
@@ -33,7 +33,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/crossorigin/specified")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCrossOrigin(allowCredentials: false, allowedHeaders: new[] { "Accept" }, allowedOrigins: new[] { "https://test.us" }, exposeHeaders: new[] { "X-RequestId" }, maxAgeSeconds: 100)]
@@ -42,7 +42,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/crossorigin/specified/with/caching")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified/with/caching")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCacheDirective(location: HttpCacheLocation.Public, cacheability: HttpCacheType.Cacheable, expirationSeconds: 120)]

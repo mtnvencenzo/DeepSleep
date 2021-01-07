@@ -296,8 +296,8 @@
         /// <param name="httpMethod">The HTTP method.</param>
         private void AddOperationResponses(OpenApiDocument3_0 document, OpenApiOperation3_0 operation, ApiRoutingItem route, string httpMethod)
         {
-            var methodInfo = route.Location.GetEndpointMethod();
-            var returnType = Helpers.GetRootType(route.Location.GetEndpointReturnType());
+            var methodInfo = route.Location.GetEndpointMethodInfo();
+            var returnType = Helpers.GetRootType(route.Location.GetMethodInfoReturnType());
 
             if (returnType == typeof(Task) || string.Equals(httpMethod, "head", StringComparison.OrdinalIgnoreCase))
             {
@@ -667,7 +667,7 @@
         {
             var container = new List<OpenApiParameter3_0>();
 
-            var uriParameter = route.Location.GetUriParameter();
+            var uriParameter = route.Location.GetUriParameterInfo();
 
             if (uriParameter != null)
             {
@@ -711,7 +711,7 @@
         /// <returns></returns>
         private OpenApiRequestBody3_0 GetRequestBody(OpenApiDocument3_0 document, ApiRoutingItem route)
         {
-            var bodyParameter = route.Location.GetBodyParameter();
+            var bodyParameter = route.Location.GetBodyParameterInfo();
 
             if (bodyParameter != null)
             {
@@ -744,7 +744,7 @@
         /// <returns></returns>
         private OpenApiSchema3_0 GetRouteVariableSchema(OpenApiDocument3_0 document, string routeVar, ApiEndpointLocation location)
         {
-            var uriParameter = location.GetUriParameter();
+            var uriParameter = location.GetUriParameterInfo();
 
             if (uriParameter != null)
             {

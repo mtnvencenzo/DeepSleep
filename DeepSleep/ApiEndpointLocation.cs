@@ -14,127 +14,184 @@
     [DebuggerDisplay("{Controller?.Name} {Endpoint}")]
     public class ApiEndpointLocation
     {
-        private MethodInfo methodInfo;
-        private ParameterInfo uriParameter;
-        private ParameterInfo bodyParameter;
         private ParameterInfo[] boundParameters;
-        private ParameterInfo[] simpleParameters;
+
+        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation"/> class.</summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="httpMethod">The HTTP method.</param>
+        public ApiEndpointLocation(
+            Type controller, 
+            string endpoint, 
+            string httpMethod)
+        {
+            this.Controller = controller;
+            this.Endpoint = endpoint;
+            this.HttpMethod = httpMethod;
+            this.MethodInfo = this.GetEndpointMethodInfo();
+            this.UriParameterType = this.GetUriParameterInfo()?.ParameterType;
+            this.BodyParameterType = this.GetBodyParameterInfo()?.ParameterType;
+            this.MethodReturnType = this.GetMethodInfoReturnType();
+            this.SimpleParameters = this.GetSimpleParametersInfo();
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation"/> class.</summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="methodInfo">The method information.</param>
+        /// <param name="uriParameterType">The URI parameter type.</param>
+        /// <param name="bodyParameterType">The body parameter.</param>
+        /// <param name="simpleParameters">The simple parameters.</param>
+        /// <param name="methodReturnType">Type of the method return.</param>
+        internal ApiEndpointLocation(
+            Type controller, 
+            string endpoint, 
+            string httpMethod, 
+            MethodInfo methodInfo, 
+            Type uriParameterType,
+            Type bodyParameterType,
+            IList<ParameterInfo> simpleParameters,
+            Type methodReturnType)
+        {
+            this.Controller = controller;
+            this.Endpoint = endpoint;
+            this.HttpMethod = httpMethod;
+            this.MethodInfo = methodInfo;
+            this.UriParameterType = uriParameterType;
+            this.BodyParameterType = bodyParameterType;
+            this.MethodReturnType = methodReturnType;
+            this.SimpleParameters = simpleParameters;
+        }
 
         /// <summary>Gets or sets the controller.</summary>
         /// <value>The controller.</value>
         [JsonIgnore]
-        public Type Controller { get; set; }
+        public Type Controller { get; }
 
         /// <summary>Gets or sets the endpoint.</summary>
         /// <value>The endpoint.</value>
-        public string Endpoint { get; set; }
+        public string Endpoint { get; }
 
         /// <summary>Gets or sets the HTTP method.</summary>
         /// <value>The HTTP method.</value>
-        public string HttpMethod { get; set; }
+        public string HttpMethod { get; }
+
+        /// <summary>Gets the method information.</summary>
+        /// <value>The method information.</value>
+        internal MethodInfo MethodInfo { get; }
+
+        /// <summary>Gets the URI parameter.</summary>
+        /// <value>The URI parameter.</value>
+        internal Type UriParameterType { get; }
+
+        /// <summary>Gets the body parameter.</summary>
+        /// <value>The body parameter.</value>
+        internal Type BodyParameterType { get; }
+
+        /// <summary>Gets the simple parameters.</summary>
+        /// <value>The simple parameters.</value>
+        internal IList<ParameterInfo> SimpleParameters { get; }
+
+        /// <summary>Gets the type of the method return.</summary>
+        /// <value>The type of the method return.</value>
+        internal Type MethodReturnType { get; }
 
         /// <summary>Gets the endpoint method.</summary>
         /// <returns></returns>
         /// <exception cref="Exception">Routing items endpoint method '{this.Endpoint}' does not exist on controller '{this.Controller.Name}'.</exception>
-        public MethodInfo GetEndpointMethod()
+        public MethodInfo GetEndpointMethodInfo()
         {
-            if (this.methodInfo == null)
+            var methods = this.Controller?.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
+            if (methods != null)
             {
-                var methods = this.Controller.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-                if (methods != null)
+                foreach (var methodinfo in methods)
                 {
-                    foreach (var methodinfo in methods)
+                    if (string.Compare(methodinfo.Name, this.Endpoint, false) == 0)
                     {
-                        if (string.Compare(methodinfo.Name, this.Endpoint, false) == 0)
-                        {
-                            methodInfo = methodinfo;
-                            break;
-                        }
+                        return methodinfo;
                     }
-                }
-
-                if (this.methodInfo == null)
-                {
-                    throw new Exception($"Routing items endpoint method '{this.Endpoint}' does not exist on controller '{this.Controller.Name}'.");
                 }
             }
 
-            return methodInfo;
+            return null;
         }
 
         /// <summary>Gets the type of the endpoint return.</summary>
         /// <returns></returns>
-        public Type GetEndpointReturnType()
+        public Type GetMethodInfoReturnType()
         {
-            var methodInfo = this.GetEndpointMethod();
-
-            if (methodInfo.ReturnType.IsSubclassOf(typeof(Task)) && methodInfo.ReturnType.IsGenericType)
+            if (this.MethodInfo != null)
             {
-                var type = methodInfo.ReturnType.GenericTypeArguments[0];
-                return type;
+                if (this.MethodInfo.ReturnType.IsSubclassOf(typeof(Task)) && this.MethodInfo.ReturnType.IsGenericType)
+                {
+                    var type = this.MethodInfo.ReturnType.GenericTypeArguments[0];
+                    return type;
+                }
+
+                return this.MethodInfo.ReturnType;
             }
 
-            return methodInfo.ReturnType;
+            return null;
         }
 
         /// <summary>Gets the URI parameter.</summary>
         /// <returns></returns>
-        public ParameterInfo GetUriParameter()
+        public ParameterInfo GetUriParameterInfo()
         {
-            if (this.boundParameters == null)
+            if (this.MethodInfo != null)
             {
-                var method = GetEndpointMethod();
+                if (this.boundParameters == null)
+                {
+                    this.boundParameters = this.MethodInfo.GetParameters()
+                        .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
+                        .ToArray();
+                }
 
-                this.boundParameters = method.GetParameters()
-                    .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
-                    .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
-                    .ToArray();
+                return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
             }
 
-            this.uriParameter = boundParameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
-
-            return this.uriParameter;
+            return null;
         }
 
         /// <summary>Gets the body parameter.</summary>
         /// <returns></returns>
-        public ParameterInfo GetBodyParameter()
+        public ParameterInfo GetBodyParameterInfo()
         {
-            if (this.boundParameters == null)
+            if (this.MethodInfo != null)
             {
-                var method = GetEndpointMethod();
+                if (this.boundParameters == null)
+                {
+                    this.boundParameters = this.MethodInfo.GetParameters()
+                        .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
+                        .ToArray();
+                }
 
-                this.boundParameters = method.GetParameters()
-                    .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
-                    .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
-                    .ToArray();
+                if (this.HttpMethod.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
+                {
+                    return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() != null);
+                }
             }
 
-            if (this.HttpMethod.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
-            {
-                this.bodyParameter = boundParameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() != null);
-            }
-
-            return this.bodyParameter;
+            return null;
         }
 
         /// <summary>Gets the simple parameters.</summary>
         /// <returns></returns>
-        public IDictionary<ParameterInfo, object> GetSimpleParameters()
+        public IList<ParameterInfo> GetSimpleParametersInfo()
         {
-            if (this.simpleParameters == null)
+            if (this.MethodInfo != null)
             {
-                var method = GetEndpointMethod();
-
-                this.simpleParameters = method.GetParameters()
+                return this.MethodInfo.GetParameters()
                     .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() == null)
                     .Where(p => p.GetCustomAttribute<UriBoundAttribute>() == null)
                     .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
-                    .ToArray();
+                    .ToList();
             }
 
-            return this.simpleParameters
-                .ToDictionary((p) => p, (p) => null as object);
+            return new List<ParameterInfo>();
         }
     }
 }

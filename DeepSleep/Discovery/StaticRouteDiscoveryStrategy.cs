@@ -31,34 +31,27 @@
 
         /// <summary>Adds the route.</summary>
         /// <param name="template">The template.</param>
-        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="httpMethods">The HTTP methods.</param>
         /// <param name="controller">The controller.</param>
         /// <param name="endpoint">The endpoint.</param>
         /// <returns></returns>
-        public StaticRouteDiscoveryStrategy AddRoute(string template, string httpMethod, Type controller, string endpoint)
+        public StaticRouteDiscoveryStrategy AddRoute(string template, IList<string> httpMethods, Type controller, string endpoint)
         {
-            return AddRoute(template, httpMethod, controller, endpoint, null);
+            return AddRoute(template, httpMethods, controller, endpoint, null);
         }
 
         /// <summary>Adds the route.</summary>
         /// <param name="template">The template.</param>
-        /// <param name="httpMethod">The HTTP method.</param>
+        /// <param name="httpMethods">The HTTP methods.</param>
         /// <param name="controller">The controller.</param>
         /// <param name="endpoint">The endpoint.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        /// <exception cref="Exception">
-        /// Route '{httpMethod} {template}' already has been added.
-        /// or
-        /// Controller must be specified
-        /// or
-        /// </exception>
-        /// <exception cref="MissingMethodException"></exception>
-        public StaticRouteDiscoveryStrategy AddRoute(string template, string httpMethod, Type controller, string endpoint, IApiRequestConfiguration config)
+        public StaticRouteDiscoveryStrategy AddRoute(string template, IList<string> httpMethods, Type controller, string endpoint, IApiRequestConfiguration config)
         {
             var registration = new ApiRouteRegistration(
                 template: template,
-                httpMethod: httpMethod,
+                httpMethods: httpMethods,
                 controller: controller,
                 endpoint: endpoint,
                 config: config);

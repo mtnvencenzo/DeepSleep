@@ -134,7 +134,7 @@
 
             table.AddRoute(new ApiRouteRegistration(
                template: template,
-               httpMethod: "GET",
+               httpMethods: new[] { "GET" },
                controller: typeof(PingController),
                endpoint: nameof(PingController.Ping),
                config: new DefaultApiRequestConfiguration

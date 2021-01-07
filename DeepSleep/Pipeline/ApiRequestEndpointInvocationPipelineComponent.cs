@@ -22,7 +22,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             if (await context.ProcessHttpEndpointInvocation().ConfigureAwait(false))
             {
@@ -51,7 +53,7 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
-                if (context.Request?.InvocationContext?.ControllerMethod != null)
+                if (context.Routing?.Route?.Location?.MethodInfo != null)
                 {
                     var parameters = new List<object>();
                     bool addedUriParam = false;
@@ -64,7 +66,7 @@
                     // they'll be passed a null value.  A possible enhancement
                     // would be to pull the extra parameters from the DI container
                     // -----------------------------------------------------------
-                    foreach (var param in context.Request.InvocationContext.ControllerMethod.GetParameters())
+                    foreach (var param in context.Routing.Route.Location.MethodInfo.GetParameters())
                     {
                         if (!addedUriParam && context.Request.InvocationContext.UriModel != null && param.GetCustomAttribute<UriBoundAttribute>() != null)
                         {
@@ -101,8 +103,8 @@
 
                     try
                     {
-                        endpointResponse = context.Request.InvocationContext.ControllerMethod.Invoke(
-                            context.Request.InvocationContext.Controller,
+                        endpointResponse = context.Routing.Route.Location.MethodInfo.Invoke(
+                            context.Request.InvocationContext.ControllerInstance,
                             parameters.ToArray());
                     }
                     catch (TargetInvocationException ex)
@@ -152,6 +154,16 @@
                                 .Where(h => h != null)
                                 .ToList()
                                 .ForEach(h => context.Response.AddHeader(h.Name, h.Value));
+                        }
+
+                        if (endpointResponse as IApiErrorResponse != null)
+                        {
+                            var errors = ((IApiErrorResponse)endpointResponse).Errors;
+
+                            if (errors != null)
+                            {
+                                errors.ForEach(e => context.AddValidationError(e));
+                            }
                         }
                     }
                     else

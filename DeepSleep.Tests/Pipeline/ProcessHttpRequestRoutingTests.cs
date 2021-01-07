@@ -143,7 +143,7 @@
 
             routingTable = routingTable.AddRoute(new ApiRouteRegistration(
                 template: "test/{id}/name",
-                httpMethod: head,
+                httpMethods: new[] { head },
                 controller: typeof(MockController),
                 endpoint: nameof(MockController.Head),
                 config: null));
@@ -1574,7 +1574,8 @@
                 {
                     Cacheability = HttpCacheType.Cacheable,
                     CacheLocation = HttpCacheLocation.Public,
-                    ExpirationSeconds = 100
+                    ExpirationSeconds = 100,
+                    VaryHeaderValue = "Test"
                 }
             };
 
@@ -1605,6 +1606,7 @@
             context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
             context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
+            context.Configuration.CacheDirective.VaryHeaderValue.Should().Be("Test");
         }
 
         [Fact]
@@ -1616,7 +1618,8 @@
                 {
                     Cacheability = HttpCacheType.Cacheable,
                     CacheLocation = HttpCacheLocation.Public,
-                    ExpirationSeconds = 100
+                    ExpirationSeconds = 100,
+                    VaryHeaderValue = "Test"
                 }
             };
 
@@ -1652,6 +1655,7 @@
             context.Configuration.CacheDirective.Cacheability.Should().Be(HttpCacheType.Cacheable);
             context.Configuration.CacheDirective.CacheLocation.Should().Be(HttpCacheLocation.Public);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(100);
+            context.Configuration.CacheDirective.VaryHeaderValue.Should().Be("Test");
         }
 
         [Theory]
@@ -1808,6 +1812,58 @@
             context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
             context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("Accept, Accept-Encoding, Accept-Language", null, null)]
+        [InlineData("Test", "Other", "Test")]
+        [InlineData("Test", "Test", null)]
+        [InlineData("Test", null, "Test")]
+        public async void request_config___cachedirective_varyheadervalue_returns_expected(string expected, string def, string endpoint)
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                CacheDirective = new ApiCacheDirectiveConfiguration
+                {
+                    VaryHeaderValue = def
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                CacheDirective = new ApiCacheDirectiveConfiguration
+                {
+                    VaryHeaderValue = endpoint
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.CacheDirective.Should().NotBeNull();
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.VaryHeaderValue.Should().Be(expected);
         }
 
         [Fact]
@@ -2243,8 +2299,10 @@
             context.Configuration.ValidationErrorConfiguration.Should().NotBeNull();
             context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(defaultConfig.ValidationErrorConfiguration);
             context.Configuration.ValidationErrorConfiguration.Should().NotBeSameAs(endpointConfig.ValidationErrorConfiguration);
-            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("400.000001|'{paramName}' is in an incorrect format and could not be bound.");
-            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.");
+            context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("'{paramName}' is in an incorrect format and could not be bound.");
+            context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.");
+            context.Configuration.ValidationErrorConfiguration.RequestDeserializationError.Should().Be("The request body could not be deserialized.");
+            context.Configuration.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors.Should().Be(true);
         }
 
         [Fact]
@@ -2450,6 +2508,8 @@
             // Language Support Configuration
             // -------------------
             request.LanguageSupport.FallBackLanguage.Should().Be(endpoint?.LanguageSupport?.FallBackLanguage ?? def?.LanguageSupport?.FallBackLanguage ?? system.LanguageSupport.FallBackLanguage);
+            request.LanguageSupport.UseAcceptedLanguageAsThreadCulture.Should().Be(endpoint?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture ?? def?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture ?? system.LanguageSupport.UseAcceptedLanguageAsThreadCulture);
+            request.LanguageSupport.UseAcceptedLanguageAsThreadUICulture.Should().Be(endpoint?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture ?? def?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture ?? system.LanguageSupport.UseAcceptedLanguageAsThreadUICulture);
 
             request.LanguageSupport.SupportedLanguages.Count.Should().Be(endpoint?.LanguageSupport?.SupportedLanguages?.Count ?? def?.LanguageSupport?.SupportedLanguages?.Count ?? system.LanguageSupport.SupportedLanguages.Count);
             for (int i = 0; i < request.LanguageSupport.SupportedLanguages.Count; i++)
@@ -2530,6 +2590,7 @@
             request.CacheDirective.Cacheability.Should().Be(endpoint?.CacheDirective?.Cacheability ?? def?.CacheDirective?.Cacheability ?? system.CacheDirective.Cacheability);
             request.CacheDirective.CacheLocation.Should().Be(endpoint?.CacheDirective?.CacheLocation ?? def?.CacheDirective?.CacheLocation ?? system.CacheDirective.CacheLocation);
             request.CacheDirective.ExpirationSeconds.Should().Be(endpoint?.CacheDirective?.ExpirationSeconds ?? def?.CacheDirective?.ExpirationSeconds ?? system.CacheDirective.ExpirationSeconds);
+            request.CacheDirective.VaryHeaderValue.Should().Be(endpoint?.CacheDirective?.VaryHeaderValue ?? def?.CacheDirective?.VaryHeaderValue ?? system.CacheDirective.VaryHeaderValue);
 
 
             // -------------------
@@ -2572,6 +2633,8 @@
             // ------------------------------
             request.ValidationErrorConfiguration.UriBindingValueError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingValueError ?? def?.ValidationErrorConfiguration?.UriBindingValueError ?? system.ValidationErrorConfiguration.UriBindingValueError);
             request.ValidationErrorConfiguration.UriBindingError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingError ?? def?.ValidationErrorConfiguration?.UriBindingError ?? system.ValidationErrorConfiguration.UriBindingError);
+            request.ValidationErrorConfiguration.RequestDeserializationError.Should().Be(endpoint?.ValidationErrorConfiguration?.RequestDeserializationError ?? def?.ValidationErrorConfiguration?.RequestDeserializationError ?? system.ValidationErrorConfiguration.RequestDeserializationError);
+            request.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors.Should().Be(endpoint?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors ?? def?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors ?? system.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors);
 
 
             // making sure references are not the same
@@ -2601,7 +2664,7 @@
 
             return routingTable.AddRoute(new ApiRouteRegistration(
                 template: "test/{id}/name",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(MockController),
                 endpoint: nameof(MockController.Get),
                 config: routeConfig));

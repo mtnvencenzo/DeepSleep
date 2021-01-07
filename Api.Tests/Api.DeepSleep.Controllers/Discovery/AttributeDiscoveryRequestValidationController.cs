@@ -4,7 +4,7 @@
 
     public class AttributeDiscoveryRequestValidationController
     {
-        [ApiRoute("POST", "discovery/attribute/requestvalidation/default")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteRequestValidation]
@@ -13,7 +13,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("POST", "discovery/attribute/requestvalidation/specified")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteRequestValidation(
@@ -27,7 +27,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("POST", "discovery/attribute/requestvalidation/specified/require/contentlength")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/require/contentlength")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteRequestValidation(
@@ -41,7 +41,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("POST", "discovery/attribute/requestvalidation/specified/requestbody/not/allowed")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/requestbody/not/allowed")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteRequestValidation(

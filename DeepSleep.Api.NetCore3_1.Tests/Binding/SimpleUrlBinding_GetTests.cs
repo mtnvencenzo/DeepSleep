@@ -1549,48 +1549,48 @@ X-CorrelationId: {correlationId}";
         // -------------------------------
 
         [Theory]
-        [InlineData("CharVar", "aa", typeof(char), "charVar", 168)]
-        [InlineData("NullCharVar", "aa", typeof(char?), "nullCharVar", 183)]
-        [InlineData("Int16Var", "a", typeof(short), "int16Var", 169)]
-        [InlineData("NullInt16Var", "a", typeof(short?), "nullInt16Var", 183)]
-        [InlineData("UInt16Var", "a", typeof(ushort), "uInt16Var", 171)]
-        [InlineData("UInt16Var", "-1", typeof(ushort), "uInt16Var", 172)]
-        [InlineData("NullUInt16Var", "a", typeof(ushort?), "nullUInt16Var", 184)]
-        [InlineData("NullUInt16Var", "-1", typeof(ushort?), "nullUInt16Var", 185)]
-        [InlineData("Int32Var", "a", typeof(int), "int32Var", 169)]
-        [InlineData("NullInt32Var", "a", typeof(int?), "nullInt32Var", 183)]
-        [InlineData("UInt32Var", "a", typeof(uint), "uInt32Var", 171)]
-        [InlineData("UInt32Var", "-1", typeof(uint), "uInt32Var", 172)]
-        [InlineData("NullUInt32Var", "a", typeof(uint?), "nullUInt32Var", 184)]
-        [InlineData("NullUInt32Var", "-1", typeof(uint?), "nullUInt32Var", 185)]
-        [InlineData("Int64Var", "a", typeof(long), "int64Var", 169)]
-        [InlineData("NullInt64Var", "a", typeof(long?), "nullInt64Var", 183)]
-        [InlineData("UInt64Var", "a", typeof(ulong), "uInt64Var", 171)]
-        [InlineData("UInt64Var", "-1", typeof(ulong), "uInt64Var", 172)]
-        [InlineData("NullUInt64Var", "a", typeof(ulong?), "nullUInt64Var", 184)]
-        [InlineData("NullUInt64Var", "-1", typeof(ulong?), "nullUInt64Var", 185)]
-        [InlineData("DoubleVar", "a", typeof(double), "doubleVar", 171)]
-        [InlineData("NullDoubleVar", "a", typeof(double?), "nullDoubleVar", 184)]
-        [InlineData("DecimalVar", "a", typeof(decimal), "decimalVar", 173)]
-        [InlineData("NullDecimalVar", "a", typeof(decimal?), "nullDecimalVar", 185)]
-        [InlineData("FloatVar", "a", typeof(float), "floatVar", 170)]
-        [InlineData("NullFloatVar", "a", typeof(float?), "nullFloatVar", 183)]
-        [InlineData("BoolVar", "a", typeof(bool), "boolVar", 170)]
-        [InlineData("NullBoolVar", "a", typeof(bool?), "nullBoolVar", 182)]
-        [InlineData("DateTimeVar", "a", typeof(DateTime), "dateTimeVar", 175)]
-        [InlineData("NullDateTimeVar", "a", typeof(DateTime?), "nullDateTimeVar", 186)]
-        [InlineData("DateTimeOffsetVar", "a", typeof(DateTimeOffset), "dateTimeOffsetVar", 187)]
-        [InlineData("NullDateTimeOffsetVar", "a", typeof(DateTimeOffset?), "nullDateTimeOffsetVar", 192)]
-        [InlineData("TimeSpanVar", "a", typeof(TimeSpan), "timeSpanVar", 175)]
-        [InlineData("NullTimeSpanVar", "a", typeof(TimeSpan?), "nullTimeSpanVar", 186)]
-        [InlineData("ByteVar", "a", typeof(byte), "byteVar", 167)]
-        [InlineData("NullByteVar", "a", typeof(byte?), "nullByteVar", 182)]
-        [InlineData("SByteVar", "a", typeof(sbyte), "sByteVar", 169)]
-        [InlineData("NullSByteVar", "a", typeof(sbyte?), "nullSByteVar", 183)]
-        [InlineData("GuidVar", "a", typeof(Guid), "guidVar", 167)]
-        [InlineData("NullGuidVar", "a", typeof(Guid?), "nullGuidVar", 182)]
-        [InlineData("EnumVar", "a", typeof(SimpleUrlBindingEnum), "enumVar", 183)]
-        [InlineData("NullEnumVar", "a", typeof(SimpleUrlBindingEnum?), "nullEnumVar", 182)]
+        [InlineData("CharVar", "aa", typeof(char), "charVar", 143)]
+        [InlineData("NullCharVar", "aa", typeof(char?), "nullCharVar", 158)]
+        [InlineData("Int16Var", "a", typeof(short), "int16Var", 144)]
+        [InlineData("NullInt16Var", "a", typeof(short?), "nullInt16Var", 158)]
+        [InlineData("UInt16Var", "a", typeof(ushort), "uInt16Var", 146)]
+        [InlineData("UInt16Var", "-1", typeof(ushort), "uInt16Var", 147)]
+        [InlineData("NullUInt16Var", "a", typeof(ushort?), "nullUInt16Var", 159)]
+        [InlineData("NullUInt16Var", "-1", typeof(ushort?), "nullUInt16Var", 160)]
+        [InlineData("Int32Var", "a", typeof(int), "int32Var", 144)]
+        [InlineData("NullInt32Var", "a", typeof(int?), "nullInt32Var", 158)]
+        [InlineData("UInt32Var", "a", typeof(uint), "uInt32Var", 146)]
+        [InlineData("UInt32Var", "-1", typeof(uint), "uInt32Var", 147)]
+        [InlineData("NullUInt32Var", "a", typeof(uint?), "nullUInt32Var", 159)]
+        [InlineData("NullUInt32Var", "-1", typeof(uint?), "nullUInt32Var", 160)]
+        [InlineData("Int64Var", "a", typeof(long), "int64Var", 144)]
+        [InlineData("NullInt64Var", "a", typeof(long?), "nullInt64Var", 158)]
+        [InlineData("UInt64Var", "a", typeof(ulong), "uInt64Var", 146)]
+        [InlineData("UInt64Var", "-1", typeof(ulong), "uInt64Var", 147)]
+        [InlineData("NullUInt64Var", "a", typeof(ulong?), "nullUInt64Var", 159)]
+        [InlineData("NullUInt64Var", "-1", typeof(ulong?), "nullUInt64Var", 160)]
+        [InlineData("DoubleVar", "a", typeof(double), "doubleVar", 146)]
+        [InlineData("NullDoubleVar", "a", typeof(double?), "nullDoubleVar", 159)]
+        [InlineData("DecimalVar", "a", typeof(decimal), "decimalVar", 148)]
+        [InlineData("NullDecimalVar", "a", typeof(decimal?), "nullDecimalVar", 160)]
+        [InlineData("FloatVar", "a", typeof(float), "floatVar", 145)]
+        [InlineData("NullFloatVar", "a", typeof(float?), "nullFloatVar", 158)]
+        [InlineData("BoolVar", "a", typeof(bool), "boolVar", 145)]
+        [InlineData("NullBoolVar", "a", typeof(bool?), "nullBoolVar", 157)]
+        [InlineData("DateTimeVar", "a", typeof(DateTime), "dateTimeVar", 150)]
+        [InlineData("NullDateTimeVar", "a", typeof(DateTime?), "nullDateTimeVar", 161)]
+        [InlineData("DateTimeOffsetVar", "a", typeof(DateTimeOffset), "dateTimeOffsetVar", 162)]
+        [InlineData("NullDateTimeOffsetVar", "a", typeof(DateTimeOffset?), "nullDateTimeOffsetVar", 167)]
+        [InlineData("TimeSpanVar", "a", typeof(TimeSpan), "timeSpanVar", 150)]
+        [InlineData("NullTimeSpanVar", "a", typeof(TimeSpan?), "nullTimeSpanVar", 161)]
+        [InlineData("ByteVar", "a", typeof(byte), "byteVar", 142)]
+        [InlineData("NullByteVar", "a", typeof(byte?), "nullByteVar", 157)]
+        [InlineData("SByteVar", "a", typeof(sbyte), "sByteVar", 144)]
+        [InlineData("NullSByteVar", "a", typeof(sbyte?), "nullSByteVar", 158)]
+        [InlineData("GuidVar", "a", typeof(Guid), "guidVar", 142)]
+        [InlineData("NullGuidVar", "a", typeof(Guid?), "nullGuidVar", 157)]
+        [InlineData("EnumVar", "a", typeof(SimpleUrlBindingEnum), "enumVar", 158)]
+        [InlineData("NullEnumVar", "a", typeof(SimpleUrlBindingEnum?), "nullEnumVar", 157)]
         public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail(string varName, string value, Type expectedType, string expectedVarName, int expectedContentLength)
         {
             base.SetupEnvironment(services =>
@@ -1629,7 +1629,6 @@ X-CorrelationId: {correlationId}";
             data.Should().NotBeNull();
             data.Messages.Should().NotBeNull();
             data.Messages.Should().HaveCount(1);
-            data.Messages[0].ErrorCode.Should().Be("400.000002");
             data.Messages[0].ErrorMessageStr.Should().Be($"Uri type conversion for '{expectedVarName}' with value '{value}' could not be converted to type {expectedType.Name}.");
         }
 
@@ -1676,7 +1675,7 @@ X-CorrelationId: {correlationId}";
         }
 
         [Theory]
-        [InlineData("CharVar", "aa", 68)]
+        [InlineData("CharVar", "aa", 50)]
         public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail_with_custom_configured_error(string varName, string value, int expectedContentLength)
         {
             base.SetupEnvironment(services =>
@@ -1714,7 +1713,6 @@ X-CorrelationId: {correlationId}";
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
             data.Should().NotBeNull();
 
-            data.Messages[0].ErrorCode.Should().Be("100");
             data.Messages[0].ErrorMessageStr.Should().Be($"Test charVar.");
 
             apiContext.Validation.Errors.Should().NotBeNull();

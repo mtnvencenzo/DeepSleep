@@ -53,6 +53,7 @@
             AuthenticationType expectedAuthenticatedBy = AuthenticationType.None,
             bool? expectedAuthorizationResult = null,
             AuthorizationType expectedAuthorizedBy = AuthorizationType.None,
+            bool? allowCustom500Response = false,
             long? expectedContentLength = null)
         {
             apiContext.Should().NotBeNull();
@@ -79,7 +80,7 @@
             apiContext.PathBase.Should().Be(apiContext.Request.Path);
             response.StatusCode.Should().Be(expectedHttpStatus);
 
-            var expectedHeaderCount = (response.StatusCode >= 500 || apiContext.Request.IsCorsPreflightRequest())
+            var expectedHeaderCount = ((response.StatusCode >= 500 && allowCustom500Response != true) || apiContext.Request.IsCorsPreflightRequest())
                 ? 3 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1)
                 : 5 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1);
 

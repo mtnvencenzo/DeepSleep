@@ -161,12 +161,15 @@
         {
             var newitem = new ApiRoutingItem
             {
-                Location = new ApiEndpointLocation
-                {
-                    Controller = item.Location.Controller,
-                    Endpoint = item.Location?.Endpoint,
-                    HttpMethod = item.Location.HttpMethod
-                },
+                Location = new ApiEndpointLocation(
+                    controller: item.Location.Controller,
+                    endpoint: item.Location.Endpoint,
+                    httpMethod: item.Location.HttpMethod,
+                    methodInfo: item.Location.MethodInfo,
+                    bodyParameterType: item.Location.BodyParameterType,
+                    uriParameterType: item.Location.UriParameterType,
+                    simpleParameters: item.Location.SimpleParameters,
+                    methodReturnType: item.Location.MethodReturnType),
                 Template = item.Template,
                 Configuration = item.Configuration,
                 HttpMethod = item.HttpMethod,

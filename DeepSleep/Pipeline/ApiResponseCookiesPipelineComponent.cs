@@ -26,7 +26,10 @@
             }
             finally
             {
-                var context = contextResolver.GetContext();
+                var context = contextResolver
+                     .GetContext()
+                     .SetThreadCulure();
+
                 await context.ProcessHttpResponseCookies().ConfigureAwait(false);
             }
         }

@@ -1,43 +1,80 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using System.Globalization;
 
     public class AttributeDiscoveryLanguageSupportController
     {
-        [ApiRoute("GET", "discovery/attribute/languagesupport/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteLanguageSupport]
-        public AttributeDiscoveryModel GetLanguageSupportDefault()
+        public AttributeDiscoveryLanguageModel GetLanguageSupportDefault()
         {
-            return new AttributeDiscoveryModel();
+            return new AttributeDiscoveryLanguageModel
+            {
+                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentUICulture = CultureInfo.CurrentUICulture.Name
+            };
         }
 
-        [ApiRoute("GET", "discovery/attribute/languagesupport/fallaback/de-DE")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/de-DE")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteLanguageSupport(fallbackLanguage: "de-DE")]
-        public AttributeDiscoveryModel GetLanguageSupportWithFallbackDeDe()
+        public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackDeDe()
         {
-            return new AttributeDiscoveryModel();
+            return new AttributeDiscoveryLanguageModel
+            {
+                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentUICulture = CultureInfo.CurrentUICulture.Name
+            };
         }
 
-        [ApiRoute("GET", "discovery/attribute/languagesupport/fallaback/en")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteLanguageSupport(fallbackLanguage: "en")]
-        public AttributeDiscoveryModel GetLanguageSupportWithFallbackEn()
+        public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEn()
         {
-            return new AttributeDiscoveryModel();
+            return new AttributeDiscoveryLanguageModel
+            {
+                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentUICulture = CultureInfo.CurrentUICulture.Name
+            };
         }
 
-        [ApiRoute("GET", "discovery/attribute/languagesupport/fallaback/en/with/supported")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en/with/supported")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteLanguageSupport(fallbackLanguage: "en", supportedLanguages: new[] { "es-ES", "en-GB" })]
-        public AttributeDiscoveryModel GetLanguageSupportWithFallbackEnAndSupported()
+        public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEnAndSupported()
         {
-            return new AttributeDiscoveryModel();
+            return new AttributeDiscoveryLanguageModel
+            {
+                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentUICulture = CultureInfo.CurrentUICulture.Name
+            };
         }
+
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en/with/supported/thread/cultures")]
+        [ApiRouteAuthentication(allowAnonymous: false)]
+        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteLanguageSupport(fallbackLanguage: "en", supportedLanguages: new[] { "es-ES", "en-GB" }, useAcceptedLanguageAsThreadCulture: true, useAcceptedLanguageAsThreadUICulture: true)]
+        public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEnAndSupportedSetsThreadCultures()
+        {
+            return new AttributeDiscoveryLanguageModel
+            {
+                CurrentCulture = CultureInfo.CurrentCulture.Name,
+                CurrentUICulture = CultureInfo.CurrentUICulture.Name
+            };
+        }
+    }
+
+    public class AttributeDiscoveryLanguageModel
+    {
+        public string CurrentUICulture { get; set; }
+
+        public string CurrentCulture { get; set; }
     }
 }

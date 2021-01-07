@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -23,7 +22,9 @@
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             await context.ProcessHttpResponseMessages().ConfigureAwait(false);
         }
@@ -59,7 +60,7 @@
                         {
                             var errors = context.Validation?.Errors ?? new List<string>();
 
-                            context.Response.ResponseObject = await provider.Process(errors).ConfigureAwait(false);
+                            context.Response.ResponseObject = await provider.Process(context, errors).ConfigureAwait(false);
                         }
                     }
                 }

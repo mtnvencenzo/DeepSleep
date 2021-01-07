@@ -4,7 +4,7 @@
 
     public class AttributeDiscoveryReadWriteController
     {
-        [ApiRoute("GET", "discovery/attribute/readwrite/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteReadWriteConfiguration]
@@ -13,7 +13,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/readwrite/acceptheader/override")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/acceptheader/override")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteReadWriteConfiguration(acceptHeaderOverride: "application/xml")]
@@ -22,7 +22,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/readwrite/writeablemediatypes/override")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/writeablemediatypes/override")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteReadWriteConfiguration(writeableMediaTypes: new[] { "application/xml" })]
@@ -31,7 +31,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("POST", "discovery/attribute/readwrite/readablemediatypes/override")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/readwrite/readablemediatypes/override")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteReadWriteConfiguration(readableMediaTypes: new[] { "application/xml" })]
@@ -40,7 +40,7 @@
             return request;
         }
 
-        [ApiRoute("POST", "discovery/attribute/readwrite/readerresolver/override")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/readwrite/readerresolver/override")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [CustomApiRouteReadWriteConfigurationWithReadResolver]
@@ -52,7 +52,7 @@
             };
         }
 
-        [ApiRoute("GET", "discovery/attribute/readwrite/writerresolver/override")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/writerresolver/override")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [CustomApiRouteReadWriteConfigurationWithWriteResolver]

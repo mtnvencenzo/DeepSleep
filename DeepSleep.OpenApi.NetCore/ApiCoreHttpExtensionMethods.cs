@@ -32,7 +32,7 @@
 
             table.AddRoute(new ApiRouteRegistration(
                 template: routeTemplate,
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: Type.GetType(typeof(OpenApiController).AssemblyQualifiedName),
                 endpoint: nameof(OpenApiController.Doc),
                 config: new DefaultApiRequestConfiguration

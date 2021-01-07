@@ -17,9 +17,9 @@
             {
                 return _epoch.AddSeconds(unixTime);
             }
-            catch (System.Exception)
+            catch
             {
-                return new DateTime(1, 1, 1, 1, 0, 1, DateTimeKind.Utc);
+                return _epoch;
             }
         }
 

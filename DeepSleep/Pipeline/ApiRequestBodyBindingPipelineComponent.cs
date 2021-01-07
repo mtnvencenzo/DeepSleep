@@ -23,7 +23,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
@@ -81,7 +83,7 @@
                         }
                     }
 
-                    if (context.Request.ContentLength > 0 && context.Request.InvocationContext?.BodyModelType == null)
+                    if (context.Request.ContentLength > 0 && context.Routing?.Route?.Location?.BodyParameterType == null)
                     {
                         if (!(context.Configuration?.RequestValidation?.AllowRequestBodyWhenNoModelDefined ?? false))
                         {
@@ -90,7 +92,7 @@
                         }
                     }
 
-                    if (context.Request.InvocationContext?.BodyModelType != null && context.Request.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.Request.ContentType))
+                    if (context.Routing.Route.Location.BodyParameterType != null && context.Request.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.Request.ContentType))
                     {
                         IFormatStreamReaderWriter formatter = null;
 
@@ -151,8 +153,11 @@
                         {
                             context.Request.InvocationContext.BodyModel = await formatter.ReadType(
                                 stream: context.Request.Body, 
-                                objType: context.Request.InvocationContext.BodyModelType,
-                                options: null).ConfigureAwait(false);
+                                objType: context.Routing.Route.Location.BodyParameterType,
+                                options: new FormatterOptions
+                                {
+                                    Culture = context.Request.AcceptCulture
+                                }).ConfigureAwait(false);
                         }
                         catch (Exception ex)
                         {
@@ -164,7 +169,16 @@
                             }
                             else
                             {
-                                context.Response.StatusCode = 450;
+                                context.AddValidationError(context.Configuration?.ValidationErrorConfiguration?.RequestDeserializationError);
+
+                                if (context?.Configuration?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors == true)
+                                {
+                                    context.Response.StatusCode = 450;
+                                }
+                                else
+                                {
+                                    context.Response.StatusCode = 400;
+                                }
                             }
 
                             return false;

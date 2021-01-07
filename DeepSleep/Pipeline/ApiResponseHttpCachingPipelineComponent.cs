@@ -23,7 +23,9 @@
         {
             await apinext.Invoke(contextResolver).ConfigureAwait(false);
 
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             await context.ProcessHttpResponseCaching().ConfigureAwait(false);
         }
@@ -71,11 +73,14 @@
                             context.Response.AddHeader("Cache-Control", $"{(directive.CacheLocation ?? HttpCacheLocation.Private).ToString().ToLower()}, max-age={directive.ExpirationSeconds}");
                             context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(directive.ExpirationSeconds.Value).ToString("r"));
 
-                            // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
-                            context.Response.AddHeader(
-                                name: "Vary", 
-                                value: "Accept, Accept-Encoding, Accept-Language", 
-                                append: true);
+                            if (!string.IsNullOrWhiteSpace(directive.VaryHeaderValue))
+                            {
+                                // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
+                                context.Response.AddHeader(
+                                    name: "Vary",
+                                    value: directive.VaryHeaderValue,
+                                    append: true);
+                            }
 
                             return Task.FromResult(true);
                         }

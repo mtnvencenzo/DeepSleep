@@ -5,7 +5,7 @@
 
     public class AttributeDiscoveryEnableHeadController
     {
-        [ApiRoute("GET", "discovery/attribute/enablehead/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteEnableHead]
@@ -14,7 +14,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/enablehead/true")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteEnableHead(enableHeadForGetRequests: true)]
@@ -23,7 +23,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/enablehead/true/with/caching")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true/with/caching")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteEnableHead(enableHeadForGetRequests: true)]
@@ -33,7 +33,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/enablehead/false")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteEnableHead(enableHeadForGetRequests: false)]
@@ -42,7 +42,7 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/enablehead/false/with/caching")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false/with/caching")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteEnableHead(enableHeadForGetRequests: false)]

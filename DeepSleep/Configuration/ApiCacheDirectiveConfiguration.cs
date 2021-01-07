@@ -14,5 +14,9 @@
         /// <summary>Gets or sets the cache location.</summary>
         /// <value>The cache location.</value>
         public HttpCacheLocation? CacheLocation { get; set; }
+
+        /// <summary>Gets or sets the vary header value.</summary>
+        /// <value>The vary header value.</value>
+        public string VaryHeaderValue { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace DeepSleep.NetCore.Tests
 
             routingTable.AddRoute(new ApiRouteRegistration(
                 template: "/myroute/{test}/other/{test2}/id",
-                httpMethod: "GET",
+                httpMethods: new[] { "GET" },
                 controller: typeof(TestController),
                 endpoint: nameof(TestController.Get)));
 

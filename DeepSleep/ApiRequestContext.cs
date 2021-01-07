@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
@@ -82,7 +83,7 @@
             return new DefaultApiRequestConfiguration
             {
                 AllowAnonymous = false,
-                ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider(),
+                ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider(),
                 Deprecated = false,
                 EnableHeadForGetRequests = true,
                 SupportedAuthenticationSchemes = new List<string>(),
@@ -91,7 +92,8 @@
                 {
                     Cacheability = HttpCacheType.NoCache,
                     CacheLocation = HttpCacheLocation.Private,
-                    ExpirationSeconds = -1
+                    ExpirationSeconds = -1,
+                    VaryHeaderValue = "Accept, Accept-Encoding, Accept-Language"
                 },
                 CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
@@ -113,6 +115,8 @@
                 {
                     FallBackLanguage = null,
                     SupportedLanguages = new List<string>(),
+                    UseAcceptedLanguageAsThreadCulture = false,
+                    UseAcceptedLanguageAsThreadUICulture = false
                 },
                 AuthorizationConfig = new ApiResourceAuthorizationConfiguration
                 {
@@ -128,8 +132,10 @@
                 },
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
-                    UriBindingError = "400.000001|'{paramName}' is in an incorrect format and could not be bound.",
-                    UriBindingValueError = "400.000002|Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}."
+                    UriBindingError = "'{paramName}' is in an incorrect format and could not be bound.",
+                    UriBindingValueError = "Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.",
+                    RequestDeserializationError = "The request body could not be deserialized.",
+                    UseCustomStatusForRequestDeserializationErrors = true
                 }
             };
         }
@@ -340,6 +346,29 @@
             }
 
             return false;
+        }
+
+        /// <summary>Sets the thread culure.</summary>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        public static ApiRequestContext SetThreadCulure(this ApiRequestContext context)
+        {
+            if (context?.Runtime?.Internals == null)
+            {
+                return context;
+            }
+
+            if (context.Runtime.Internals.CurrentCulture != null && CultureInfo.CurrentCulture != context.Runtime.Internals.CurrentCulture)
+            {
+                CultureInfo.CurrentCulture = context.Runtime.Internals.CurrentCulture;
+            }
+
+            if (context.Runtime.Internals.CurrentUICulture != null && CultureInfo.CurrentUICulture != context.Runtime.Internals.CurrentUICulture)
+            {
+                CultureInfo.CurrentUICulture = context.Runtime.Internals.CurrentUICulture;
+            }
+
+            return context;
         }
     }
 }

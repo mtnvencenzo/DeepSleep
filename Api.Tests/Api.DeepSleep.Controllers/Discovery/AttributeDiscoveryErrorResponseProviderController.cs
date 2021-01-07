@@ -11,7 +11,7 @@
             this.apiRequestContextResolver = apiRequestContextResolver;
         }
 
-        [ApiRoute("GET", "discovery/attribute/errorresponseprovider/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/errorresponseprovider/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [CustomApiRouteErrorResponseProvider]

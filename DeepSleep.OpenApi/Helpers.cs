@@ -260,7 +260,7 @@
             return
                 httpMethod.ToUpper().Substring(0, 1) +
                 httpMethod.ToLower().Substring(1) +
-                route.Location.GetEndpointMethod().Name;
+                route.Location.GetEndpointMethodInfo().Name;
         }
     }
 }

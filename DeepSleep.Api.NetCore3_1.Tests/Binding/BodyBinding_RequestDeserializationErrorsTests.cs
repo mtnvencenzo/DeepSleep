@@ -1,16 +1,9 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests.Binding
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using FluentAssertions;
     using global::Api.DeepSleep.Models;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
-    using Moq;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -39,7 +32,7 @@ X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {{
-    ""Value"": ""This is way too long of a request""
+    ""Value"": ""Test""
 ";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
@@ -50,12 +43,18 @@ Content-Length: 1
                 apiContext: apiContext,
                 response: response,
                 expectedHttpStatus: 450,
-                shouldHaveResponse: false,
+                shouldHaveResponse: true,
+                expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
         }
 
         [Theory]
@@ -91,12 +90,18 @@ Content-Length: 1
                 apiContext: apiContext,
                 response: response,
                 expectedHttpStatus: 450,
-                shouldHaveResponse: false,
+                shouldHaveResponse: true,
+                expectedContentType: applicationXml,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
         }
 
         [Theory]
@@ -125,7 +130,6 @@ Content-Disposition: form-data; name=""Value""
 
 test data
 --{multipartBoundary}";
-// missing final boundary terminator '--' to make this fail
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -135,12 +139,18 @@ test data
                 apiContext: apiContext,
                 response: response,
                 expectedHttpStatus: 450,
-                shouldHaveResponse: false,
+                shouldHaveResponse: true,
+                expectedContentType: applicationXml,
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"}
                 });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
         }
     }
 }

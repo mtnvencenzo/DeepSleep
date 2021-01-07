@@ -45,55 +45,56 @@
                 return this;
             }
 
-            if (registration.Location?.Controller == null)
+            if (registration?.Controller == null)
             {
                 throw new Exception("Controller must be specified");
             }
 
-            if (string.IsNullOrWhiteSpace(registration.Location.Endpoint))
+            if (string.IsNullOrWhiteSpace(registration.Endpoint))
             {
                 throw new Exception("Endpoint must be specified");
             }
 
-            if (string.IsNullOrWhiteSpace(registration.HttpMethod))
+            if (registration.HttpMethods?.Count <= 0)
             {
-                throw new Exception(string.Format("Http method not specified on {1}:{0}", registration.Location.Endpoint, registration.Location.Controller.FullName));
+                throw new Exception(string.Format("Http methods not specified on {1}:{0}", registration.Endpoint, registration.Controller.FullName));
             }
 
-            var existing = this.routes
-                .Where(r => string.Equals(r.Template, registration.Template, StringComparison.OrdinalIgnoreCase))
-                .Where(r => string.Equals(r.HttpMethod, registration.HttpMethod, StringComparison.OrdinalIgnoreCase))
-                .FirstOrDefault();
-
-            if (existing != null)
+            foreach (var httpMethod in registration.HttpMethods)
             {
-                throw new Exception($"Route '{registration.HttpMethod} {registration.Template}' already has been added.");
-            }
+                var existing = this.routes
+                    .Where(r => string.Equals(r.Template, registration.Template, StringComparison.OrdinalIgnoreCase))
+                    .Where(r => string.Equals(r.HttpMethod, httpMethod, StringComparison.OrdinalIgnoreCase))
+                    .FirstOrDefault();
 
-
-            var method = registration.Location.Controller.GetMethod(
-                name: registration?.Location?.Endpoint, 
-                bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-
-            if (method == null)
-            {
-                throw new MissingMethodException(string.Format("Endpoint '{0}' does not exist on controller '{1}'", registration.Location.Endpoint, registration.Location.Controller.FullName));
-            }
-
-            var item = new ApiRoutingItem
-            {
-                Template = registration.Template,
-                HttpMethod = registration.HttpMethod.ToUpper(),
-                Configuration = registration.Configuration,
-                Location = new ApiEndpointLocation
+                if (existing != null)
                 {
-                    Controller = Type.GetType(registration.Location.Controller.AssemblyQualifiedName),
-                    Endpoint = registration.Location.Endpoint,
-                    HttpMethod = registration.HttpMethod.ToUpper()
+                    throw new Exception($"Route '{httpMethod} {registration.Template}' already has been added.");
                 }
-            };
 
-            routes.Add(item);
+                var method = registration.Controller.GetMethod(
+                    name: registration.Endpoint,
+                    bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
+
+                if (method == null)
+                {
+                    throw new MissingMethodException(string.Format("Endpoint '{0}' does not exist on controller '{1}'", registration.Endpoint, registration.Controller.FullName));
+                }
+
+                var item = new ApiRoutingItem
+                {
+                    Template = registration.Template,
+                    HttpMethod = httpMethod.ToUpperInvariant(),
+                    Configuration = registration.Configuration,
+                    Location = new ApiEndpointLocation(
+                        controller: Type.GetType(registration.Controller.AssemblyQualifiedName),
+                        endpoint: registration.Endpoint,
+                        httpMethod: httpMethod.ToUpperInvariant())
+                };
+
+                routes.Add(item);
+            }
+
             return this;
         }
 

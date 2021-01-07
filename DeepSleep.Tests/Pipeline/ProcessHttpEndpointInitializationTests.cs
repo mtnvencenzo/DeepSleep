@@ -115,10 +115,7 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = null
-                        }
+                        Location = new ApiEndpointLocation(null, null, null)
                     }
                 }
             };
@@ -152,11 +149,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = controllerType,
-                            Endpoint = endpoint
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: controllerType,
+                            endpoint: endpoint,
+                            httpMethod: null)
                     }
                 }
             };
@@ -176,76 +172,6 @@
         }
 
         [Fact]
-        public async void ThrowsForMissingEndpointControllerMethod()
-        {
-            var controllerType = typeof(StandardController);
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                Routing = new ApiRoutingInfo
-                {
-                    Route = new ApiRoutingItem
-                    {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = controllerType,
-                            Endpoint = "MissingEndpoint"
-                        }
-                    }
-                }
-            };
-
-
-            try
-            {
-                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be($"Routing items endpoint method 'MissingEndpoint' does not exist on controller 'StandardController'.");
-                return;
-            }
-
-            Assert.False(true);
-        }
-
-        [Fact]
-        public async void ThrowsForMissingEndpointControllerMethodCaseSensitivity()
-        {
-            var controllerType = typeof(StandardController);
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                Routing = new ApiRoutingInfo
-                {
-                    Route = new ApiRoutingItem
-                    {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = controllerType,
-                            Endpoint = nameof(StandardController.DefaultEndpoint).ToLower()
-                        }
-                    }
-                }
-            };
-
-
-            try
-            {
-                var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                ex.Message.Should().Be($"Routing items endpoint method 'defaultendpoint' does not exist on controller 'StandardController'.");
-                return;
-            }
-
-            Assert.False(true);
-        }
-
-        [Fact]
         public async void ReturnsTrueAndRetrivesControllerFromServiceProvider()
         {
             var mockServiceProvider = new Mock<IServiceProvider>();
@@ -258,11 +184,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpoint)
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            httpMethod: null)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -271,16 +196,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.UriParameterType?.Should().BeNull();
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Fact]
@@ -293,11 +216,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpoint)
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            httpMethod: null)
                     }
                 }
             };
@@ -305,16 +227,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Fact]
@@ -330,11 +250,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpoint)
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            httpMethod: null)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -343,16 +262,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Fact]
@@ -368,11 +285,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointInternal)
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointInternal),
+                            httpMethod: null)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -381,16 +297,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Fact]
@@ -406,11 +320,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = "DefaultEndpointPrivate"
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: "DefaultEndpointPrivate",
+                            httpMethod: null)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -419,16 +332,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Fact]
@@ -444,11 +355,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = "DefaultEndpointProtected"
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: "DefaultEndpointProtected",
+                            httpMethod: null)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -457,16 +367,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -495,12 +403,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithUri),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithUri),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -509,17 +415,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().NotBeNull();
-            context.Request.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -541,12 +444,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithBody),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithBody),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -555,17 +456,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().BeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().NotBeNull();
-            context.Request.InvocationContext.BodyModelType.Should().Be(typeof(StandardModel));
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.UriParameterType.Should().BeNull();
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -587,12 +485,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithUriAndBody),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBody),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -601,17 +497,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().NotBeNull();
-            context.Request.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().Be(typeof(StandardNullableModel));
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
+            context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -633,12 +526,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithUriAndBody),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBody),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -647,17 +538,14 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().NotBeNull();
-            context.Request.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().BeNull();
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
-
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().BeNull();
+            context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -679,12 +567,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersBefore),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersBefore),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -693,17 +579,15 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().NotBeNull();
-            context.Request.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().Be(typeof(StandardNullableModel));
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
 
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
+            context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -725,12 +609,10 @@
                 {
                     Route = new ApiRoutingItem
                     {
-                        Location = new ApiEndpointLocation
-                        {
-                            Controller = typeof(InjectionController),
-                            Endpoint = nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersAfter),
-                            HttpMethod = method
-                        }
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(InjectionController),
+                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersAfter),
+                            httpMethod: method)
                     }
                 },
                 RequestServices = mockServiceProvider.Object
@@ -739,17 +621,15 @@
             var processed = await context.ProcessHttpEndpointInitialization().ConfigureAwait(false);
             processed.Should().BeTrue();
 
-            context.Request.InvocationContext.Controller.Should().NotBeNull();
-            context.Request.InvocationContext.Controller.Should().BeOfType<InjectionController>();
-            context.Request.InvocationContext.UriModelType.Should().NotBeNull();
-            context.Request.InvocationContext.UriModelType.Should().Be(typeof(StandardModel));
+            context.Request.InvocationContext.ControllerInstance.Should().NotBeNull();
+            context.Request.InvocationContext.ControllerInstance.Should().BeOfType<InjectionController>();
             context.Request.InvocationContext.UriModel.Should().BeNull();
-            context.Request.InvocationContext.BodyModelType.Should().Be(typeof(StandardNullableModel));
             context.Request.InvocationContext.BodyModel.Should().BeNull();
-            context.Request.InvocationContext.ControllerMethod.Should().NotBeNull();
-            context.Request.InvocationContext.ControllerMethod.Name.Should().Be(context.Routing.Route.Location.Endpoint);
 
-            var controller = context.Request.InvocationContext.Controller as InjectionController;
+            context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
+            context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
+            context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
     }
 }

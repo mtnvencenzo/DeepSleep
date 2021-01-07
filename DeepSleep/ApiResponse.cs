@@ -21,10 +21,8 @@
         public IList<ApiHeader> Headers { get; set; }
 
 
-
-        // Helper Responses
+        // Success Responses
         // ----------------
-
 
 
         /// <summary>Oks the specified headers.</summary>
@@ -131,13 +129,21 @@
 
         /// <summary>Bads the request.</summary>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public static IApiResponse BadRequest(IList<ApiHeader> headers = null)
+        public static IApiResponse BadRequest(IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            return BadRequest(
+            return SettHttp(
+                statusCode: 400,
                 value: null as object,
-                headers: headers);
+                headers: headers,
+                errors: errors);
         }
+
+
+        // Bad Responses
+        // ----------------
+
 
         /// <summary>Bads the request.</summary>
         /// <typeparam name="T"></typeparam>
@@ -154,12 +160,15 @@
 
         /// <summary>Unauthorizeds the specified headers.</summary>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public static IApiResponse Unauthorized(IList<ApiHeader> headers = null)
+        public static IApiResponse Unauthorized(IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            return Unauthorized<object>(
+            return SettHttp(
+                statusCode: 401,
                 value: null as object,
-                headers: headers);
+                headers: headers,
+                errors: errors);
         }
 
         /// <summary>Unauthorizeds the specified value.</summary>
@@ -177,12 +186,15 @@
 
         /// <summary>Forbiddens the specified headers.</summary>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public static IApiResponse Forbidden(IList<ApiHeader> headers = null)
+        public static IApiResponse Forbidden(IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            return Forbidden(
+            return SettHttp(
+                statusCode: 403,
                 value: null as object,
-                headers: headers);
+                headers: headers,
+                errors: errors);
         }
 
         /// <summary>Forbiddens the specified value.</summary>
@@ -200,12 +212,15 @@
 
         /// <summary>Nots the found.</summary>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public static IApiResponse NotFound(IList<ApiHeader> headers = null)
+        public static IApiResponse NotFound(IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            return NotFound(
+            return SettHttp(
+                statusCode: 404,
                 value: null as object,
-                headers: headers);
+                headers: headers,
+                errors: errors);
         }
 
         /// <summary>Nots the found.</summary>
@@ -223,12 +238,15 @@
 
         /// <summary>Conflicts the specified headers.</summary>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public static IApiResponse Conflict(IList<ApiHeader> headers = null)
+        public static IApiResponse Conflict(IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            return Conflict(
+            return SettHttp(
+                statusCode: 409,
                 value: null as object,
-                headers: headers);
+                headers: headers,
+                errors: errors);
         }
 
         /// <summary>Conflicts the specified value.</summary>
@@ -243,6 +261,11 @@
                 value: value,
                 headers: headers);
         }
+
+
+        // Redirect Responses
+        // ----------------
+
 
         /// <summary>Moveds the permanently.</summary>
         /// <param name="location">The location.</param>
@@ -336,20 +359,176 @@
                 headers: headersToUse);
         }
 
+
+        // Error Responses
+        // ----------------
+
+
+        /// <summary>Unhandleds the exception.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse UnhandledException(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 500,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Unhandleds the exception.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse UnhandledException<T>(T value = default, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 500,
+                value: value,
+                headers: headers);
+        }
+
+        /// <summary>Nots the implemented.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse NotImplemented(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 501,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Nots the implemented.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse NotImplemented<T>(T value = default, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 501,
+                value: value,
+                headers: headers);
+        }
+
+        /// <summary>Bads the gateway.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse BadGateway(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 502,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Bads the gateway.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse BadGateway<T>(T value = default, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 502,
+                value: value,
+                headers: headers);
+        }
+
+        /// <summary>Services the unavailable.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse ServiceUnavailable(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 503,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Services the unavailable.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse ServiceUnavailable<T>(T value = default, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 503,
+                value: value,
+                headers: headers);
+        }
+
+        /// <summary>Gateways the timeout.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse GatewayTimeout(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 504,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Gateways the timeout.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse GatewayTimeout<T>(T value = default, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 504,
+                value: value,
+                headers: headers);
+        }
+
+
+        // Internal response
+        // -----------------
+
+
         /// <summary>Setts the HTTP.</summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="statusCode">The status code.</param>
         /// <param name="value">The value.</param>
         /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        private static IApiResponse SettHttp<T>(int statusCode, T value = default, IList<ApiHeader> headers = null)
+        private static IApiResponse SettHttp<T>(int statusCode, T value = default, IList<ApiHeader> headers = null, IList<string> errors = null)
         {
-            var response = new ApiResponse
+            ApiResponse response = null;
+
+            if (errors != null && errors.Count > 0)
             {
-                StatusCode = statusCode,
-                Response = value,
-                Headers = new List<ApiHeader>()
-            };
+                response = new ApiErrorResponse
+                {
+                    StatusCode = statusCode,
+                    Response = value,
+                    Headers = new List<ApiHeader>(),
+                    Errors = errors
+                };
+            }
+            else
+            {
+                response = new ApiResponse
+                {
+                    StatusCode = statusCode,
+                    Response = value,
+                    Headers = new List<ApiHeader>()
+                };
+            }
 
             if (headers != null)
             {

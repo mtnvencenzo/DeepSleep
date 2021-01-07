@@ -26,7 +26,7 @@
             {
                 new ApiRouteRegistration(
                     template: "discovery/delegated",
-                    httpMethod: "GET",
+                    httpMethods: new[] { "GET" },
                     controller: this.GetType(),
                     endpoint: nameof(Get))
             } as IList<ApiRouteRegistration>);

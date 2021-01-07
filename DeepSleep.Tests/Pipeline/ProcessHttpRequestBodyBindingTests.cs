@@ -141,10 +141,23 @@
                     ContentType = "application/json",
                     InvocationContext = new ApiInvocationContext
                     {
-                        BodyModelType = null
                     }
                 },
-
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
+                    }
+                }
             };
 
             var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
@@ -168,7 +181,21 @@
                     ContentType = "application/json",
                     InvocationContext = new ApiInvocationContext
                     {
-                        BodyModelType = typeof(string)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: typeof(string),
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -197,7 +224,21 @@
                     ContentType = "application/json",
                     InvocationContext = new ApiInvocationContext
                     {
-                        BodyModelType = typeof(string)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: typeof(string),
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -227,7 +268,22 @@
                     ContentType = "application/json",
                     InvocationContext = new ApiInvocationContext
                     {
-                        BodyModelType = typeof(string)
+                        //BodyModelType = typeof(string)
+                    }
+                },
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: typeof(string),
+                            simpleParameters: null,
+                            methodReturnType: null)
                     }
                 }
             };
@@ -263,7 +319,7 @@
                         ContentType = "application/json",
                         InvocationContext = new ApiInvocationContext
                         {
-                            BodyModelType = typeof(ApiHeader)
+                            //BodyModelType = typeof(ApiHeader)
                         },
                         Body = memoryStream
                     },
@@ -272,6 +328,21 @@
                         RequestValidation = new ApiRequestValidationConfiguration
                         {
                             MaxRequestLength = 1
+                        }
+                    },
+                    Routing = new ApiRoutingInfo
+                    {
+                        Route = new ApiRoutingItem
+                        {
+                            Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: null,
+                            simpleParameters: null,
+                            methodReturnType: null)
                         }
                     }
                 };
@@ -308,9 +379,23 @@
                         ContentType = "application/json",
                         InvocationContext = new ApiInvocationContext
                         {
-                            BodyModelType = typeof(ApiHeader)
                         },
                         Body = memoryStream
+                    },
+                    Routing = new ApiRoutingInfo
+                    {
+                        Route = new ApiRoutingItem
+                        {
+                            Location = new ApiEndpointLocation(
+                                controller: null,
+                                endpoint: null,
+                                httpMethod: null,
+                                methodInfo: null,
+                                uriParameterType: null,
+                                bodyParameterType: typeof(ApiHeader),
+                                simpleParameters: null,
+                                methodReturnType: null)
+                        }
                     }
                 };
 
@@ -350,9 +435,30 @@
                         ContentType = "application/json",
                         InvocationContext = new ApiInvocationContext
                         {
-                            BodyModelType = typeof(ApiHeader)
                         },
                         Body = memoryStream
+                    },
+                    Configuration = new DefaultApiRequestConfiguration
+                    {
+                        ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                        {
+                            UseCustomStatusForRequestDeserializationErrors = true
+                        }
+                    },
+                    Routing = new ApiRoutingInfo
+                    {
+                        Route = new ApiRoutingItem
+                        {
+                            Location = new ApiEndpointLocation(
+                            controller: null,
+                            endpoint: null,
+                            httpMethod: null,
+                            methodInfo: null,
+                            uriParameterType: null,
+                            bodyParameterType: typeof(ApiHeader),
+                            simpleParameters: null,
+                            methodReturnType: null)
+                        }
                     }
                 };
 

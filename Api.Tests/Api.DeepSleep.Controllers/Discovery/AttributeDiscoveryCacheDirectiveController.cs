@@ -5,7 +5,7 @@
 
     public class AttributeDiscoveryCacheDirectiveController
     {
-        [ApiRoute("GET", "discovery/attribute/cachedirective/default")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/default")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
         [ApiRouteCacheDirective()]
@@ -14,10 +14,14 @@
             return new AttributeDiscoveryModel();
         }
 
-        [ApiRoute("GET", "discovery/attribute/cachedirective/specified")]
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/specified")]
         [ApiRouteAuthentication(allowAnonymous: false)]
         [ApiRouteAuthorization(policy: "Default")]
-        [ApiRouteCacheDirective(location: HttpCacheLocation.Public, cacheability: HttpCacheType.Cacheable, expirationSeconds: 120)]
+        [ApiRouteCacheDirective(
+            location: HttpCacheLocation.Public, 
+            cacheability: HttpCacheType.Cacheable, 
+            expirationSeconds: 120,
+            varyHeaderValue: "Test, Something")]
         public AttributeDiscoveryModel GetAuthorizationPolicyNotMatched()
         {
             return new AttributeDiscoveryModel();

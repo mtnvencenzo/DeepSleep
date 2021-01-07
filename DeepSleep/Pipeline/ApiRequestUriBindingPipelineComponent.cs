@@ -24,7 +24,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var formUrlEncodedObjectSerializer = context?.RequestServices?.GetService<IFormUrlEncodedObjectSerializer>();
 
@@ -59,7 +61,7 @@
             {
                 var addedBindingError = false;
 
-                if (context.Request.InvocationContext?.UriModelType != null || (context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
+                if (context.Routing?.Route?.Location?.UriParameterType != null || (context.Request?.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
                 {
                     var nameValues = new Dictionary<string, string>();
 
@@ -90,7 +92,7 @@
                         // ----------------------------------------
                         // Bind the UrlModel if UrlModelType exists
                         // ----------------------------------------
-                        if (context.Request.InvocationContext?.UriModelType != null)
+                        if (context.Routing.Route.Location.UriParameterType != null)
                         {
                             var bindingValues = nameValues
                                 .Select(kv => $"{kv.Key}={kv.Value}");
@@ -101,7 +103,7 @@
                             {
                                 var uriModel = await formUrlEncodedObjectSerializer.Deserialize(
                                     formUrlEncoded,
-                                    context.Request.InvocationContext.UriModelType,
+                                    context.Routing.Route.Location.UriParameterType,
                                     true).ConfigureAwait(false);
 
                                 context.Request.InvocationContext.UriModel = uriModel;

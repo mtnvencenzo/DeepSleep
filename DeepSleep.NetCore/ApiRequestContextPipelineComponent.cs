@@ -1092,6 +1092,8 @@
             {
                 await requestPipeline.Run(contextResolver);
 
+                context.SetThreadCulure();
+
                 var responseDate = DateTimeOffset.UtcNow;
                 context.Response.Date = responseDate;
 
@@ -1153,8 +1155,8 @@
                     if (!context.Request.IsHeadRequest())
                     {
                         var contentLength = await context.Response.ResponseWriter.WriteType(
-                            httpcontext.Response.Body,
-                            context.Response.ResponseObject,
+                            stream: httpcontext.Response.Body,
+                            obj: context.Response.ResponseObject,
                             context.Response.ResponseWriterOptions,
                             (l) =>
                             {

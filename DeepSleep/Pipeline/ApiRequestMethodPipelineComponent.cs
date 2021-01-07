@@ -21,7 +21,9 @@
         /// <returns></returns>
         public override async Task Invoke(IApiRequestContextResolver contextResolver)
         {
-            var context = contextResolver.GetContext();
+            var context = contextResolver
+                 .GetContext()
+                 .SetThreadCulure();
 
             var routes = context?.RequestServices.GetService<IApiRoutingTable>();
             var resolver = context?.RequestServices.GetService<IUriRouteResolver>();

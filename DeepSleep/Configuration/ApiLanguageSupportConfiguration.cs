@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace DeepSleep.Configuration
+﻿namespace DeepSleep.Configuration
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// 
     /// </summary>
@@ -14,5 +14,13 @@ namespace DeepSleep.Configuration
         /// <summary>Gets or sets the supported languages.</summary>
         /// <value>The supported languages.</value>
         public IList<string> SupportedLanguages { get; set; }
+
+        /// <summary>Gets or sets the use accepted language as thread UI culture.</summary>
+        /// <value>The use accepted language as thread UI culture.</value>
+        public bool? UseAcceptedLanguageAsThreadUICulture { get; set; }
+
+        /// <summary>Gets or sets the use accepted language as thread culture.</summary>
+        /// <value>The use accepted language as thread culture.</value>
+        public bool? UseAcceptedLanguageAsThreadCulture { get; set; }
     }
 }

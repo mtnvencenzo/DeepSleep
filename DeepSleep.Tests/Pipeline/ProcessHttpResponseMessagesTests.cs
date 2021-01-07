@@ -42,11 +42,11 @@
                 {
                     Errors = new List<string>
                     {
-                        "200|test1",
-                        "100|test1",
-                        "100|test1",
-                        "500|test1",
-                        "300|test1"
+                        "test1.0",
+                        "test1.1",
+                        "test1.0",
+                        "test1.5",
+                        "test1.3"
                     }
                 },
                 Response = new ApiResponseInfo
@@ -55,7 +55,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
@@ -64,20 +64,15 @@
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeAssignableTo<ApiResult>();
+            context.Response.ResponseObject.Should().BeAssignableTo<IList<string>>();
 
-            var apiResult = context.Response.ResponseObject as ApiResult;
+            var apiResult = context.Response.ResponseObject as IList<string>;
             apiResult.Should().NotBeNull();
-            apiResult.Messages.Should().NotBeNull();
-            apiResult.Messages.Should().HaveCount(4);
-            apiResult.Messages[1].Code.Should().Be("100");
-            apiResult.Messages[1].Message.Should().Be("test1");
-            apiResult.Messages[0].Code.Should().Be("200");
-            apiResult.Messages[0].Message.Should().Be("test1");
-            apiResult.Messages[3].Code.Should().Be("300");
-            apiResult.Messages[3].Message.Should().Be("test1");
-            apiResult.Messages[2].Code.Should().Be("500");
-            apiResult.Messages[2].Message.Should().Be("test1");
+            apiResult.Should().HaveCount(4);
+            apiResult[0].Should().Be("test1.0");
+            apiResult[1].Should().Be("test1.1");
+            apiResult[2].Should().Be("test1.3");
+            apiResult[3].Should().Be("test1.5");
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(0);
@@ -92,7 +87,7 @@
                 Runtime = null,
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
@@ -115,7 +110,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
@@ -138,7 +133,7 @@
                 },
                 Configuration = new Configuration.DefaultApiRequestConfiguration
                 {
-                    ApiErrorResponseProvider = (p) => new ApiResultValidationErrorResponseProvider()
+                    ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
