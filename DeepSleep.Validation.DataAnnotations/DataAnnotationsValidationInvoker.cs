@@ -8,7 +8,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public class DataAnnotationsValidationInvoker : IApiValidationInvoker
+    public class DataAnnotationsValidationInvoker
     {
         /// <summary>Invokes the method validation.</summary>
         /// <param name="method">The method.</param>

@@ -4,6 +4,7 @@
     using FluentAssertions;
     using System;
     using System.Threading.Tasks;
+    using DeepSleep.Validation;
     using Xunit;
 
     public class PingTests : PipelineTestBase

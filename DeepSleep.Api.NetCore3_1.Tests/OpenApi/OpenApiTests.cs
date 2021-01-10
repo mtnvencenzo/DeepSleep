@@ -6,7 +6,7 @@
     using Newtonsoft.Json.Linq;
     using Newtonsoft.Json.Schema;
     using System;
-    using System.Collections.Generic;
+    using DeepSleep.Validation;
     using System.Text;
     using System.Threading.Tasks;
     using Xunit;

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.NetCore
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Pipeline;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
@@ -63,6 +64,7 @@
             Console.WriteLine($"{context.Request.Method.ToUpper()} {context.Request.RequestUri} {context.Request.Protocol}");
             Console.ForegroundColor = previousForeColor;
 #endif
+            var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IApiRequestConfiguration)) as IApiRequestConfiguration;
 
             await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
         }
@@ -1091,7 +1093,6 @@
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 await requestPipeline.Run(contextResolver);
-
                 context.SetThreadCulure();
 
                 var responseDate = DateTimeOffset.UtcNow;
@@ -1152,6 +1153,7 @@
                             allowMultiple: false);
                     }
 
+
                     if (!context.Request.IsHeadRequest())
                     {
                         var contentLength = await context.Response.ResponseWriter.WriteType(
@@ -1201,9 +1203,10 @@
                     context.Response.AddHeader("Content-Length", "0");
                     addHeadersToResponse();
                 }
+
+                context.Runtime.Duration.UtcEnd = DateTime.UtcNow;
             }
 
-            context.Runtime.Duration.UtcEnd = DateTime.UtcNow;
             return true;
         }
     }

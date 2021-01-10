@@ -5,6 +5,7 @@
     using global::Api.DeepSleep.Controllers.Pipeline;
     using System;
     using System.Collections.Generic;
+    using DeepSleep.Validation;
     using System.Threading.Tasks;
     using Xunit;
 

@@ -6,6 +6,7 @@
     using System;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class MethodNotFound405RequestTest : PipelineTestBase
     {

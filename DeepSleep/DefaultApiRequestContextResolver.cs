@@ -8,11 +8,11 @@
     /// <seealso cref="DeepSleep.IApiRequestContextResolver" />
     public class DefaultApiRequestContextResolver : IApiRequestContextResolver
     {
-        private ApiRequestContext _context;
+        private ApiRequestContext context;
 
         /// <summary>Gets the context.</summary>
         /// <returns></returns>
-        public ApiRequestContext GetContext() => _context;
+        public ApiRequestContext GetContext() => this.context;
 
         /// <summary>Sets the context.</summary>
         /// <param name="context">The context.</param>
@@ -20,10 +20,12 @@
         /// <exception cref="System.InvalidOperationException">Attempt to overwrite existing context not allowed</exception>
         public IApiRequestContextResolver SetContext(ApiRequestContext context)
         {
-            if (_context != null)
+            if (this.context != null)
+            {
                 throw new InvalidOperationException("Attempt to overwrite existing context not allowed");
+            }
 
-            _context = context;
+            this.context = context;
             return this;
         }
     }

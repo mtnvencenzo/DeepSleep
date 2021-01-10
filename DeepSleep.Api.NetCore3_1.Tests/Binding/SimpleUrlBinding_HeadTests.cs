@@ -9,6 +9,7 @@
     using System.Globalization;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class SimpleUrlBinding_HeadTests : PipelineTestBase
     {

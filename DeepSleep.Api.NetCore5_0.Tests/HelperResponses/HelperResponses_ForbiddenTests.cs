@@ -7,6 +7,7 @@
     using System;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class HelperResponses_ForbiddenTests : PipelineTestBase
     {

@@ -5,6 +5,7 @@
     using global::Api.DeepSleep.Controllers.Discovery;
     using System;
     using System.Threading.Tasks;
+    using DeepSleep.Validation;
     using Xunit;
 
     public class DelegatedDiscoveryTests : PipelineTestBase

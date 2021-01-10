@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Pipeline;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using System.Collections.Generic;
     using Xunit;
@@ -71,8 +72,8 @@
             apiResult.Should().HaveCount(4);
             apiResult[0].Should().Be("test1.0");
             apiResult[1].Should().Be("test1.1");
-            apiResult[2].Should().Be("test1.3");
-            apiResult[3].Should().Be("test1.5");
+            apiResult[2].Should().Be("test1.5");
+            apiResult[3].Should().Be("test1.3");
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(0);

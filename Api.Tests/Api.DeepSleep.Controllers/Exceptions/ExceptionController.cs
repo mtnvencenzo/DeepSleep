@@ -18,7 +18,7 @@
             throw new ApiNotImplementedException();
         }
 
-        [TypeBasedValidator(typeof(NotImplementedExceptionThrowValidator))]
+        [ApiEndpointValidation(typeof(NotImplementedExceptionThrowValidator))]
         public void NotImplementedFromValidator()
         {
         }
@@ -41,7 +41,7 @@
             throw new ApiBadGatewayException();
         }
 
-        [TypeBasedValidator(typeof(BadGatewayExceptionThrowValidator))]
+        [ApiEndpointValidation(typeof(BadGatewayExceptionThrowValidator))]
         public void BadGatewayFromValidator()
         {
         }
@@ -64,7 +64,7 @@
             throw new ApiGatewayTimeoutException();
         }
 
-        [TypeBasedValidator(typeof(GatewayTimeoutExceptionThrowValidator))]
+        [ApiEndpointValidation(typeof(GatewayTimeoutExceptionThrowValidator))]
         public void GatewayTimeoutFromValidator()
         {
         }
@@ -87,7 +87,7 @@
             throw new ApiServiceUnavailableException();
         }
 
-        [TypeBasedValidator(typeof(ServiceUnavailableExceptionThrowValidator))]
+        [ApiEndpointValidation(typeof(ServiceUnavailableExceptionThrowValidator))]
         public void ServiceUnavailableFromValidator()
         {
         }
@@ -110,7 +110,7 @@
             throw new Exception();
         }
 
-        [TypeBasedValidator(typeof(UnhandledExceptionThrowValidator))]
+        [ApiEndpointValidation(typeof(UnhandledExceptionThrowValidator))]
         public void UnhandledFromValidator()
         {
         }

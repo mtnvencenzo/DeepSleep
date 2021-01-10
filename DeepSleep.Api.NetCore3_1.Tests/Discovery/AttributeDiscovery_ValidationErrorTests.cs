@@ -2,8 +2,8 @@
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
     using DeepSleep.Auth;
+    using DeepSleep.Validation;
     using FluentAssertions;
-    using global::Api.DeepSleep.Controllers.Discovery;
     using global::Api.DeepSleep.Models;
     using System;
     using System.Threading.Tasks;

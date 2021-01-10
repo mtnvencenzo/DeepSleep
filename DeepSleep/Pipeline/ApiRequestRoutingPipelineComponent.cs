@@ -1,8 +1,11 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Configuration;
+    using DeepSleep.Validation;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -69,6 +72,28 @@
                 }
 
                 context.Configuration = MergeConfigurations(context, defaultRequestConfig, context.Routing?.Route?.Configuration);
+                
+                if (context.Routing.Route?.Location?.MethodInfo != null)
+                {
+                    var attributes = context.Routing.Route.Location.MethodInfo.GetCustomAttributes();
+
+                    // Find any attribute request pipeline components
+                    // and add the to the final configuration of the request.
+                    attributes
+                        .Where(a => a as IRequestPipelineComponent != null)
+                        .Select(a => a as IRequestPipelineComponent)
+                        .ToList()
+                        .ForEach(p => context.Configuration.PipelineComponents.Add(p));
+
+                    // Find any attribute validator components
+                    // and add the to the final configuration of the request.
+                    attributes
+                        .Where(a => a as IEndpointValidatorComponent != null)
+                        .Select(a => a as IEndpointValidatorComponent)
+                        .ToList()
+                        .ForEach(v => context.Configuration.Validators.Add(v));
+                }
+
 
                 if (context.Configuration?.RequestValidation?.MaxRequestLength != null && context.ConfigureMaxRequestLength != null)
                 {
@@ -263,6 +288,52 @@
             requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
 
             // ----------------------------
+            // Validator Components
+            // ----------------------------
+            if (endpointConfig?.Validators != null || defaultConfig?.Validators != null)
+            {
+                if (endpointConfig.Validators != null)
+                {
+                    requestConfig.Validators = new List<IEndpointValidatorComponent>(endpointConfig.Validators);
+                }
+                else if (defaultConfig.Validators != null)
+                {
+                    requestConfig.Validators = new List<IEndpointValidatorComponent>(defaultConfig.Validators);
+                }
+                else
+                {
+                    requestConfig.Validators = systemConfig.Validators;
+                }
+            }
+            else
+            {
+                requestConfig.Validators = systemConfig.Validators;
+            }
+
+            // ----------------------------
+            // Pipeline Components
+            // ----------------------------
+            if (endpointConfig?.PipelineComponents != null || defaultConfig?.PipelineComponents != null)
+            {
+                if (endpointConfig.PipelineComponents != null)
+                {
+                    requestConfig.PipelineComponents = new List<IRequestPipelineComponent>(endpointConfig.PipelineComponents);
+                }
+                else if (defaultConfig.PipelineComponents != null)
+                {
+                    requestConfig.PipelineComponents = new List<IRequestPipelineComponent>(defaultConfig.PipelineComponents);
+                }
+                else
+                {
+                    requestConfig.PipelineComponents = systemConfig.PipelineComponents;
+                }
+            }
+            else
+            {
+                requestConfig.PipelineComponents = systemConfig.PipelineComponents;
+            }
+
+            // ----------------------------
             // Language Support Validation
             // ----------------------------
             if (endpointConfig?.LanguageSupport != null || defaultConfig?.LanguageSupport != null)
@@ -285,6 +356,16 @@
                         ?? defaultConfig?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture
                         ?? systemConfig.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture
                 };
+
+                var endpointSupportedLanguages = endpointConfig?.LanguageSupport?.SupportedLanguages != null
+                    ? new List<string>(endpointConfig.LanguageSupport.SupportedLanguages)
+                    : null;
+
+                var defaultSupportedLanguages = defaultConfig?.LanguageSupport?.SupportedLanguages != null
+                    ? new List<string>(defaultConfig.LanguageSupport.SupportedLanguages)
+                    : null;
+
+                requestConfig.LanguageSupport.SupportedLanguages = endpointSupportedLanguages ?? defaultSupportedLanguages ?? systemConfig.LanguageSupport?.SupportedLanguages;
             }
             else
             {
@@ -362,11 +443,39 @@
                         ?? systemConfig?.CrossOriginConfig?.AllowCredentials,
                     MaxAgeSeconds = endpointConfig?.CrossOriginConfig?.MaxAgeSeconds
                         ?? defaultConfig?.CrossOriginConfig?.MaxAgeSeconds
-                        ?? systemConfig?.CrossOriginConfig?.MaxAgeSeconds,
-                    AllowedOrigins = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedOrigins ?? defaultConfig?.CrossOriginConfig?.AllowedOrigins ?? systemConfig.CrossOriginConfig.AllowedOrigins),
-                    ExposeHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.ExposeHeaders ?? defaultConfig?.CrossOriginConfig?.ExposeHeaders ?? systemConfig.CrossOriginConfig.ExposeHeaders),
-                    AllowedHeaders = new List<string>(endpointConfig?.CrossOriginConfig?.AllowedHeaders ?? defaultConfig?.CrossOriginConfig?.AllowedHeaders ?? systemConfig.CrossOriginConfig.AllowedHeaders)
+                        ?? systemConfig?.CrossOriginConfig?.MaxAgeSeconds
                 };
+
+                var endpointAllowedOrigins = endpointConfig?.CrossOriginConfig?.AllowedOrigins != null
+                    ? new List<string>(endpointConfig.CrossOriginConfig.AllowedOrigins)
+                    : null;
+
+                var defaultAllowedOrigins = defaultConfig?.CrossOriginConfig?.AllowedOrigins != null
+                    ? new List<string>(defaultConfig.CrossOriginConfig.AllowedOrigins)
+                    : null;
+
+                requestConfig.CrossOriginConfig.AllowedOrigins = endpointAllowedOrigins ?? defaultAllowedOrigins ?? systemConfig.CrossOriginConfig?.AllowedOrigins;
+
+                var endpointExposeHeaders = endpointConfig?.CrossOriginConfig?.ExposeHeaders != null
+                    ? new List<string>(endpointConfig.CrossOriginConfig.ExposeHeaders)
+                    : null;
+
+                var defaultExposeHeaders = defaultConfig?.CrossOriginConfig?.ExposeHeaders != null
+                    ? new List<string>(defaultConfig.CrossOriginConfig.ExposeHeaders)
+                    : null;
+
+                requestConfig.CrossOriginConfig.ExposeHeaders = endpointExposeHeaders ?? defaultExposeHeaders ?? systemConfig.CrossOriginConfig?.ExposeHeaders;
+
+                var endpointAllowedHeaders = endpointConfig?.CrossOriginConfig?.AllowedHeaders != null
+                    ? new List<string>(endpointConfig.CrossOriginConfig.AllowedHeaders)
+                    : null;
+
+                var defaultAllowedHeaders = defaultConfig?.CrossOriginConfig?.AllowedHeaders != null
+                    ? new List<string>(defaultConfig.CrossOriginConfig.AllowedHeaders)
+                    : null;
+
+                requestConfig.CrossOriginConfig.AllowedHeaders = endpointAllowedHeaders ?? defaultAllowedHeaders ?? systemConfig.CrossOriginConfig?.AllowedHeaders;
+
             }
             else
             {
@@ -418,16 +527,24 @@
                     ? new List<string>(endpointConfig.ReadWriteConfiguration.ReadableMediaTypes)
                     : null;
 
+                var defaultReadableMediaTypes = defaultConfig?.ReadWriteConfiguration?.ReadableMediaTypes != null
+                    ? new List<string>(defaultConfig.ReadWriteConfiguration.ReadableMediaTypes)
+                    : null;
+
                 var endpointWriteableMediaTypes = endpointConfig?.ReadWriteConfiguration?.WriteableMediaTypes != null
                     ? new List<string>(endpointConfig.ReadWriteConfiguration.WriteableMediaTypes)
                     : null;
 
+                var defaultWriteableMediaTypes = defaultConfig?.ReadWriteConfiguration?.WriteableMediaTypes != null
+                    ? new List<string>(defaultConfig.ReadWriteConfiguration.WriteableMediaTypes)
+                    : null;
+
                 requestConfig.ReadWriteConfiguration.ReadableMediaTypes = endpointReadableMediaTypes
-                        ?? defaultConfig?.ReadWriteConfiguration?.ReadableMediaTypes
+                        ?? defaultReadableMediaTypes
                         ?? systemConfig.ReadWriteConfiguration?.ReadableMediaTypes;
 
                 requestConfig.ReadWriteConfiguration.WriteableMediaTypes = endpointWriteableMediaTypes
-                        ?? defaultConfig?.ReadWriteConfiguration?.WriteableMediaTypes
+                        ?? defaultWriteableMediaTypes
                         ?? systemConfig.ReadWriteConfiguration?.WriteableMediaTypes;
             }
             else

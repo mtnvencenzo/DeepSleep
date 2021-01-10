@@ -5,6 +5,7 @@
     using global::Api.DeepSleep.Controllers.Pipeline;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class CorsTests : PipelineTestBase
     {

@@ -8,6 +8,7 @@ namespace Api.DeepSleep.NetCore3_1
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -54,14 +55,40 @@ namespace Api.DeepSleep.NetCore3_1
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
                     DiscoveryStrategies = ServiceStartup.DiscoveryStrategies(),
-                    ApiValidationProvider = ServiceStartup.DefaultValidationProvider(this.serviceProvider),
                     DefaultRequestConfiguration = ServiceStartup.DefaultRequestConfiguration(),
                     PingEndpoint = new EndpointUsage
                     {
                         Enabled = true,
                         RelativePath = "ping"
                     },
-                    WriteConsoleHeader = false
+                    WriteConsoleHeader = false,
+                    OnException = (ctx, ex) => {
+                        if (ctx.Items.ContainsKey("exceptionHandlerCount"))
+                        {
+                            var count = (int)ctx.Items["exceptionHandlerCount"];
+                            ctx.Items["exceptionHandlerCount"] = count++;
+                        }
+                        else
+                        {
+                            ctx.Items["exceptionHandlerCount"] = 1;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnRequestProcessed = (ctx) =>
+                    {
+                        if (ctx.Items.ContainsKey("requestHandlerCount"))
+                        {
+                            var count = (int)ctx.Items["requestHandlerCount"];
+                            ctx.Items["requestHandlerCount"] = count++;
+                        }
+                        else
+                        {
+                            ctx.Items["requestHandlerCount"] = 1;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 });
 
 

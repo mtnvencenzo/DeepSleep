@@ -18,7 +18,6 @@
                 var messages = errors
                     .Where(e => !string.IsNullOrWhiteSpace(e))
                     .Distinct()
-                    .OrderBy(e => e)
                     .ToList();
 
                 return Task.FromResult(messages as object);

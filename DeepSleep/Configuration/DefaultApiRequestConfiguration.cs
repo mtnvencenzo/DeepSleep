@@ -1,5 +1,7 @@
 ﻿namespace DeepSleep.Configuration
 {
+    using DeepSleep.Pipeline;
+    using DeepSleep.Validation;
     using System;
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
@@ -62,5 +64,13 @@
         /// <summary>Gets or sets the validation error configuration.</summary>
         /// <value>The validation error configuration.</value>
         public ApiValidationErrorConfiguration ValidationErrorConfiguration { get; set; }
+
+        /// <summary>Gets or sets the pipeline components.</summary>
+        /// <value>The pipeline components.</value>
+        public IList<IRequestPipelineComponent> PipelineComponents { get; set; }
+
+        /// <summary>Gets or sets the validators.</summary>
+        /// <value>The validators.</value>
+        public IList<IEndpointValidatorComponent> Validators { get; set; }
     }
 }

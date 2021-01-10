@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
+    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>

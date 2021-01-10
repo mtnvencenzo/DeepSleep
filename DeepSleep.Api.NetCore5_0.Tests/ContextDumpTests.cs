@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using System;
     using System.Threading.Tasks;

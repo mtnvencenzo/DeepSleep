@@ -9,6 +9,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class AttributeDiscovery_LanguageSupportTests : PipelineTestBase
     {

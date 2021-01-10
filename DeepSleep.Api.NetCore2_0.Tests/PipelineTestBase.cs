@@ -3,6 +3,7 @@
     using DeepSleep;
     using DeepSleep.Configuration;
     using DeepSleep.NetCore;
+    using DeepSleep.Pipeline;
     using global::Api.DeepSleep.NetCore2_0;
     using Microsoft.AspNetCore.Builder.Internal;
     using Microsoft.AspNetCore.Hosting;

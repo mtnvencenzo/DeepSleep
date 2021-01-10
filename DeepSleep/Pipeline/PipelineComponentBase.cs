@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace DeepSleep.Pipeline
+﻿namespace DeepSleep.Pipeline
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// 
     /// </summary>

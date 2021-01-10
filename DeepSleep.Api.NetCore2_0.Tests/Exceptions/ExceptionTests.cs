@@ -1,8 +1,8 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests.Exceptions
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
+    using DeepSleep.Validation;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
 

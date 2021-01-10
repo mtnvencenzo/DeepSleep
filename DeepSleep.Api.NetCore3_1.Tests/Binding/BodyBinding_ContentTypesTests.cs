@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class BodyBinding_ContentTypesTests : PipelineTestBase
     {

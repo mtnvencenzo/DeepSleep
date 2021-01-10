@@ -1,9 +1,9 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests.Authentication
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using global::Api.DeepSleep.Controllers.Authentication;
-    using global::Api.DeepSleep.Controllers.Binding;
     using System;
     using System.Threading.Tasks;
     using Xunit;

@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Api.NetCore.Tests.Binding
 {
     using DeepSleep.Api.NetCore.Tests.Mocks;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using global::Api.DeepSleep.Models;
     using System;

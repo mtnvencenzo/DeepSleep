@@ -9,7 +9,8 @@
     using Api.DeepSleep.Controllers.HelperResponses;
     using Api.DeepSleep.Controllers.Items;
     using Api.DeepSleep.Controllers.Pipeline;
-    using Api.DeepSleep.Controllers.ValidationErrors;
+    using Api.DeepSleep.Controllers.RequestPipeline;
+    using Api.DeepSleep.Controllers.Validation;
     using global::DeepSleep;
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
@@ -42,8 +43,9 @@
             services.AddTransient<ContextDumpController>();
             services.AddTransient<DelegatedDiscoveryController>();
             services.AddTransient<AttributeDiscoveryController>();
-            services.AddTransient<ValidationErrorsController>();
+            services.AddTransient<ErrorResponseProviderController>();
             services.AddTransient<AttributeDiscoveryErrorResponseProviderController>();
+            services.AddTransient<RequestPipelineController>();
 
             // Only one of these to check both injection and no-injection resolution
             services.AddTransient<NotImplementedExceptionThrowValidator>();
@@ -1234,12 +1236,6 @@
                 AllowAnonymous = true,
                 ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>()
             };
-        }
-
-        public static IApiValidationProvider DefaultValidationProvider(IServiceProvider serviceProvider)
-        {
-            return new DefaultApiValidationProvider(serviceProvider)
-                .RegisterInvoker<TypeBasedValidationInvoker>();
         }
     }
 }

@@ -3,14 +3,11 @@
     using DeepSleep.Api.NetCore.Tests.Mocks;
     using DeepSleep.Auth;
     using FluentAssertions;
-    using global::Api.DeepSleep.Controllers;
     using global::Api.DeepSleep.Controllers.Authorization;
-    using global::Api.DeepSleep.Controllers.Binding;
-    using Microsoft.Extensions.DependencyInjection;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Validation;
 
     public class Authorization_CounfiguredPolicyTests : PipelineTestBase
     {

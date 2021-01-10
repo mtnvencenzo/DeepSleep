@@ -4,13 +4,6 @@
 
     public class ContextDumpController
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
-
-        public ContextDumpController(IApiRequestContextResolver apiRequestContextResolver)
-        {
-            this.apiRequestContextResolver = apiRequestContextResolver;
-        }
-
         /// <summary>Gets the with items.</summary>
         /// <returns></returns>
         public void GetDump()

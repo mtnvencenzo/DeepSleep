@@ -2,6 +2,7 @@
 {
     using DeepSleep;
     using DeepSleep.Auth;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using Microsoft.AspNetCore.Http;
     using System;
@@ -54,7 +55,8 @@
             bool? expectedAuthorizationResult = null,
             AuthorizationType expectedAuthorizedBy = AuthorizationType.None,
             bool? allowCustom500Response = false,
-            long? expectedContentLength = null)
+            long? expectedContentLength = null,
+            NameValuePairs<string, string> expectedItems = null)
         {
             apiContext.Should().NotBeNull();
             response.Should().NotBeNull();
@@ -227,6 +229,28 @@
             }
 
             apiContext.Request.AcceptCulture?.Name.Should().Be(expectedCulture ?? CultureInfo.CurrentUICulture.Name);
+
+            apiContext.Items.ContainsKey("requestHandlerCount").Should().BeTrue();
+            apiContext.Items["requestHandlerCount"].Should().Be(1);
+
+            var exceptionCount = apiContext.Runtime.Exceptions
+                .Where(e => e as ApiException == null)
+                .Count();
+
+            if (apiContext.Response.StatusCode >= 500 && exceptionCount > 0)
+            {
+                apiContext.Items.ContainsKey("exceptionHandlerCount").Should().BeTrue();
+                apiContext.Items["exceptionHandlerCount"].Should().Be(1);
+            }
+
+            if (expectedItems != null)
+            {
+                foreach (var item in expectedItems)
+                {
+                    apiContext.Items.TryGetValue(item.Key, out var val);
+                    val.Should().Be(item.Value);
+                }
+            }
 
             var jsonDump = apiContext.Dump();
             jsonDump.Should().NotBeNullOrWhiteSpace();

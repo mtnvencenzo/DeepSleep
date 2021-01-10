@@ -5,6 +5,7 @@
     using DeepSleep.Formatting;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.Mocks;
+    using DeepSleep.Validation;
     using FluentAssertions;
     using Moq;
     using System;
@@ -1867,7 +1868,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_crossoriginconfig_null_default_null_returns_expected()
+        public async void request_config___crossoriginconfig_null_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -1916,7 +1917,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_crossoriginconfig_notnull_default_null_returns_expected()
+        public async void request_config___crossoriginconfig_notnull_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -1976,7 +1977,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_crossoriginconfig_null_default_notnull_returns_expected()
+        public async void request_config___crossoriginconfig_null_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2036,7 +2037,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_crossoriginconfig__default_notnull_returns_expected()
+        public async void request_config___crossoriginconfig__default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2105,7 +2106,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_headervalidationconfig_null_default_null_returns_expected()
+        public async void request_config___headervalidationconfig_null_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2140,7 +2141,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_headervalidationconfig_notnull_default_null_returns_expected()
+        public async void request_config___headervalidationconfig_notnull_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2179,7 +2180,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_headervalidationconfig_null_default_notnull_returns_expected()
+        public async void request_config___headervalidationconfig_null_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2218,7 +2219,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_headervalidationconfig_default_notnull_returns_expected()
+        public async void request_config___headervalidationconfig_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2263,7 +2264,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_validationerrorconfig_null_default_null_returns_expected()
+        public async void request_config___validationerrorconfig_null_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2306,7 +2307,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_validationerrorconfig_notnull_default_null_returns_expected()
+        public async void request_config___validationerrorconfig_notnull_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2351,7 +2352,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_validationerrorconfig_null_default_notnull_returns_expected()
+        public async void request_config___validationerrorconfig_null_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2396,7 +2397,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_validationerrorconfig_default_notnull_returns_expected()
+        public async void request_config___validationerrorconfig_default_notnull_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2447,7 +2448,7 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_validationerrorconfig_default_notnull_endpoint_mixed_null_returns_expected()
+        public async void request_config___validationerrorconfig_default_notnull_endpoint_mixed_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
             {
@@ -2496,6 +2497,361 @@
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("UriBindingValueError - Override");
         }
 
+        [Fact]
+        public async void request_config___pipelinecomponents_default_notnull_returns_endpoint()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                PipelineComponents = new List<IRequestPipelineComponent>
+                {
+                    new RequestPipelineComponent<CustomRequestPipelineComponent>(PipelinePlacement.AfterEndpointInvocation, 0)
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                PipelineComponents = new List<IRequestPipelineComponent>
+                {
+                    new RequestPipelineComponent<CustomRequestPipelineComponent>(PipelinePlacement.AfterEndpointInvocation, 0),
+                    new RequestPipelineComponent<CustomRequestPipelineComponent>(PipelinePlacement.AfterEndpointInvocation, 1),
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.PipelineComponents.Should().NotBeNull();
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(defaultConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(endpointConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async void request_config___pipelinecomponents_default_notnull_returns_default()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                PipelineComponents = new List<IRequestPipelineComponent>
+                {
+                    new RequestPipelineComponent<CustomRequestPipelineComponent>(PipelinePlacement.AfterEndpointInvocation, 0)
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.PipelineComponents.Should().NotBeNull();
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(defaultConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(endpointConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async void request_config___pipelinecomponents_default_null_returns_endpoint()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                PipelineComponents = new List<IRequestPipelineComponent>
+                {
+                    new RequestPipelineComponent<CustomRequestPipelineComponent>(PipelinePlacement.AfterEndpointInvocation, 0)
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.PipelineComponents.Should().NotBeNull();
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(defaultConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(endpointConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async void request_config___pipelinecomponents_default_null_endpoint_null_returns_system()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.PipelineComponents.Should().NotBeNull();
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(defaultConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().NotBeSameAs(endpointConfig.PipelineComponents);
+            context.Configuration.PipelineComponents.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public async void request_config___validators_default_notnull_returns_endpoint()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                Validators = new List<IEndpointValidatorComponent>
+                {
+                    new EndpointValidatorComponent<CustomRequestPipelineModelValidator>()
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                Validators = new List<IEndpointValidatorComponent>
+                {
+                    new EndpointValidatorComponent<CustomRequestPipelineModelValidator>(),
+                    new EndpointValidatorComponent<CustomRequestPipelineModelValidator>(),
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.Validators.Should().NotBeNull();
+            context.Configuration.Validators.Should().NotBeSameAs(defaultConfig.Validators);
+            context.Configuration.Validators.Should().NotBeSameAs(endpointConfig.Validators);
+            context.Configuration.Validators.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async void request_config___validators_default_notnull_returns_default()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                Validators = new List<IEndpointValidatorComponent>
+                {
+                    new EndpointValidatorComponent<CustomRequestPipelineModelValidator>()
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.Validators.Should().NotBeNull();
+            context.Configuration.Validators.Should().NotBeSameAs(defaultConfig.Validators);
+            context.Configuration.Validators.Should().NotBeSameAs(endpointConfig.Validators);
+            context.Configuration.Validators.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async void request_config___validators_default_null_returns_endpoint()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                Validators = new List<IEndpointValidatorComponent>
+                {
+                    new EndpointValidatorComponent<CustomRequestPipelineModelValidator>()
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.Validators.Should().NotBeNull();
+            context.Configuration.Validators.Should().NotBeSameAs(defaultConfig.Validators);
+            context.Configuration.Validators.Should().NotBeSameAs(endpointConfig.Validators);
+            context.Configuration.Validators.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async void request_config___validators_default_null_endpoint_null_returns_system()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.Validators.Should().NotBeNull();
+            context.Configuration.Validators.Should().NotBeSameAs(defaultConfig.Validators);
+            context.Configuration.Validators.Should().NotBeSameAs(endpointConfig.Validators);
+            context.Configuration.Validators.Should().HaveCount(0);
+        }
+
+
         private void AssertConfiguration(IApiRequestConfiguration request, IApiRequestConfiguration endpoint, IApiRequestConfiguration def)
         {
             var system = ApiRequestContext.GetDefaultRequestConfiguration();
@@ -2503,6 +2859,24 @@
             request.AllowAnonymous.Should().Be(endpoint?.AllowAnonymous ?? def?.AllowAnonymous ?? system.AllowAnonymous);
             request.Deprecated.Should().Be(endpoint?.Deprecated ?? def?.Deprecated ?? system.Deprecated);
             request.IncludeRequestIdHeaderInResponse.Should().Be(endpoint?.IncludeRequestIdHeaderInResponse ?? def?.IncludeRequestIdHeaderInResponse ?? system.IncludeRequestIdHeaderInResponse);
+
+            // ----------------------
+            // Validator Configuration
+            // ----------------------
+            request.Validators.Count.Should().Be(endpoint?.Validators?.Count ?? def?.Validators?.Count ?? system.Validators.Count);
+            for (int i = 0; i < request.Validators.Count; i++)
+            {
+                request.Validators[i].Should().Be(endpoint?.Validators?[i] ?? def?.Validators?[i] ?? system.Validators[i]);
+            }
+
+            // ----------------------
+            // Pipeline Configuration
+            // ----------------------
+            request.PipelineComponents.Count.Should().Be(endpoint?.PipelineComponents?.Count ?? def?.PipelineComponents?.Count ?? system.PipelineComponents.Count);
+            for (int i = 0; i < request.PipelineComponents.Count; i++)
+            {
+                request.PipelineComponents[i].Should().Be(endpoint?.PipelineComponents?[i] ?? def?.PipelineComponents?[i] ?? system.PipelineComponents[i]);
+            }
 
             // -------------------
             // Language Support Configuration

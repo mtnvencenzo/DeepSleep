@@ -2,6 +2,7 @@
 {
     using Api.DeepSleep.Models;
     using global::DeepSleep;
+    using global::DeepSleep.Validation;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,7 +24,6 @@
                 var messages = errors
                     .Where(e => !string.IsNullOrWhiteSpace(e))
                     .Distinct()
-                    .OrderBy(e => e)
                     .Select(e => new ErrorMessage { ErrorMessageStr = e })
                     .ToList();
 

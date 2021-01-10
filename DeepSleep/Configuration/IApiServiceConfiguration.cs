@@ -16,17 +16,17 @@
         /// <value>The discovery strategies.</value>
         IList<IRouteDiscoveryStrategy> DiscoveryStrategies { get; set; }
 
-        /// <summary>Gets or sets the API validation provider.</summary>
-        /// <value>The API validation provider.</value>
-        IApiValidationProvider ApiValidationProvider { get; set; }
-
         /// <summary>Gets or sets the default request configuration.</summary>
         /// <value>The default request configuration.</value>
         IApiRequestConfiguration DefaultRequestConfiguration { get; set; }
 
-        /// <summary>Gets or sets the exception handler.</summary>
-        /// <value>The exception handler.</value>
-        Func<ApiRequestContext, Exception, Task<long>> ExceptionHandler { get; set; }
+        /// <summary>Gets or sets the on exception.</summary>
+        /// <value>The on exception.</value>
+        Func<ApiRequestContext, Exception, Task> OnException { get; set; }
+
+        /// <summary>Gets or sets the on request processed.</summary>
+        /// <value>The on request processed.</value>
+        Func<ApiRequestContext, Task> OnRequestProcessed { get; set; }
 
         /// <summary>Gets or sets the default json formatting configuration
         /// </summary>

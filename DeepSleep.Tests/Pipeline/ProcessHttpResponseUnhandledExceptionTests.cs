@@ -3,6 +3,7 @@
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     /// <summary>
@@ -11,7 +12,7 @@
     public class ProcessHttpResponseUnhandledExceptionTests
     {
         [Fact]
-        public async void ReturnsTrueForNullException()
+        public async void unhandled_exception___returns_true_for_null_exception()
         {
             var context = new ApiRequestContext();
 
@@ -23,7 +24,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndProcessNotImplementedExceptionCorrectly()
+        public async void unhandled_exception___returns_true_and_process_not_implemented_exception_correctly()
         {
             var context = new ApiRequestContext();
 
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndProcessNotImplementedExceptionCorrectlyAndDoesntHandleExceptionNotCalled()
+        public async void unhandled_exception___returns_true_and_process_not_implemented_exception_handler_not_called()
         {
             var context = new ApiRequestContext();
 
@@ -53,7 +54,7 @@
 
             var config = new DefaultApiServiceConfiguration
             {
-                ExceptionHandler = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
+                OnException = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
             };
 
             var exception = new ApiNotImplementedException();
@@ -74,7 +75,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndProcessExceptionCorrectlyAndProcessExceptionCalled()
+        public async void unhandled_exception___returns_true_and_process_bad_gateway_exception_handler_not_called()
         {
             var context = new ApiRequestContext();
 
@@ -82,22 +83,79 @@
 
             var config = new DefaultApiServiceConfiguration
             {
-                ExceptionHandler = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
+                OnException = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
             };
 
-            var exception = new Exception("ex");
+            var exception = new ApiBadGatewayException();
 
             var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
-            context.Response.StatusCode.Should().Be(500);
+            context.Response.StatusCode.Should().Be(502);
 
-            context.Validation.Should().NotBeNull();
             context.Validation.Errors.Should().NotBeNull();
             context.Validation.Errors.Should().HaveCount(0);
-            exHandled.Should().Be(true);
+            exHandled.Should().Be(false);
+            context.Runtime.Exceptions.Should().NotBeNull();
+            context.Runtime.Exceptions.Should().HaveCount(1);
+            context.Runtime.Exceptions[0].Should().Be(exception);
+        }
+
+        [Fact]
+        public async void unhandled_exception___returns_true_and_process_service_unavailable_exception_handler_not_called()
+        {
+            var context = new ApiRequestContext();
+
+            bool exHandled = false;
+
+            var config = new DefaultApiServiceConfiguration
+            {
+                OnException = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
+            };
+
+            var exception = new ApiServiceUnavailableException();
+
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(503);
+
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
+            exHandled.Should().Be(false);
+            context.Runtime.Exceptions.Should().NotBeNull();
+            context.Runtime.Exceptions.Should().HaveCount(1);
+            context.Runtime.Exceptions[0].Should().Be(exception);
+        }
+
+        [Fact]
+        public async void unhandled_exception___returns_true_and_process_gateway_timeout_exception_handler_not_called()
+        {
+            var context = new ApiRequestContext();
+
+            bool exHandled = false;
+
+            var config = new DefaultApiServiceConfiguration
+            {
+                OnException = (ctx, ex) => { exHandled = true; throw new Exception("Error"); }
+            };
+
+            var exception = new ApiGatewayTimeoutException();
+
+            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Response.StatusCode.Should().Be(504);
+
+            context.Validation.Errors.Should().NotBeNull();
+            context.Validation.Errors.Should().HaveCount(0);
+            exHandled.Should().Be(false);
             context.Runtime.Exceptions.Should().NotBeNull();
             context.Runtime.Exceptions.Should().HaveCount(1);
             context.Runtime.Exceptions[0].Should().Be(exception);

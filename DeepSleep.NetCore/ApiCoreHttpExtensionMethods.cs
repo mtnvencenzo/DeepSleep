@@ -5,6 +5,7 @@
     using DeepSleep.Formatting;
     using DeepSleep.Formatting.Formatters;
     using DeepSleep.NetCore.Controllers;
+    using DeepSleep.Pipeline;
     using DeepSleep.Validation;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
@@ -93,7 +94,6 @@
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
                 .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
-                .AddScoped<IApiValidationProvider, IApiValidationProvider>((p) => config?.ApiValidationProvider ?? GetDefaultValidationProvider(p))
                 .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config?.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
                 .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
                 .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
@@ -101,21 +101,12 @@
                 .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
                 .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
-                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => DefaultApiServiceConfiguration.GetDefaultRequestPipeline())
+                .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => ApiRequestPipeline.GetDefaultRequestPipeline())
                 .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config?.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
                 .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
 
             return services;
-        }
-
-        /// <summary>Gets the default validation provider.</summary>
-        /// <param name="serviceProvider">The service provider.</param>
-        /// <returns></returns>
-        private static IApiValidationProvider GetDefaultValidationProvider(IServiceProvider serviceProvider)
-        {
-            return new DefaultApiValidationProvider(serviceProvider)
-                .RegisterInvoker<TypeBasedValidationInvoker>();
         }
 
         /// <summary>Gets the default routing table.</summary>
@@ -242,7 +233,7 @@
             {
                 existingColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"  {r.HttpMethod.ToUpper().PadRight(9, ' ')}");
+                Console.Write($"  {r.HttpMethod.ToUpper(),-9}");
                 Console.ForegroundColor = existingColor;
 
                 WriteEndpointTemplate(r.Template);

@@ -16,7 +16,7 @@
 
         /// <summary>Gets the with items.</summary>
         /// <returns></returns>
-        [TypeBasedValidator(typeof(ItemsRsValidator))]
+        [ApiEndpointValidation(typeof(ItemsRsValidator))]
         public ItemsRs GetWithItems()
         {
             var found1 = apiRequestContextResolver.GetContext().TryGetItem<string>("TestItem", out var value1);
@@ -49,14 +49,14 @@
         public bool Found3 { get; set; }
     }
 
-    public class ItemsRsValidator : IApiValidator
+    public class ItemsRsValidator : IEndpointValidator
     {
         /// <summary>Validates the specified arguments.</summary>
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
-        public Task<IEnumerable<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            if (args.ValiationState != ApiValidationState.Failed)
+            if (args?.ApiContext?.ValidationState() != ApiValidationState.Failed)
             {
                 args.ApiContext.TryAddItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden-First");
                 args.ApiContext.UpsertItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden");
@@ -67,7 +67,7 @@
                 args.ApiContext.UpsertItem<string>("TestItem2", "TestItemValue2");
             }
 
-            return Task.FromResult(null as IEnumerable<ApiValidationResult>);
+            return Task.FromResult(null as IList<ApiValidationResult>);
         }
     }
 }

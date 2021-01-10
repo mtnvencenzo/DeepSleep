@@ -28,8 +28,8 @@
             catch (Exception ex)
             {
                 var context = contextResolver
-                     .GetContext()
-                     .SetThreadCulure();
+                    .GetContext()
+                    .SetThreadCulure();
 
                 var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
 
@@ -62,11 +62,11 @@
             {
                 var code = context.HandleException(exception);
 
-                if (config?.ExceptionHandler != null && exception as ApiNotImplementedException == null)
+                if (config?.OnException != null && exception as ApiException == null)
                 {
                     try
                     {
-                        await config.ExceptionHandler(context, exception).ConfigureAwait(false);
+                        await config.OnException(context, exception).ConfigureAwait(false);
                     }
                     catch { }
                 }

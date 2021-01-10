@@ -5,9 +5,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class NotImplementedExceptionThrowValidator : IApiValidator
+    public class NotImplementedExceptionThrowValidator : IEndpointValidator
     {
-        public Task<IEnumerable<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
             throw new ApiNotImplementedException();
         }

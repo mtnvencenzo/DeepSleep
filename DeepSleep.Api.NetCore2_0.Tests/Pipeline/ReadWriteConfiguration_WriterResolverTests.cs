@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using DeepSleep.Validation;
     using Xunit;
 
     public class ReadWriteConfiguration_WriterResolverTests : PipelineTestBase

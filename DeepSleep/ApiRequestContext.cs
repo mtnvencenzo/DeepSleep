@@ -2,6 +2,8 @@
 {
     using DeepSleep.Configuration;
     using DeepSleep.Formatting.Converters;
+    using DeepSleep.Pipeline;
+    using DeepSleep.Validation;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -136,7 +138,9 @@
                     UriBindingValueError = "Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.",
                     RequestDeserializationError = "The request body could not be deserialized.",
                     UseCustomStatusForRequestDeserializationErrors = true
-                }
+                },
+                PipelineComponents = new List<IRequestPipelineComponent>(),
+                Validators = new List<IEndpointValidatorComponent>()
             };
         }
 

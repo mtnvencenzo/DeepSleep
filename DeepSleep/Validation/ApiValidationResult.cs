@@ -1,81 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DeepSleep.Validation
+﻿namespace DeepSleep.Validation
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// 
     /// </summary>
     public class ApiValidationResult
     {
         /// <summary>Initializes a new instance of the <see cref="ApiValidationResult"/> class.</summary>
-        public ApiValidationResult()
-        {
-            IsValid = false;
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="ApiValidationResult"/> class.</summary>
+        /// <param name="isValid">if set to <c>true</c> [is valid].</param>
         /// <param name="message">The message.</param>
-        public ApiValidationResult(string message) : this()
+        /// <param name="suggestedHttpStatusCode">The suggested HTTP status code.</param>
+        internal ApiValidationResult(bool isValid, string message = null, int? suggestedHttpStatusCode = null)
         {
-            Message = message;
+            this.IsValid = isValid;
+            this.Message = message;
+            this.SuggestedHttpStatusCode = suggestedHttpStatusCode;
         }
 
-        /// <summary>Gets or sets a value indicating whether this instance is success.</summary>
-        /// <value><c>true</c> if this instance is success; otherwise, <c>false</c>.</value>
-        public bool IsValid { get; set; }
+        /// <summary>Returns true if ... is valid.</summary>
+        /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
+        public bool IsValid { get; }
 
-        /// <summary>Gets or sets the message.</summary>
+        /// <summary>Gets the message.</summary>
         /// <value>The message.</value>
-        public string Message { get; set; }
+        public string Message { get; }
 
         /// <summary>Gets or sets the suggested HTTP status code.</summary>
         /// <value>The suggested HTTP status code.</value>
-        public int SuggestedHttpStatusCode { get; set; } = 400;
+        public int? SuggestedHttpStatusCode { get; }
 
-        /// <summary>Singles the specified message.</summary>
-        /// <param name="message">The message.</param>
+        /// <summary>Successes this instance.</summary>
         /// <returns></returns>
-        public static List<ApiValidationResult> Single(string message)
+        public static ApiValidationResult Success()
         {
-            return new List<ApiValidationResult>
-            {
-                new ApiValidationResult
-                {
-                    IsValid = false,
-                    Message = message
-                }
-            };
+            return new ApiValidationResult(
+                isValid: true, 
+                message: null, 
+                suggestedHttpStatusCode: null);
+        }
+
+        /// <summary>Successes this instance.</summary>
+        /// <returns></returns>
+        public static ApiValidationResult Failure(string message = null, int? suggestedHttpStatusCode = 400)
+        {
+            return new ApiValidationResult(
+                isValid: false,
+                message: message,
+                suggestedHttpStatusCode: suggestedHttpStatusCode);
         }
 
         /// <summary>Singles the specified message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="suggestedHttpStatusCode">The suggested HTTP status code.</param>
         /// <returns></returns>
-        public static List<ApiValidationResult> Single(string message, int suggestedHttpStatusCode)
+        public static IList<ApiValidationResult> Single(string message, int? suggestedHttpStatusCode = null)
         {
             return new List<ApiValidationResult>
             {
-                new ApiValidationResult
-                {
-                    IsValid = false,
-                    Message = message,
-                    SuggestedHttpStatusCode = suggestedHttpStatusCode
-                }
+                new ApiValidationResult(
+                    isValid: false, 
+                    message: message, 
+                    suggestedHttpStatusCode: suggestedHttpStatusCode)
             };
         }
 
-        /// <summary>Singles the specified message.</summary>
+        /// <summary>Multiples the specified messages.</summary>
+        /// <param name="messages">The messages.</param>
         /// <returns></returns>
-        public static List<ApiValidationResult> Multiple(IEnumerable<string> messages)
+        public static IList<ApiValidationResult> Multiple(IEnumerable<string> messages)
         {
             if (messages == null)
             {
-                throw new ArgumentNullException(nameof(messages));
+                return new List<ApiValidationResult>();
             }
 
-            return new List<ApiValidationResult>(messages.Select(m => new ApiValidationResult(m)));
+            return new List<ApiValidationResult>(messages.Select(m => new ApiValidationResult(isValid: false, message: m)));
         }
     }
 }

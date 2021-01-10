@@ -26,9 +26,36 @@
                  .GetContext()
                  .SetThreadCulure();
 
+            var beforePipelines = context?.Configuration?.PipelineComponents?
+                .Where(p => p.Placement == PipelinePlacement.BeforeEndpointInvocation)
+                .OrderBy(p => p.Order)
+                .ToList() ?? new List<IRequestPipelineComponent>();
+
+            var afterPipelines = context?.Configuration?.PipelineComponents?
+                .Where(p => p.Placement == PipelinePlacement.AfterEndpointInvocation)
+                .OrderBy(p => p.Order)
+                .ToList() ?? new List<IRequestPipelineComponent>();
+
+            foreach (var pipeline in beforePipelines)
+            {
+                await pipeline.Invoke(contextResolver).ConfigureAwait(false);
+            }
+
             if (await context.ProcessHttpEndpointInvocation().ConfigureAwait(false))
             {
+                foreach (var pipeline in afterPipelines)
+                {
+                    await pipeline.Invoke(contextResolver).ConfigureAwait(false);
+                }
+
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
+            }
+            else
+            {
+                foreach (var pipeline in afterPipelines)
+                {
+                    await pipeline.Invoke(contextResolver).ConfigureAwait(false);
+                }
             }
         }
     }

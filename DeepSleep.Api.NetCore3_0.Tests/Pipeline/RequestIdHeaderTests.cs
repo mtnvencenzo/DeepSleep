@@ -5,6 +5,7 @@
     using global::Api.DeepSleep.Controllers.Pipeline;
     using System;
     using System.Threading.Tasks;
+    using DeepSleep.Validation;
     using Xunit;
 
     public class RequestIdHeaderTests : PipelineTestBase

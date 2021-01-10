@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Validation;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -25,9 +26,17 @@
                  .GetContext()
                  .SetThreadCulure();
 
-            var validationProvider = context?.RequestServices?.GetService<IApiValidationProvider>();
+            var beforePipelines = context?.Configuration?.PipelineComponents?
+                .Where(p => p.Placement == PipelinePlacement.BeforeEndpointValidation)
+                .OrderBy(p => p.Order)
+                .ToList() ?? new List<IRequestPipelineComponent>();
 
-            if (await context.ProcessHttpEndpointValidation(validationProvider).ConfigureAwait(false))
+            foreach (var pipeline in beforePipelines)
+            {
+                await pipeline.Invoke(contextResolver).ConfigureAwait(false);
+            }
+
+            if (await context.ProcessHttpEndpointValidation().ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -49,84 +58,76 @@
 
         /// <summary>Processes the HTTP endpoint validation.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="validationProvider">The validation provider.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context, IApiValidationProvider validationProvider)
+        internal static async Task<bool> ProcessHttpEndpointValidation(this ApiRequestContext context)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 context.Validation.State = ApiValidationState.Validating;
-
-                if (validationProvider != null)
+                var statusCodePrecedence = new List<int>
                 {
-                    var invokers = validationProvider
-                        .GetInvokers()
-                        .ToList();
+                    401,
+                    403,
+                    404,
+                };
 
-                    foreach (var validationInvoker in invokers)
+                foreach (var validator in context.Configuration.Validators.OrderBy(v => v.Order))
+                {
+                    // Skip validators that are not set to run if validation != failed
+                    if (context.Validation.State == ApiValidationState.Failed && validator.Continuation == ValidationContinuation.OnlyIfValid)
                     {
-                        if (context.Request.InvocationContext.UriModel != null)
-                        {
-                            var objectUriValidationResult = await validationInvoker.InvokeObjectValidation(
-                                context.Request.InvocationContext.UriModel,
-                                context).ConfigureAwait(false);
-
-                            if (!objectUriValidationResult)
-                            {
-                                context.Validation.State = ApiValidationState.Failed;
-                            }
-                        }
+                        continue;
                     }
 
+                    IEnumerable <ApiValidationResult> results = null;
 
-                    foreach (var validationInvoker in invokers)
+                    try
                     {
-                        if (context.Request.InvocationContext.BodyModel != null)
+                        results = await validator.Validate(new ApiValidationArgs
                         {
-                            try
-                            {
-                                var objectBodyValidationResult = await validationInvoker.InvokeObjectValidation(
-                                    context.Request.InvocationContext.BodyModel,
-                                    context).ConfigureAwait(false);
-
-                                if (!objectBodyValidationResult)
-                                {
-                                    context.Validation.State = ApiValidationState.Failed;
-                                }
-                            }
-                            catch
-                            {
-                                context.Validation.State = ApiValidationState.Exception;
-                                throw;
-                            }
-                        }
+                            ApiContext = context
+                        }).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        context.Validation.State = ApiValidationState.Exception;
+                        throw;
                     }
 
-
-                    foreach (var validationInvoker in invokers)
+                    foreach (var result in (results ?? new List<ApiValidationResult>()).Where(r => r != null))
                     {
-                        if (context.Routing.Route.Location.MethodInfo != null)
+                        if (!result.IsValid)
                         {
-                            try
-                            {
-                                var methodValidationResult = await validationInvoker.InvokeMethodValidation(
-                                    context.Routing.Route.Location.MethodInfo,
-                                    context).ConfigureAwait(false);
+                            context.Validation.State = ApiValidationState.Failed;
+                            context.AddValidationError(result.Message);
 
-                                if (!methodValidationResult)
-                                {
-                                    context.Validation.State = ApiValidationState.Failed;
-                                }
-                            }
-                            catch
+                            var suggestedStatus = result.SuggestedHttpStatusCode ?? 400;
+                            var currentStatus = context.Validation.SuggestedErrorStatusCode;
+
+                            if (suggestedStatus != currentStatus)
                             {
-                                context.Validation.State = ApiValidationState.Exception;
-                                throw;
+                                if (statusCodePrecedence.Contains(suggestedStatus) == true && statusCodePrecedence.Contains(currentStatus) == false)
+                                {
+                                    context.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                }
+                                else if (statusCodePrecedence.Contains(suggestedStatus) == true && statusCodePrecedence.Contains(currentStatus) == true)
+                                {
+                                    if (statusCodePrecedence.IndexOf(suggestedStatus) < statusCodePrecedence.IndexOf(currentStatus))
+                                    {
+                                        context.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                    }
+                                }
+                                else if (statusCodePrecedence.Contains(suggestedStatus) == false && statusCodePrecedence.Contains(currentStatus) == false)
+                                {
+                                    if (suggestedStatus > currentStatus)
+                                    {
+                                        context.Validation.SuggestedErrorStatusCode = suggestedStatus;
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
 
                 if (context.Validation.State == ApiValidationState.Failed)
                 {
