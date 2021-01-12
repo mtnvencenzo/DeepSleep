@@ -42,7 +42,7 @@
         {
             object obj = null;
 
-            var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.ReadSerializerOptions ?? GetReadSettings();
+            var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.ReadSerializerOptions ?? GetReaderSettings();
 
             using (var reader = new StreamReader(stream, true))
             {
@@ -74,7 +74,7 @@
 
             if (obj != null)
             {
-                var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.WriteSerializerOptions ?? GetWriteSettings(options);
+                var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.WriteSerializerOptions ?? GetWriterSettings(options);
 
                 using (var ms = new MemoryStream())
                 {
@@ -105,10 +105,18 @@
         /// </summary>
         public virtual bool SupportsWrite => true;
 
-        /// <summary>Gets the write settings.</summary>
+        /// <summary>Gets the readable media types.</summary>
+        /// <value>The readable media types.</value>
+        public virtual IList<string> ReadableMediaTypes => new[] { "application/json", "text/json", "application/json-patch+json" };
+
+        /// <summary>Gets or sets the writeable media types.</summary>
+        /// <value>The writeable media types.</value>
+        public virtual IList<string> WriteableMediaTypes => new[] { "application/json", "text/json" };
+
+        /// <summary>Gets the writer settings.</summary>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        private JsonSerializerOptions GetWriteSettings(IFormatStreamOptions options)
+        public static JsonSerializerOptions GetWriterSettings(IFormatStreamOptions options)
         {
             var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -132,9 +140,9 @@
             return settings;
         }
 
-        /// <summary>Gets the write settings.</summary>
+        /// <summary>Gets the reader settings.</summary>
         /// <returns></returns>
-        private JsonSerializerOptions GetReadSettings()
+        public static JsonSerializerOptions GetReaderSettings()
         {
             var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -163,13 +171,5 @@
 
             return settings;
         }
-
-        /// <summary>Gets the readable media types.</summary>
-        /// <value>The readable media types.</value>
-        public virtual IList<string> ReadableMediaTypes => new[] { "application/json", "text/json", "application/json-patch+json" };
-
-        /// <summary>Gets or sets the writeable media types.</summary>
-        /// <value>The writeable media types.</value>
-        public virtual IList<string> WriteableMediaTypes => new[] { "application/json", "text/json" };
     }
 }
