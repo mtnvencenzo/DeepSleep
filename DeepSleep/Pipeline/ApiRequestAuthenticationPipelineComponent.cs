@@ -59,14 +59,32 @@
             {
                 if (!(context.Configuration?.AllowAnonymous ?? false))
                 {
+                    // log
+                    // ----------------------------------------------------------------------------
+                    context.Log($"{nameof(ProcessHttpRequestAuthentication)}        Not anonymous");
+
                     var authenticationComponents = context.Configuration?.AuthenticationProviders ?? new List<IAuthenticationComponent>();
+
+                    // log
+                    // ----------------------------------------------------------------------------
+                    context.Log($"{nameof(ProcessHttpRequestAuthentication)}        authenticationComponents: {authenticationComponents.Count}");
 
                     var providers = authenticationComponents
                         .Where(a => a != null)
-                        .Select(a => a.Activate(context));
+                        .Select(a => a.Activate(context))
+                        .ToList();
+
+                    // log
+                    // ----------------------------------------------------------------------------
+                    context.Log($"{nameof(ProcessHttpRequestAuthentication)}        providers: {providers.Count}");
+
 
                     var authProvider = providers
                         .FirstOrDefault(p => p.CanHandleAuthScheme(context.Request.ClientAuthenticationInfo?.AuthScheme));
+
+                    // log
+                    // ----------------------------------------------------------------------------
+                    context.Log($"{nameof(ProcessHttpRequestAuthentication)}        authProvider: {authProvider?.GetType()?.Name}");
 
                     if (authProvider != null)
                     {

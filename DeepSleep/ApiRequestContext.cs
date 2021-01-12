@@ -372,5 +372,19 @@
 
             return context;
         }
+
+        /// <summary>Logs the specified message.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
+        public static ApiRequestContext Log(this ApiRequestContext context, string message)
+        {
+            if (context?.Runtime != null)
+            {
+                context.Runtime.Log(message);
+            }
+
+            return context;
+        }
     }
 }
