@@ -16,9 +16,7 @@
     using global::DeepSleep.Configuration;
     using global::DeepSleep.Discovery;
     using global::DeepSleep.Formatting;
-    using global::DeepSleep.Validation;
     using Microsoft.Extensions.DependencyInjection;
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -157,7 +155,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "EX-501" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<Ex501AuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -168,10 +169,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "EX-501"
+                        new ApiAuthenticationComponent<SuccessAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<Ex501AuthorizationProvider>()
                     }
                 });
 
@@ -197,7 +201,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "EX-502" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<Ex502AuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -208,10 +215,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "EX-502"
+                        new ApiAuthenticationComponent<SuccessAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<Ex502AuthorizationProvider>()
                     }
                 });
 
@@ -237,7 +247,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "EX-504" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<Ex504AuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -248,10 +261,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "EX-504"
+                        new ApiAuthenticationComponent<SuccessAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<Ex504AuthorizationProvider>()
                     }
                 });
 
@@ -277,7 +293,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "EX-503" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<Ex503AuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -288,10 +307,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "EX-503"
+                        new ApiAuthenticationComponent<SuccessAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<Ex503AuthorizationProvider>()
                     }
                 });
 
@@ -317,7 +339,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "EX-500" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<Ex500AuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -328,10 +353,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new List<string> { "Success" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "EX-500"
+                        new ApiAuthenticationComponent<SuccessAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<Ex500AuthorizationProvider>()
                     }
                 });
 
@@ -379,19 +407,40 @@
                 template: "binding/body/bad/request/format",
                 httpMethods: new[] { "POST" },
                 controller: typeof(BodyBindingController),
-                endpoint: nameof(BodyBindingController.PostForBadRequestFormat));
+                endpoint: nameof(BodyBindingController.PostForBadRequestFormat),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                    }
+                });
 
             staticDiscovery.AddRoute(
                 template: "binding/body/bad/request/format",
                 httpMethods: new[] { "PUT" },
                 controller: typeof(BodyBindingController),
-                endpoint: nameof(BodyBindingController.PutForBadRequestFormat));
+                endpoint: nameof(BodyBindingController.PutForBadRequestFormat),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                    }
+                });
 
             staticDiscovery.AddRoute(
                 template: "binding/body/bad/request/format",
                 httpMethods: new[] { "PATCH" },
                 controller: typeof(BodyBindingController),
-                endpoint: nameof(BodyBindingController.PatchForBadRequestFormat));
+                endpoint: nameof(BodyBindingController.PatchForBadRequestFormat),
+                config: new DefaultApiRequestConfiguration
+                {
+                    ValidationErrorConfiguration = new ApiValidationErrorConfiguration
+                    {
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                    }
+                });
 
             staticDiscovery.AddRoute(
                 template: "binding/simple/post",
@@ -687,7 +736,10 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { "Token" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -698,7 +750,11 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { "Token", "Token2" }
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>(),
+                        new ApiAuthenticationComponent<Static2TokenAuthenticationProvider>()
+                    }
                 });
 
             staticDiscovery.AddRoute(
@@ -718,8 +774,7 @@
                 endpoint: nameof(AuthenticationController.GetWithNoSupportedScheme),
                 config: new DefaultApiRequestConfiguration
                 {
-                    AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { }
+                    AllowAnonymous = false
                 });
 
             staticDiscovery.AddRoute(
@@ -956,10 +1011,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "Default"
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<DefaultAuthorizationProvider>()
                     }
                 });
 
@@ -971,10 +1029,32 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "DefaultFail"
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<DefaultFailingAuthorizationProvider>()
+                    }
+                });
+
+            staticDiscovery.AddRoute(
+                template: "authorization/policy/configured/mixed/providers",
+                httpMethods: new[] { "GET" },
+                controller: typeof(AuthorizationController),
+                endpoint: nameof(AuthorizationController.GetWithAuthorization),
+                config: new DefaultApiRequestConfiguration
+                {
+                    AllowAnonymous = false,
+                    AuthenticationProviders = new List<IAuthenticationComponent>
+                    {
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<DefaultAuthorizationProvider>(),
+                        new ApiAuthorizationComponent<DefaultFailingAuthorizationProvider>()
                     }
                 });
 
@@ -986,10 +1066,13 @@
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = false,
-                    SupportedAuthenticationSchemes = new string[] { "Token" },
-                    AuthorizationConfig = new ApiResourceAuthorizationConfiguration
+                    AuthenticationProviders = new List<IAuthenticationComponent>
                     {
-                        Policy = "Default1"
+                        new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>()
+                    },
+                    AuthorizationProviders = new List<IAuthorizationComponent>
+                    {
+                        new ApiAuthorizationComponent<DefaultAuthorizationProvider>()
                     }
                 });
 
@@ -1234,7 +1317,18 @@
             return new DefaultApiRequestConfiguration
             {
                 AllowAnonymous = true,
-                ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>()
+                ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>(),
+                AuthenticationProviders = new List<IAuthenticationComponent>
+                {
+                    new ApiAuthenticationComponent<Ex500AuthenticationProvider>(),
+                    new ApiAuthenticationComponent<Ex501AuthenticationProvider>(),
+                    new ApiAuthenticationComponent<Ex502AuthenticationProvider>(),
+                    new ApiAuthenticationComponent<Ex503AuthenticationProvider>(),
+                    new ApiAuthenticationComponent<Ex504AuthenticationProvider>(),
+                    new ApiAuthenticationComponent<SuccessAuthenticationProvider>(),
+                    new ApiAuthenticationComponent<StaticTokenAuthenticationProvider>(),
+                    new ApiAuthenticationComponent<Static2TokenAuthenticationProvider>(),
+                }
             };
         }
     }

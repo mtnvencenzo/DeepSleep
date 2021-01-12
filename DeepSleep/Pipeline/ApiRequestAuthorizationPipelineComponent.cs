@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Auth;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -52,89 +53,48 @@
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
+                context.Request.ClientAuthorizationInfo = context.Request.ClientAuthorizationInfo ?? new ClientAuthorization();
+
                 if (!(context.Configuration?.AllowAnonymous ?? false))
                 {
-                    if (!string.IsNullOrWhiteSpace(context.Configuration?.AuthorizationConfig?.Policy))
+                    var authorizationComponents = context.Configuration?.AuthorizationProviders ?? new List<IAuthorizationComponent>();
+
+                    var providers = authorizationComponents
+                        .Where(a => a != null)
+                        .Select(a => a.Activate(context))
+                        .ToList();
+
+                    foreach (var authProvider in providers)
                     {
-                        var providers = context.RequestServices
-                            .GetServices<IAuthorizationProvider>()
-                            .ToList();
+                        context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Provider;
+                        var result = await authProvider.Authorize(context).ConfigureAwait(false);
 
-                        var authProvider = providers
-                            .FirstOrDefault(p => p.CanHandleAuthPolicy(context.Configuration.AuthorizationConfig.Policy));
-
-                        if (authProvider != null)
+                        if (result == null)
                         {
-                            if (context.Request.ClientAuthorizationInfo == null)
-                            {
-                                context.Request.ClientAuthorizationInfo = new ClientAuthorization
-                                {
-                                    AuthorizedBy = AuthorizationType.Provider
-                                };
-                            }
-                            else
-                            {
-                                context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Provider;
-                            }
-
-                            context.Request.ClientAuthorizationInfo.AuthResult = await authProvider.Authorize(context).ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            if (context.Request.ClientAuthorizationInfo == null)
-                            {
-                                context.Request.ClientAuthorizationInfo = new ClientAuthorization
-                                {
-                                    AuthorizedBy = AuthorizationType.None
-                                };
-                            }
-                            else
-                            {
-                                context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.None;
-                            }
+                            result = new AuthorizationResult(false);
                         }
 
-                        context.Request.ClientAuthorizationInfo.AuthResult = context.Request.ClientAuthorizationInfo.AuthResult ?? new AuthorizationResult(false);
-                        var result = context.Request.ClientAuthorizationInfo.AuthResult;
-
-                        if (!result?.IsAuthorized ?? false)
-                        {
-                            context.Response.StatusCode = 403;
-                            return false;
-                        }
+                        result.Policy = authProvider.Policy;
+                        context.Request.ClientAuthorizationInfo.AuthResults.Add(result);
                     }
-                    else
+
+                    if (context.Request.ClientAuthorizationInfo.AuthResults.Count == 0)
                     {
-                        if (context.Request.ClientAuthorizationInfo == null)
-                        {
-                            context.Request.ClientAuthorizationInfo = new ClientAuthorization
-                            {
-                                AuthorizedBy = AuthorizationType.None,
-                                AuthResult = new AuthorizationResult(true)
-                            };
-                        }
-                        else
-                        {
-                            context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.None;
-                            context.Request.ClientAuthorizationInfo.AuthResult = new AuthorizationResult(true);
-                        }
+                        context.Request.ClientAuthorizationInfo.AuthResults.Add(new AuthorizationResult(true));
+                        context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.None;
+                    }
+
+                    var isFailed = context.Request.ClientAuthorizationInfo.AuthResults.Any(a => a.IsAuthorized == false);
+                    if (isFailed)
+                    {
+                        context.Response.StatusCode = 403;
+                        return false;
                     }
                 }
                 else
                 {
-                    if (context.Request.ClientAuthorizationInfo == null)
-                    {
-                        context.Request.ClientAuthorizationInfo = new ClientAuthorization
-                        {
-                            AuthorizedBy = AuthorizationType.Anonymous,
-                            AuthResult = new AuthorizationResult(true)
-                        };
-                    }
-                    else
-                    {
-                        context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Anonymous;
-                        context.Request.ClientAuthorizationInfo.AuthResult = new AuthorizationResult(true);
-                    }
+                    context.Request.ClientAuthorizationInfo.AuthResults.Add(new AuthorizationResult(true));
+                    context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Anonymous;
                 }
 
                 return true;

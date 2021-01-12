@@ -17,6 +17,8 @@
 
     public abstract class PipelineTestBase : TestBase
     {
+        protected readonly int uriBindingErrorStatusCode = 404;
+        protected readonly int bodyBindingErrorStatusCode = 422;
         private Startup startup;
 
         protected void SetupEnvironment(Action<IServiceCollection> servicePreprocessor = null)

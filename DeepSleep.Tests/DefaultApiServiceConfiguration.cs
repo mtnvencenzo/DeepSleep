@@ -2,9 +2,7 @@
 {
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
-    using DeepSleep.Formatting;
     using DeepSleep.Pipeline;
-    using DeepSleep.Validation;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -30,9 +28,21 @@
         /// <value>The on request processed.</value>
         public virtual Func<ApiRequestContext, Task> OnRequestProcessed { get; set; }
 
-        /// <summary>Gets or set the json formatting configuration
-        /// </summary>
-        public IJsonFormattingConfiguration JsonConfiguration { get; set; }
+        /// <summary>Gets or sets the json formatter configuration.</summary>
+        /// <value>The json formatter configuration.</value>
+        public JsonFormattingConfiguration JsonFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the XML formatter configuration.</summary>
+        /// <value>The XML formatter configuration.</value>
+        public XmlFormattingConfiguration XmlFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the multipart form data formatter configuration.</summary>
+        /// <value>The multipart form data formatter configuration.</value>
+        public MultipartFormDataFormattingConfiguration MultipartFormDataFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the form URL encoded formatter configuration.</summary>
+        /// <value>The form URL encoded formatter configuration.</value>
+        public FormUrlEncodedFormattingConfiguration FormUrlEncodedFormatterConfiguration { get; set; }
 
         /// <summary>Gets or sets a list of regular expression paths to exclude from processing</summary>
         /// <value>The paths to exclude.</value>
@@ -41,36 +51,5 @@
         /// <summary>Gets or sets a value indicating whether [write console header].</summary>
         /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>
         public bool WriteConsoleHeader { get; set; } = false;
-
-        /// <summary>Gets the default request pipeline.</summary>
-        /// <returns></returns>
-        internal static IApiRequestPipeline GetDefaultRequestPipeline()
-        {
-            return new ApiRequestPipeline()
-                .UseApiResponseUnhandledExceptionHandler()
-                .UseApiRequestCanceled()
-                .UseApiResponseBodyWriter()
-                .UseApiResponseCookies()
-                .UseApiResponseMessages()
-                .UseApiResponseHttpCaching()
-                .UseApiRequestUriValidation()
-                .UseApiRequestHeaderValidation()
-                .UseApiResponseCorrelation()
-                .UseApiResponseDeprecated()
-                .UseApiRequestRouting()
-                .UseApiRequestLocalization()
-                .UseApiRequestNotFound()
-                .UseApiResponseCors()
-                .UseApiRequestCorsPreflight()
-                .UseApiRequestMethod()
-                .UseApiRequestAccept()
-                .UseApiRequestAuthentication()
-                .UseApiRequestAuthorization()
-                .UseApiRequestInvocationInitializer()
-                .UseApiRequestUriBinding()
-                .UseApiRequestBodyBinding()
-                .UseApiRequestEndpointValidation()
-                .UseApiRequestEndpointInvocation();
-        }
     }
 }

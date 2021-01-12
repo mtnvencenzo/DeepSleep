@@ -1,13 +1,14 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
     public class AttributeDiscoveryCacheDirectiveController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteCacheDirective()]
         public AttributeDiscoveryModel GetCacheDirectiveDefault()
         {
@@ -15,8 +16,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/specified")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteCacheDirective(
             location: HttpCacheLocation.Public, 
             cacheability: HttpCacheType.Cacheable, 

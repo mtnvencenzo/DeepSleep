@@ -88,23 +88,50 @@
         /// <returns></returns>
         public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
         {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
             var routingTable = new DefaultApiRoutingTable();
-            
+
+            config.JsonFormatterConfiguration = config.JsonFormatterConfiguration ?? GetDefaultJsonFormattingConfiguration();
+            config.XmlFormatterConfiguration = config.XmlFormatterConfiguration ?? GetDefaultXmlFormattingConfiguration();
+            config.MultipartFormDataFormatterConfiguration = config.MultipartFormDataFormatterConfiguration ?? GetDefaultMultipartFormDataFormattingConfiguration();
+            config.FormUrlEncodedFormatterConfiguration = config.FormUrlEncodedFormatterConfiguration ?? GetDefaultFormUrlEncodedFormattingConfiguration();
+
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
                 .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
                 .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
-                .AddScoped<IJsonFormattingConfiguration, IJsonFormattingConfiguration>((p) => config?.JsonConfiguration ?? GetDefaultJsonFormattingConfiguration())
-                .AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>()
-                .AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>()
-                .AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>()
-                .AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>()
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
                 .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
+                .AddScoped<IApiValidationProvider, ApiEndpointValidationProvider>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => ApiRequestPipeline.GetDefaultRequestPipeline())
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config?.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
                 .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
                 .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
+
+
+            if (config.JsonFormatterConfiguration.DisableFormatter == false)
+            {
+                services.AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>();
+            }
+
+            if (config.XmlFormatterConfiguration.DisableFormatter == false)
+            {
+                services.AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>();
+            }
+
+            if (config.MultipartFormDataFormatterConfiguration.DisableFormatter == false)
+            {
+                services.AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>();
+            }
+
+            if (config.FormUrlEncodedFormatterConfiguration.DisableFormatter == false)
+            {
+                services.AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>();
+            }
 
             return services;
         }
@@ -148,12 +175,41 @@
         /// <summary>Gets the default json formatting configuration
         /// </summary>
         /// <returns></returns>
-        private static IJsonFormattingConfiguration GetDefaultJsonFormattingConfiguration()
+        private static JsonFormattingConfiguration GetDefaultJsonFormattingConfiguration()
         {
             return new JsonFormattingConfiguration
             {
-                CasingStyle = FormatCasingStyle.CamelCase,
-                NullValuesExcluded = true
+                DisableFormatter = false
+            };
+        }
+
+        /// <summary>Gets the default XML formatting configuration.</summary>
+        /// <returns></returns>
+        private static XmlFormattingConfiguration GetDefaultXmlFormattingConfiguration()
+        {
+            return new XmlFormattingConfiguration
+            {
+                DisableFormatter = false
+            };
+        }
+
+        /// <summary>Gets the default multipart form data formatting configuration.</summary>
+        /// <returns></returns>
+        private static MultipartFormDataFormattingConfiguration GetDefaultMultipartFormDataFormattingConfiguration()
+        {
+            return new MultipartFormDataFormattingConfiguration
+            {
+                DisableFormatter = false
+            };
+        }
+
+        /// <summary>Gets the default form URL encoded formatting configuration.</summary>
+        /// <returns></returns>
+        private static FormUrlEncodedFormattingConfiguration GetDefaultFormUrlEncodedFormattingConfiguration()
+        {
+            return new FormUrlEncodedFormattingConfiguration
+            {
+                DisableFormatter = false
             };
         }
 

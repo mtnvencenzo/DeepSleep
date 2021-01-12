@@ -3,12 +3,13 @@ namespace Api.DeepSleep.NetCore2_0
     using Api.DeepSleep.Controllers;
     using global::DeepSleep.NetCore;
     using global::DeepSleep.OpenApi.NetCore;
+    using global::DeepSleep.Validation.DataAnnotations;
+    using global::DeepSleep.Validation;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class Startup
@@ -53,6 +54,7 @@ namespace Api.DeepSleep.NetCore2_0
             services
                 .AddLogging()
                 .UseOpenApiServices()
+                .UseDataAnnotationValidations(continuation: ValidationContinuation.OnlyIfValid, validateAllProperties: true)
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
                     DiscoveryStrategies = ServiceStartup.DiscoveryStrategies(),
@@ -91,7 +93,6 @@ namespace Api.DeepSleep.NetCore2_0
                         return Task.CompletedTask;
                     }
                 });
-
 
             if (ServicePreprocessor != null)
             {

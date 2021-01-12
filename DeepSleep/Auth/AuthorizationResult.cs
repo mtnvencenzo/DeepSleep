@@ -35,6 +35,10 @@
         /// <summary>Gets or sets a value indicating whether this instance is authorized.</summary>
         /// <value><c>true</c> if this instance is authorized; otherwise, <c>false</c>.</value>
         public bool IsAuthorized { get; }
+
+        /// <summary>Gets the policy.</summary>
+        /// <value>The policy.</value>
+        public string Policy { get; internal set; }
     }
 
     /// <summary></summary>

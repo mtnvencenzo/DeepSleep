@@ -64,74 +64,21 @@
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 context.Validation.State = ApiValidationState.Validating;
-                var statusCodePrecedence = new List<int>
+
+                var validationProviders = (context.RequestServices?.GetServices(typeof(IApiValidationProvider)) ?? new List<IApiValidationProvider>())
+                    .Where(p => p as IApiValidationProvider != null)
+                    .Select(p => p as IApiValidationProvider)
+                    .OrderBy(p => p.Order);
+
+                foreach (var validationProvider in validationProviders)
                 {
-                    401,
-                    403,
-                    404,
-                };
-
-                foreach (var validator in context.Configuration.Validators.OrderBy(v => v.Order))
-                {
-                    // Skip validators that are not set to run if validation != failed
-                    if (context.Validation.State == ApiValidationState.Failed && validator.Continuation == ValidationContinuation.OnlyIfValid)
-                    {
-                        continue;
-                    }
-
-                    IEnumerable <ApiValidationResult> results = null;
-
-                    try
-                    {
-                        results = await validator.Validate(new ApiValidationArgs
-                        {
-                            ApiContext = context
-                        }).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-                        context.Validation.State = ApiValidationState.Exception;
-                        throw;
-                    }
-
-                    foreach (var result in (results ?? new List<ApiValidationResult>()).Where(r => r != null))
-                    {
-                        if (!result.IsValid)
-                        {
-                            context.Validation.State = ApiValidationState.Failed;
-                            context.AddValidationError(result.Message);
-
-                            var suggestedStatus = result.SuggestedHttpStatusCode ?? 400;
-                            var currentStatus = context.Validation.SuggestedErrorStatusCode;
-
-                            if (suggestedStatus != currentStatus)
-                            {
-                                if (statusCodePrecedence.Contains(suggestedStatus) == true && statusCodePrecedence.Contains(currentStatus) == false)
-                                {
-                                    context.Validation.SuggestedErrorStatusCode = suggestedStatus;
-                                }
-                                else if (statusCodePrecedence.Contains(suggestedStatus) == true && statusCodePrecedence.Contains(currentStatus) == true)
-                                {
-                                    if (statusCodePrecedence.IndexOf(suggestedStatus) < statusCodePrecedence.IndexOf(currentStatus))
-                                    {
-                                        context.Validation.SuggestedErrorStatusCode = suggestedStatus;
-                                    }
-                                }
-                                else if (statusCodePrecedence.Contains(suggestedStatus) == false && statusCodePrecedence.Contains(currentStatus) == false)
-                                {
-                                    if (suggestedStatus > currentStatus)
-                                    {
-                                        context.Validation.SuggestedErrorStatusCode = suggestedStatus;
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    await validationProvider.Validate(context).ConfigureAwait(false);
                 }
 
                 if (context.Validation.State == ApiValidationState.Failed)
                 {
-                    context.Response.StatusCode = context.Validation.SuggestedErrorStatusCode;
+                    var defaultStatusCode = context.Configuration?.ValidationErrorConfiguration?.BodyValidationErrorStatusCode ?? 400;
+                    context.Response.StatusCode = context.Validation.SuggestedErrorStatusCode ?? defaultStatusCode;
                     return false;
                 }
 

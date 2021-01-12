@@ -1170,7 +1170,7 @@ X-CorrelationId: {correlationId}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.NotAttempted,

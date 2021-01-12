@@ -32,7 +32,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -70,7 +70,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -108,7 +108,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: false,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -143,7 +143,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: false,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -178,7 +178,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -216,7 +216,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -254,7 +254,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -292,7 +292,7 @@ Accept: {applicationJson}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedAuthenticatedBy: AuthenticationType.Provider,
                 expectedAuthorizedBy: AuthorizationType.Provider,
@@ -312,11 +312,8 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___deserializationerror_default()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/default/deserialization/error HTTP/1.1
 Host: {host}
@@ -354,9 +351,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___deserializationerror_empty()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -432,7 +427,7 @@ Content-Type: {applicationJson}
         }
 
         [Fact]
-        public async Task discovery_attribute___deserializationerror_450_statuscode()
+        public async Task discovery_attribute___deserializationerror_450_statuscode_for_custom()
         {
             base.SetupEnvironment(services =>
             {
@@ -474,7 +469,7 @@ Content-Type: {applicationJson}
         }
 
         [Fact]
-        public async Task discovery_attribute___deserializationerror_400_statuscode()
+        public async Task discovery_attribute___deserializationerror_400_statuscode_for_strict()
         {
             base.SetupEnvironment(services =>
             {
@@ -482,7 +477,49 @@ Content-Type: {applicationJson}
 
             var correlationId = Guid.NewGuid();
             var request = @$"
-POST https://{host}/discovery/attribute/validationerror/400/deserialization/error HTTP/1.1
+POST https://{host}/discovery/attribute/validationerror/400/deserialization/error/for/strict HTTP/1.1
+Host: {host}
+Authorization: Token {staticToken}
+Accept: {applicationJson}
+Content-Type: {applicationJson}
+
+<AttributeDiscoveryModel>
+</AttributeDiscoveryModel>";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 400,
+                shouldHaveResponse: true,
+                expectedAuthenticatedBy: AuthenticationType.Provider,
+                expectedAuthorizedBy: AuthorizationType.Provider,
+                expectedContentType: applicationJson,
+                expectedValidationState: ApiValidationState.NotAttempted,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Messages.Should().NotBeNull();
+            data.Messages.Should().HaveCount(1);
+            data.Messages[0].ErrorMessageStr.Should().Be("The request body could not be deserialized.");
+        }
+
+        [Fact]
+        public async Task discovery_attribute___deserializationerror_400_statuscode_for_common()
+        {
+            base.SetupEnvironment(services =>
+            {
+            });
+
+            var correlationId = Guid.NewGuid();
+            var request = @$"
+POST https://{host}/discovery/attribute/validationerror/400/deserialization/error/for/common HTTP/1.1
 Host: {host}
 Authorization: Token {staticToken}
 Accept: {applicationJson}

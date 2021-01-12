@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.NetCore.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.DeepSleep.NetCore5_0", "Api.Tests\Api.DeepSleep.NetCore5_0\Api.DeepSleep.NetCore5_0.csproj", "{5315E27F-CD40-4388-B60C-4714D2AA0F4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.Api.NetCore5_0.Tests", "DeepSleep.Api.NetCore5_0.Tests\DeepSleep.Api.NetCore5_0.Tests.csproj", "{7CBFB342-53F7-41C9-BD76-5A8CA5A0B141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Api.NetCore5_0.Tests", "DeepSleep.Api.NetCore5_0.Tests\DeepSleep.Api.NetCore5_0.Tests.csproj", "{7CBFB342-53F7-41C9-BD76-5A8CA5A0B141}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@
     public class AttributeDiscoveryPipelineController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/pipeline/multi")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointInvocation, 1)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointInvocation, 0)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.AfterEndpointInvocation, 1)]

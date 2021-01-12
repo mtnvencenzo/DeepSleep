@@ -1,13 +1,14 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
     using System.Globalization;
 
     public class AttributeDiscoveryLanguageSupportController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteLanguageSupport]
         public AttributeDiscoveryLanguageModel GetLanguageSupportDefault()
         {
@@ -19,8 +20,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/de-DE")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteLanguageSupport(fallbackLanguage: "de-DE")]
         public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackDeDe()
         {
@@ -32,8 +33,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteLanguageSupport(fallbackLanguage: "en")]
         public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEn()
         {
@@ -45,8 +46,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en/with/supported")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteLanguageSupport(fallbackLanguage: "en", supportedLanguages: new[] { "es-ES", "en-GB" })]
         public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEnAndSupported()
         {
@@ -58,8 +59,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/languagesupport/fallaback/en/with/supported/thread/cultures")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteLanguageSupport(fallbackLanguage: "en", supportedLanguages: new[] { "es-ES", "en-GB" }, useAcceptedLanguageAsThreadCulture: true, useAcceptedLanguageAsThreadUICulture: true)]
         public AttributeDiscoveryLanguageModel GetLanguageSupportWithFallbackEnAndSupportedSetsThreadCultures()
         {

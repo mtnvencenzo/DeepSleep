@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Configuration;
     using System;
 
     /// <summary>
@@ -13,17 +14,17 @@
         /// <param name="uriBindingError">The URI binding error.</param>
         /// <param name="uriBindingValueError">The URI binding value error.</param>
         /// <param name="requestDeserializationError">The request deserialization error.</param>
-        /// <param name="useCustomStatusForRequestDeserializationErrors">if set to <c>true</c> [use custom status for request deserialization errors].</param>
+        /// <param name="httpStatusMode">The HTTP status mode.</param>
         public ApiRouteValidationErrorConfigurationAttribute(
             string uriBindingError = null, 
             string uriBindingValueError = null, 
             string requestDeserializationError = null,
-            bool useCustomStatusForRequestDeserializationErrors = true)
+            ValidationHttpStatusMode httpStatusMode = ValidationHttpStatusMode.StrictHttpSpecification)
         {
             this.UriBindingError = uriBindingError;
             this.UriBindingValueError = uriBindingValueError;
             this.RequestDeserializationError = requestDeserializationError;
-            this.UseCustomStatusForRequestDeserializationErrors = useCustomStatusForRequestDeserializationErrors;
+            this.HttpStatusMode = httpStatusMode;
         }
 
         /// <summary>Gets the URI binding error.</summary>
@@ -38,8 +39,8 @@
         /// <value>The request deserialization error.</value>
         public string RequestDeserializationError { get; private set; }
 
-        /// <summary>Gets the use custom status for request deserialization errors.</summary>
-        /// <value>The use custom status for request deserialization errors.</value>
-        public bool? UseCustomStatusForRequestDeserializationErrors { get; private set; }
+        /// <summary>Gets or sets the HTTP status mode.</summary>
+        /// <value>The HTTP status mode.</value>
+        public ValidationHttpStatusMode HttpStatusMode { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep
 {
+    using DeepSleep.Auth;
     using DeepSleep.Configuration;
     using DeepSleep.Formatting.Converters;
     using DeepSleep.Pipeline;
@@ -88,7 +89,6 @@
                 ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider(),
                 Deprecated = false,
                 EnableHeadForGetRequests = true,
-                SupportedAuthenticationSchemes = new List<string>(),
                 IncludeRequestIdHeaderInResponse = true,
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -120,10 +120,6 @@
                     UseAcceptedLanguageAsThreadCulture = false,
                     UseAcceptedLanguageAsThreadUICulture = false
                 },
-                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = null
-                },
                 ReadWriteConfiguration = new ApiReadWriteConfiguration
                 {
                     ReadableMediaTypes = null,
@@ -137,10 +133,12 @@
                     UriBindingError = "'{paramName}' is in an incorrect format and could not be bound.",
                     UriBindingValueError = "Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.",
                     RequestDeserializationError = "The request body could not be deserialized.",
-                    UseCustomStatusForRequestDeserializationErrors = true
+                    HttpStatusMode = ValidationHttpStatusMode.StrictHttpSpecification
                 },
                 PipelineComponents = new List<IRequestPipelineComponent>(),
-                Validators = new List<IEndpointValidatorComponent>()
+                Validators = new List<IEndpointValidatorComponent>(),
+                AuthenticationProviders = new List<IAuthenticationComponent>(),
+                AuthorizationProviders = new List<IAuthorizationComponent>()
             };
         }
 
@@ -161,7 +159,7 @@
                 //ReferenceHandler = ReferenceHandler.Preserve
             };
 
-            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
             settings.Converters.Add(new TimeSpanConverter());
             settings.Converters.Add(new NullableTimeSpanConverter());
             settings.Converters.Add(new ContentDispositionConverter());

@@ -189,8 +189,6 @@
                     : "{}";
             }
 
-            //System.Diagnostics.Debug.Write(json);
-
             var obj = JsonSerializer.Deserialize(json, objType, JsonReaderSerializationOptions.ReaderOptions);
             return obj;
         }

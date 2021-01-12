@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -172,7 +173,8 @@
 
                 if (addedBindingError)
                 {
-                    context.Response.StatusCode = 400;
+                    context.Response.StatusCode = context.Configuration?.ValidationErrorConfiguration?.UriBindingErrorStatusCode ?? 400;
+
                     return false;
                 }
 

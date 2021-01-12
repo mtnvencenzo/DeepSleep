@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Formatting.Formatters
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Formatting.Converters;
     using System;
     using System.Collections.Generic;
@@ -14,13 +15,13 @@
     /// <seealso cref="DeepSleep.Formatting.IFormatStreamReaderWriter" />
     public class JsonHttpFormatter : IFormatStreamReaderWriter
     {
-        private readonly IJsonFormattingConfiguration jsonFormattingConfiguration;
+        private readonly IApiServiceConfiguration apiServiceConfiguration;
 
         /// <summary>Initializes a new instance of the <see cref="JsonHttpFormatter"/> class.</summary>
-        /// <param name="jsonFormattingConfiguration">The json formatting configuration.</param>
-        public JsonHttpFormatter(IJsonFormattingConfiguration jsonFormattingConfiguration)
+        /// <param name="apiServiceConfiguration">The API service configuration.</param>
+        public JsonHttpFormatter(IApiServiceConfiguration apiServiceConfiguration)
         {
-            this.jsonFormattingConfiguration = jsonFormattingConfiguration;
+            this.apiServiceConfiguration = apiServiceConfiguration;
         }
 
         /// <summary>Reads the type.</summary>
@@ -41,9 +42,11 @@
         {
             object obj = null;
 
+            var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.ReadSerializerOptions ?? GetReadSettings();
+
             using (var reader = new StreamReader(stream, true))
             {
-                obj = await JsonSerializer.DeserializeAsync(stream, objType, GetReadSettings()).ConfigureAwait(false);
+                obj = await JsonSerializer.DeserializeAsync(stream, objType, settings).ConfigureAwait(false);
             }
 
             return obj;
@@ -71,9 +74,11 @@
 
             if (obj != null)
             {
+                var settings = this.apiServiceConfiguration?.JsonFormatterConfiguration?.WriteSerializerOptions ?? GetWriteSettings(options);
+
                 using (var ms = new MemoryStream())
                 {
-                    await JsonSerializer.SerializeAsync(ms, obj, GetWriteSettings(options)).ConfigureAwait(false);
+                    await JsonSerializer.SerializeAsync(ms, obj, settings).ConfigureAwait(false);
                     length = ms.Length;
                     ms.Seek(0, SeekOrigin.Begin);
 
@@ -105,29 +110,20 @@
         /// <returns></returns>
         private JsonSerializerOptions GetWriteSettings(IFormatStreamOptions options)
         {
-            JsonNamingPolicy jsonNamingPolicy = null;
-            var casing = this.jsonFormattingConfiguration?.CasingStyle ?? FormatCasingStyle.CamelCase;
-            var nullValuesExcluded = this.jsonFormattingConfiguration?.NullValuesExcluded ?? true;
-
-            if (casing == FormatCasingStyle.CamelCase)
-            {
-                jsonNamingPolicy = JsonNamingPolicy.CamelCase;
-            }
-
             var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 AllowTrailingCommas = false,
-                DefaultIgnoreCondition = nullValuesExcluded == true ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = false,
                 IncludeFields = false,
                 NumberHandling = JsonNumberHandling.Strict,
                 PropertyNameCaseInsensitive = true,
-                PropertyNamingPolicy = jsonNamingPolicy,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 WriteIndented = options?.PrettyPrint ?? false
             };
 
-            settings.Converters.Add(new JsonStringEnumConverter(jsonNamingPolicy, false));
+            settings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
             settings.Converters.Add(new TimeSpanConverter());
             settings.Converters.Add(new NullableTimeSpanConverter());
             settings.Converters.Add(new ContentDispositionConverter());
@@ -140,7 +136,32 @@
         /// <returns></returns>
         private JsonSerializerOptions GetReadSettings()
         {
-            return JsonReaderSerializationOptions.ReaderOptions;
+            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+
+            settings.Converters.Add(new NullableBooleanConverter());
+            settings.Converters.Add(new BooleanConverter());
+            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+            settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableDateTimeConverter());
+            settings.Converters.Add(new DateTimeConverter());
+            settings.Converters.Add(new NullableDateTimeOffsetConverter());
+            settings.Converters.Add(new DateTimeOffsetConverter());
+            settings.Converters.Add(new ObjectConverter());
+            settings.Converters.Add(new ContentDispositionConverter());
+            settings.Converters.Add(new ContentTypeConverter());
+
+            return settings;
         }
 
         /// <summary>Gets the readable media types.</summary>

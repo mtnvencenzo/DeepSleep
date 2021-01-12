@@ -1,6 +1,7 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
 
     public class AttributeDiscoveryErrorResponseProviderController
     {
@@ -12,8 +13,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/errorresponseprovider/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [CustomApiRouteErrorResponseProvider]
         public IApiResponse GetRequestValidationtDefault()
         {

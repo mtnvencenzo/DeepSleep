@@ -2,7 +2,6 @@
 {
     using DeepSleep.Discovery;
     using DeepSleep.Formatting;
-    using DeepSleep.Validation;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -28,9 +27,21 @@
         /// <value>The on request processed.</value>
         Func<ApiRequestContext, Task> OnRequestProcessed { get; set; }
 
-        /// <summary>Gets or sets the default json formatting configuration
-        /// </summary>
-        IJsonFormattingConfiguration JsonConfiguration { get; set; }
+        /// <summary>Gets or sets the json formatter configuration.</summary>
+        /// <value>The json formatter configuration.</value>
+        JsonFormattingConfiguration JsonFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the XML formatter configuration.</summary>
+        /// <value>The XML formatter configuration.</value>
+        XmlFormattingConfiguration XmlFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the multipart form data formatter configuration.</summary>
+        /// <value>The multipart form data formatter configuration.</value>
+        MultipartFormDataFormattingConfiguration MultipartFormDataFormatterConfiguration { get; set; }
+
+        /// <summary>Gets or sets the form URL encoded formatter configuration.</summary>
+        /// <value>The form URL encoded formatter configuration.</value>
+        FormUrlEncodedFormattingConfiguration FormUrlEncodedFormatterConfiguration { get; set; }
 
         /// <summary>Gets or sets the exclude paths.</summary>
         /// <value>The exclude paths.</value>

@@ -1,12 +1,14 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
+    using global::DeepSleep.Configuration;
 
     public class AttributeDiscoveryValidationErrorController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration]
         public AttributeDiscoveryModel GetValidationErrorDefault(int? queryValue, [UriBound] AttributeDiscoveryModel request)
         {
@@ -18,8 +20,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/empty")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "", 
             uriBindingValueError: "")]
@@ -33,8 +35,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/custom/no/replacements")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "uriBindingError-test",
             uriBindingValueError: "uriBindingValueError-test")]
@@ -48,8 +50,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/custom/with/replacements")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "{paramName}",
             uriBindingValueError: "{paramName}-{paramValue}-{paramType}")]
@@ -63,49 +65,63 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/default/deserialization/error")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
+        [ApiRouteValidationErrorConfiguration(
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
         public AttributeDiscoveryModel GetValidationErrorDefaultDeserializationError([BodyBound] AttributeDiscoveryModel request)
         {
             return request;
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/empty/deserialization/error")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            requestDeserializationError: "")]
+            requestDeserializationError: "",
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
         public AttributeDiscoveryModel GetValidationErrorEmptyDeserializationError([BodyBound] AttributeDiscoveryModel request)
         {
             return request;
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/custom/deserialization/error")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            requestDeserializationError: "Deserialization Failed")]
+            requestDeserializationError: "Deserialization Failed",
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
         public AttributeDiscoveryModel GetValidationErrorCustomDeserializationError([BodyBound] AttributeDiscoveryModel request)
         {
             return request;
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/450/deserialization/error")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            useCustomStatusForRequestDeserializationErrors: true)]
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
         public AttributeDiscoveryModel GetValidationErrorUse450DeserializationError([BodyBound] AttributeDiscoveryModel request)
         {
             return request;
         }
 
-        [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/400/deserialization/error")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/400/deserialization/error/for/strict")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            useCustomStatusForRequestDeserializationErrors: false)]
-        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationError([BodyBound] AttributeDiscoveryModel request)
+            httpStatusMode: ValidationHttpStatusMode.StrictHttpSpecification)]
+        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForStrict([BodyBound] AttributeDiscoveryModel request)
+        {
+            return request;
+        }
+
+        [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/400/deserialization/error/for/common")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
+        [ApiRouteValidationErrorConfiguration(
+            httpStatusMode: ValidationHttpStatusMode.StrictHttpSpecification)]
+        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForCommon([BodyBound] AttributeDiscoveryModel request)
         {
             return request;
         }

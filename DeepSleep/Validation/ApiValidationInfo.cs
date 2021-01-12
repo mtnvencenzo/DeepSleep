@@ -14,7 +14,7 @@
         public ApiValidationState State { get; set; } = ApiValidationState.NotAttempted;
 
         /// <summary>The suggested error status code</summary>
-        public int SuggestedErrorStatusCode { get; set; } = 400;
+        public int? SuggestedErrorStatusCode { get; set; }
 
         /// <summary>Gets or sets the extended messages.</summary>
         /// <value>The extended messages.</value>

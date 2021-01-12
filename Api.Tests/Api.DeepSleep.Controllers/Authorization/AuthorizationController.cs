@@ -2,6 +2,7 @@
 {
     using global::DeepSleep;
     using global::DeepSleep.Auth;
+    using System.Linq;
 
     public class AuthorizationController
     {
@@ -16,7 +17,7 @@
         {
             return new AuthorizationModel
             {
-                IsAuthorized = apiRequestContextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthResult?.IsAuthorized,
+                IsAuthorized = apiRequestContextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthResults?.All(a => a.IsAuthorized),
                 AuthorizedBy = apiRequestContextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthorizedBy ?? AuthorizationType.None
             };
         }

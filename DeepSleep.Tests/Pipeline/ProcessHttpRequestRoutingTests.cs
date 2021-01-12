@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
+    using DeepSleep.Auth;
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
     using DeepSleep.Formatting;
@@ -1154,270 +1155,6 @@
         }
 
         [Fact]
-        public async void request_config___endpoint_authconfig_notnull_default_null_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = null
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = "TestPolicy"
-                }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.AuthorizationConfig.Should().NotBeNull();
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Policy.Should().Be("TestPolicy");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_authconfig_null_default_notnull_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = "TestPolicyDefault"
-                }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = null
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.AuthorizationConfig.Should().NotBeNull();
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Policy.Should().Be("TestPolicyDefault");
-        }
-
-        [Theory]
-        [InlineData(null, null, null)]
-        [InlineData("endpoint", "default", "endpoint")]
-        [InlineData("default", "default", null)]
-        [InlineData("endpoint", null, "endpoint")]
-        public async void request_config___authconfig_policy_returns_expected(string expected, string def, string endpoint)
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = def
-                }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = endpoint
-                }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo(),
-                Configuration = null
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.AuthorizationConfig.Should().NotBeNull();
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
-            context.Configuration.AuthorizationConfig.Policy.Should().Be(expected);
-        }
-
-        [Fact]
-        public async void request_config___endpoint_supportedauthenticationschemes_notnull_default_null_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = null
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = new string[] { "test1", "test2" }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test1");
-            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test2");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_supportedauthenticationschemes_null_default_notnull_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = new string[] { "test1", "test2" }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = null
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test1");
-            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test2");
-        }
-
-        [Fact]
-        public async void request_config___endpoint_supportedauthenticationschemes_notnull_default_notnull_returns_expected()
-        {
-            var defaultConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = new string[] { "test1", "test2" }
-            };
-
-            var endpointConfig = new DefaultApiRequestConfiguration
-            {
-                SupportedAuthenticationSchemes = new string[] { "test3", "test4" }
-            };
-
-            var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new CancellationToken(false),
-                Request = GetRequestInfo()
-            };
-
-            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.Should().NotBeNull();
-            context.Response.ResponseObject.Should().BeNull();
-            context.Routing.Should().NotBeNull();
-            context.Routing.Route.Should().NotBeNull();
-            context.Routing.Template.Should().NotBeNull();
-            context.Configuration.Should().NotBeNull();
-
-            // Assert the request's configuration
-            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
-
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeNull();
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(defaultConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().NotBeSameAs(endpointConfig.SupportedAuthenticationSchemes);
-            context.Configuration.SupportedAuthenticationSchemes.Should().HaveCount(2);
-            context.Configuration.SupportedAuthenticationSchemes[0].Should().Be("test3");
-            context.Configuration.SupportedAuthenticationSchemes[1].Should().Be("test4");
-        }
-
-        [Fact]
         public async void request_config___endpoint_supportedlanguages_notnull_default_null_returns_expected()
         {
             var defaultConfig = new DefaultApiRequestConfiguration
@@ -1706,8 +1443,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.Cacheability.Should().Be(expected);
         }
 
@@ -1758,8 +1495,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.CacheLocation.Should().Be(expected);
         }
 
@@ -1810,8 +1547,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.ExpirationSeconds.Should().Be(expected);
         }
 
@@ -1862,8 +1599,8 @@
             AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
 
             context.Configuration.CacheDirective.Should().NotBeNull();
-            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.AuthorizationConfig);
-            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.AuthorizationConfig);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(defaultConfig.CacheDirective);
+            context.Configuration.CacheDirective.Should().NotBeSameAs(endpointConfig.CacheDirective);
             context.Configuration.CacheDirective.VaryHeaderValue.Should().Be(expected);
         }
 
@@ -2303,7 +2040,7 @@
             context.Configuration.ValidationErrorConfiguration.UriBindingError.Should().Be("'{paramName}' is in an incorrect format and could not be bound.");
             context.Configuration.ValidationErrorConfiguration.UriBindingValueError.Should().Be("Uri type conversion for '{paramName}' with value '{paramValue}' could not be converted to type {paramType}.");
             context.Configuration.ValidationErrorConfiguration.RequestDeserializationError.Should().Be("The request body could not be deserialized.");
-            context.Configuration.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors.Should().Be(true);
+            context.Configuration.ValidationErrorConfiguration.HttpStatusMode.Should().Be(ValidationHttpStatusMode.StrictHttpSpecification);
         }
 
         [Fact]
@@ -2851,6 +2588,143 @@
             context.Configuration.Validators.Should().HaveCount(0);
         }
 
+        [Fact]
+        public async void request_config___authorizationproviders_endpoint_notnull_default_null_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = null
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = new List<IAuthorizationComponent>
+                {
+                    new ApiAuthorizationComponent<DefaultAuthorizationProvider>()
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo()
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.AuthorizationProviders.Should().NotBeNull();
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(defaultConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(endpointConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().HaveCount(1);
+            context.Configuration.AuthorizationProviders[0].Should().BeOfType<ApiAuthorizationComponent<DefaultAuthorizationProvider>>();
+        }
+
+        [Fact]
+        public async void request_config___authorizationproviders_endpoint_null_default_notnull_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = new List<IAuthorizationComponent>
+                {
+                    new ApiAuthorizationComponent<DefaultAuthorizationProvider>()
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = null
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo()
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.AuthorizationProviders.Should().NotBeNull();
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(defaultConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(endpointConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().HaveCount(1);
+            context.Configuration.AuthorizationProviders[0].Should().BeOfType<ApiAuthorizationComponent<DefaultAuthorizationProvider>>();
+        }
+
+        [Fact]
+        public async void request_config___authorizationproviders_endpoint_and_default_returns_expected()
+        {
+            var defaultConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = new List<IAuthorizationComponent>
+                {
+                    new ApiAuthorizationComponent<DefaultAuthorizationProvider>()
+                }
+            };
+
+            var endpointConfig = new DefaultApiRequestConfiguration
+            {
+                AuthorizationProviders = new List<IAuthorizationComponent>
+                {
+                    new ApiAuthorizationComponent<Default2AuthorizationProvider>()
+                }
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new DefaultRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.AuthorizationProviders.Should().NotBeNull();
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(defaultConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().NotBeSameAs(endpointConfig.AuthorizationProviders);
+            context.Configuration.AuthorizationProviders.Should().HaveCount(1);
+            context.Configuration.AuthorizationProviders[0].Should().BeOfType<ApiAuthorizationComponent<Default2AuthorizationProvider>>();
+        }
+
 
         private void AssertConfiguration(IApiRequestConfiguration request, IApiRequestConfiguration endpoint, IApiRequestConfiguration def)
         {
@@ -2859,6 +2733,24 @@
             request.AllowAnonymous.Should().Be(endpoint?.AllowAnonymous ?? def?.AllowAnonymous ?? system.AllowAnonymous);
             request.Deprecated.Should().Be(endpoint?.Deprecated ?? def?.Deprecated ?? system.Deprecated);
             request.IncludeRequestIdHeaderInResponse.Should().Be(endpoint?.IncludeRequestIdHeaderInResponse ?? def?.IncludeRequestIdHeaderInResponse ?? system.IncludeRequestIdHeaderInResponse);
+
+            // -------------------------
+            // Authorization Components
+            // -------------------------
+            request.AuthorizationProviders.Count.Should().Be(endpoint?.AuthorizationProviders?.Count ?? def?.AuthorizationProviders?.Count ?? system.AuthorizationProviders.Count);
+            for (int i = 0; i < request.AuthorizationProviders.Count; i++)
+            {
+                request.AuthorizationProviders[i].Should().Be(endpoint?.AuthorizationProviders?[i] ?? def?.AuthorizationProviders?[i] ?? system.AuthorizationProviders[i]);
+            }
+
+            // -------------------------
+            // Authentication Components
+            // -------------------------
+            request.AuthenticationProviders.Count.Should().Be(endpoint?.AuthenticationProviders?.Count ?? def?.AuthenticationProviders?.Count ?? system.AuthenticationProviders.Count);
+            for (int i = 0; i < request.AuthenticationProviders.Count; i++)
+            {
+                request.AuthenticationProviders[i].Should().Be(endpoint?.AuthenticationProviders?[i] ?? def?.AuthenticationProviders?[i] ?? system.AuthenticationProviders[i]);
+            }
 
             // ----------------------
             // Validator Configuration
@@ -2952,12 +2844,7 @@
                 request.ReadWriteConfiguration.WriteableMediaTypes[i].Should().Be(endpoint?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? def?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? system.ReadWriteConfiguration.WriteableMediaTypes[i]);
             }
 
-            // -------------------
-            // Authorization Configuration
-            // -------------------
-            request.AuthorizationConfig.Policy.Should().Be(endpoint?.AuthorizationConfig?.Policy ?? def?.AuthorizationConfig?.Policy ?? system.AuthorizationConfig.Policy);
-
-
+ 
             // -------------------
             // Cache Directive Configuration
             // -------------------
@@ -2993,34 +2880,28 @@
             }
 
 
-            // --------------------------------
-            // Supported Authentication Schemes
-            // --------------------------------
-            request.SupportedAuthenticationSchemes.Count.Should().Be(endpoint?.SupportedAuthenticationSchemes?.Count ?? def?.SupportedAuthenticationSchemes?.Count ?? system.SupportedAuthenticationSchemes.Count);
-            for (int i = 0; i < request.SupportedAuthenticationSchemes.Count; i++)
-            {
-                request.SupportedAuthenticationSchemes[i].Should().Be(endpoint?.SupportedAuthenticationSchemes?[i] ?? def?.SupportedAuthenticationSchemes?[i] ?? system.SupportedAuthenticationSchemes[i]);
-            }
-
             // ------------------------------
             // Validation Error Configuration
             // ------------------------------
             request.ValidationErrorConfiguration.UriBindingValueError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingValueError ?? def?.ValidationErrorConfiguration?.UriBindingValueError ?? system.ValidationErrorConfiguration.UriBindingValueError);
             request.ValidationErrorConfiguration.UriBindingError.Should().Be(endpoint?.ValidationErrorConfiguration?.UriBindingError ?? def?.ValidationErrorConfiguration?.UriBindingError ?? system.ValidationErrorConfiguration.UriBindingError);
             request.ValidationErrorConfiguration.RequestDeserializationError.Should().Be(endpoint?.ValidationErrorConfiguration?.RequestDeserializationError ?? def?.ValidationErrorConfiguration?.RequestDeserializationError ?? system.ValidationErrorConfiguration.RequestDeserializationError);
-            request.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors.Should().Be(endpoint?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors ?? def?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors ?? system.ValidationErrorConfiguration.UseCustomStatusForRequestDeserializationErrors);
+            request.ValidationErrorConfiguration.HttpStatusMode.Should().Be(endpoint?.ValidationErrorConfiguration?.HttpStatusMode ?? def?.ValidationErrorConfiguration?.HttpStatusMode ?? system.ValidationErrorConfiguration.HttpStatusMode);
 
 
             // making sure references are not the same
             request.Should().NotBeSameAs(system);
             request.ApiErrorResponseProvider(null).Should().NotBeSameAs(system.ApiErrorResponseProvider(null));
-            request.AuthorizationConfig.Should().NotBeSameAs(system.AuthorizationConfig);
+            request.AuthorizationProviders.Should().NotBeSameAs(system.AuthorizationProviders);
             request.CacheDirective.Should().NotBeSameAs(system.CacheDirective);
             request.CrossOriginConfig.Should().NotBeSameAs(system.CrossOriginConfig);
-            request.SupportedAuthenticationSchemes.Should().NotBeSameAs(system.SupportedAuthenticationSchemes);
             request.LanguageSupport.Should().NotBeSameAs(system.LanguageSupport);
             request.ReadWriteConfiguration.Should().NotBeSameAs(system.ReadWriteConfiguration);
             request.ValidationErrorConfiguration.Should().NotBeSameAs(system.ValidationErrorConfiguration);
+            request.Validators.Should().NotBeSameAs(system.Validators);
+            request.RequestValidation.Should().NotBeSameAs(system.RequestValidation);
+            request.AuthenticationProviders.Should().NotBeSameAs(system.AuthenticationProviders);
+            request.PipelineComponents.Should().NotBeSameAs(system.PipelineComponents);
         }
 
         private ApiRequestInfo GetRequestInfo(string method = "GET")

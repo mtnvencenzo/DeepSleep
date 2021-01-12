@@ -1,13 +1,14 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
     public class AttributeDiscoveryEnableHeadController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteEnableHead]
         public AttributeDiscoveryModel GetEnableHeadDefault()
         {
@@ -15,8 +16,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteEnableHead(enableHeadForGetRequests: true)]
         public AttributeDiscoveryModel GetEnableHeadTrue()
         {
@@ -24,8 +25,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true/with/caching")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteEnableHead(enableHeadForGetRequests: true)]
         [ApiRouteCacheDirective(location: HttpCacheLocation.Public, cacheability: HttpCacheType.Cacheable, expirationSeconds: 120)]
         public AttributeDiscoveryModel GetEnableHeadTrueWithCaching()
@@ -34,8 +35,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteEnableHead(enableHeadForGetRequests: false)]
         public AttributeDiscoveryModel GetEnableHeadFalse()
         {
@@ -43,8 +44,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false/with/caching")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteEnableHead(enableHeadForGetRequests: false)]
         [ApiRouteCacheDirective(location: HttpCacheLocation.Public, cacheability: HttpCacheType.Cacheable, expirationSeconds: 120)]
         public AttributeDiscoveryModel GetEnableHeadFalseWithCaching()

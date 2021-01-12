@@ -3,6 +3,8 @@ namespace Api.DeepSleep.NetCore3_0
     using Api.DeepSleep.Controllers;
     using global::DeepSleep.NetCore;
     using global::DeepSleep.OpenApi.NetCore;
+    using global::DeepSleep.Validation.DataAnnotations;
+    using global::DeepSleep.Validation;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -52,6 +54,7 @@ namespace Api.DeepSleep.NetCore3_0
             services
                 .AddLogging()
                 .UseOpenApiServices()
+                .UseDataAnnotationValidations(continuation: ValidationContinuation.OnlyIfValid, validateAllProperties: true)
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
                     DiscoveryStrategies = ServiceStartup.DiscoveryStrategies(),

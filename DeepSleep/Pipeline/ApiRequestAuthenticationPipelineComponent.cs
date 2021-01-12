@@ -59,14 +59,11 @@
             {
                 if (!(context.Configuration?.AllowAnonymous ?? false))
                 {
-                    var supportedAuthSchemes = context.Configuration.SupportedAuthenticationSchemes?.Count > 0
-                        ? context.Configuration.SupportedAuthenticationSchemes.Where(a => a != null).Distinct().ToArray()
-                        : new string[] { };
+                    var authenticationComponents = context.Configuration?.AuthenticationProviders ?? new List<IAuthenticationComponent>();
 
-                    var providers = context.RequestServices
-                        .GetServices<IAuthenticationProvider>()
-                        .Where(p => supportedAuthSchemes.Length == 0 || supportedAuthSchemes.Contains(p.Scheme))
-                        .ToList();
+                    var providers = authenticationComponents
+                        .Where(a => a != null)
+                        .Select(a => a.Activate(context));
 
                     var authProvider = providers
                         .FirstOrDefault(p => p.CanHandleAuthScheme(context.Request.ClientAuthenticationInfo?.AuthScheme));

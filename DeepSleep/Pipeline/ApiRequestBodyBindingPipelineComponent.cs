@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
@@ -170,15 +171,7 @@
                             else
                             {
                                 context.AddValidationError(context.Configuration?.ValidationErrorConfiguration?.RequestDeserializationError);
-
-                                if (context?.Configuration?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors == true)
-                                {
-                                    context.Response.StatusCode = 450;
-                                }
-                                else
-                                {
-                                    context.Response.StatusCode = 400;
-                                }
+                                context.Response.StatusCode = context.Configuration?.ValidationErrorConfiguration?.BodyDeserializationErrorStatusCode ?? 400;
                             }
 
                             return false;

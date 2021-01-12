@@ -33,17 +33,20 @@
 
         /// <summary>Successes this instance.</summary>
         /// <returns></returns>
-        public static ApiValidationResult Success()
+        public static IList<ApiValidationResult> Success()
         {
-            return new ApiValidationResult(
-                isValid: true, 
-                message: null, 
-                suggestedHttpStatusCode: null);
+            return new List<ApiValidationResult>
+            {
+                new ApiValidationResult(
+                    isValid: true,
+                    message: null,
+                    suggestedHttpStatusCode: null)
+            };
         }
 
         /// <summary>Successes this instance.</summary>
         /// <returns></returns>
-        public static ApiValidationResult Failure(string message = null, int? suggestedHttpStatusCode = 400)
+        public static ApiValidationResult Failure(string message = null, int? suggestedHttpStatusCode = null)
         {
             return new ApiValidationResult(
                 isValid: false,

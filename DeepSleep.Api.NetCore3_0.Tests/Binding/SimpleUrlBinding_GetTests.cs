@@ -1594,9 +1594,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("NullEnumVar", "a", typeof(SimpleUrlBindingEnum?), "nullEnumVar", 157)]
         public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail(string varName, string value, Type expectedType, string expectedVarName, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 
@@ -1616,7 +1614,7 @@ X-CorrelationId: {correlationId}";
             base.AssertResponse(
                 apiContext: apiContext,
                 response: response,
-                expectedHttpStatus: 400,
+                expectedHttpStatus: base.uriBindingErrorStatusCode,
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.NotAttempted,
@@ -1637,9 +1635,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("CharVar", "aa", 0)]
         public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail_with_empty_configured_error(string varName, string value, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 
@@ -1679,9 +1675,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("CharVar", "aa", 50)]
         public async Task GET_binding_simple_url_querystring_unconvertable_char_type_fail_with_custom_configured_error(string varName, string value, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 

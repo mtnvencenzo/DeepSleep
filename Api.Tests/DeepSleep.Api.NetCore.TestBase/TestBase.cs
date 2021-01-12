@@ -53,6 +53,7 @@
             string expectedCulture = null,
             AuthenticationType expectedAuthenticatedBy = AuthenticationType.None,
             bool? expectedAuthorizationResult = null,
+            int? expectedAuthorizationResultCount = 1,
             AuthorizationType expectedAuthorizedBy = AuthorizationType.None,
             bool? allowCustom500Response = false,
             long? expectedContentLength = null,
@@ -219,8 +220,8 @@
                 {
                     apiContext.Request.ClientAuthorizationInfo.Should().NotBeNull();
                     apiContext.Request.ClientAuthorizationInfo.AuthorizedBy.Should().Be(expectedAuthorizedBy);
-                    apiContext.Request.ClientAuthorizationInfo.AuthResult.Should().NotBeNull();
-                    apiContext.Request.ClientAuthorizationInfo.AuthResult.IsAuthorized.Should().Be(expectedAuthorizationResult.Value);
+                    apiContext.Request.ClientAuthorizationInfo.AuthResults.Should().HaveCount(expectedAuthorizationResultCount.Value);
+                    apiContext.Request.ClientAuthorizationInfo.AuthResults.Last().IsAuthorized.Should().Be(expectedAuthorizationResult.Value);
                 }
             }
             else

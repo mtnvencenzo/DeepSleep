@@ -442,7 +442,7 @@
                     {
                         ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                         {
-                            UseCustomStatusForRequestDeserializationErrors = true
+                            HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
                         }
                     },
                     Routing = new ApiRoutingInfo

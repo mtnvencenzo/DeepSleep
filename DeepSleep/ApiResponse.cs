@@ -127,6 +127,9 @@
                 headers: headers);
         }
 
+        // Bad Responses
+        // ----------------
+
         /// <summary>Bads the request.</summary>
         /// <param name="headers">The headers.</param>
         /// <param name="errors">The errors.</param>
@@ -140,11 +143,6 @@
                 errors: errors);
         }
 
-
-        // Bad Responses
-        // ----------------
-
-
         /// <summary>Bads the request.</summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
@@ -154,6 +152,32 @@
         {
             return SettHttp(
                 statusCode: 400,
+                value: value,
+                headers: headers);
+        }
+
+        /// <summary>Unprocessables the entity.</summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="errors">The errors.</param>
+        /// <returns></returns>
+        public static IApiResponse UnprocessableEntity(IList<ApiHeader> headers = null, IList<string> errors = null)
+        {
+            return SettHttp(
+                statusCode: 422,
+                value: null as object,
+                headers: headers,
+                errors: errors);
+        }
+
+        /// <summary>Unprocessables the entity.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value">The value.</param>
+        /// <param name="headers">The headers.</param>
+        /// <returns></returns>
+        public static IApiResponse UnprocessableEntity<T>(T value, IList<ApiHeader> headers = null)
+        {
+            return SettHttp(
+                statusCode: 422,
                 value: value,
                 headers: headers);
         }

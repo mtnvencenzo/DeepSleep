@@ -11,8 +11,8 @@
     public class ValidatorController : IRouteRegistrationProvider
     {
         [ApiRoute(new[] { "GET" }, "validators/get")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
-        [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1),continuation: ValidationContinuation.Always, 2)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
+        [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1), continuation: ValidationContinuation.Always, 2)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator3), continuation: ValidationContinuation.OnlyIfValid, 1)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator2), continuation: ValidationContinuation.Always, 0)]
         public IApiResponse Get()
@@ -21,7 +21,7 @@
         }
 
         [ApiRoute(new[] { "GET" }, "validators/get/with/mixed/success/failures")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidatorSuccess4), continuation: ValidationContinuation.Always, 0)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1), continuation: ValidationContinuation.Always, 5)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator3), continuation: ValidationContinuation.OnlyIfValid, 4)]
@@ -33,7 +33,7 @@
         }
 
         [ApiRoute(new[] { "GET" }, "validators/get/with/mixed/success/failures/multi")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1), continuation: ValidationContinuation.Always, 5)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator3), continuation: ValidationContinuation.OnlyIfValid, 4)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator2), continuation: ValidationContinuation.Always, 3)]
@@ -44,7 +44,7 @@
         }
 
         [ApiRoute(new[] { "GET" }, "validators/get/failure/404")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator5), order: -1)]
         public IApiResponse GetFailureWith404StatusCode()
         {
@@ -86,7 +86,9 @@
     {
         public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            return Task.FromResult(ApiValidationResult.Single("VALIDATOR-1"));
+            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+
+            return Task.FromResult(ApiValidationResult.Single("VALIDATOR-1", suggestedHttpStatusCode: suggestedStatusCode));
         }
     }
 
@@ -94,7 +96,9 @@
     {
         public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            return Task.FromResult(ApiValidationResult.Single("VALIDATOR-2"));
+            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+
+            return Task.FromResult(ApiValidationResult.Single("VALIDATOR-2", suggestedHttpStatusCode: suggestedStatusCode));
         }
     }
 
@@ -102,10 +106,9 @@
     {
         public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            return Task.FromResult(new List<ApiValidationResult>
-            {
-                ApiValidationResult.Failure(message: "VALIDATOR-3")
-            } as IList<ApiValidationResult>);
+            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+
+            return Task.FromResult(ApiValidationResult.Single("VALIDATOR-3", suggestedHttpStatusCode: suggestedStatusCode));
         }
     }
 
@@ -113,7 +116,15 @@
     {
         public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            return Task.FromResult(ApiValidationResult.Multiple(new string[] { "VALIDATOR-4.1", "VALIDATOR-4.2" }));
+
+            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+
+            var results = new List<ApiValidationResult>();
+
+            results.Add(ApiValidationResult.Failure("VALIDATOR-4.1", suggestedHttpStatusCode: suggestedStatusCode));
+            results.Add(ApiValidationResult.Failure("VALIDATOR-4.2", suggestedHttpStatusCode: suggestedStatusCode));
+
+            return Task.FromResult(results as IList<ApiValidationResult>);
         }
     }
 
@@ -137,10 +148,7 @@
     {
         public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
         {
-            return Task.FromResult(new List<ApiValidationResult>
-            {
-                ApiValidationResult.Success()
-            } as IList<ApiValidationResult>);
+            return Task.FromResult(ApiValidationResult.Success());
         }
     }
 }

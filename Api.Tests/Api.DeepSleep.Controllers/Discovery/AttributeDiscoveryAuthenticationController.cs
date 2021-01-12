@@ -1,39 +1,41 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
 
     public class AttributeDiscoveryAuthenticationController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/true")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         public AttributeDiscoveryModel GetAuthenticationAnonymousTrue()
         {
             return new AttributeDiscoveryModel();
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/false")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
         public AttributeDiscoveryModel GetAuthenticationAnonymousFalse()
         {
             return new AttributeDiscoveryModel();
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/notspecified")]
-        [ApiRouteAuthentication(supportedAuthenticationSchemes: null)]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
         public AttributeDiscoveryModel GetAuthenticationSchemesNotSpecified()
         {
             return new AttributeDiscoveryModel();
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/specified/empty")]
-        [ApiRouteAuthentication(supportedAuthenticationSchemes: new string[] {})]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
         public AttributeDiscoveryModel GetAuthenticationSchemesSpecifiedEmpty()
         {
             return new AttributeDiscoveryModel();
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/schemes/specified")]
-        [ApiRouteAuthentication(supportedAuthenticationSchemes: new[] { "Token" })]
+        [ApiAuthentication(authenticationProviderType: typeof(StaticTokenAuthenticationProvider))]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
         public AttributeDiscoveryModel GetAuthenticationSchemesSpecified()
         {
             return new AttributeDiscoveryModel();

@@ -75,8 +75,7 @@
 
                         DefaultApiRequestConfiguration configuration = null;
                         configuration = this.AssignRouteAttribute(configuration, method.GetCustomAttribute<ApiRouteAttribute>());
-                        configuration = this.AssignRouteAuthenticationAttribute(configuration, method.GetCustomAttribute<ApiRouteAuthenticationAttribute>());
-                        configuration = this.AssignRouteAuthorizationAttribute(configuration, method.GetCustomAttribute<ApiRouteAuthorizationAttribute>());
+                        configuration = this.AssignRouteAllowAnonymousAttribute(configuration, method.GetCustomAttribute<ApiRouteAllowAnonymousAttribute>());
                         configuration = this.AssignRouteCacheDirectiveAttribute(configuration, method.GetCustomAttribute<ApiRouteCacheDirectiveAttribute>());
                         configuration = this.AssignRouteCrossOriginAttribute(configuration, method.GetCustomAttribute<ApiRouteCrossOriginAttribute>());
                         configuration = this.AssignRouteEnableHeadAttribute(configuration, method.GetCustomAttribute<ApiRouteEnableHeadAttribute>());
@@ -116,7 +115,7 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteAuthenticationAttribute(DefaultApiRequestConfiguration configuration, ApiRouteAuthenticationAttribute attribute)
+        private DefaultApiRequestConfiguration AssignRouteAllowAnonymousAttribute(DefaultApiRequestConfiguration configuration, ApiRouteAllowAnonymousAttribute attribute)
         {
             if (attribute == null)
             {
@@ -126,24 +125,6 @@
             var config = configuration ?? new DefaultApiRequestConfiguration();
 
             config.AllowAnonymous = attribute.AllowAnonymous;
-            config.SupportedAuthenticationSchemes = attribute.SupportedAuthenticationSchemes;
-
-            return config;
-        }
-
-        private DefaultApiRequestConfiguration AssignRouteAuthorizationAttribute(DefaultApiRequestConfiguration configuration, ApiRouteAuthorizationAttribute attribute)
-        {
-            if (attribute == null)
-            {
-                return configuration;
-            }
-
-            var config = configuration ?? new DefaultApiRequestConfiguration();
-
-            config.AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-            {
-                Policy = attribute.Policy
-            };
 
             return config;
         }
@@ -272,7 +253,7 @@
                 UriBindingError = attribute.UriBindingError,
                 UriBindingValueError = attribute.UriBindingValueError,
                 RequestDeserializationError = attribute.RequestDeserializationError,
-                UseCustomStatusForRequestDeserializationErrors = attribute.UseCustomStatusForRequestDeserializationErrors
+                HttpStatusMode = attribute.HttpStatusMode
             };
 
             return config;

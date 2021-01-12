@@ -9,10 +9,10 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Moq;
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
     using Xunit;
+    using DeepSleep.Configuration;
 
     public class BodyBinding_MaxRequestLengthTests : PipelineTestBase
     {
@@ -61,9 +61,9 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment(services =>
             {
-                var jsonFormattingConfiguration = new JsonFormattingConfiguration();
+                var serviceConfigurationMock = new Mock<IApiServiceConfiguration>();
 
-                var instanceMock = new Mock<JsonHttpFormatter>(jsonFormattingConfiguration) { CallBase = true };
+                var instanceMock = new Mock<JsonHttpFormatter>(serviceConfigurationMock.Object) { CallBase = true };
                 instanceMock
                     .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IFormatStreamOptions>()))
                     .Throws(new MockBadHttpRequestException());

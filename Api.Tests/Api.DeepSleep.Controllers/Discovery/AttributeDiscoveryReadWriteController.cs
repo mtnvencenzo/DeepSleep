@@ -1,12 +1,13 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
 
     public class AttributeDiscoveryReadWriteController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteReadWriteConfiguration]
         public AttributeDiscoveryModel GetReadWriteDefault()
         {
@@ -14,8 +15,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/acceptheader/override")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteReadWriteConfiguration(acceptHeaderOverride: "application/xml")]
         public AttributeDiscoveryModel GetReadWriteAcceptHeaderOverride()
         {
@@ -23,8 +24,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/writeablemediatypes/override")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteReadWriteConfiguration(writeableMediaTypes: new[] { "application/xml" })]
         public AttributeDiscoveryModel GetReadWriteWriteableMediaTypesOverride()
         {
@@ -32,8 +33,8 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/readwrite/readablemediatypes/override")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteReadWriteConfiguration(readableMediaTypes: new[] { "application/xml" })]
         public AttributeDiscoveryModel GetReadWriteReadableMediaTypesOverride([BodyBound] AttributeDiscoveryModel request)
         {
@@ -41,8 +42,8 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/readwrite/readerresolver/override")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [CustomApiRouteReadWriteConfigurationWithReadResolver]
         public AttributeDiscoveryModel GetReadWriteReaderResolverOverride([BodyBound] string request)
         {
@@ -53,8 +54,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/writerresolver/override")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [CustomApiRouteReadWriteConfigurationWithWriteResolver]
         public string GetReadWriteWriterResolverOverride()
         {

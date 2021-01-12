@@ -5,7 +5,7 @@
     public class ErrorResponseProviderController
     {
         [ApiRoute(new[] { "GET" }, "validationerrors/get")]
-        [ApiRouteAuthentication(allowAnonymous: true)]
+        [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [CustomListErrorResponseProvider]
         public IApiResponse Get()
         {

@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Configuration
 {
+    using DeepSleep.Auth;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
     using System;
@@ -44,14 +45,6 @@
         /// <value>The enable head for get requests.</value>
         bool? EnableHeadForGetRequests { get; set; }
 
-        /// <summary>Gets or sets the supported authentication schemes.  If not provided all available schemes are supported.</summary>
-        /// <value>The supported authentication schemes.</value>
-        IList<string> SupportedAuthenticationSchemes { get; set; }
-
-        /// <summary>Gets or sets the supported authorization configuration.</summary>
-        /// <value>The supported authorization configuration.</value>
-        ApiResourceAuthorizationConfiguration AuthorizationConfig { get; set; }
-
         /// <summary>Gets or sets the include request identifier header in response.</summary>
         /// <value>The include request identifier header in response.</value>
         bool? IncludeRequestIdHeaderInResponse { get; set; }
@@ -71,5 +64,13 @@
         /// <summary>Gets or sets the validators.</summary>
         /// <value>The validators.</value>
         IList<IEndpointValidatorComponent> Validators { get; set; }
+
+        /// <summary>Gets or sets the authentication providers.</summary>
+        /// <value>The authentication providers.</value>
+        IList<IAuthenticationComponent> AuthenticationProviders { get; set; }
+
+        /// <summary>Gets or sets the authorization providers.</summary>
+        /// <value>The authorization providers.</value>
+        IList<IAuthorizationComponent> AuthorizationProviders { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Auth;
     using DeepSleep.Configuration;
     using DeepSleep.Validation;
     using System;
@@ -92,6 +93,30 @@
                         .Select(a => a as IEndpointValidatorComponent)
                         .ToList()
                         .ForEach(v => context.Configuration.Validators.Add(v));
+
+                    // Find any authentication components
+                    // and add the to the final configuration of the request.
+                    var authenticationComponents = attributes
+                        .Where(a => a as IAuthenticationComponent != null)
+                        .Select(a => a as IAuthenticationComponent)
+                        .ToList();
+
+                    if (authenticationComponents.Count > 0)
+                    {
+                        context.Configuration.AuthenticationProviders = authenticationComponents;
+                    }
+
+                    // Find any authorization components
+                    // and add the to the final configuration of the request.
+                    var authorizationComponents = attributes
+                        .Where(a => a as IAuthorizationComponent != null)
+                        .Select(a => a as IAuthorizationComponent)
+                        .ToList();
+
+                    if (authorizationComponents.Count > 0)
+                    {
+                        context.Configuration.AuthorizationProviders = authorizationComponents;
+                    }
                 }
 
 
@@ -285,18 +310,65 @@
                 ?? defaultConfig?.EnableHeadForGetRequests
                 ?? systemConfig.EnableHeadForGetRequests;
 
-            requestConfig.SupportedAuthenticationSchemes = new List<string>(endpointConfig?.SupportedAuthenticationSchemes ?? defaultConfig?.SupportedAuthenticationSchemes ?? systemConfig.SupportedAuthenticationSchemes);
+
+            // ----------------------------
+            // Authorization Components
+            // ----------------------------
+            if (endpointConfig?.AuthorizationProviders != null || defaultConfig?.AuthorizationProviders != null)
+            {
+                if (endpointConfig?.AuthorizationProviders != null)
+                {
+                    requestConfig.AuthorizationProviders = new List<IAuthorizationComponent>(endpointConfig.AuthorizationProviders);
+                }
+                else if (defaultConfig?.AuthorizationProviders != null)
+                {
+                    requestConfig.AuthorizationProviders = new List<IAuthorizationComponent>(defaultConfig.AuthorizationProviders);
+                }
+                else
+                {
+                    requestConfig.AuthorizationProviders = systemConfig.AuthorizationProviders;
+                }
+            }
+            else
+            {
+                requestConfig.AuthorizationProviders = systemConfig.AuthorizationProviders;
+            }
+
+
+            // ----------------------------
+            // Authentication Components
+            // ----------------------------
+            if (endpointConfig?.AuthenticationProviders != null || defaultConfig?.AuthenticationProviders != null)
+            {
+                if (endpointConfig?.AuthenticationProviders != null)
+                {
+                    requestConfig.AuthenticationProviders = new List<IAuthenticationComponent>(endpointConfig.AuthenticationProviders);
+                }
+                else if (defaultConfig?.AuthenticationProviders != null)
+                {
+                    requestConfig.AuthenticationProviders = new List<IAuthenticationComponent>(defaultConfig.AuthenticationProviders);
+                }
+                else
+                {
+                    requestConfig.AuthenticationProviders = systemConfig.AuthenticationProviders;
+                }
+            }
+            else
+            {
+                requestConfig.AuthenticationProviders = systemConfig.AuthenticationProviders;
+            }
+
 
             // ----------------------------
             // Validator Components
             // ----------------------------
             if (endpointConfig?.Validators != null || defaultConfig?.Validators != null)
             {
-                if (endpointConfig.Validators != null)
+                if (endpointConfig?.Validators != null)
                 {
                     requestConfig.Validators = new List<IEndpointValidatorComponent>(endpointConfig.Validators);
                 }
-                else if (defaultConfig.Validators != null)
+                else if (defaultConfig?.Validators != null)
                 {
                     requestConfig.Validators = new List<IEndpointValidatorComponent>(defaultConfig.Validators);
                 }
@@ -315,11 +387,11 @@
             // ----------------------------
             if (endpointConfig?.PipelineComponents != null || defaultConfig?.PipelineComponents != null)
             {
-                if (endpointConfig.PipelineComponents != null)
+                if (endpointConfig?.PipelineComponents != null)
                 {
                     requestConfig.PipelineComponents = new List<IRequestPipelineComponent>(endpointConfig.PipelineComponents);
                 }
-                else if (defaultConfig.PipelineComponents != null)
+                else if (defaultConfig?.PipelineComponents != null)
                 {
                     requestConfig.PipelineComponents = new List<IRequestPipelineComponent>(defaultConfig.PipelineComponents);
                 }
@@ -483,26 +555,6 @@
             }
 
 
-
-            // -----------------------------------
-            // Merge Resource Authorization Configuration
-            // -----------------------------------
-            if (endpointConfig?.AuthorizationConfig != null || defaultConfig?.AuthorizationConfig != null)
-            {
-                requestConfig.AuthorizationConfig = new ApiResourceAuthorizationConfiguration
-                {
-                    Policy = endpointConfig?.AuthorizationConfig?.Policy
-                        ?? defaultConfig?.AuthorizationConfig?.Policy
-                        ?? systemConfig.AuthorizationConfig.Policy
-                };
-            }
-            else
-            {
-                requestConfig.AuthorizationConfig = systemConfig.AuthorizationConfig;
-            }
-
-
-
             // ----------------------------
             // Merge Read Write Configuration
             // ----------------------------
@@ -572,9 +624,9 @@
                         ?? defaultConfig?.ValidationErrorConfiguration?.RequestDeserializationError
                         ?? systemConfig.ValidationErrorConfiguration?.RequestDeserializationError,
 
-                    UseCustomStatusForRequestDeserializationErrors = endpointConfig?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
-                        ?? defaultConfig?.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
-                        ?? systemConfig.ValidationErrorConfiguration?.UseCustomStatusForRequestDeserializationErrors
+                    HttpStatusMode = endpointConfig?.ValidationErrorConfiguration?.HttpStatusMode
+                        ?? defaultConfig?.ValidationErrorConfiguration?.HttpStatusMode
+                        ?? systemConfig.ValidationErrorConfiguration.HttpStatusMode
                 };
             }
             else

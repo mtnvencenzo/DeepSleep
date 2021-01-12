@@ -1,12 +1,13 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
 
     public class AttributeDiscoveryRequestValidationController
     {
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteRequestValidation]
         public AttributeDiscoveryModel GetRequestValidationtDefault()
         {
@@ -14,8 +15,8 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteRequestValidation(
             maxHeaderLength: 100,
             maxRequestLength: 100,
@@ -28,8 +29,8 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/require/contentlength")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteRequestValidation(
             maxHeaderLength: 100,
             maxRequestLength: 100,
@@ -42,8 +43,8 @@
         }
 
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/requestbody/not/allowed")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteRequestValidation(
             maxHeaderLength: 100,
             maxRequestUriLength: 180,

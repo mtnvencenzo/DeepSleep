@@ -1,12 +1,13 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using global::DeepSleep.Auth;
 
     public class AttributeDiscoveryIncludeRequestHeaderController
     {
         [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/default")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteIncludeRequestIdHeader]
         public AttributeDiscoveryModel GetIncludeRequestHeaderDefault()
         {
@@ -14,8 +15,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/true")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteIncludeRequestIdHeader(includeRequestIdHeaderInResponse: true)]
         public AttributeDiscoveryModel GetIncludeRequestHeaderTrue()
         {
@@ -23,8 +24,8 @@
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/includeRequestHeader/false")]
-        [ApiRouteAuthentication(allowAnonymous: false)]
-        [ApiRouteAuthorization(policy: "Default")]
+        [ApiRouteAllowAnonymous(allowAnonymous: false)]
+        [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteIncludeRequestIdHeader(includeRequestIdHeaderInResponse: false)]
         public AttributeDiscoveryModel GetIncludeRequestHeaderFalse()
         {
