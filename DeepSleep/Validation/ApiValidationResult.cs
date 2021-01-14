@@ -63,8 +63,8 @@
             return new List<ApiValidationResult>
             {
                 new ApiValidationResult(
-                    isValid: false, 
-                    message: message, 
+                    isValid: false,
+                    message: message,
                     suggestedHttpStatusCode: suggestedHttpStatusCode)
             };
         }

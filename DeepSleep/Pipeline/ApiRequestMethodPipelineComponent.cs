@@ -55,9 +55,9 @@
         /// <param name="resolver">The resolver.</param>
         /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context, 
-            IApiRoutingTable routes, 
-            IUriRouteResolver resolver, 
+        internal static async Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context,
+            IApiRoutingTable routes,
+            IUriRouteResolver resolver,
             IApiRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)

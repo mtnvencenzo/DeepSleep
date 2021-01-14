@@ -3,7 +3,6 @@
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using System;
-    using System.Threading.Tasks;
     using Xunit;
 
     /// <summary>
@@ -16,7 +15,7 @@
         {
             var context = new ApiRequestContext();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -30,7 +29,7 @@
 
             var exception = new ApiNotImplementedException();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), exception, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -59,7 +58,7 @@
 
             var exception = new ApiNotImplementedException();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -88,7 +87,7 @@
 
             var exception = new ApiBadGatewayException();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -117,7 +116,7 @@
 
             var exception = new ApiServiceUnavailableException();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -146,7 +145,7 @@
 
             var exception = new ApiGatewayTimeoutException();
 
-            var processed = await context.ProcessHttpResponseUnhandledException(exception, config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseUnhandledException(new DefaultApiRequestContextResolver(), exception, config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();

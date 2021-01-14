@@ -5,9 +5,5 @@
     /// </summary>
     public interface IAuthorizationComponent : IAuthorizationProvider
     {
-        /// <summary>Activates the specified context.</summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        IAuthorizationProvider Activate(ApiRequestContext context);
     }
 }

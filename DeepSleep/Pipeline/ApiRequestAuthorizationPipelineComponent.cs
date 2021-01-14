@@ -59,22 +59,22 @@
                 {
                     var authorizationComponents = context.Configuration?.AuthorizationProviders ?? new List<IAuthorizationComponent>();
 
-                    var providers = authorizationComponents
+                    var authComponents = authorizationComponents
                         .Where(a => a != null)
-                        .Select(a => a.Activate(context))
                         .ToList();
 
-                    foreach (var authProvider in providers)
+                    var contextResolver = context?.RequestServices?.GetService<IApiRequestContextResolver>();
+
+                    foreach (var authComponent in authComponents)
                     {
                         context.Request.ClientAuthorizationInfo.AuthorizedBy = AuthorizationType.Provider;
-                        var result = await authProvider.Authorize(context).ConfigureAwait(false);
+                        var result = await authComponent.Authorize(contextResolver).ConfigureAwait(false);
 
                         if (result == null)
                         {
                             result = new AuthorizationResult(false);
                         }
 
-                        result.Policy = authProvider.Policy;
                         context.Request.ClientAuthorizationInfo.AuthResults.Add(result);
                     }
 

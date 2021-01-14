@@ -1,9 +1,7 @@
 ﻿namespace Api.DeepSleep.Controllers.HelperResponses
 {
     using global::DeepSleep;
-    using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class HelperResponsesController

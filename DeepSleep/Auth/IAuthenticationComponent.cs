@@ -5,9 +5,9 @@
     /// </summary>
     public interface IAuthenticationComponent : IAuthenticationProvider
     {
-        /// <summary>Activates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Activates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        IAuthenticationProvider Activate(ApiRequestContext context);
+        IAuthenticationProvider Activate(IApiRequestContextResolver contextResolver);
     }
 }

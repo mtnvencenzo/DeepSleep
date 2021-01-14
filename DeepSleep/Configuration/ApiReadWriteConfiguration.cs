@@ -26,11 +26,11 @@
         /// <summary>Gets or sets the reader resolver.</summary>
         /// <value>The reader resolver.</value>
         [JsonIgnore]
-        public Func<ResolvedFormatterArguments, Task<FormatterReadOverrides>> ReaderResolver { get; set; }
+        public Func<IApiRequestContextResolver, Task<FormatterReadOverrides>> ReaderResolver { get; set; }
 
         /// <summary>Gets or sets the writer resolver.</summary>
         /// <value>The writer resolver.</value>
         [JsonIgnore]
-        public Func<ResolvedFormatterArguments, Task<FormatterWriteOverrides>> WriterResolver { get; set; }
+        public Func<IApiRequestContextResolver, Task<FormatterWriteOverrides>> WriterResolver { get; set; }
     }
 }

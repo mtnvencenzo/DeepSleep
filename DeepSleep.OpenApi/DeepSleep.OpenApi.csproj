@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <None Include=".pack\DeepSleep.OpenApi.nuspec" />
-    <None Include=".pack\deepsleep_netcore.pdn" />
+    <None Include=".pack\deepsleep_web.pdn" />
   </ItemGroup>
 
   <ItemGroup>

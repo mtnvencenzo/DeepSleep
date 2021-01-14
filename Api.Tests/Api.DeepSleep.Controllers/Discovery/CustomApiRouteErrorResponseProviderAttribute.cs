@@ -6,11 +6,11 @@
 
     public class CustomApiRouteErrorResponseProviderAttribute : ApiRouteErrorResponseProviderAttribute
     {
-        /// <summary>Processes the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Processes the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public override Task<object> Process(ApiRequestContext context, IList<string> errors)
+        public override Task<object> Process(IApiRequestContextResolver contextResolver, IList<string> errors)
         {
             return Task.FromResult(new CustomResponseErrorObject(errors) as object);
         }

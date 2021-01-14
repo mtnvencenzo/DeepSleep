@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using System.Globalization;
+
     /// <summary>
     /// 
     /// </summary>

@@ -16,8 +16,8 @@
         /// <param name="requireContentLengthOnRequestBodyRequests">if set to <c>true</c> [require content length on request body requests].</param>
         /// <param name="allowRequestBodyWhenNoModelDefined">if set to <c>true</c> [allow request body when no model defined].</param>
         public ApiRouteRequestValidationAttribute(
-            int maxHeaderLength = -1, 
-            int maxRequestLength = -1, 
+            int maxHeaderLength = -1,
+            int maxRequestLength = -1,
             int maxRequestUriLength = -1,
             bool requireContentLengthOnRequestBodyRequests = true,
             bool allowRequestBodyWhenNoModelDefined = false)
@@ -37,7 +37,7 @@
 
         /// <summary>Gets the maximum length of the header.</summary>
         /// <value>The maximum length of the header.</value>
-        public int? MaxHeaderLength { get; private set;}
+        public int? MaxHeaderLength { get; private set; }
 
         /// <summary>Gets the maximum length of the request.</summary>
         /// <value>The maximum length of the request.</value>

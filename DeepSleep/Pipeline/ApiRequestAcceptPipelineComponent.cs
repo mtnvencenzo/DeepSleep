@@ -28,7 +28,7 @@
 
             var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
-            if (await context.ProcessHttpRequestAccept(formatterFactory).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestAccept(contextResolver, formatterFactory).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -50,9 +50,10 @@
 
         /// <summary>Processes the HTTP request accept.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -76,7 +77,7 @@
 
                     if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                     {
-                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
 
                         overridingFormatters = overrides?.Formatters;
 

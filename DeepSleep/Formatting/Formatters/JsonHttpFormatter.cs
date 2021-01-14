@@ -128,12 +128,18 @@
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 ReadCommentHandling = JsonCommentHandling.Skip,
-                WriteIndented = options?.PrettyPrint ?? false
+                WriteIndented = options?.PrettyPrint ?? false,
             };
 
-            settings.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, false));
-            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableBooleanConverter());
+            settings.Converters.Add(new BooleanConverter());
+            settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
             settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableDateTimeConverter());
+            settings.Converters.Add(new DateTimeConverter());
+            settings.Converters.Add(new NullableDateTimeOffsetConverter());
+            settings.Converters.Add(new DateTimeOffsetConverter());
             settings.Converters.Add(new ContentDispositionConverter());
             settings.Converters.Add(new ContentTypeConverter());
 

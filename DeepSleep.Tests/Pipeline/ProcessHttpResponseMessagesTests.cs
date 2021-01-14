@@ -26,7 +26,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -60,7 +60,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -92,7 +92,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -115,7 +115,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -138,7 +138,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -161,7 +161,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();

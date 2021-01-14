@@ -24,7 +24,10 @@
                 Request = null
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -48,7 +51,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -71,7 +74,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -96,7 +102,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -117,10 +126,12 @@
                     ContentType = "application/json",
                     InvocationContext = null
                 },
-
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -160,7 +171,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -200,7 +214,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -243,7 +260,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -254,7 +274,7 @@
         [Fact]
         public async void body_binding___returns_false_and_415_status_for_non_writable_formatter()
         {
-            var xmlformatter = SetupXmlFormatterMock(null, null );
+            var xmlformatter = SetupXmlFormatterMock(null, null);
             var jsonformatter = SetupJsonFormatterMock(null, null);
             var mockFactory = SetupFormatterFactory(xmlformatter.Object, jsonformatter.Object);
 
@@ -288,7 +308,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -347,7 +370,10 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+                var contextResolver = new DefaultApiRequestContextResolver();
+                contextResolver.SetContext(context);
+
+                var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeFalse();
 
                 context.Response.Should().NotBeNull();
@@ -399,7 +425,10 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+                var contextResolver = new DefaultApiRequestContextResolver();
+                contextResolver.SetContext(context);
+
+                var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeTrue();
 
                 context.Response.Should().NotBeNull();
@@ -462,7 +491,10 @@
                     }
                 };
 
-                var processed = await context.ProcessHttpRequestBodyBinding(mockFactory.Object).ConfigureAwait(false);
+                var contextResolver = new DefaultApiRequestContextResolver();
+                contextResolver.SetContext(context);
+
+                var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
                 processed.Should().BeFalse();
 
                 context.Response.Should().NotBeNull();

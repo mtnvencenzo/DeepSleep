@@ -7,11 +7,11 @@
 
     public class ItemsController
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
+        private readonly IApiRequestContextResolver contextResolver;
 
-        public ItemsController(IApiRequestContextResolver apiRequestContextResolver)
+        public ItemsController(IApiRequestContextResolver contextResolver)
         {
-            this.apiRequestContextResolver = apiRequestContextResolver;
+            this.contextResolver = contextResolver;
         }
 
         /// <summary>Gets the with items.</summary>
@@ -19,9 +19,9 @@
         [ApiEndpointValidation(typeof(ItemsRsValidator))]
         public ItemsRs GetWithItems()
         {
-            var found1 = apiRequestContextResolver.GetContext().TryGetItem<string>("TestItem", out var value1);
-            var found2 = apiRequestContextResolver.GetContext().TryGetItem<string>("TestItem2", out var value2);
-            var found3 = apiRequestContextResolver.GetContext().TryGetItem<string>("TestItem3", out var value3);
+            var found1 = contextResolver.GetContext().TryGetItem<string>("TestItem", out var value1);
+            var found2 = contextResolver.GetContext().TryGetItem<string>("TestItem2", out var value2);
+            var found3 = contextResolver.GetContext().TryGetItem<string>("TestItem3", out var value3);
 
             return new ItemsRs
             {
@@ -51,20 +51,22 @@
 
     public class ItemsRsValidator : IEndpointValidator
     {
-        /// <summary>Validates the specified arguments.</summary>
-        /// <param name="args">The arguments.</param>
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            if (args?.ApiContext?.ValidationState() != ApiValidationState.Failed)
+            var context = contextResolver?.GetContext();
+
+            if (context?.ValidationState() != ApiValidationState.Failed)
             {
-                args.ApiContext.TryAddItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden-First");
-                args.ApiContext.UpsertItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden");
-                args.ApiContext.UpsertItem<string>("TestItem", "TestItemValue");
-                args.ApiContext.TryAddItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden-First");
+                context.TryAddItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden-First");
+                context.UpsertItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden");
+                context.UpsertItem<string>("TestItem", "TestItemValue");
+                context.TryAddItem<string>("TestItem", "TestItemValue-ShouldBe-Overridden-First");
 
 
-                args.ApiContext.UpsertItem<string>("TestItem2", "TestItemValue2");
+                context.UpsertItem<string>("TestItem2", "TestItemValue2");
             }
 
             return Task.FromResult(null as IList<ApiValidationResult>);

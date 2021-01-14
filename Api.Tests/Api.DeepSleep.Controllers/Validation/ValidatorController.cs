@@ -84,9 +84,10 @@
 
     public class RequestPipelineModelValidator1 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+            var context = contextResolver?.GetContext();
+            var suggestedStatusCode = context.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
 
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-1", suggestedHttpStatusCode: suggestedStatusCode));
         }
@@ -94,9 +95,10 @@
 
     public class RequestPipelineModelValidator2 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+            var context = contextResolver?.GetContext();
+            var suggestedStatusCode = context.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
 
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-2", suggestedHttpStatusCode: suggestedStatusCode));
         }
@@ -104,9 +106,10 @@
 
     public class RequestPipelineModelValidator3 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver apiRequestContextResolver)
         {
-            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+            var context = apiRequestContextResolver?.GetContext();
+            var suggestedStatusCode = context.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
 
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-3", suggestedHttpStatusCode: suggestedStatusCode));
         }
@@ -114,10 +117,10 @@
 
     public class RequestPipelineModelValidator4 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-
-            var suggestedStatusCode = args?.ApiContext.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
+            var context = contextResolver?.GetContext();
+            var suggestedStatusCode = context.Configuration.ValidationErrorConfiguration.UriBindingErrorStatusCode;
 
             var results = new List<ApiValidationResult>();
 
@@ -130,7 +133,7 @@
 
     public class RequestPipelineModelValidator5 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-5", suggestedHttpStatusCode: 404));
         }
@@ -138,7 +141,7 @@
 
     public class RequestPipelineModelValidatorSuccess4 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(null as IList<ApiValidationResult>);
         }
@@ -146,7 +149,7 @@
 
     public class RequestPipelineModelValidatorSuccess5 : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(ApiValidationResult.Success());
         }

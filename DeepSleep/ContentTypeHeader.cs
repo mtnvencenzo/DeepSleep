@@ -14,7 +14,7 @@
         /// <summary>Initializes a new instance of the <see cref="ContentTypeHeader"/> class.</summary>
         /// <param name="value">The value.</param>
         public ContentTypeHeader(string value)
-            :base(value)
+            : base(value)
         {
             var charset = (this.MediaValue?.GetParameterValue("charset") ?? string.Empty).ToLowerInvariant();
 

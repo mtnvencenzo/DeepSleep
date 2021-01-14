@@ -7,7 +7,7 @@
 
     public class ServiceUnavailableExceptionThrowValidator : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             throw new ApiServiceUnavailableException();
         }

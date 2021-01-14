@@ -6,19 +6,19 @@
 
     public class AuthorizationController
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
+        private readonly IApiRequestContextResolver contextResolver;
 
-        public AuthorizationController(IApiRequestContextResolver apiRequestContextResolver)
+        public AuthorizationController(IApiRequestContextResolver contextResolver)
         {
-            this.apiRequestContextResolver = apiRequestContextResolver;
+            this.contextResolver = contextResolver;
         }
 
         public AuthorizationModel GetWithAuthorization()
         {
             return new AuthorizationModel
             {
-                IsAuthorized = apiRequestContextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthResults?.All(a => a.IsAuthorized),
-                AuthorizedBy = apiRequestContextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthorizedBy ?? AuthorizationType.None
+                IsAuthorized = contextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthResults?.All(a => a.IsAuthorized),
+                AuthorizedBy = contextResolver.GetContext().Request.ClientAuthorizationInfo?.AuthorizedBy ?? AuthorizationType.None
             };
         }
     }

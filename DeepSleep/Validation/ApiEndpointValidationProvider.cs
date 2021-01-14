@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Validation
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -15,11 +14,9 @@
         /// <value>The order.</value>
         public int Order => 10;
 
-        /// <summary>Validates the specified context.</summary>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public async Task Validate(ApiRequestContext context)
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        public async Task Validate(IApiRequestContextResolver contextResolver)
         {
             var statusCodePrecedence = new List<int>
             {
@@ -27,6 +24,8 @@
                 403,
                 404,
             };
+
+            var context = contextResolver.GetContext();
 
             foreach (var validator in context.Configuration.Validators.OrderBy(v => v.Order))
             {
@@ -40,10 +39,7 @@
 
                 try
                 {
-                    results = await validator.Validate(new ApiValidationArgs
-                    {
-                        ApiContext = context
-                    }).ConfigureAwait(false);
+                    results = await validator.Validate(contextResolver).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -59,8 +55,6 @@
                     {
                         context.Validation.State = ApiValidationState.Failed;
                         context.AddValidationError(result.Message);
-
-
 
                         var suggestedStatus = result.SuggestedHttpStatusCode ?? defaultStatusCode;
                         var currentStatus = context.Validation.SuggestedErrorStatusCode ?? defaultStatusCode;

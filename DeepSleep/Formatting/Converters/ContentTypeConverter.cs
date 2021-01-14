@@ -7,7 +7,7 @@
     /// <summary>
     /// 
     /// </summary>
-    internal class ContentTypeConverter : JsonConverter<ContentTypeHeader>
+    public class ContentTypeConverter : JsonConverter<ContentTypeHeader>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -30,7 +30,11 @@
             {
                 string value = reader.GetString();
 
-                if (!string.IsNullOrWhiteSpace(value))
+                if (value == null)
+                {
+                    return null;
+                }
+                else
                 {
                     return new ContentTypeHeader(value);
                 }
@@ -45,13 +49,15 @@
         /// <param name="options">An object that specifies serialization options to use.</param>
         public override void Write(Utf8JsonWriter writer, ContentTypeHeader value, JsonSerializerOptions options)
         {
-            if (!string.IsNullOrWhiteSpace(value?.ToString()))
+            var contentType = value?.ToString();
+
+            if (contentType == null)
             {
-                writer.WriteStringValue(value.ToString());
+                writer.WriteNullValue();
             }
             else
             {
-                writer.WriteNullValue();
+                writer.WriteStringValue(contentType);
             }
         }
     }

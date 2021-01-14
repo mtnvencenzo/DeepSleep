@@ -23,7 +23,7 @@
                 Response = null
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().BeNull();
@@ -45,7 +45,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().BeNull();
@@ -69,7 +69,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().BeNull();
@@ -93,7 +93,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -115,7 +115,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -130,7 +130,7 @@
         [InlineData("text/plain")]
         public async void ReturnsTrueAndDoesNotWriteForNonMatchingFormatter(string accept)
         {
-            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" } );
+            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
             var context = new ApiRequestContext
@@ -147,7 +147,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -178,7 +178,10 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -214,7 +217,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -251,10 +254,13 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -288,9 +294,12 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -324,9 +333,12 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -363,10 +375,13 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -404,10 +419,13 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -445,10 +463,13 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -484,9 +505,12 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -522,9 +546,12 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -557,7 +584,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Serialization;
@@ -74,7 +75,7 @@
                 {
                     NewLineOnAttributes = false,
                     CloseOutput = false,
-                    Encoding = options.Encoding,
+                    Encoding = Encoding.UTF8,
                     Indent = options.PrettyPrint,
                     NamespaceHandling = NamespaceHandling.Default,
                     OmitXmlDeclaration = true,

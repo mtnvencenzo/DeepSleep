@@ -69,9 +69,12 @@
                     // ----------------------------------------------------------------------------
                     context.Log($"{nameof(ProcessHttpRequestAuthentication)}        authenticationComponents: {authenticationComponents.Count}");
 
+                    var contextResolver = context?.RequestServices?.GetService<IApiRequestContextResolver>();
+
                     var providers = authenticationComponents
                         .Where(a => a != null)
-                        .Select(a => a.Activate(context))
+                        .Select(a => a.Activate(contextResolver))
+                        .Where(a => a != null)
                         .ToList();
 
                     // log
@@ -100,7 +103,7 @@
                             context.Request.ClientAuthenticationInfo.AuthenticatedBy = AuthenticationType.Provider;
                         }
 
-                        context.Request.ClientAuthenticationInfo.AuthResult = await authProvider.Authenticate(context).ConfigureAwait(false);
+                        context.Request.ClientAuthenticationInfo.AuthResult = await authProvider.Authenticate(contextResolver).ConfigureAwait(false);
                     }
                     else
                     {
@@ -136,9 +139,9 @@
                         challenges.ForEach(c =>
                         {
                             context.Response.AddHeader(
-                                name: "WWW-Authenticate", 
-                                value: c, 
-                                append: false, 
+                                name: "WWW-Authenticate",
+                                value: c,
+                                append: false,
                                 allowMultiple: true);
                         });
 

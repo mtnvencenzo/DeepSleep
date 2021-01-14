@@ -1,12 +1,13 @@
 ﻿namespace DeepSleep.Auth
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
     /// 
     /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <seealso cref="DeepSleep.Auth.IAuthenticationComponent" />
     public class ApiAuthenticationComponent<T> : IAuthenticationComponent where T : IAuthenticationProvider
     {
         private IAuthenticationProvider provider;
@@ -14,13 +15,14 @@
         string IAuthenticationProvider.Realm { get; }
         string IAuthenticationProvider.Scheme { get; }
 
-        /// <summary>Activates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Activates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public IAuthenticationProvider Activate(ApiRequestContext context)
+        public IAuthenticationProvider Activate(IApiRequestContextResolver contextResolver)
         {
             if (this.provider == null)
             {
+                var context = contextResolver?.GetContext();
                 if (context != null)
                 {
                     try
@@ -30,7 +32,10 @@
                             this.provider = context.RequestServices.GetService(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        context.Log(ex.ToString());
+                    }
 
                     if (this.provider == null)
                     {
@@ -38,7 +43,10 @@
                         {
                             this.provider = Activator.CreateInstance(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            context.Log(ex.ToString());
+                        }
                     }
                 }
             }
@@ -46,18 +54,15 @@
             return this.provider;
         }
 
-        /// <summary>Authenticates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Authenticates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public async Task<AuthenticationResult> Authenticate(ApiRequestContext context)
+        public async Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)
         {
-            if (context != null)
+            var provider = this.Activate(contextResolver);
+            if (provider != null)
             {
-                var provider = this.Activate(context);
-                if (provider != null)
-                {
-                    return await provider.Authenticate(context).ConfigureAwait(false);
-                }
+                return await provider.Authenticate(contextResolver).ConfigureAwait(false);
             }
 
             return null;

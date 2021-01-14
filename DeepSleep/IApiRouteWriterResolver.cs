@@ -8,9 +8,9 @@
     /// </summary>
     public interface IApiRouteWriterResolver
     {
-        /// <summary>Resolves the specified arguments.</summary>
-        /// <param name="args">The arguments.</param>
+        /// <summary>Resolves the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        Task<FormatterWriteOverrides> Resolve(ResolvedFormatterArguments args);
+        Task<FormatterWriteOverrides> Resolve(IApiRequestContextResolver contextResolver);
     }
 }

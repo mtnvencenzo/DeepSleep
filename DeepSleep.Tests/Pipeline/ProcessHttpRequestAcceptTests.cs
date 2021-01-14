@@ -22,7 +22,10 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
 
             context.Response.Should().NotBeNull();
@@ -38,7 +41,10 @@
                 Request = null
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -54,7 +60,10 @@
                 Request = new ApiRequestInfo()
             };
 
-            var processed = await context.ProcessHttpRequestAccept(null).ConfigureAwait(false);
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
@@ -75,12 +84,15 @@
                 Request = new ApiRequestInfo()
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
             mockFormatterFactory
                 .Setup(m => m.GetWriteableTypes(It.IsAny<IList<IFormatStreamReaderWriter>>()))
                 .Returns(new string[] { "application/json", "text/xml", "text/plain" });
 
-            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeFalse();
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
@@ -101,6 +113,9 @@
                 Request = new ApiRequestInfo()
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             string formatterType;
             var mockFormatter = new Mock<IFormatStreamReaderWriter>();
 
@@ -109,7 +124,7 @@
                 .Setup(m => m.GetAcceptableFormatter(It.IsAny<AcceptHeader>(), out formatterType, It.IsAny<IList<IFormatStreamReaderWriter>>(), It.IsAny<IList<string>>()))
                 .Returns(Task.FromResult(mockFormatter.Object));
 
-            var processed = await context.ProcessHttpRequestAccept(mockFormatterFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, mockFormatterFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();
@@ -132,11 +147,14 @@
                 }
             };
 
+            var contextResolver = new DefaultApiRequestContextResolver();
+            contextResolver.SetContext(context);
+
             var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
 
 
-            var processed = await context.ProcessHttpRequestAccept(mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestAccept(contextResolver, mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
             context.Response.Should().NotBeNull();
             context.Response.ResponseObject.Should().BeNull();

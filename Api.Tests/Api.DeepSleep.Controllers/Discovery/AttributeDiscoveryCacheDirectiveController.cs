@@ -19,8 +19,8 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteCacheDirective(
-            location: HttpCacheLocation.Public, 
-            cacheability: HttpCacheType.Cacheable, 
+            location: HttpCacheLocation.Public,
+            cacheability: HttpCacheType.Cacheable,
             expirationSeconds: 120,
             varyHeaderValue: "Test, Something")]
         public AttributeDiscoveryModel GetAuthorizationPolicyNotMatched()

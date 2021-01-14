@@ -1,12 +1,13 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Formatting.Converters;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
@@ -18,6 +19,7 @@
     {
         private readonly static Regex regexArrayReplace = new Regex(@"\[[0-9] {0,}\]");
         private readonly static JsonWriterOptions writerOptions;
+        private readonly static JsonSerializerOptions readerOptions;
 
         static FormUrlEncodedObjectSerializer()
         {
@@ -26,6 +28,31 @@
                 Indented = false,
                 SkipValidation = false
             };
+
+            readerOptions = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+
+            readerOptions.Converters.Add(new NullableBooleanConverter());
+            readerOptions.Converters.Add(new BooleanConverter());
+            readerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+            readerOptions.Converters.Add(new NullableTimeSpanConverter());
+            readerOptions.Converters.Add(new TimeSpanConverter());
+            readerOptions.Converters.Add(new NullableDateTimeConverter());
+            readerOptions.Converters.Add(new DateTimeConverter());
+            readerOptions.Converters.Add(new NullableDateTimeOffsetConverter());
+            readerOptions.Converters.Add(new DateTimeOffsetConverter());
+            readerOptions.Converters.Add(new ObjectConverter());
+            readerOptions.Converters.Add(new ContentDispositionConverter());
+            readerOptions.Converters.Add(new ContentTypeConverter());
         }
 
         /// <summary>
@@ -189,7 +216,7 @@
                     : "{}";
             }
 
-            var obj = JsonSerializer.Deserialize(json, objType, JsonReaderSerializationOptions.ReaderOptions);
+            var obj = JsonSerializer.Deserialize(json, objType, readerOptions);
             return obj;
         }
 

@@ -569,9 +569,10 @@
                 {
                     ReadWriteConfiguration = new ApiReadWriteConfiguration
                     {
-                        WriterResolver = (args) => {
+                        WriterResolver = (args) =>
+                        {
                             var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {
@@ -592,7 +593,8 @@
                  {
                      ReadWriteConfiguration = new ApiReadWriteConfiguration
                      {
-                         WriterResolver = (args) => {
+                         WriterResolver = (args) =>
+                         {
                              var formatters = new List<IFormatStreamReaderWriter>();
                              return Task.FromResult(new FormatterWriteOverrides(formatters));
                          }
@@ -608,9 +610,10 @@
                  {
                      ReadWriteConfiguration = new ApiReadWriteConfiguration
                      {
-                         WriterResolver = (args) => {
+                         WriterResolver = (args) =>
+                         {
                              var formatters = new List<IFormatStreamReaderWriter>();
-                             var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                             var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
 
                              if (formatter != null)
                              {
@@ -632,9 +635,10 @@
                 {
                     ReadWriteConfiguration = new ApiReadWriteConfiguration
                     {
-                        ReaderResolver = (args) => {
+                        ReaderResolver = (args) =>
+                        {
                             var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {
@@ -655,7 +659,8 @@
                 {
                     ReadWriteConfiguration = new ApiReadWriteConfiguration
                     {
-                        ReaderResolver = (args) => {
+                        ReaderResolver = (args) =>
+                        {
 
                             var formatters = new List<IFormatStreamReaderWriter>
                             {
@@ -685,15 +690,17 @@
                 {
                     ReadWriteConfiguration = new ApiReadWriteConfiguration
                     {
-                        ReaderResolver = (args) => {
-                            var formatters = args.Context.RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+                        ReaderResolver = (args) =>
+                        {
+                            var formatters = args.GetContext().RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
 
                             formatters.Add(new PlainTextFormatStreamReaderWriter());
-    
+
                             return Task.FromResult(new FormatterReadOverrides(formatters));
                         },
-                        WriterResolver = (args) => {
-                            var formatters = args.Context.RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+                        WriterResolver = (args) =>
+                        {
+                            var formatters = args.GetContext().RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
 
                             formatters.Add(new PlainTextFormatStreamReaderWriter());
 
@@ -712,9 +719,10 @@
                 {
                     ReadWriteConfiguration = new ApiReadWriteConfiguration
                     {
-                        ReaderResolver = (args) => {
+                        ReaderResolver = (args) =>
+                        {
                             var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.Context.RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {

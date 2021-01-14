@@ -5,10 +5,10 @@
     /// <summary></summary>
     public interface IAuthenticationProvider
     {
-        /// <summary>Authenticates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Authenticates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        Task<AuthenticationResult> Authenticate(ApiRequestContext context);
+        Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver);
 
         /// <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
         /// <param name="scheme">The scheme.</param>

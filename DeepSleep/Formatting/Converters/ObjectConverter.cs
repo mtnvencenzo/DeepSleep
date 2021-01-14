@@ -4,7 +4,10 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class ObjectConverter : JsonConverter<object>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ObjectConverter : JsonConverter<object>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -68,7 +71,7 @@
                 return element;
             }
 
-            throw new JsonException();
+            throw new JsonException($"Value cannot be converted to an object value");
         }
 
         /// <summary>Writes a specified value as JSON.</summary>
@@ -78,7 +81,12 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                writer.WriteNullValue();
+            }
+
+            JsonSerializer.Serialize(writer, value, value.GetType(), options);
         }
     }
 }

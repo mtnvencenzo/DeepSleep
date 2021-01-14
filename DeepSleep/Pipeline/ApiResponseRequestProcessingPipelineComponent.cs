@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Configuration;
-    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -26,8 +25,8 @@
                 .SetThreadCulure();
 
             var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
-            
-            await context.ProcessHttpResponseRequestProcessing(apiServiceConfiguration).ConfigureAwait(false);
+
+            await context.ProcessHttpResponseRequestProcessing(contextResolver, apiServiceConfiguration).ConfigureAwait(false);
         }
     }
 
@@ -46,15 +45,19 @@
 
         /// <summary>Processes the HTTP response request processing.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="apiServiceConfiguration">The API service configuration.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseRequestProcessing(this ApiRequestContext context, IApiServiceConfiguration apiServiceConfiguration)
+        public static async Task<bool> ProcessHttpResponseRequestProcessing(
+            this ApiRequestContext context,
+            IApiRequestContextResolver contextResolver,
+            IApiServiceConfiguration apiServiceConfiguration)
         {
             if (apiServiceConfiguration?.OnRequestProcessed != null)
             {
                 try
                 {
-                    await apiServiceConfiguration.OnRequestProcessed(context).ConfigureAwait(false);
+                    await apiServiceConfiguration.OnRequestProcessed(contextResolver).ConfigureAwait(false);
                 }
                 catch { }
             }

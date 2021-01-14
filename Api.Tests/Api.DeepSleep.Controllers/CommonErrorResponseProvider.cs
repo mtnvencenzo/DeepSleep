@@ -13,11 +13,11 @@
     /// <seealso cref="DeepSleep.IApiErrorResponseProvider" />
     public class CommonErrorResponseProvider : IValidationErrorResponseProvider
     {
-        /// <summary>Processes the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Processes the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public Task<object> Process(ApiRequestContext context, IList<string> errors)
+        public Task<object> Process(IApiRequestContextResolver contextResolver, IList<string> errors)
         {
             if ((errors?.Count ?? 0) > 0)
             {

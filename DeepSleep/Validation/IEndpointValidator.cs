@@ -6,9 +6,9 @@
     /// <summary></summary>
     public interface IEndpointValidator
     {
-        /// <summary>Validates the specified arguments.</summary>
-        /// <param name="args">The arguments.</param>
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args);
+        Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver);
     }
 }

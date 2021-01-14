@@ -23,8 +23,9 @@
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
-        public Task<AuthenticationResult> Authenticate(ApiRequestContext context)
+        public Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)
         {
+            var context = contextResolver?.GetContext();
             var acceptable = "T0RrMlJqWXpNVFF0UmtReFF5MDBRamN5TFVJeE5qZ3RPVGxGTlRBek5URXdNVUkz";
             var authValue = context.Request.ClientAuthenticationInfo.AuthValue ?? string.Empty;
 

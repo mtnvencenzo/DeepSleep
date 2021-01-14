@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using DeepSleep.OpenApi.Decorators;
     using DeepSleep.OpenApi.v3_0;
-    using DeepSleep.Pipeline;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -97,7 +96,7 @@
 
                 temp = newTemp;
             }
-            
+
             return temp;
         }
 

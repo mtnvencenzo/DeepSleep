@@ -3,7 +3,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -15,12 +14,12 @@
         /// <summary>Initializes a new instance of the <see cref="DataAnnotationsValidationProvider"/> class.</summary>
         /// <param name="continuation">The continuation.</param>
         /// <param name="validateAllProperties">if set to <c>true</c> [validate all properties].</param>
-        public DataAnnotationsValidationProvider( ValidationContinuation continuation = ValidationContinuation.OnlyIfValid, bool validateAllProperties = true)
+        public DataAnnotationsValidationProvider(ValidationContinuation continuation = ValidationContinuation.OnlyIfValid, bool validateAllProperties = true)
         {
             this.Continuation = continuation;
             this.ValidateAllProperties = validateAllProperties;
         }
-        
+
         /// <summary>Gets the order.</summary>
         /// <value>The order.</value>
         public int Order => 0;
@@ -33,15 +32,17 @@
         /// <value><c>true</c> if [validate all properties]; otherwise, <c>false</c>.</value>
         public bool ValidateAllProperties { get; }
 
-        /// <summary>Validates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public Task Validate(ApiRequestContext context)
+        public Task Validate(IApiRequestContextResolver contextResolver)
         {
+            var context = contextResolver?.GetContext();
+
             var uriModel = context?.Request?.InvocationContext?.UriModel;
             var bodyModel = context?.Request?.InvocationContext?.BodyModel;
 
-            if(uriModel != null)
+            if (uriModel != null)
             {
                 // Skip validators that are not set to run if validation != failed
                 if (context.Validation.State == ApiValidationState.Failed && this.Continuation == ValidationContinuation.OnlyIfValid)
@@ -127,7 +128,7 @@
         /// <param name="validateAllProperties">if set to <c>true</c> [validate all properties].</param>
         /// <returns></returns>
         public static IServiceCollection UseDataAnnotationValidations(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             ValidationContinuation continuation = ValidationContinuation.OnlyIfValid,
             bool validateAllProperties = true)
         {

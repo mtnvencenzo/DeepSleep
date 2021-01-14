@@ -19,8 +19,8 @@
         /// <exception cref="ArgumentNullException">validatorType</exception>
         /// <exception cref="ArgumentException"></exception>
         public ApiEndpointValidationAttribute(
-            Type validatorType, 
-            ValidationContinuation continuation = ValidationContinuation.OnlyIfValid, 
+            Type validatorType,
+            ValidationContinuation continuation = ValidationContinuation.OnlyIfValid,
             int order = 0)
         {
             if (validatorType == null)
@@ -53,12 +53,12 @@
         /// <value>The continuation.</value>
         public ValidationContinuation Continuation { get; }
 
-        /// <summary>Validates the specified arguments.</summary>
-        /// <param name="args">The arguments.</param>
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public async Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public async Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            var context = args.ApiContext;
+            var context = contextResolver?.GetContext();
 
             if (context != null)
             {
@@ -84,7 +84,7 @@
 
                 if (validator != null)
                 {
-                    return await validator.Validate(args).ConfigureAwait(false);
+                    return await validator.Validate(contextResolver).ConfigureAwait(false);
                 }
             }
 

@@ -73,9 +73,9 @@
         /// <param name="writeableMediaTypes">The writeable media types.</param>
         /// <returns></returns>
         public virtual Task<IFormatStreamReaderWriter> GetAcceptableFormatter(
-            AcceptHeader acceptHeader, 
-            out string formatterType, 
-            IList<IFormatStreamReaderWriter> writeableFormatters = null, 
+            AcceptHeader acceptHeader,
+            out string formatterType,
+            IList<IFormatStreamReaderWriter> writeableFormatters = null,
             IList<string> writeableMediaTypes = null)
         {
             formatterType = string.Empty;
@@ -105,9 +105,9 @@
         /// <param name="readableMediaTypes">The readable media types.</param>
         /// <returns></returns>
         public virtual Task<IFormatStreamReaderWriter> GetContentTypeFormatter(
-            ContentTypeHeader mediaHeader, 
-            out string formatterType, 
-            IList<IFormatStreamReaderWriter> readableFormatters = null, 
+            ContentTypeHeader mediaHeader,
+            out string formatterType,
+            IList<IFormatStreamReaderWriter> readableFormatters = null,
             IList<string> readableMediaTypes = null)
         {
             var formatter = this.Get(
@@ -115,7 +115,7 @@
                 parameters: mediaHeader.ParameterString(),
                 forRead: true,
                 overridingFormatters: readableFormatters,
-                overridingMediaTypes: readableMediaTypes, 
+                overridingMediaTypes: readableMediaTypes,
                 formatterType: out formatterType);
 
             return Task.FromResult(formatter);
@@ -154,11 +154,11 @@
         /// <param name="overridingMediaTypes">The overriding media types.</param>
         /// <returns></returns>
         protected virtual IFormatStreamReaderWriter Get(
-            string type, 
-            string parameters, 
-            bool forRead, 
-            out string formatterType, 
-            IList<IFormatStreamReaderWriter> overridingFormatters = null, 
+            string type,
+            string parameters,
+            bool forRead,
+            out string formatterType,
+            IList<IFormatStreamReaderWriter> overridingFormatters = null,
             IList<string> overridingMediaTypes = null)
         {
             var formatters = (overridingFormatters ?? GetFormatters() ?? new List<IFormatStreamReaderWriter>())

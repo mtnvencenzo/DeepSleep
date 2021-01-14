@@ -1,10 +1,10 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Configuration;
     using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -30,7 +30,7 @@
 
             var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
-            if (await context.ProcessHttpRequestBodyBinding(formatterFactory).ConfigureAwait(false))
+            if (await context.ProcessHttpRequestBodyBinding(contextResolver, formatterFactory).ConfigureAwait(false))
             {
                 await apinext.Invoke(contextResolver).ConfigureAwait(false);
             }
@@ -52,9 +52,10 @@
 
         /// <summary>Processes the HTTP request body binding.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -109,7 +110,7 @@
 
                         if (context.Configuration.ReadWriteConfiguration?.ReaderResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(contextResolver).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
@@ -150,14 +151,31 @@
                             return false;
                         }
 
+
+                        Encoding contextTypeEncoding = null;
+
+                        if (context.Request.ContentType != null as string)
+                        {
+                            if (!string.IsNullOrWhiteSpace(context.Request.ContentType.Charset))
+                            {
+                                try
+                                {
+                                    contextTypeEncoding = Encoding.GetEncoding(context.Request.ContentType.Charset);
+                                }
+                                catch { }
+                            }
+                        }
+
+
                         try
                         {
                             context.Request.InvocationContext.BodyModel = await formatter.ReadType(
-                                stream: context.Request.Body, 
+                                stream: context.Request.Body,
                                 objType: context.Routing.Route.Location.BodyParameterType,
                                 options: new FormatterOptions
                                 {
-                                    Culture = context.Request.AcceptCulture
+                                    Culture = context.Request.AcceptCulture,
+                                    Encoding = contextTypeEncoding ?? Encoding.UTF8
                                 }).ConfigureAwait(false);
                         }
                         catch (Exception ex)

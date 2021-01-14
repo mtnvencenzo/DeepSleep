@@ -18,11 +18,11 @@
         /// <value>The authentication scheme.</value>
         public string Scheme => "EX-502";
 
-        /// <summary>Authenticates the specified context.</summary>
-        /// <param name="context">The context.</param>
-        /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
-        /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
-        public Task<AuthenticationResult> Authenticate(ApiRequestContext context)
+        /// <summary>Authenticates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
+        /// <exception cref="ApiBadGatewayException"></exception>
+        public Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)
         {
             throw new ApiBadGatewayException();
         }

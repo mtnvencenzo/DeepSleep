@@ -11,16 +11,16 @@
 
     public class RequestPipelineController : IRouteRegistrationProvider
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
+        private readonly IApiRequestContextResolver contextResolver;
 
-        public RequestPipelineController(IApiRequestContextResolver apiRequestContextResolver)
+        public RequestPipelineController(IApiRequestContextResolver contextResolver)
         {
-            this.apiRequestContextResolver = apiRequestContextResolver;
+            this.contextResolver = contextResolver;
         }
 
         public RequestPipelineModel GetConfiguredAfterEndpoint()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
 
             return new RequestPipelineModel
             {
@@ -30,7 +30,7 @@
 
         public RequestPipelineModel GetConfiguredBeforeEndpoint()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
 
             return new RequestPipelineModel
             {
@@ -41,7 +41,7 @@
         [ApiEndpointValidation(typeof(RequestPipelineModelValidator))]
         public RequestPipelineModel GetConfiguredBeforeValidation()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(RequestPipelineModelValidator), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(RequestPipelineModelValidator), out string item);
 
             return new RequestPipelineModel
             {
@@ -52,7 +52,7 @@
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.AfterEndpointInvocation, 0)]
         public RequestPipelineModel GetAttributeAfterEndpoint()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
 
             return new RequestPipelineModel
             {
@@ -63,7 +63,7 @@
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointInvocation, 0)]
         public RequestPipelineModel GetAttributeBeforeEndpoint()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
 
             return new RequestPipelineModel
             {
@@ -75,7 +75,7 @@
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointValidation, 0)]
         public RequestPipelineModel GetAttributeBeforeValidation()
         {
-            this.apiRequestContextResolver.GetContext().TryGetItem(nameof(RequestPipelineModelValidator), out string item);
+            this.contextResolver.GetContext().TryGetItem(nameof(RequestPipelineModelValidator), out string item);
 
             return new RequestPipelineModel
             {
@@ -121,10 +121,10 @@
             var routes = new List<ApiRouteRegistration>();
 
             routes.Add(new ApiRouteRegistration(
-                template: "requestpipeline/getafterendpoint/with/static/configured/pipeline", 
-                httpMethods: new[] { "GET" }, 
-                controller: this.GetType(), 
-                endpoint: nameof(GetConfiguredAfterEndpoint), 
+                template: "requestpipeline/getafterendpoint/with/static/configured/pipeline",
+                httpMethods: new[] { "GET" },
+                controller: this.GetType(),
+                endpoint: nameof(GetConfiguredAfterEndpoint),
                 config: new DefaultApiRequestConfiguration
                 {
                     AllowAnonymous = true,
@@ -229,15 +229,17 @@
     {
         public int Order { get; }
 
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            if (args?.ApiContext?.ValidationState() != ApiValidationState.Failed)
+            var context = contextResolver?.GetContext();
+
+            if (context?.ValidationState() != ApiValidationState.Failed)
             {
-                if (args.ApiContext.Items.TryGetValue(nameof(CustomRequestPipelineComponent), out var beforeValidator))
+                if (context.Items.TryGetValue(nameof(CustomRequestPipelineComponent), out var beforeValidator))
                 {
                     if (beforeValidator as string == "SET")
                     {
-                        args.ApiContext.TryAddItem(nameof(RequestPipelineModelValidator), "VALIDATOR-SET");
+                        context.TryAddItem(nameof(RequestPipelineModelValidator), "VALIDATOR-SET");
                     }
                 }
             }

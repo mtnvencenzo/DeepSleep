@@ -5,11 +5,11 @@
 
     public class AttributeDiscoveryController
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
+        private readonly IApiRequestContextResolver contextResolver;
 
-        public AttributeDiscoveryController(IApiRequestContextResolver apiRequestContextResolver)
+        public AttributeDiscoveryController(IApiRequestContextResolver contextResolver)
         {
-            this.apiRequestContextResolver = apiRequestContextResolver ?? throw new ArgumentNullException(nameof(apiRequestContextResolver));
+            this.contextResolver = contextResolver ?? throw new ArgumentNullException(nameof(contextResolver));
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute")]

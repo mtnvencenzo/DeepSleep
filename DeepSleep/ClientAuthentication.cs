@@ -1,8 +1,8 @@
-﻿using DeepSleep.Auth;
-using System.Security.Principal;
-
-namespace DeepSleep
+﻿namespace DeepSleep
 {
+    using DeepSleep.Auth;
+    using System.Security.Principal;
+
     /// <summary>
     /// 
     /// </summary>

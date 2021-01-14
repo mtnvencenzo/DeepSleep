@@ -5,7 +5,10 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class TimeSpanConverter : JsonConverter<TimeSpan>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TimeSpanConverter : JsonConverter<TimeSpan>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -14,14 +17,29 @@
         /// <returns>The converted value.</returns>
         public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string value = reader.GetString();
-
-            if (string.IsNullOrWhiteSpace(value))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                return default;
+                return default(TimeSpan);
             }
 
-            return TimeSpan.Parse(value, CultureInfo.CurrentCulture);
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                return default(TimeSpan);
+            }
+
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                string value = reader.GetString();
+
+                if (value == null)
+                {
+                    return default(TimeSpan);
+                }
+
+                return TimeSpan.Parse(value, CultureInfo.CurrentCulture);
+            }
+
+            throw new JsonException($"Value cannot be converted to a timespan value");
         }
 
         /// <summary>Writes a specified value as JSON.</summary>

@@ -11,10 +11,6 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ApiAuthorizationAttribute : Attribute, IAuthorizationComponent
     {
-        private IAuthorizationProvider provider;
-
-        string IAuthorizationProvider.Policy { get; }
-
         /// <summary>Initializes a new instance of the <see cref="ApiAuthorizationAttribute"/> class.</summary>
         /// <param name="authorizationProviderType">Type of the authorization provider.</param>
         /// <exception cref="ArgumentNullException">authenticationProviderType</exception>
@@ -38,58 +34,50 @@
         /// <value>The type of the authorization provider.</value>
         public Type AuthorizationProviderType { get; }
 
-        /// <summary>Authorizes the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Authorizes the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public async Task<AuthorizationResult> Authorize(ApiRequestContext context)
+        public async Task<AuthorizationResult> Authorize(IApiRequestContextResolver contextResolver)
         {
-            if (context != null)
+            var provider = this.Activate(contextResolver);
+            if (provider != null)
             {
-                var provider = this.Activate(context);
-                if (provider != null)
-                {
-                    return await provider.Authorize(context).ConfigureAwait(false);
-                }
+                return await provider.Authorize(contextResolver).ConfigureAwait(false);
             }
 
             return null;
         }
 
-        /// <summary>Activates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Activates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public IAuthorizationProvider Activate(ApiRequestContext context)
+        protected IAuthorizationProvider Activate(IApiRequestContextResolver contextResolver)
         {
-            if (this.provider == null)
+            IAuthorizationProvider provider = null;
+
+            var context = contextResolver?.GetContext();
+            if (context != null)
             {
-                if (context != null)
+                try
+                {
+                    if (context.RequestServices != null)
+                    {
+                        provider = context.RequestServices.GetService(Type.GetType(AuthorizationProviderType.AssemblyQualifiedName)) as IAuthorizationProvider;
+                    }
+                }
+                catch { }
+
+                if (provider == null)
                 {
                     try
                     {
-                        if (context.RequestServices != null)
-                        {
-                            this.provider = context.RequestServices.GetService(Type.GetType(AuthorizationProviderType.AssemblyQualifiedName)) as IAuthorizationProvider;
-                        }
+                        provider = Activator.CreateInstance(Type.GetType(AuthorizationProviderType.AssemblyQualifiedName)) as IAuthorizationProvider;
                     }
                     catch { }
-
-                    if (this.provider == null)
-                    {
-                        try
-                        {
-                            this.provider = Activator.CreateInstance(Type.GetType(AuthorizationProviderType.AssemblyQualifiedName)) as IAuthorizationProvider;
-                        }
-                        catch { }
-                    }
                 }
             }
 
-            return this.provider;
-        }
-
-        bool IAuthorizationProvider.CanHandleAuthPolicy(string policy)
-        {
-            return false;
+            return provider;
         }
     }
 }

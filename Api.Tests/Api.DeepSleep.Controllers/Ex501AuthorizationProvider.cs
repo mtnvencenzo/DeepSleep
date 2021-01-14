@@ -2,7 +2,6 @@
 {
     using global::DeepSleep;
     using global::DeepSleep.Auth;
-    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -10,37 +9,13 @@
     /// </summary>
     public class Ex501AuthorizationProvider : IAuthorizationProvider
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Policy => "EX-501";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
+        /// <summary>Authorizes the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public Task<AuthorizationResult> Authorize(ApiRequestContext context)
+        /// <exception cref="ApiNotImplementedException"></exception>
+        public Task<AuthorizationResult> Authorize(IApiRequestContextResolver contextResolver)
         {
             throw new ApiNotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="policy"></param>
-        /// <returns></returns>
-        public bool CanHandleAuthPolicy(string policy)
-        {
-            if (string.IsNullOrWhiteSpace(policy))
-                return false;
-
-            if (policy.Equals(this.Policy, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

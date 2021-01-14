@@ -21,8 +21,8 @@
         /// <param name="endpoint">The endpoint.</param>
         /// <param name="httpMethod">The HTTP method.</param>
         public ApiEndpointLocation(
-            Type controller, 
-            string endpoint, 
+            Type controller,
+            string endpoint,
             string httpMethod)
         {
             this.Controller = controller;
@@ -45,10 +45,10 @@
         /// <param name="simpleParameters">The simple parameters.</param>
         /// <param name="methodReturnType">Type of the method return.</param>
         internal ApiEndpointLocation(
-            Type controller, 
-            string endpoint, 
-            string httpMethod, 
-            MethodInfo methodInfo, 
+            Type controller,
+            string endpoint,
+            string httpMethod,
+            MethodInfo methodInfo,
             Type uriParameterType,
             Type bodyParameterType,
             IList<ParameterInfo> simpleParameters,

@@ -103,6 +103,6 @@
 
         /// <summary>Gets or sets the writeable media types.</summary>
         /// <value>The writeable media types.</value>
-        public virtual IList<string> WriteableMediaTypes => new string [] { };
+        public virtual IList<string> WriteableMediaTypes => new string[] { };
     }
 }

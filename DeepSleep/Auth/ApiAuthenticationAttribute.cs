@@ -39,30 +39,28 @@
         /// <value>The type of the authentication provider.</value>
         public Type AuthenticationProviderType { get; }
 
-        /// <summary>Authenticates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Authenticates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public async Task<AuthenticationResult> Authenticate(ApiRequestContext context)
+        public async Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)
         {
-            if (context != null)
+            var provider = this.Activate(contextResolver);
+            if (provider != null)
             {
-                var provider = this.Activate(context);
-                if (provider != null)
-                {
-                    return await provider.Authenticate(context).ConfigureAwait(false);
-                }
+                return await provider.Authenticate(contextResolver).ConfigureAwait(false);
             }
 
             return null;
         }
 
-        /// <summary>Activates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Activates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        public IAuthenticationProvider Activate(ApiRequestContext context)
+        public IAuthenticationProvider Activate(IApiRequestContextResolver contextResolver)
         {
             if (this.provider == null)
             {
+                var context = contextResolver?.GetContext();
                 if (context != null)
                 {
                     try
@@ -72,7 +70,10 @@
                             this.provider = context.RequestServices.GetService(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        context.Log(ex.ToString());
+                    }
 
                     if (this.provider == null)
                     {
@@ -80,7 +81,10 @@
                         {
                             this.provider = Activator.CreateInstance(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            context.Log(ex.ToString());
+                        }
                     }
                 }
             }

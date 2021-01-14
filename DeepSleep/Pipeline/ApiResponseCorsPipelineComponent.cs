@@ -100,8 +100,8 @@
                     }
 
                     context.Response.AddHeader(
-                        name: "Vary", 
-                        value: "Origin", 
+                        name: "Vary",
+                        value: "Origin",
                         append: true);
                 }
 

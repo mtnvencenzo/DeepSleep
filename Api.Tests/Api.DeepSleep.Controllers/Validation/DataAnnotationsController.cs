@@ -34,10 +34,11 @@
 
     public class DataAnnotationsModelValidator : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
-            var body = args.ApiContext.Request.InvocationContext.Models<DataAnnotationsBodyModel>().FirstOrDefault();
-            var uri = args.ApiContext.Request.InvocationContext.Models<DataAnnotationsUriModel>().FirstOrDefault();
+            var context = contextResolver.GetContext();
+            var body = context.Request.InvocationContext.Models<DataAnnotationsBodyModel>().FirstOrDefault();
+            var uri = context.Request.InvocationContext.Models<DataAnnotationsUriModel>().FirstOrDefault();
 
             if (body.Value != uri.Value)
             {

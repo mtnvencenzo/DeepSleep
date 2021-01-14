@@ -17,7 +17,7 @@
         /// <param name="varyHeaderValue">The vary header value.</param>
         public ApiRouteCacheDirectiveAttribute(
             HttpCacheLocation location = HttpCacheLocation.Private,
-            HttpCacheType cacheability = HttpCacheType.NoCache, 
+            HttpCacheType cacheability = HttpCacheType.NoCache,
             int expirationSeconds = -1,
             string varyHeaderValue = null)
         {
@@ -29,7 +29,7 @@
 
         /// <summary>Gets the location.</summary>
         /// <value>The location.</value>
-        public HttpCacheLocation? Location { get; private set;}
+        public HttpCacheLocation? Location { get; private set; }
 
         /// <summary>Gets the cacheability.</summary>
         /// <value>The cacheability.</value>

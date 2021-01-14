@@ -26,7 +26,7 @@
 
         /// <summary>Gets the allow credentials.</summary>
         /// <value>The allow credentials.</value>
-        public bool? AllowCredentials { get; private set;}
+        public bool? AllowCredentials { get; private set; }
 
         /// <summary>Gets the allowed headers.</summary>
         /// <value>The allowed headers.</value>

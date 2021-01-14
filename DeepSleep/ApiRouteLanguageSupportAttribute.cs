@@ -33,7 +33,7 @@
 
         /// <summary>Gets the fallback language.</summary>
         /// <value>The fallback language.</value>
-        public string FallbackLanguage { get; private set;}
+        public string FallbackLanguage { get; private set; }
 
         /// <summary>Gets the supported languages.</summary>
         /// <value>The supported languages.</value>

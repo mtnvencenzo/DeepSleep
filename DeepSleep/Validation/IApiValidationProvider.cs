@@ -11,9 +11,9 @@
         /// <value>The order.</value>
         int Order { get; }
 
-        /// <summary>Validates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        Task Validate(ApiRequestContext context);
+        Task Validate(IApiRequestContextResolver contextResolver);
     }
 }

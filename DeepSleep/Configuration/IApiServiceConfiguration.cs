@@ -1,7 +1,6 @@
 ﻿namespace DeepSleep.Configuration
 {
     using DeepSleep.Discovery;
-    using DeepSleep.Formatting;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -21,11 +20,11 @@
 
         /// <summary>Gets or sets the on exception.</summary>
         /// <value>The on exception.</value>
-        Func<ApiRequestContext, Exception, Task> OnException { get; set; }
+        Func<IApiRequestContextResolver, Exception, Task> OnException { get; set; }
 
         /// <summary>Gets or sets the on request processed.</summary>
         /// <value>The on request processed.</value>
-        Func<ApiRequestContext, Task> OnRequestProcessed { get; set; }
+        Func<IApiRequestContextResolver, Task> OnRequestProcessed { get; set; }
 
         /// <summary>Gets or sets the json formatter configuration.</summary>
         /// <value>The json formatter configuration.</value>

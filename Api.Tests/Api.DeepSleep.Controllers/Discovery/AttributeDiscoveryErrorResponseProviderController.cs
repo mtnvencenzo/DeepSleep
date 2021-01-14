@@ -5,11 +5,11 @@
 
     public class AttributeDiscoveryErrorResponseProviderController
     {
-        private readonly IApiRequestContextResolver apiRequestContextResolver;
+        private readonly IApiRequestContextResolver contextResolver;
 
-        public AttributeDiscoveryErrorResponseProviderController(IApiRequestContextResolver apiRequestContextResolver)
+        public AttributeDiscoveryErrorResponseProviderController(IApiRequestContextResolver contextResolver)
         {
-            this.apiRequestContextResolver = apiRequestContextResolver;
+            this.contextResolver = contextResolver;
         }
 
         [ApiRoute(new[] { "GET" }, "discovery/attribute/errorresponseprovider/default")]
@@ -18,7 +18,7 @@
         [CustomApiRouteErrorResponseProvider]
         public IApiResponse GetRequestValidationtDefault()
         {
-            var context = this.apiRequestContextResolver.GetContext();
+            var context = this.contextResolver.GetContext();
 
             context.AddValidationError("test-error-1");
             context.AddValidationError("test-error-2");

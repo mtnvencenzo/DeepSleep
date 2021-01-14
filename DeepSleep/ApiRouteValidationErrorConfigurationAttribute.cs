@@ -16,8 +16,8 @@
         /// <param name="requestDeserializationError">The request deserialization error.</param>
         /// <param name="httpStatusMode">The HTTP status mode.</param>
         public ApiRouteValidationErrorConfigurationAttribute(
-            string uriBindingError = null, 
-            string uriBindingValueError = null, 
+            string uriBindingError = null,
+            string uriBindingValueError = null,
             string requestDeserializationError = null,
             ValidationHttpStatusMode httpStatusMode = ValidationHttpStatusMode.StrictHttpSpecification)
         {

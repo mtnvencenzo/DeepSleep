@@ -5,7 +5,10 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -14,15 +17,29 @@
         /// <returns>The converted value.</returns>
         public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string value = reader.GetString();
-
-            if (string.IsNullOrWhiteSpace(value))
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                return DateTimeOffset.MinValue;
+                return default(DateTimeOffset);
             }
 
-            return DateTimeOffset.Parse(value, CultureInfo.CurrentCulture);
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                return default(DateTimeOffset);
+            }
 
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                string value = reader.GetString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return default(DateTimeOffset);
+                }
+
+                return DateTimeOffset.Parse(value, CultureInfo.CurrentCulture);
+            }
+
+            throw new JsonException($"Value cannot be converted to a datetimeoffset value");
         }
 
         /// <summary>Writes a specified value as JSON.</summary>
@@ -32,7 +49,7 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            writer.WriteStringValue(value);
         }
     }
 }

@@ -70,9 +70,11 @@
                     .Select(p => p as IApiValidationProvider)
                     .OrderBy(p => p.Order);
 
+                var contextResolver = context.RequestServices.GetService<IApiRequestContextResolver>();
+
                 foreach (var validationProvider in validationProviders)
                 {
-                    await validationProvider.Validate(context).ConfigureAwait(false);
+                    await validationProvider.Validate(contextResolver).ConfigureAwait(false);
                 }
 
                 if (context.Validation.State == ApiValidationState.Failed)

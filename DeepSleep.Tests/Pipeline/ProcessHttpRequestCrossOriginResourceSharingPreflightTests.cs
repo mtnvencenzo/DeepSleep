@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using DeepSleep.Pipeline;
     using FluentAssertions;
-    using System.Collections.Generic;
     using System.Threading;
     using Xunit;
 

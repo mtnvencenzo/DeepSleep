@@ -3,7 +3,6 @@
     using DeepSleep.Configuration;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -59,8 +58,8 @@
         /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
         internal static async Task<bool> ProcessHttpRequestCrossOriginResourceSharingPreflight(
-            this ApiRequestContext context, 
-            IApiRoutingTable routes, 
+            this ApiRequestContext context,
+            IApiRoutingTable routes,
             IUriRouteResolver resolver,
             IApiRequestConfiguration defaultRequestConfiguration)
         {

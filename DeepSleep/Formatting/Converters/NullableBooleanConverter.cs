@@ -4,7 +4,10 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class NullableBooleanConverter : JsonConverter<bool?>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class NullableBooleanConverter : JsonConverter<bool?>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -19,6 +22,11 @@
                 return null;
             }
 
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                return null;
+            }
+
             if (reader.TokenType == JsonTokenType.True)
             {
                 return true;
@@ -29,38 +37,40 @@
                 return false;
             }
 
-            try
+            if (reader.TokenType == JsonTokenType.Number)
             {
-                var val = reader.GetInt32();
-                return val == 1;
-            }
-            catch { }
-
-            string value = reader.GetString();
-            string chkValue = value?.ToLower();
-
-            if (chkValue == null)
-            {
-                return null;
-            }
-            if (chkValue.Equals("true"))
-            {
-                return true;
-            }
-            if (chkValue.Equals("false"))
-            {
-                return false;
-            }
-            if (chkValue.Equals("0"))
-            {
-                return false;
-            }
-            if (chkValue.Equals("1"))
-            {
-                return true;
+                reader.TryGetDouble(out var number);
+                return number == 1d;
             }
 
-            throw new JsonException($"Value '{value}' cannot be converted to a boolean value");
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                string value = reader.GetString()?.ToLowerInvariant();
+
+                if (value == null)
+                {
+                    return null;
+                }
+                if (value.Equals("true"))
+                {
+                    return true;
+                }
+                if (value.Equals("false"))
+                {
+                    return false;
+                }
+                if (value.Equals("0"))
+                {
+                    return false;
+                }
+                if (value.Equals("1"))
+                {
+                    return true;
+                }
+            }
+
+
+            throw new JsonException($"Value cannot be converted to a boolean? value");
         }
 
         /// <summary>Writes a specified value as JSON.</summary>
@@ -70,7 +80,14 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public override void Write(Utf8JsonWriter writer, bool? value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                writer.WriteNullValue();
+            }
+            else
+            {
+                writer.WriteBooleanValue(value.Value);
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿namespace DeepSleep.Tests
 {
     using FluentAssertions;
-    using System;
-    using System.Globalization;
     using Xunit;
 
     public class AcceptEncodingHeaderTests

@@ -26,7 +26,7 @@
                  .GetContext()
                  .SetThreadCulure();
 
-            await context.ProcessHttpResponseMessages().ConfigureAwait(false);
+            await context.ProcessHttpResponseMessages(contextResolver).ConfigureAwait(false);
         }
     }
 
@@ -45,8 +45,9 @@
 
         /// <summary>Processes the HTTP response messages.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context)
+        internal static async Task<bool> ProcessHttpResponseMessages(this ApiRequestContext context, IApiRequestContextResolver contextResolver)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -60,7 +61,7 @@
                         {
                             var errors = context.Validation?.Errors ?? new List<string>();
 
-                            context.Response.ResponseObject = await provider.Process(context, errors).ConfigureAwait(false);
+                            context.Response.ResponseObject = await provider.Process(contextResolver, errors).ConfigureAwait(false);
                         }
                     }
                 }

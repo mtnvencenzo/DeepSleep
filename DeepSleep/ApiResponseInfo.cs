@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Text;
 
     /// <summary>The API response info.
     /// </summary>
@@ -118,9 +117,9 @@
             if (!string.IsNullOrWhiteSpace(etag))
             {
                 response.AddHeader(
-                    name: "ETag", 
-                    value: etag, 
-                    append: false, 
+                    name: "ETag",
+                    value: etag,
+                    append: false,
                     allowMultiple: false);
             }
 

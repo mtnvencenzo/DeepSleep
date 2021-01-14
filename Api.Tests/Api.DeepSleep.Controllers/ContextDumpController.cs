@@ -12,7 +12,7 @@
 
         /// <summary>Gets the with items.</summary>
         /// <returns></returns>
-        public ContextDump PostDump([BodyBound]ContextDump model)
+        public ContextDump PostDump([BodyBound] ContextDump model)
         {
             return model;
         }

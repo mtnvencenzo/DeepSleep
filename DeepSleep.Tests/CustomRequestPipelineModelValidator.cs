@@ -6,7 +6,7 @@
 
     public class CustomRequestPipelineModelValidator : IEndpointValidator
     {
-        public Task<IList<ApiValidationResult>> Validate(ApiValidationArgs args)
+        public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-1"));
         }

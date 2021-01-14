@@ -23,7 +23,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            uriBindingError: "", 
+            uriBindingError: "",
             uriBindingValueError: "")]
         public AttributeDiscoveryModel GetValidationErrorSpecifiedEmpty(int? queryValue, [UriBound] AttributeDiscoveryModel request)
         {

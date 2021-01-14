@@ -5,7 +5,10 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    internal class NullableDateTimeConverter : JsonConverter<DateTime?>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class NullableDateTimeConverter : JsonConverter<DateTime?>
     {
         /// <summary>Reads and converts the JSON to type</summary>
         /// <param name="reader">The reader.</param>
@@ -14,14 +17,29 @@
         /// <returns>The converted value.</returns>
         public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string value = reader.GetString();
-
-            if (string.IsNullOrWhiteSpace(value))
+            if (reader.TokenType == JsonTokenType.Null)
             {
                 return null;
             }
 
-            return DateTimeOffset.Parse(value, CultureInfo.CurrentCulture).UtcDateTime;
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                return null;
+            }
+
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                string value = reader.GetString();
+
+                if (value == null)
+                {
+                    return null;
+                }
+
+                return DateTimeOffset.Parse(value, CultureInfo.CurrentCulture).UtcDateTime;
+            }
+
+            throw new JsonException($"Value cannot be converted to a datetime? value");
         }
 
         /// <summary>Writes a specified value as JSON.</summary>
@@ -31,7 +49,14 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                writer.WriteNullValue();
+            }
+            else
+            {
+                writer.WriteStringValue(value.Value);
+            }
         }
     }
 }

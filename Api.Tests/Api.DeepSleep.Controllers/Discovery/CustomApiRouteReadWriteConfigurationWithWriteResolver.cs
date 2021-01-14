@@ -7,7 +7,7 @@
 
     public class CustomApiRouteReadWriteConfigurationWithWriteResolver : ApiRouteReadWriteConfigurationAttribute, IApiRouteWriterResolver
     {
-        Task<FormatterWriteOverrides> IApiRouteWriterResolver.Resolve(ResolvedFormatterArguments args)
+        Task<FormatterWriteOverrides> IApiRouteWriterResolver.Resolve(IApiRequestContextResolver contextResolver)
         {
             var formatters = new List<IFormatStreamReaderWriter>
             {

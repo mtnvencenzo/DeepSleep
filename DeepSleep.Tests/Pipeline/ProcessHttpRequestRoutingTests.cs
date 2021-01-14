@@ -11,7 +11,6 @@
     using Moq;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
@@ -1030,9 +1029,10 @@
                 RequestAborted = new CancellationToken(false),
                 Request = GetRequestInfo(),
                 Configuration = null,
-                ConfigureMaxRequestLength = (length) => { 
+                ConfigureMaxRequestLength = (length) =>
+                {
                     hasSet = true;
-                    throw new Exception("should not have been called"); 
+                    throw new Exception("should not have been called");
                 }
             };
 
@@ -2824,8 +2824,8 @@
                 request.ReadWriteConfiguration.WriterResolver.Should().BeNull();
             }
 
-            request.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(endpoint?.ReadWriteConfiguration?.AcceptHeaderOverride 
-                ?? def?.ReadWriteConfiguration?.AcceptHeaderOverride 
+            request.ReadWriteConfiguration.AcceptHeaderOverride.Should().Be(endpoint?.ReadWriteConfiguration?.AcceptHeaderOverride
+                ?? def?.ReadWriteConfiguration?.AcceptHeaderOverride
                 ?? system.ReadWriteConfiguration?.AcceptHeaderOverride);
 
             request.ReadWriteConfiguration.ReadableMediaTypes?.Count.Should().Be(endpoint?.ReadWriteConfiguration?.ReadableMediaTypes?.Count
@@ -2844,7 +2844,7 @@
                 request.ReadWriteConfiguration.WriteableMediaTypes[i].Should().Be(endpoint?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? def?.ReadWriteConfiguration?.WriteableMediaTypes?[i] ?? system.ReadWriteConfiguration.WriteableMediaTypes[i]);
             }
 
- 
+
             // -------------------
             // Cache Directive Configuration
             // -------------------

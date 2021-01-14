@@ -33,7 +33,7 @@
 
                 var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
 
-                await context.ProcessHttpResponseUnhandledException(ex, apiServiceConfiguration).ConfigureAwait(false);
+                await context.ProcessHttpResponseUnhandledException(contextResolver, ex, apiServiceConfiguration).ConfigureAwait(false);
             }
         }
     }
@@ -53,20 +53,22 @@
 
         /// <summary>Processes the HTTP response unhandled exception.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The context resolver.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, Exception exception, IApiServiceConfiguration config)
+        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, IApiRequestContextResolver contextResolver, Exception exception, IApiServiceConfiguration config)
         {
             if (exception != null)
             {
                 var code = context.HandleException(exception);
 
+
                 if (config?.OnException != null && exception as ApiException == null)
                 {
                     try
                     {
-                        await config.OnException(context, exception).ConfigureAwait(false);
+                        await config.OnException(contextResolver, exception).ConfigureAwait(false);
                     }
                     catch { }
                 }

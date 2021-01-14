@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.Pipeline
 {
     using DeepSleep.Formatting;
-    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -29,7 +29,7 @@
 
             var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
 
-            await context.ProcessHttpResponseBodyWriting(formatterFactory).ConfigureAwait(false);
+            await context.ProcessHttpResponseBodyWriting(contextResolver, formatterFactory).ConfigureAwait(false);
         }
     }
 
@@ -49,9 +49,10 @@
 
         /// <summary>Processes the HTTP response body writing.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -73,20 +74,43 @@
 
                     if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
                     {
+                        Encoding acceptEncoding = null;
+
+                        if (context.Request.AcceptCharset != null as string)
+                        {
+                            foreach (var value in context.Request.AcceptCharset.Values)
+                            {
+                                try
+                                {
+                                    if (!string.IsNullOrWhiteSpace(value.Charset))
+                                    {
+                                        acceptEncoding = Encoding.GetEncoding(value.Charset);
+                                    }
+
+                                    if (acceptEncoding != null)
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch { }
+                            }
+                        }
+
                         IFormatStreamOptions options = new FormatterOptions
                         {
                             PrettyPrint = context.Request.PrettyPrint,
-                            Culture = context.Request.AcceptCulture
+                            Culture = context.Request.AcceptCulture,
+                            Encoding = acceptEncoding ?? Encoding.UTF8
                         };
 
                         var formatter = await formatterFactory.GetAcceptableFormatter(
-                            acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept, 
-                            writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes, 
+                            acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                            writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                             formatterType: out var formatterType).ConfigureAwait(false);
 
                         if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(new ResolvedFormatterArguments(context)).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {

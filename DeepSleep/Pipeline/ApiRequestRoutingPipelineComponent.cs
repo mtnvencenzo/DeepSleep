@@ -73,7 +73,7 @@
                 }
 
                 context.Configuration = MergeConfigurations(context, defaultRequestConfig, context.Routing?.Route?.Configuration);
-                
+
                 if (context.Routing.Route?.Location?.MethodInfo != null)
                 {
                     var attributes = context.Routing.Route.Location.MethodInfo.GetCustomAttributes();
@@ -162,8 +162,8 @@
                 if (routeInfo == null)
                 {
                     routeInfo = await resolver.MatchRoute(
-                        routes, 
-                        "GET", 
+                        routes,
+                        "GET",
                         context.Request.Path).ConfigureAwait(false);
 
                     if (routeInfo != null)
@@ -235,8 +235,8 @@
         /// <param name="routes">The routes.</param>
         /// <returns></returns>
         private static async Task<ApiRoutingTemplate> GetRoutingTemplate(
-            this ApiRequestContext context, 
-            IUriRouteResolver resolver, 
+            this ApiRequestContext context,
+            IUriRouteResolver resolver,
             IApiRoutingTable routes)
         {
             RouteMatch result;

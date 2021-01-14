@@ -11,10 +11,10 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class ApiRouteErrorResponseProviderAttribute : Attribute, IValidationErrorResponseProvider
     {
-        /// <summary>Processes the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <summary>Processes the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
-        public abstract Task<object> Process(ApiRequestContext context, IList<string> errors);
+        public abstract Task<object> Process(IApiRequestContextResolver contextResolver, IList<string> errors);
     }
 }
