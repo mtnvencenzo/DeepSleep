@@ -12,6 +12,8 @@
         <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.IList(System.Collections.Generic.IList{Api.DeepSleep.Controllers.Binding.SimpleRs})">
             <summary>is the list.</summary>
             <param name="request">The request.</param>
+            <response code="201" />
+            <response code="201" />
             <returns></returns>
         </member>
         <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.List(System.Collections.Generic.List{Api.DeepSleep.Controllers.Binding.SimpleRs})">

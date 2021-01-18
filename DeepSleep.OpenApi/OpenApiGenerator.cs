@@ -133,11 +133,15 @@
 
             if (route.HttpMethod.ToLower() == "put" || route.HttpMethod.ToLower() == "post" || route.HttpMethod.ToLower() == "patch")
             {
-                var bodyParameter = await GetRequestBody(document, route, routes, defaultRequestConfiguration).ConfigureAwait(false);
+                var bodyParameter = route.Location.GetBodyParameterInfo();
 
                 if (bodyParameter != null)
                 {
-                    operation.RequestBody = bodyParameter;
+                    var requestBody = AddAndGetRequestBodyReference(document, bodyParameter.ParameterType, routes, defaultRequestConfiguration);
+                    if (requestBody != null)
+                    {
+                        operation.RequestBody = requestBody;
+                    }
                 }
             }
 
@@ -535,6 +539,114 @@
             return schema;
         }
 
+        /// <summary>Adds the and get request body reference.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="routes">The routes.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
+        /// <returns></returns>
+        private OpenApiRequestBody AddAndGetRequestBodyReference(OpenApiDocument document, Type type, IApiRoutingTable routes, IApiRequestConfiguration defaultRequestConfiguration)
+        {
+            if (document.Components == null)
+            {
+                document.Components = new OpenApiComponents();
+            }
+
+            if (document.Components.RequestBodies == null)
+            {
+                document.Components.RequestBodies = new Dictionary<string, OpenApiRequestBody>();
+            }
+
+            var existingRequestBody = document.Components.RequestBodies.FirstOrDefault(s => string.Equals(s.Key, Helpers.GetDocumentTypeSchemaName(type, this.configuration.PrefixNamesWithNamespace), StringComparison.Ordinal));
+
+            if (existingRequestBody.Value == null)
+            {
+                var requestBody = AddRequestBody(document, type);
+                existingRequestBody = document.Components.RequestBodies.FirstOrDefault(s => string.Equals(s.Key, Helpers.GetDocumentTypeSchemaName(type, this.configuration.PrefixNamesWithNamespace), StringComparison.Ordinal));
+
+                if (existingRequestBody.Value == null)
+                {
+                    document.Components.RequestBodies.Add(Helpers.GetDocumentTypeSchemaName(type, this.configuration.PrefixNamesWithNamespace), requestBody);
+                }
+            }
+
+            //var template = ReplaceTemplateVars(route.Template);
+            //var routeMatch = await new DefaultRouteResolver().MatchRoute(
+            //    routes: routes,
+            //    method: route.HttpMethod,
+            //    requestPath: template).ConfigureAwait(false);
+
+            //var readerResolver = routeMatch.Configuration?.ReadWriteConfiguration?.ReaderResolver
+            //    ?? defaultRequestConfiguration?.ReadWriteConfiguration?.ReaderResolver
+            //    ?? ApiRequestContext.GetDefaultRequestConfiguration().ReadWriteConfiguration?.ReaderResolver;
+
+            //var supportedReadableMediaTypes = routeMatch.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes
+            //    ?? defaultRequestConfiguration?.ReadWriteConfiguration?.ReadableMediaTypes
+            //    ?? ApiRequestContext.GetDefaultRequestConfiguration().ReadWriteConfiguration?.ReadableMediaTypes;
+
+            //var formatters
+
+            return new OpenApiRequestBody
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = $"{Helpers.GetDocumentTypeSchemaName(type, this.configuration.PrefixNamesWithNamespace)}",
+                    Type = ReferenceType.RequestBody
+                }
+            };
+        }
+
+        /// <summary>Adds the request body.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="returnReferenceIfAddedAsRoot">if set to <c>true</c> [return reference if added as root].</param>
+        /// <returns></returns>
+        private OpenApiRequestBody AddRequestBody(OpenApiDocument document, Type type, bool returnReferenceIfAddedAsRoot = true)
+        {
+            var existingRequestBody = document.Components.RequestBodies
+                .FirstOrDefault(s => string.Equals(s.Key, Helpers.GetDocumentTypeSchemaName(type, this.configuration.PrefixNamesWithNamespace), StringComparison.Ordinal));
+
+            if (existingRequestBody.Value != null)
+            {
+                if (returnReferenceIfAddedAsRoot)
+                {
+                    return new OpenApiRequestBody
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = $"{existingRequestBody.Key}",
+                            Type = ReferenceType.Schema
+                        }
+                    };
+                }
+                else
+                {
+                    return existingRequestBody.Value;
+                }
+            }
+
+
+            var requestBody = existingRequestBody.Value;
+
+            if (existingRequestBody.Value == null)
+            {
+                if (Helpers.IsArrayType(type))
+                {
+                    requestBody = AddArrayRequestBody(document, type);
+                }
+                else if (Helpers.IsComplexType(type))
+                {
+                    requestBody = AddComplexTypeRequestBody(document, type, returnReferenceIfAddedAsRoot);
+                }
+                else
+                {
+                    requestBody = AddSimpleTypeRequestBody(type);
+                }
+            }
+
+            return requestBody;
+        }
+
         /// <summary>
         /// Adds the array schema.
         /// </summary>
@@ -633,6 +745,153 @@
             };
         }
 
+        /// <summary>Adds the array request body.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        private OpenApiRequestBody AddArrayRequestBody(OpenApiDocument document, Type type)
+        {
+            var arrayType = Helpers.GetRootType(Helpers.GetArrayType(type));
+            var contents = new Dictionary<string, OpenApiMediaType>();
+
+            // TODO: Need ot base this off of the route configuration
+            var contentTypes = new string[]
+            {
+                "application/json",
+                "text/xml"
+            };
+
+            foreach (var contentType in contentTypes.Distinct())
+            {
+                contents.Add(contentType, new OpenApiMediaType
+                {
+                    Schema = AddSchema(document, arrayType, true)
+                });
+            }
+
+            return new OpenApiRequestBody
+            {
+                Description = GetDocumentationDescription(arrayType) ?? string.Empty,
+                Required = true,
+                Content = contents
+            };
+        }
+
+        /// <summary>Adds the complex type request body.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="returnReferenceIfAddedAsRoot">if set to <c>true</c> [return reference if added as root].</param>
+        /// <returns></returns>
+        private OpenApiRequestBody AddComplexTypeRequestBody(OpenApiDocument document, Type type, bool returnReferenceIfAddedAsRoot = true)
+        {
+            var rootType = Helpers.GetRootType(type);
+            var existingRequestBody = document.Components.RequestBodies
+                .FirstOrDefault(s => string.Equals(s.Key, Helpers.GetDocumentTypeSchemaName(rootType, this.configuration.PrefixNamesWithNamespace), StringComparison.Ordinal));
+
+            if (existingRequestBody.Value != null)
+            {
+                if (returnReferenceIfAddedAsRoot)
+                {
+                    return new OpenApiRequestBody
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = $"{existingRequestBody.Key}",
+                            Type = ReferenceType.RequestBody
+                        }
+                    };
+                }
+                else
+                {
+                    return existingRequestBody.Value;
+                }
+            }
+
+            var contents = new Dictionary<string, OpenApiMediaType>();
+
+            // TODO: Need ot base this off of the route configuration
+            var contentTypes = new string[]
+            {
+                "application/json",
+                "text/xml"
+            };
+
+            foreach (var contentType in contentTypes.Distinct())
+            {
+                contents.Add(contentType, new OpenApiMediaType
+                {
+                    Schema = this.AddAndGetSchemaRefrence(document, type)
+                });
+            }
+
+            var requestBody = new OpenApiRequestBody
+            {
+                Description = GetDocumentationDescription(rootType) ?? string.Empty,
+                Required = true,
+                Content = contents
+            };
+
+            document.Components.RequestBodies.Add(Helpers.GetDocumentTypeSchemaName(rootType, this.configuration.PrefixNamesWithNamespace), requestBody);
+
+            if (returnReferenceIfAddedAsRoot)
+            {
+                return new OpenApiRequestBody
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = $"{Helpers.GetDocumentTypeSchemaName(rootType, this.configuration.PrefixNamesWithNamespace)}",
+                        Type = ReferenceType.RequestBody
+                    }
+                };
+            }
+            else
+            {
+                return requestBody;
+            }
+        }
+
+        /// <summary>Adds the simple type request body.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        private OpenApiRequestBody AddSimpleTypeRequestBody(Type type)
+        {
+            var rootType = Helpers.GetRootType(type);
+
+            var openApiType = Helpers.GetOpenApiSchemaType(rootType);
+
+            var contents = new Dictionary<string, OpenApiMediaType>();
+
+            // TODO: Need ot base this off of the route configuration
+            var contentTypes = new string[]
+            {
+                "application/json",
+                "text/xml"
+            };
+
+            foreach (var contentType in contentTypes.Distinct())
+            {
+                contents.Add(contentType, new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema
+                    {
+                        Description = GetDocumentationDescription(rootType) ?? string.Empty,
+                        Type = openApiType,
+                        Format = Helpers.GetOpenApiSchemaFormat(openApiType, rootType),
+                        Nullable = Helpers.IsNullableType(type)
+                    }
+                });
+            }
+
+            var requestBody = new OpenApiRequestBody
+            {
+                Description = GetDocumentationDescription(rootType) ?? string.Empty,
+                Required = true,
+                Content = contents
+            };
+
+            return requestBody;
+        }
+
         /// <summary>Gets the query string parameters.</summary>
         /// <param name="document">The document.</param>
         /// <param name="route">The route.</param>
@@ -703,55 +962,6 @@
             return parameters.Count > 0
                 ? parameters
                 : null;
-        }
-
-        /// <summary>Gets the request body.</summary>
-        /// <param name="document">The document.</param>
-        /// <param name="route">The route.</param>
-        /// <param name="routes">The routes.</param>
-        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
-        /// <returns></returns>
-        private async Task<OpenApiRequestBody> GetRequestBody(OpenApiDocument document, ApiRoutingItem route, IApiRoutingTable routes, IApiRequestConfiguration defaultRequestConfiguration)
-        {
-            var bodyParameter = route.Location.GetBodyParameterInfo();
-
-            if (bodyParameter != null)
-            {
-                var schema = this.AddAndGetSchemaRefrence(document, bodyParameter.ParameterType, ReferenceType.RequestBody);
-
-                var content = new OpenApiMediaType
-                {
-                    Schema = schema,
-                };
-
-                //var template = ReplaceTemplateVars(route.Template);
-                //var routeMatch = await new DefaultRouteResolver().MatchRoute(
-                //    routes: routes,
-                //    method: route.HttpMethod,
-                //    requestPath: template).ConfigureAwait(false);
-
-                //var readerResolver = routeMatch.Configuration?.ReadWriteConfiguration?.ReaderResolver
-                //    ?? defaultRequestConfiguration?.ReadWriteConfiguration?.ReaderResolver
-                //    ?? ApiRequestContext.GetDefaultRequestConfiguration().ReadWriteConfiguration?.ReaderResolver;
-
-                //var supportedReadableMediaTypes = routeMatch.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes
-                //    ?? defaultRequestConfiguration?.ReadWriteConfiguration?.ReadableMediaTypes
-                //    ?? ApiRequestContext.GetDefaultRequestConfiguration().ReadWriteConfiguration?.ReadableMediaTypes;
-
-                //var formatters
-
-                // TODO: */* ?
-                return new OpenApiRequestBody
-                {
-                    Content = new Dictionary<string, OpenApiMediaType>
-                    {
-                        { "*/*", content }
-                    },
-                    Required = true
-                };
-            }
-
-            return null;
         }
 
         /// <summary>Replaces the template vars.</summary>

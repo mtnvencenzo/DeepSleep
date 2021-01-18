@@ -48,7 +48,7 @@ X-CorrelationId: {correlationId}";
 
             var data = await base.GetResponseDataString(response).ConfigureAwait(false);
 
-            //System.Diagnostics.Debug.Write(data);
+            System.Diagnostics.Debug.Write(data);
 
             data.Should().NotBeNull();
             data.Should().NotBeEmpty();
