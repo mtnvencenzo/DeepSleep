@@ -2,12 +2,14 @@
 {
     using System.Threading.Tasks;
 
-    /// <summary></summary>
+    /// <summary>
+    /// Represents an authorization provider associated capable of authorizing a request.
+    /// </summary>
     public interface IAuthorizationProvider
     {
-        /// <summary>Authorizes the specified API request context resolver.</summary>
+        /// <summary>Authorizes the request.</summary>
         /// <param name="contextResolver">The API request context resolver.</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="AuthorizationResult"/> detailing the result of the authorization</returns>
         Task<AuthorizationResult> Authorize(IApiRequestContextResolver contextResolver);
     }
 }

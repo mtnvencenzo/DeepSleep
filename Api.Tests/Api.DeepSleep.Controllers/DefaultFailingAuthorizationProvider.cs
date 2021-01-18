@@ -14,7 +14,7 @@
         /// <returns></returns>
         public Task<AuthorizationResult> Authorize(IApiRequestContextResolver contextResolver)
         {
-            return Task.FromResult(new AuthorizationResult(false, "my error"));
+            return Task.FromResult(new AuthorizationResult("my error"));
         }
     }
 }

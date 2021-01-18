@@ -225,7 +225,7 @@
                 rootType != typeof(Uri);
         }
 
-        internal static string GetDocumentTypeSchemaName(Type type)
+        internal static string GetDocumentTypeSchemaName(Type type, bool prefixNamesWithNamespace)
         {
             var rootType = GetRootType(type);
             string typeName;
@@ -234,7 +234,7 @@
             if (IsArrayType(rootType))
             {
                 var arrayType = GetArrayType(rootType);
-                typeName = (DefaultOpenApiGenerator.PrefixNamesWithNamespace)
+                typeName = prefixNamesWithNamespace
                     ? arrayType.FullName
                     : arrayType.Name;
 
@@ -242,7 +242,7 @@
             }
             else
             {
-                typeName = (DefaultOpenApiGenerator.PrefixNamesWithNamespace)
+                typeName = prefixNamesWithNamespace
                     ? rootType.FullName
                     : rootType.Name;
             }

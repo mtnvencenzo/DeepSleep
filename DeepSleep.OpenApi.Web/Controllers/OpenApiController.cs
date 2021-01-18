@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi.Web.Controllers
 {
     using DeepSleep.Configuration;
-    using DeepSleep.OpenApi.v3_0;
+    using Microsoft.OpenApi.Models;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -11,31 +11,48 @@
     {
         private readonly IOpenApiGenerator generator;
         private readonly IApiRoutingTable routingTable;
-        private readonly IApiRequestContextResolver requestContextResolver;
         private readonly IApiRequestConfiguration defaultRequestConfiguration;
+        private readonly IApiRequestContextResolver contextResolver;
 
         /// <summary>Initializes a new instance of the <see cref="OpenApiController"/> class.</summary>
         /// <param name="generator">The generator.</param>
         /// <param name="routingTable">The routing table.</param>
-        /// <param name="requestContextResolver">The request context resolver.</param>
         /// <param name="defaultRequestConfiguration">The default request configuration.</param>
+        /// <param name="contextResolver">The context resolver.</param>
         public OpenApiController(
             IOpenApiGenerator generator,
             IApiRoutingTable routingTable,
-            IApiRequestContextResolver requestContextResolver,
-            IApiRequestConfiguration defaultRequestConfiguration)
+            IApiRequestConfiguration defaultRequestConfiguration,
+            IApiRequestContextResolver contextResolver)
         {
             this.generator = generator;
             this.routingTable = routingTable;
-            this.requestContextResolver = requestContextResolver;
             this.defaultRequestConfiguration = defaultRequestConfiguration;
+            this.contextResolver = contextResolver;
         }
 
-        /// <summary>Documents this instance.</summary>
+        /// <summary>Documents the v2.</summary>
         /// <returns></returns>
-        internal async Task<OpenApiDocument3_0> Doc()
+        internal async Task<OpenApiDocument> DocV2()
         {
-            var document = await this.generator.Generate(OpenApiVersion.V3, routingTable, defaultRequestConfiguration).ConfigureAwait(false);
+            var context = this.contextResolver.GetContext();
+
+            context.TryAddItem("openapi_version", "2");
+
+            var document = await this.generator.Generate(routingTable, defaultRequestConfiguration).ConfigureAwait(false);
+
+            return document;
+        }
+
+        /// <summary>Documents the v3.</summary>
+        /// <returns></returns>
+        internal async Task<OpenApiDocument> DocV3()
+        {
+            var context = this.contextResolver.GetContext();
+
+            context.TryAddItem("openapi_version", "3");
+
+            var document = await this.generator.Generate(routingTable, defaultRequestConfiguration).ConfigureAwait(false);
 
             return document;
         }

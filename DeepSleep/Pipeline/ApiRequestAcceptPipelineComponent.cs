@@ -64,33 +64,32 @@
                         : AcceptHeader.All();
 
                     IFormatStreamReaderWriter formatter = null;
+                    IList<IFormatStreamReaderWriter> overridingFormatters = null;
+
+                    if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
+                    {
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
+                        overridingFormatters = overrides?.Formatters;
+                    }
 
                     if (formatterFactory != null)
                     {
                         formatter = await formatterFactory.GetAcceptableFormatter(
                             acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
                             writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
+                            writeableFormatters: overridingFormatters,
                             formatterType: out var _).ConfigureAwait(false);
-                    }
 
-                    IList<IFormatStreamReaderWriter> overridingFormatters = null;
 
-                    if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
-                    {
-                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
-
-                        overridingFormatters = overrides?.Formatters;
-
-                        if (overrides?.Formatters != null)
+                        if (formatter == null && context.Configuration?.ReadWriteConfiguration?.AcceptHeaderFallback != null as AcceptHeader)
                         {
                             formatter = await formatterFactory.GetAcceptableFormatter(
-                                acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                acceptHeader: context.Configuration?.ReadWriteConfiguration.AcceptHeaderFallback,
                                 writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
-                                writeableFormatters: overrides.Formatters,
+                                writeableFormatters: overridingFormatters,
                                 formatterType: out var _).ConfigureAwait(false);
                         }
                     }
-
 
                     if (formatter == null)
                     {

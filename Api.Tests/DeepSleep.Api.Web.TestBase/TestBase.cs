@@ -20,6 +20,7 @@
     {
         protected readonly string host = "ut-test.com";
         protected readonly string applicationJson = "application/json";
+        protected readonly string applicationYaml = "application/yaml";
         protected readonly string textJson = "text/json";
         protected readonly string textPlain = "text/plain";
         protected readonly string applicationWwwFormUrlEncoded = "application/x-www-form-urlencoded";
@@ -28,7 +29,7 @@
         protected readonly string applicationJsonPatch = "application/json-patch+json";
         protected static readonly string multipartBoundary = "gc0p4Jq0M2Yt08j34c0p";
         protected readonly string multipartFormData = $"multipart/form-data; boundary=\"{multipartBoundary}\"";
-        protected readonly string cacheControlNoCache = "no-cache, no-store, must-revalidate, max-age=0";
+        protected readonly string cacheControlNoCache = "no-store, max-age=0";
         protected readonly string authSchemeToken = "Token";
         protected readonly string authSchemeBearer = "Bearer";
         protected readonly string staticToken = "T0RrMlJqWXpNVFF0UmtReFF5MDBRamN5TFVJeE5qZ3RPVGxGTlRBek5URXdNVUkz";
@@ -129,7 +130,7 @@
 
                 var expectedExpiresValue = expectedExpiresSecondsAdd.HasValue
                     ? apiContext.Response.Date?.AddSeconds(expectedExpiresSecondsAdd.Value).ToString("r")
-                    : apiContext.Response.Date?.AddYears(-1).ToString("r");
+                    : apiContext.Response.Date?.AddSeconds(-1).ToString("r");
 
                 response.Headers.Should().ContainKey("Expires");
                 response.Headers["Expires"].Should().Equal(expectedExpiresValue);

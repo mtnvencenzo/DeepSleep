@@ -66,7 +66,7 @@
 #endif
             var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IApiRequestConfiguration)) as IApiRequestConfiguration;
 
-            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline);
+            await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, defaultRequestConfiguration);
         }
 
         /// <summary>Builds the API request context.</summary>
@@ -83,7 +83,6 @@
                 RequestServices = context.RequestServices,
                 RegisterForDispose = (disposable) => context.Response.RegisterForDispose(disposable),
                 ConfigureMaxRequestLength = (length) => SetMaxRequestLength(length, context),
-                Runtime = new ApiRuntimeInfo(),
                 Request = new ApiRequestInfo
                 {
                     Path = context.Request.Path,
@@ -1080,8 +1079,14 @@
         /// <param name="httpcontext">The httpcontext.</param>
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="requestPipeline">The request pipeline.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessApiRequest(this ApiRequestContext context, HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline)
+        internal static async Task<bool> ProcessApiRequest(
+            this ApiRequestContext context, 
+            HttpContext httpcontext, 
+            IApiRequestContextResolver contextResolver, 
+            IApiRequestPipeline requestPipeline,
+            IApiRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -1099,13 +1104,27 @@
 
                 httpcontext.Response.Headers.Add("Date", responseDate.ToString("r"));
 
-                // Sync up the expir header for nocache requests with the date header being used
+                // Sync up the expire header for nocache requests with the date header being used
                 var contextExpiresHeader = context.Response.Headers.FirstOrDefault(h => h.Name == "Expires");
-                var cacheDirective = context.Configuration?.CacheDirective;
 
-                if (contextExpiresHeader != null && (cacheDirective == null || cacheDirective.Cacheability == HttpCacheType.NoCache))
+                var expirationSeconds = context.Configuration?.CacheDirective?.ExpirationSeconds
+                    ?? defaultRequestConfiguration?.CacheDirective?.ExpirationSeconds
+                    ?? ApiRequestContext.GetDefaultRequestConfiguration().CacheDirective.ExpirationSeconds.Value;
+
+                var cacheability = context.Configuration?.CacheDirective?.Cacheability
+                    ?? defaultRequestConfiguration?.CacheDirective?.Cacheability
+                    ?? ApiRequestContext.GetDefaultRequestConfiguration().CacheDirective.Cacheability.Value;
+
+                if (contextExpiresHeader != null)
                 {
-                    contextExpiresHeader.Value = responseDate.AddYears(-1).ToString("r");
+                    if (cacheability == HttpCacheType.NoCache && expirationSeconds > 0)
+                    {
+                        contextExpiresHeader.Value = responseDate.AddSeconds(-1).ToString("r");
+                    }
+                    else
+                    {
+                        contextExpiresHeader.Value = responseDate.AddSeconds(expirationSeconds).ToString("r");
+                    }
                 }
 
                 // Merge status code to the http response

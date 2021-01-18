@@ -3,6 +3,9 @@ namespace DeepSleep.OpenApi.Tests
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
     using DeepSleep.OpenApi.Tests.TestSetup;
+    using Microsoft.OpenApi;
+    using Microsoft.OpenApi.Extensions;
+    using Microsoft.OpenApi.Models;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
@@ -11,7 +14,7 @@ namespace DeepSleep.OpenApi.Tests
     public class OpenApiV3GenerateTests
     {
         [Fact]
-        public async Task Test1()
+        public async Task openapi___generates_v2_v3_for_json_and_yaml()
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(new ApiRouteRegistration(
@@ -49,21 +52,26 @@ namespace DeepSleep.OpenApi.Tests
                 endpoint: nameof(BasicController.EndpointWithBodyParam),
                 config: new DefaultApiRequestConfiguration()));
 
-            var generator = new DefaultOpenApiGenerator();
-
-            var document = await generator.Generate(OpenApiVersion.V3, table, null).ConfigureAwait(false);
-
-            var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            var configuration = new OpenApiConfigurationProvider
             {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            });
+                Info = new OpenApiInfo
+                {
+                    Description = "Test",
+                    Title = "Test"
+                },
+                IncludeHeadOperationsForGets = true,
+                PrefixNamesWithNamespace = false
+            };
 
-            System.Diagnostics.Debug.Write(results);
+            var document = await new OpenApiGenerator(configuration).Generate(table, null).ConfigureAwait(false);
+            var resultsJsonV2 = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+            var resultsJsonV3 = document.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
+            var resultsYamlV2 = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml);
+            var resultsYamlV3 = document.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
         }
 
         [Fact]
-        public async Task TestList()
+        public async Task openapi___generates_v2_v3_for_json_and_yaml_for_lists()
         {
             var table = new DefaultApiRoutingTable();
             table.AddRoute(new ApiRouteRegistration(
@@ -94,19 +102,22 @@ namespace DeepSleep.OpenApi.Tests
                 endpoint: nameof(ListController.ListContainer),
                 config: new DefaultApiRequestConfiguration()));
 
-            var generator = new DefaultOpenApiGenerator();
-
-            DefaultOpenApiGenerator.PrefixNamesWithNamespace = false;
-
-            var document = await generator.Generate(OpenApiVersion.V3, table, null).ConfigureAwait(false);
-
-            var results = JsonSerializer.Serialize(document, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            var configuration = new OpenApiConfigurationProvider
             {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            });
+                Info = new OpenApiInfo
+                {
+                    Description = "Test",
+                    Title = "Test"
+                },
+                IncludeHeadOperationsForGets = true,
+                PrefixNamesWithNamespace = false
+            };
 
-            System.Diagnostics.Debug.Write(results);
+            var document = await new OpenApiGenerator(configuration).Generate(table, null).ConfigureAwait(false);
+            var resultsJsonV2 = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+            var resultsJsonV3 = document.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json);
+            var resultsYamlV2 = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml);
+            var resultsYamlV3 = document.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
         }
     }
 }

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// 
+    /// The Multi part Http Request
     /// </summary>
     public class MultipartHttpRequest
     {

@@ -1,6 +1,9 @@
 ﻿namespace DeepSleep
 {
+    using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// 
@@ -26,5 +29,10 @@
         /// <summary>Gets or sets the current UI culture.</summary>
         /// <value>The current UI culture.</value>
         internal CultureInfo CurrentUICulture { get; set; }
+
+        /// <summary>Gets or sets the exceptions.</summary>
+        /// <value>The exceptions.</value>
+        [JsonIgnore]
+        internal IList<Exception> Exceptions { get; set; } = new List<Exception>();
     }
 }

@@ -1642,7 +1642,7 @@
             context.Configuration.CrossOriginConfig.Should().NotBeSameAs(defaultConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.Should().NotBeSameAs(endpointConfig.CrossOriginConfig);
             context.Configuration.CrossOriginConfig.AllowCredentials.Should().Be(true);
-            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(600);
+            context.Configuration.CrossOriginConfig.MaxAgeSeconds.Should().Be(0);
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().NotBeNull();
             context.Configuration.CrossOriginConfig.AllowedHeaders.Should().HaveCount(1);
             context.Configuration.CrossOriginConfig.AllowedHeaders[0].Should().Be("*");

@@ -27,7 +27,7 @@
 
         /// <summary>Gets the internals.</summary>
         /// <value>The internals.</value>
-        internal ApiInternals Internals { get; } = new ApiInternals();
+        internal ApiInternals Internals { get; set; } = new ApiInternals();
 
         /// <summary>Logs the dump.</summary>
         /// <returns></returns>

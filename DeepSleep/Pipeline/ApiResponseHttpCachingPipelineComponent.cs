@@ -27,7 +27,9 @@
                  .GetContext()
                  .SetThreadCulure();
 
-            await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var defaultRequestConfiguration = context.RequestServices.GetService<IApiRequestConfiguration>();
+
+            await context.ProcessHttpResponseCaching(defaultRequestConfiguration).ConfigureAwait(false);
         }
     }
 
@@ -46,12 +48,30 @@
 
         /// <summary>Processes the HTTP response caching.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpResponseCaching(this ApiRequestContext context)
+        internal static Task<bool> ProcessHttpResponseCaching(this ApiRequestContext context, IApiRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 var statusCode = context.Response.StatusCode;
+                var systemConfiguration = ApiRequestContext.GetDefaultRequestConfiguration();
+
+                var expirationSeconds = context.Configuration?.CacheDirective?.ExpirationSeconds
+                    ?? defaultRequestConfiguration?.CacheDirective?.ExpirationSeconds
+                    ?? systemConfiguration.CacheDirective.ExpirationSeconds.Value;
+
+                var cacheability = context.Configuration?.CacheDirective?.Cacheability
+                    ?? defaultRequestConfiguration?.CacheDirective?.Cacheability
+                    ?? systemConfiguration.CacheDirective.Cacheability.Value;
+
+                var cacheLocation = context.Configuration?.CacheDirective?.CacheLocation
+                    ?? defaultRequestConfiguration?.CacheDirective?.CacheLocation
+                    ?? systemConfiguration.CacheDirective.CacheLocation.Value;
+
+                var vary = context.Configuration?.CacheDirective?.VaryHeaderValue
+                    ?? defaultRequestConfiguration?.CacheDirective?.VaryHeaderValue
+                    ?? systemConfiguration.CacheDirective.VaryHeaderValue;
 
                 if (statusCode >= 200 && statusCode <= 299 && statusCode != 204)
                 {
@@ -62,37 +82,38 @@
                         return Task.FromResult(true);
                     }
 
-                    var method = context.Request?.Method?.ToLower() ?? string.Empty;
-
-                    if (method.In(StringComparison.InvariantCultureIgnoreCase, "get", "put", "options", "head"))
+                    if (cacheability == HttpCacheType.Cacheable)
                     {
-                        var directive = context.Configuration?.CacheDirective;
+                        var maxAgeSeconds = expirationSeconds < 0
+                            ? 0
+                            : expirationSeconds;
 
-                        if (directive != null && directive.Cacheability == HttpCacheType.Cacheable && directive.ExpirationSeconds > 0)
+                        context.Response.AddHeader("Cache-Control", $"{cacheLocation.ToString().ToLower()}, max-age={maxAgeSeconds}");
+                        context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(expirationSeconds).ToString("r"));
+
+                        if (!string.IsNullOrWhiteSpace(vary))
                         {
-                            context.Response.AddHeader("Cache-Control", $"{(directive.CacheLocation ?? HttpCacheLocation.Private).ToString().ToLower()}, max-age={directive.ExpirationSeconds}");
-                            context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(directive.ExpirationSeconds.Value).ToString("r"));
-
-                            if (!string.IsNullOrWhiteSpace(directive.VaryHeaderValue))
-                            {
-                                // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
-                                context.Response.AddHeader(
-                                    name: "Vary",
-                                    value: directive.VaryHeaderValue,
-                                    append: true);
-                            }
-
-                            return Task.FromResult(true);
+                            // ADDING VARY HEADERS TO SPECIFY WHAT THE RESPONSE REPRESENTATION WAS GENERATED AGAINST.
+                            context.Response.AddHeader(
+                                name: "Vary",
+                                value: vary,
+                                append: true);
                         }
+
+                        return Task.FromResult(true);
                     }
                 }
 
-                context.Response.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+                var seconds = expirationSeconds > 0 
+                    ? -1 
+                    : expirationSeconds;
+
+                context.Response.AddHeader("Cache-Control", $"no-store, max-age=0");
 
                 // this gets updated when the response date is added to the headers.  THe value will
-                // ultimately be the response date - 1 year.  Needs to be here though because the header is checked
+                // ultimately be the response date - expiration seconds.  Needs to be here though because the header is checked
                 // for prior to updating it.
-                context.Response.AddHeader("Expires", DateTime.UtcNow.AddYears(-1).ToString("r"));
+                context.Response.AddHeader("Expires", DateTime.UtcNow.AddSeconds(seconds).ToString("r"));
             }
 
             return Task.FromResult(true);

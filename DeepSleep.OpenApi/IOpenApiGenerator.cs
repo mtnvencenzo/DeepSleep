@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.OpenApi
 {
     using DeepSleep.Configuration;
-    using DeepSleep.OpenApi.v3_0;
+    using Microsoft.OpenApi.Models;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -9,11 +9,10 @@
     /// </summary>
     public interface IOpenApiGenerator
     {
-        /// <summary>Generates the specified version.</summary>
-        /// <param name="version">The version.</param>
+        /// <summary>Generates the specified information.</summary>
         /// <param name="routingTable">The routing table.</param>
         /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        Task<OpenApiDocument3_0> Generate(OpenApiVersion version, IApiRoutingTable routingTable, IApiRequestConfiguration defaultRequestConfiguration);
+        Task<OpenApiDocument> Generate(IApiRoutingTable routingTable, IApiRequestConfiguration defaultRequestConfiguration);
     }
 }

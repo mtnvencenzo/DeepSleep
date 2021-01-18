@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -91,16 +92,24 @@
                 }
                 else
                 {
-                    context.Request.AcceptCulture = new CultureInfo(acceptedLanguage);
-
-                    if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture == true)
+                    try
                     {
-                        context.Runtime.Internals.CurrentCulture = context.Request.AcceptCulture;
+                        context.Request.AcceptCulture = new CultureInfo(acceptedLanguage);
+
+                        if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadCulture == true)
+                        {
+                            context.Runtime.Internals.CurrentCulture = context.Request.AcceptCulture;
+                        }
+
+                        if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture == true)
+                        {
+                            context.Runtime.Internals.CurrentUICulture = context.Request.AcceptCulture;
+                        }
                     }
-
-                    if (context.Configuration?.LanguageSupport?.UseAcceptedLanguageAsThreadUICulture == true)
+                    catch (Exception ex)
                     {
-                        context.Runtime.Internals.CurrentUICulture = context.Request.AcceptCulture;
+                        context.AddInternalException(ex);
+                        context.Request.AcceptCulture = CultureInfo.CurrentUICulture;
                     }
                 }
 

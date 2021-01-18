@@ -31,12 +31,12 @@
 
             if (string.IsNullOrWhiteSpace(authValue))
             {
-                return Task.FromResult(new AuthenticationResult(false, "EmptyStaticToken"));
+                return Task.FromResult(new AuthenticationResult("EmptyStaticToken"));
             }
 
             if (authValue != acceptable)
             {
-                return Task.FromResult(new AuthenticationResult(false, "InvalidStaticToken"));
+                return Task.FromResult(new AuthenticationResult("InvalidStaticToken"));
             }
 
             return Task.FromResult(new AuthenticationResult(true, null as IPrincipal));

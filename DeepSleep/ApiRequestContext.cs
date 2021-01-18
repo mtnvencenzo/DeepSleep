@@ -31,15 +31,15 @@
 
         /// <summary>Gets or sets the response information.</summary>
         /// <value>The response information.</value>
-        public virtual ApiResponseInfo Response { get; set; } = new ApiResponseInfo();
+        public virtual ApiResponseInfo Response { get; internal set; } = new ApiResponseInfo();
 
         /// <summary>Gets or sets the routing.</summary>
         /// <value>The routing.</value>
-        public virtual ApiRoutingInfo Routing { get; set; } = new ApiRoutingInfo();
+        public virtual ApiRoutingInfo Routing { get; internal set; } = new ApiRoutingInfo();
 
         /// <summary>Gets the response information.</summary>
         /// <value>The response information.</value>
-        public virtual ApiRuntimeInfo Runtime { get; set; } = new ApiRuntimeInfo();
+        public virtual ApiRuntimeInfo Runtime { get; internal set; } = new ApiRuntimeInfo();
 
         /// <summary>Gets or sets the path base.</summary>
         /// <value>The path base.</value>
@@ -58,7 +58,7 @@
         /// <summary>Adds the response cookie.</summary>
         /// <param name="cookie">The cookie.</param>
         /// <returns></returns>
-        public ApiRequestContext AddResponseCookie(ApiCookie cookie)
+        public virtual ApiRequestContext AddResponseCookie(ApiCookie cookie)
         {
             this.Response.Cookies.Add(cookie);
             return this;
@@ -76,7 +76,7 @@
 
         /// <summary>Gets or sets the validation.</summary>
         /// <value>The validation.</value>
-        public ApiValidationInfo Validation { get; set; } = new ApiValidationInfo();
+        public ApiValidationInfo Validation { get; internal set; } = new ApiValidationInfo();
 
         /// <summary>Gets the default request configuration.</summary>
         /// <returns></returns>
@@ -102,7 +102,7 @@
                     AllowedOrigins = new List<string> { "*" },
                     AllowedHeaders = new List<string> { "*" },
                     ExposeHeaders = new List<string>(),
-                    MaxAgeSeconds = 600
+                    MaxAgeSeconds = 0
                 },
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -143,7 +143,7 @@
 
         /// <summary>Dumps this instance.</summary>
         /// <returns></returns>
-        public string Dump()
+        public virtual string Dump()
         {
             var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -154,8 +154,7 @@
                 NumberHandling = JsonNumberHandling.Strict,
                 PropertyNameCaseInsensitive = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
-                WriteIndented = true,
-                //ReferenceHandler = ReferenceHandler.Preserve
+                WriteIndented = true
             };
 
             settings.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
@@ -204,6 +203,35 @@
             }
 
             context.Runtime.Exceptions.Add(ex);
+            return context;
+        }
+
+        /// <summary>Adds the exception.</summary>
+        /// <param name="context">The context.</param>
+        /// <param name="ex">The ex.</param>
+        /// <returns></returns>
+        internal static ApiRequestContext AddInternalException(this ApiRequestContext context, Exception ex)
+        {
+            if (context == null)
+                return context;
+
+            if (context.Runtime == null)
+            {
+                context.Runtime = new ApiRuntimeInfo();
+            }
+
+            if (context.Runtime.Internals == null)
+            {
+                context.Runtime.Internals = new ApiInternals();
+            }
+
+
+            if (context.Runtime.Internals.Exceptions == null)
+            {
+                context.Runtime.Internals.Exceptions = new List<Exception>();
+            }
+
+            context.Runtime.Internals.Exceptions.Add(ex);
             return context;
         }
 

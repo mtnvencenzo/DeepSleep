@@ -23,6 +23,10 @@
         /// <value>The accept header override.</value>
         public AcceptHeader AcceptHeaderOverride { get; set; }
 
+        /// <summary>Gets or sets the accept header fallback.</summary>
+        /// <value>The accept header fallback.</value>
+        public AcceptHeader AcceptHeaderFallback { get; set; }
+
         /// <summary>Gets or sets the reader resolver.</summary>
         /// <value>The reader resolver.</value>
         [JsonIgnore]

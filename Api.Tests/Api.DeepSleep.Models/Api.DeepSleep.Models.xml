@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Api.DeepSleep.Models</name>
+    </assembly>
+    <members>
+        <member name="T:Api.DeepSleep.Models.CommonErrorResponse">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api.DeepSleep.Models.ErrorMessage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Models.ErrorMessage.ErrorMessageStr">
+            <summary>Gets or sets the error message.</summary>
+            <value>The error message.</value>
+        </member>
+    </members>
+</doc>

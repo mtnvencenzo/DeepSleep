@@ -4,4 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\GIT\DeepSleep\Api.Tests\Api.DeepSleep.Models\Api.DeepSleep.Models.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\GIT\DeepSleep\Api.Tests\Api.DeepSleep.Models\Api.DeepSleep.Models.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

@@ -6,6 +6,9 @@
     using System.Linq;
     using System.Text;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class BodyBindingController
     {
         /// <summary>Posts the length of for maximum request.</summary>
@@ -134,28 +137,51 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class SimpleMultipartRs
     {
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public string Value { get; set; }
 
+        /// <summary>Gets or sets the other value.</summary>
+        /// <value>The other value.</value>
         public string OtherValue { get; set; }
 
+        /// <summary>Gets or sets the text file data.</summary>
+        /// <value>The text file data.</value>
         public string TextFileData { get; set; }
     }
 
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class SimpleMultipartRq
     {
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public string Value { get; set; }
 
+        /// <summary>Gets or sets the other value.</summary>
+        /// <value>The other value.</value>
         public string OtherValue { get; set; }
 
+        /// <summary>Gets or sets the files.</summary>
+        /// <value>The files.</value>
         public IList<MultipartHttpRequestSection> Files { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MaxRequestLengthModel
     {
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public string Value { get; set; }
     }
 }

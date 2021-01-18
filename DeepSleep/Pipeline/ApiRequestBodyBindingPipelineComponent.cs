@@ -180,7 +180,7 @@
                         }
                         catch (Exception ex)
                         {
-                            context.AddException(ex);
+                            context.AddInternalException(ex);
 
                             if (ex.GetType().Name.Contains("BadHttpRequestException"))
                             {

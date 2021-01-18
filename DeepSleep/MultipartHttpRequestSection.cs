@@ -4,7 +4,7 @@
     using System.IO;
 
     /// <summary>
-    /// 
+    /// Multipart Http Request Section
     /// </summary>
     public class MultipartHttpRequestSection : IDisposable
     {

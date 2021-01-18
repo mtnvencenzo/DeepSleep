@@ -9,7 +9,9 @@ namespace Api.DeepSleep.Web5_0
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OpenApi.Models;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class Startup
@@ -53,7 +55,19 @@ namespace Api.DeepSleep.Web5_0
 
             services
                 .AddLogging()
-                .UseOpenApiServices()
+                .UseOpenApiServices(
+                    info: null,
+                    v2RouteTemplate: "openapi/v2/doc",
+                    v3RouteTemplate: "openapi/v3/doc",
+                    prefixNamesWithNamespace: false,
+                    includeHeadOperationsForGets: true,
+                    xmlDocumentationFileNames: new List<string>
+                    {
+                        "Api.DeepSleep.Models.xml",
+                        "Api.DeepSleep.Controllers.xml",
+                        "deepsleep.xml",
+                        "deepsleep.web.xml"
+                    })
                 .UseDataAnnotationValidations(continuation: ValidationContinuation.OnlyIfValid, validateAllProperties: true)
                 .UseApiCoreServices(new DefaultApiServiceConfiguration
                 {
@@ -117,10 +131,7 @@ namespace Api.DeepSleep.Web5_0
         public void Configure(IApplicationBuilder app)
         {
             app
-                .UseOpenApiEndpoint(
-                    routeTemplate: "openapi/v3/doc",
-                    prefixNamesWithNamespace: false,
-                    includeHeadOperationsForGets: true)
+                .UseOpenApiEndpoint()
                 .UseApiCoreHttp()
                 .UseForwardedHeaders();
         }

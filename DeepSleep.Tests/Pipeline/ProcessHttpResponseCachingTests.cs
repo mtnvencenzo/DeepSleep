@@ -24,7 +24,7 @@
                 Response = mockResponseInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
         }
 
@@ -41,18 +41,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -81,18 +81,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -119,18 +119,18 @@
                 Routing = mockRouteInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -155,18 +155,18 @@
                 Routing = null
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -194,18 +194,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -230,18 +230,18 @@
                 Configuration = null
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -269,18 +269,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -311,18 +311,18 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
             context.Response.Headers.Should().HaveCount(2);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("no-store, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -330,6 +330,7 @@
         [InlineData("PUT")]
         [InlineData("OPTIONS")]
         [InlineData("HEAD")]
+        [InlineData("POST")]
         public async void ReturnsTrueAndCorrectHeadersForCachableRequestMethodButCacheDirectiveSecondsIsZero(string method)
         {
             var context = new ApiRequestContext
@@ -354,18 +355,20 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
-            context.Response.Headers.Should().HaveCount(2);
+            context.Response.Headers.Should().HaveCount(3);
             context.Response.Headers[0].Name.Should().Be("Cache-Control");
-            context.Response.Headers[0].Value.Should().Be("no-cache, no-store, must-revalidate, max-age=0");
+            context.Response.Headers[0].Value.Should().Be("private, max-age=0");
             context.Response.Headers[1].Name.Should().Be("Expires");
+            context.Response.Headers[2].Name.Should().Be("Vary");
+            context.Response.Headers[2].Value.Should().Be("Accept, Accept-Encoding, Accept-Language");
 
             var now = DateTime.UtcNow;
             var expires = DateTimeOffset.Parse(context.Response.Headers[1].Value);
-            expires.Year.Should().Be(now.Year - 1);
+            expires.Should().BeOnOrAfter(now.AddSeconds(-2));
         }
 
         [Theory]
@@ -403,7 +406,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();
@@ -453,7 +456,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseCaching().ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseCaching(null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Headers.Should().NotBeNull();

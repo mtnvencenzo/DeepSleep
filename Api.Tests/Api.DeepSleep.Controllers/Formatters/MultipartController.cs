@@ -4,9 +4,16 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class MultipartController
     {
-        public void Post([BodyBound] MultipartHttpRequest data)
+        /// <summary>Posts the specified data.</summary>
+        /// <param name="data">The data.</param>
+        /// <param name="simpleMultiPartParameter">The simple multi part parameter.</param>
+        /// <param name="simpleMultiPartParameterNullableInt">The simple multi part parameter nullable int.</param>
+        public void Post([BodyBound] MultipartHttpRequest data, string simpleMultiPartParameter, int? simpleMultiPartParameterNullableInt)
         {
         }
 

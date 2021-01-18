@@ -162,7 +162,7 @@
                    {
                        Cacheability = HttpCacheType.NoCache,
                        CacheLocation = HttpCacheLocation.Private,
-                       ExpirationSeconds = -5
+                       ExpirationSeconds = -1
                    },
                    CrossOriginConfig = new ApiCrossOriginConfiguration
                    {

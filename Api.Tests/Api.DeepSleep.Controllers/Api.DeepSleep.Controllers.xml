@@ -1,0 +1,849 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Api.DeepSleep.Controllers</name>
+    </assembly>
+    <members>
+        <member name="T:Api.DeepSleep.Controllers.Binding.ArrayController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.IList(System.Collections.Generic.IList{Api.DeepSleep.Controllers.Binding.SimpleRs})">
+            <summary>is the list.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.List(System.Collections.Generic.List{Api.DeepSleep.Controllers.Binding.SimpleRs})">
+            <summary>Lists the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.Array(Api.DeepSleep.Controllers.Binding.SimpleRs[])">
+            <summary>Arrays the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.IEnumerable(System.Collections.Generic.IEnumerable{Api.DeepSleep.Controllers.Binding.SimpleRs})">
+            <summary>is the enumerable.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.ArrayController.IListRequestResponse(System.Collections.Generic.ICollection{Api.DeepSleep.Controllers.Binding.SimpleRs})">
+            <summary>is the list request response.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleRs">
+            <summary>
+            The Simple Rs
+            </summary>
+            <remarks>
+            Description for the simple rs
+            </remarks>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleRs.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.BodyBindingController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PostForMaxRequestLength(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Posts the length of for maximum request.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PutForMaxRequestLength(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Puts the length of for maximum request.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PatchForMaxRequestLength(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Patches the length of for maximum request.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PostForBadRequestFormat(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Posts for bad request format.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PutForBadRequestFormat(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Puts for bad request format.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.PatchForBadRequestFormat(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Patches for bad request format.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.SimplePost(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Simples the post.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.SimplePut(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Simples the put.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.SimplePatch(Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel)">
+            <summary>Simples the patch.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.SimpleMultipart(DeepSleep.MultipartHttpRequest)">
+            <summary>Simples the patch.</summary>
+            <param name="model">The model.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.BodyBindingController.MultipartCustom(Api.DeepSleep.Controllers.Binding.SimpleMultipartRq)">
+            <summary>Multiparts the custom.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleMultipartRs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRs.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRs.OtherValue">
+            <summary>Gets or sets the other value.</summary>
+            <value>The other value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRs.TextFileData">
+            <summary>Gets or sets the text file data.</summary>
+            <value>The text file data.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleMultipartRq">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRq.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRq.OtherValue">
+            <summary>Gets or sets the other value.</summary>
+            <value>The other value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleMultipartRq.Files">
+            <summary>Gets or sets the files.</summary>
+            <value>The files.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.MaxRequestLengthModel.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingController">
+            <summary>
+            Simple Url Binding Controller
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingController.GetWithQuery(System.String,System.Char,System.Nullable{System.Char},System.Int16,System.UInt16,System.Nullable{System.Int16},System.Nullable{System.UInt16},System.Int32,System.UInt32,System.Nullable{System.Int32},System.Nullable{System.UInt32},System.Int64,System.UInt64,System.Nullable{System.Int64},System.Nullable{System.UInt64},System.Double,System.Nullable{System.Double},System.Decimal,System.Nullable{System.Decimal},System.Single,System.Nullable{System.Single},System.Boolean,System.Nullable{System.Boolean},System.DateTime,System.Nullable{System.DateTime},System.DateTimeOffset,System.Nullable{System.DateTimeOffset},System.TimeSpan,System.Nullable{System.TimeSpan},System.Byte,System.Nullable{System.Byte},System.SByte,System.Nullable{System.SByte},System.Guid,System.Nullable{System.Guid},Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum,System.Nullable{Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum})">
+            <summary>Gets the with query.</summary>
+            <param name="stringVar">The string variable.</param>
+            <param name="charVar">The character variable.</param>
+            <param name="nullCharVar">The null character variable.</param>
+            <param name="int16Var">The int16 variable.</param>
+            <param name="uInt16Var">The u int16 variable.</param>
+            <param name="nullInt16Var">The null int16 variable.</param>
+            <param name="nullUInt16Var">The null u int16 variable.</param>
+            <param name="int32Var">The int32 variable.</param>
+            <param name="uInt32Var">The u int32 variable.</param>
+            <param name="nullInt32Var">The null int32 variable.</param>
+            <param name="nullUInt32Var">The null u int32 variable.</param>
+            <param name="int64Var">The int64 variable.</param>
+            <param name="uInt64Var">The u int64 variable.</param>
+            <param name="nullInt64Var">The null int64 variable.</param>
+            <param name="nullUInt64Var">The null u int64 variable.</param>
+            <param name="doubleVar">The double variable.</param>
+            <param name="nullDoubleVar">The null double variable.</param>
+            <param name="decimalVar">The decimal variable.</param>
+            <param name="nullDecimalVar">The null decimal variable.</param>
+            <param name="floatVar">The float variable.</param>
+            <param name="nullFloatVar">The null float variable.</param>
+            <param name="boolVar">if set to <c>true</c> [bool variable].</param>
+            <param name="nullBoolVar">The null bool variable.</param>
+            <param name="dateTimeVar">The date time variable.</param>
+            <param name="nullDateTimeVar">The null date time variable.</param>
+            <param name="dateTimeOffsetVar">The date time offset variable.</param>
+            <param name="nullDateTimeOffsetVar">The null date time offset variable.</param>
+            <param name="timeSpanVar">The time span variable.</param>
+            <param name="nullTimeSpanVar">The null time span variable.</param>
+            <param name="byteVar">The byte variable.</param>
+            <param name="nullByteVar">The null byte variable.</param>
+            <param name="sByteVar">The s byte variable.</param>
+            <param name="nullSByteVar">The null s byte variable.</param>
+            <param name="guidVar">The unique identifier variable.</param>
+            <param name="nullGuidVar">The null unique identifier variable.</param>
+            <param name="enumVar">The enum variable.</param>
+            <param name="nullEnumVar">The null enum variable.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingController.GetWithRoute(System.String,System.Char,System.Nullable{System.Char},System.Int16,System.UInt16,System.Nullable{System.Int16},System.Nullable{System.UInt16},System.Int32,System.UInt32,System.Nullable{System.Int32},System.Nullable{System.UInt32},System.Int64,System.UInt64,System.Nullable{System.Int64},System.Nullable{System.UInt64},System.Double,System.Nullable{System.Double},System.Decimal,System.Nullable{System.Decimal},System.Single,System.Nullable{System.Single},System.Boolean,System.Nullable{System.Boolean},System.DateTime,System.Nullable{System.DateTime},System.DateTimeOffset,System.Nullable{System.DateTimeOffset},System.TimeSpan,System.Nullable{System.TimeSpan},System.Byte,System.Nullable{System.Byte},System.SByte,System.Nullable{System.SByte},System.Guid,System.Nullable{System.Guid},Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum,System.Nullable{Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum})">
+            <summary>Gets the with route.</summary>
+            <param name="stringVar">The string variable.</param>
+            <param name="charVar">The character variable.</param>
+            <param name="nullCharVar">The null character variable.</param>
+            <param name="int16Var">The int16 variable.</param>
+            <param name="uInt16Var">The u int16 variable.</param>
+            <param name="nullInt16Var">The null int16 variable.</param>
+            <param name="nullUInt16Var">The null u int16 variable.</param>
+            <param name="int32Var">The int32 variable.</param>
+            <param name="uInt32Var">The u int32 variable.</param>
+            <param name="nullInt32Var">The null int32 variable.</param>
+            <param name="nullUInt32Var">The null u int32 variable.</param>
+            <param name="int64Var">The int64 variable.</param>
+            <param name="uInt64Var">The u int64 variable.</param>
+            <param name="nullInt64Var">The null int64 variable.</param>
+            <param name="nullUInt64Var">The null u int64 variable.</param>
+            <param name="doubleVar">The double variable.</param>
+            <param name="nullDoubleVar">The null double variable.</param>
+            <param name="decimalVar">The decimal variable.</param>
+            <param name="nullDecimalVar">The null decimal variable.</param>
+            <param name="floatVar">The float variable.</param>
+            <param name="nullFloatVar">The null float variable.</param>
+            <param name="boolVar">if set to <c>true</c> [bool variable].</param>
+            <param name="nullBoolVar">The null bool variable.</param>
+            <param name="dateTimeVar">The date time variable.</param>
+            <param name="nullDateTimeVar">The null date time variable.</param>
+            <param name="dateTimeOffsetVar">The date time offset variable.</param>
+            <param name="nullDateTimeOffsetVar">The null date time offset variable.</param>
+            <param name="timeSpanVar">The time span variable.</param>
+            <param name="nullTimeSpanVar">The null time span variable.</param>
+            <param name="byteVar">The byte variable.</param>
+            <param name="nullByteVar">The null byte variable.</param>
+            <param name="sByteVar">The s byte variable.</param>
+            <param name="nullSByteVar">The null s byte variable.</param>
+            <param name="guidVar">The unique identifier variable.</param>
+            <param name="nullGuidVar">The null unique identifier variable.</param>
+            <param name="enumVar">The enum variable.</param>
+            <param name="nullEnumVar">The null enum variable.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingController.GetWithMixed(System.String,System.Char,System.Nullable{System.Char},System.Int16,System.UInt16,System.Nullable{System.Int16},System.Nullable{System.UInt16},System.Int32,System.UInt32,System.Nullable{System.Int32},System.Nullable{System.UInt32},System.Int64,System.UInt64,System.Nullable{System.Int64},System.Nullable{System.UInt64},System.Double,System.Nullable{System.Double},System.Decimal,System.Nullable{System.Decimal},System.Single,System.Nullable{System.Single},System.Boolean,System.Nullable{System.Boolean},System.DateTime,System.Nullable{System.DateTime},System.DateTimeOffset,System.Nullable{System.DateTimeOffset},System.TimeSpan,System.Nullable{System.TimeSpan},System.Byte,System.Nullable{System.Byte},System.SByte,System.Nullable{System.SByte},System.Guid,System.Nullable{System.Guid},Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum,System.Nullable{Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum},Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs)">
+            <summary>Gets the with mixed.</summary>
+            <param name="stringVar">The string variable.</param>
+            <param name="charVar">The character variable.</param>
+            <param name="nullCharVar">The null character variable.</param>
+            <param name="int16Var">The int16 variable.</param>
+            <param name="uInt16Var">The u int16 variable.</param>
+            <param name="nullInt16Var">The null int16 variable.</param>
+            <param name="nullUInt16Var">The null u int16 variable.</param>
+            <param name="int32Var">The int32 variable.</param>
+            <param name="uInt32Var">The u int32 variable.</param>
+            <param name="nullInt32Var">The null int32 variable.</param>
+            <param name="nullUInt32Var">The null u int32 variable.</param>
+            <param name="int64Var">The int64 variable.</param>
+            <param name="uInt64Var">The u int64 variable.</param>
+            <param name="nullInt64Var">The null int64 variable.</param>
+            <param name="nullUInt64Var">The null u int64 variable.</param>
+            <param name="doubleVar">The double variable.</param>
+            <param name="nullDoubleVar">The null double variable.</param>
+            <param name="decimalVar">The decimal variable.</param>
+            <param name="nullDecimalVar">The null decimal variable.</param>
+            <param name="floatVar">The float variable.</param>
+            <param name="nullFloatVar">The null float variable.</param>
+            <param name="boolVar">if set to <c>true</c> [bool variable].</param>
+            <param name="nullBoolVar">The null bool variable.</param>
+            <param name="dateTimeVar">The date time variable.</param>
+            <param name="nullDateTimeVar">The null date time variable.</param>
+            <param name="dateTimeOffsetVar">The date time offset variable.</param>
+            <param name="nullDateTimeOffsetVar">The null date time offset variable.</param>
+            <param name="timeSpanVar">The time span variable.</param>
+            <param name="nullTimeSpanVar">The null time span variable.</param>
+            <param name="byteVar">The byte variable.</param>
+            <param name="nullByteVar">The null byte variable.</param>
+            <param name="sByteVar">The s byte variable.</param>
+            <param name="nullSByteVar">The null s byte variable.</param>
+            <param name="guidVar">The unique identifier variable.</param>
+            <param name="nullGuidVar">The null unique identifier variable.</param>
+            <param name="enumVar">The enum variable.</param>
+            <param name="nullEnumVar">The null enum variable.</param>
+            <param name="boundType">Type of the bound.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum">
+            <summary>
+            Simple Url Binding Enum
+            </summary>
+        </member>
+        <member name="F:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum.None">
+            <summary>The none</summary>
+        </member>
+        <member name="F:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum.One">
+            <summary>The one</summary>
+        </member>
+        <member name="F:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum.Two">
+            <summary>The two</summary>
+        </member>
+        <member name="F:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum.Four">
+            <summary>The four</summary>
+        </member>
+        <member name="F:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingEnum.Eight">
+            <summary>The eight</summary>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.StringVar">
+            <summary>Gets or sets the string variable.</summary>
+            <value>The string variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.CharVar">
+            <summary>Gets or sets the character variable.</summary>
+            <value>The character variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullCharVar">
+            <summary>Gets or sets the null character variable.</summary>
+            <value>The null character variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.Int16Var">
+            <summary>Gets or sets the int16 variable.</summary>
+            <value>The int16 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.UInt16Var">
+            <summary>Gets or sets the u int16 variable.</summary>
+            <value>The u int16 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullInt16Var">
+            <summary>Gets or sets the null int16 variable.</summary>
+            <value>The null int16 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullUInt16Var">
+            <summary>Gets or sets the null u int16 variable.</summary>
+            <value>The null u int16 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.Int32Var">
+            <summary>Gets or sets the int32 variable.</summary>
+            <value>The int32 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.UInt32Var">
+            <summary>Gets or sets the u int32 variable.</summary>
+            <value>The u int32 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullInt32Var">
+            <summary>Gets or sets the null int32 variable.</summary>
+            <value>The null int32 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullUInt32Var">
+            <summary>Gets or sets the null u int32 variable.</summary>
+            <value>The null u int32 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.Int64Var">
+            <summary>Gets or sets the int64 variable.</summary>
+            <value>The int64 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.UInt64Var">
+            <summary>Gets or sets the u int64 variable.</summary>
+            <value>The u int64 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullInt64Var">
+            <summary>Gets or sets the null int64 variable.</summary>
+            <value>The null int64 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullUInt64Var">
+            <summary>Gets or sets the null u int64 variable.</summary>
+            <value>The null u int64 variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.DoubleVar">
+            <summary>Gets or sets the double variable.</summary>
+            <value>The double variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullDoubleVar">
+            <summary>Gets or sets the null double variable.</summary>
+            <value>The null double variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.DecimalVar">
+            <summary>Gets or sets the decimal variable.</summary>
+            <value>The decimal variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullDecimalVar">
+            <summary>Gets or sets the null decimal variable.</summary>
+            <value>The null decimal variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.FloatVar">
+            <summary>Gets or sets the float variable.</summary>
+            <value>The float variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullFloatVar">
+            <summary>Gets or sets the null float variable.</summary>
+            <value>The null float variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.BoolVar">
+            <summary>Gets or sets a value indicating whether [bool variable].</summary>
+            <value><c>true</c> if [bool variable]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullBoolVar">
+            <summary>Gets or sets the null bool variable.</summary>
+            <value>The null bool variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.DateTimeVar">
+            <summary>Gets or sets the date time variable.</summary>
+            <value>The date time variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullDateTimeVar">
+            <summary>Gets or sets the null date time variable.</summary>
+            <value>The null date time variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.DateTimeOffsetVar">
+            <summary>Gets or sets the date time offset variable.</summary>
+            <value>The date time offset variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullDateTimeOffsetVar">
+            <summary>Gets or sets the null date time offset variable.</summary>
+            <value>The null date time offset variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.TimeSpanVar">
+            <summary>Gets or sets the time span variable.</summary>
+            <value>The time span variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullTimeSpanVar">
+            <summary>Gets or sets the null time span variable.</summary>
+            <value>The null time span variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.ByteVar">
+            <summary>Gets or sets the byte variable.</summary>
+            <value>The byte variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullByteVar">
+            <summary>Gets or sets the null byte variable.</summary>
+            <value>The null byte variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.SByteVar">
+            <summary>Gets or sets the s byte variable.</summary>
+            <value>The s byte variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullSByteVar">
+            <summary>Gets or sets the null s byte variable.</summary>
+            <value>The null s byte variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.GuidVar">
+            <summary>Gets or sets the unique identifier variable.</summary>
+            <value>The unique identifier variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullGuidVar">
+            <summary>Gets or sets the null unique identifier variable.</summary>
+            <value>The null unique identifier variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.EnumVar">
+            <summary>Gets or sets the enum variable.</summary>
+            <value>The enum variable.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Binding.SimpleUrlBindingRs.NullEnumVar">
+            <summary>Gets or sets the null enum variable.</summary>
+            <value>The null enum variable.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.CommonErrorResponseProvider">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.IApiErrorResponseProvider" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.CommonErrorResponseProvider.Process(DeepSleep.IApiRequestContextResolver,System.Collections.Generic.IList{System.String})">
+            <summary>Processes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <param name="errors">The errors.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.ContextDumpController.GetDump">
+            <summary>Gets the with items.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.ContextDumpController.PostDump(Api.DeepSleep.Controllers.ContextDump)">
+            <summary>Gets the with items.</summary>
+            <returns></returns>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.ContextDump.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.CustomListErrorResponseProviderAttribute.Process(DeepSleep.IApiRequestContextResolver,System.Collections.Generic.IList{System.String})">
+            <summary>Processes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <param name="errors">The errors.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.CustomRequestPipelineComponent">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.CustomRequestPipelineComponent.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Default1AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Default1AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.DefaultAuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.DefaultAuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.DefaultFailingAuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.DefaultFailingAuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel.Value">
+            <summary>Gets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel.PostValue">
+            <summary>Gets or sets the post value.</summary>
+            <value>The post value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel.CustomInt">
+            <summary>Gets or sets the custom int.</summary>
+            <value>The custom int.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.CustomApiRouteErrorResponseProviderAttribute.Process(DeepSleep.IApiRequestContextResolver,System.Collections.Generic.IList{System.String})">
+            <summary>Processes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <param name="errors">The errors.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex500AuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex500AuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex500AuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex500AuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex500AuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex500AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex500AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex501AuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex501AuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex501AuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex501AuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiNotImplementedException"></exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex501AuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex501AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex501AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiNotImplementedException"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex502AuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex502AuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex502AuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex502AuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiBadGatewayException"></exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex502AuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex502AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex502AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiBadGatewayException"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex503AuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex503AuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex503AuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex503AuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiServiceUnavailableException"></exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex503AuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex503AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex503AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiServiceUnavailableException"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex504AuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex504AuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Ex504AuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex504AuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiGatewayTimeoutException"></exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex504AuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Ex504AuthorizationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Ex504AuthorizationProvider.Authorize(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authorizes the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiGatewayTimeoutException"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Exceptions.ExceptionController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Formatters.AcceptController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Formatters.AcceptController.Get">
+            <summary>Gets the XML only.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Formatters.MultipartController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Formatters.MultipartController.Post(DeepSleep.MultipartHttpRequest,System.String,System.Nullable{System.Int32})">
+            <summary>Posts the specified data.</summary>
+            <param name="data">The data.</param>
+            <param name="simpleMultiPartParameter">The simple multi part parameter.</param>
+            <param name="simpleMultiPartParameterNullableInt">The simple multi part parameter nullable int.</param>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Formatters.CustomMultiPart">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Formatters.CustomMultiPart.ADate">
+            <summary>Gets or sets a date.</summary>
+            <value>a date.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Formatters.CustomMultiPart.Files">
+            <summary>Gets or sets the files.</summary>
+            <value>The files.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Formatters.CustomMultiPart.MoreFiles">
+            <summary>Gets or sets the files.</summary>
+            <value>The files.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Formatters.CustomMultiPart.SingleFile">
+            <summary>Gets or sets the files.</summary>
+            <value>The files.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Items.ItemsController.GetWithItems">
+            <summary>Gets the with items.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Items.ItemsRsValidator.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.StaticTokenAuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.StaticTokenAuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.StaticTokenAuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.StaticTokenAuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified context.</summary>
+            <param name="context">The context.</param>
+            <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
+            <exception cref="T:System.ArgumentException">StaticToken.Token is null or empty</exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.StaticTokenAuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.SuccessAuthenticationProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.SuccessAuthenticationProvider.Realm">
+            <summary>Gets the realm.</summary>
+            <value>The realm.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.SuccessAuthenticationProvider.Scheme">
+            <summary>Gets the authentication scheme.</summary>
+            <value>The authentication scheme.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.SuccessAuthenticationProvider.Authenticate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Authenticates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.SuccessAuthenticationProvider.CanHandleAuthScheme(System.String)">
+            <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
+            <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
