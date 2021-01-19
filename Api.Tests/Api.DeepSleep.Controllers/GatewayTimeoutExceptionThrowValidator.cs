@@ -5,8 +5,16 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class GatewayTimeoutExceptionThrowValidator : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
+        /// <exception cref="ApiGatewayTimeoutException"></exception>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             throw new ApiGatewayTimeoutException();

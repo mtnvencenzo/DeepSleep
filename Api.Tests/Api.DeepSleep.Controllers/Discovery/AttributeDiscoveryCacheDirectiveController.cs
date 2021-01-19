@@ -4,8 +4,13 @@
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryCacheDirectiveController
     {
+        /// <summary>Gets the cache directive default.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -15,6 +20,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the authorization policy not matched.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/cachedirective/specified")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

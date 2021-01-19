@@ -4,8 +4,15 @@
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryValidationErrorController
     {
+        /// <summary>Gets the validation error default.</summary>
+        /// <param name="queryValue">The query value.</param>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -19,6 +26,10 @@
             };
         }
 
+        /// <summary>Gets the validation error specified empty.</summary>
+        /// <param name="queryValue">The query value.</param>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/empty")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -34,6 +45,10 @@
             };
         }
 
+        /// <summary>Gets the validation error specified custom no replacements.</summary>
+        /// <param name="queryValue">The query value.</param>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/custom/no/replacements")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -49,6 +64,10 @@
             };
         }
 
+        /// <summary>Gets the validation error specified custom with replacements.</summary>
+        /// <param name="queryValue">The query value.</param>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/validationerror/specified/custom/with/replacements")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -64,6 +83,9 @@
             };
         }
 
+        /// <summary>Gets the validation error default deserialization error.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/default/deserialization/error")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -74,6 +96,9 @@
             return request;
         }
 
+        /// <summary>Gets the validation error empty deserialization error.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/empty/deserialization/error")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -85,6 +110,9 @@
             return request;
         }
 
+        /// <summary>Gets the validation error custom deserialization error.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/custom/deserialization/error")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -96,6 +124,9 @@
             return request;
         }
 
+        /// <summary>Gets the validation error use450 deserialization error.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/450/deserialization/error")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -106,6 +137,9 @@
             return request;
         }
 
+        /// <summary>Gets the validation error use400 deserialization error for strict.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/400/deserialization/error/for/strict")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -116,6 +150,9 @@
             return request;
         }
 
+        /// <summary>Gets the validation error use400 deserialization error for common.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/validationerror/400/deserialization/error/for/common")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

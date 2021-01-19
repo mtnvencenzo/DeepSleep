@@ -3,8 +3,13 @@
     using global::DeepSleep;
     using global::DeepSleep.Pipeline;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryPipelineController
     {
+        /// <summary>Gets the pipeline before validation.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/pipeline/multi")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointInvocation, 1)]

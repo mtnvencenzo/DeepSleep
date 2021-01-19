@@ -8,8 +8,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Discovery.IRouteRegistrationProvider" />
     public class ValidatorController : IRouteRegistrationProvider
     {
+        /// <summary>Gets this instance.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "validators/get")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1), continuation: ValidationContinuation.Always, 2)]
@@ -20,6 +26,8 @@
             return ApiResponse.BadRequest(errors: new string[] { "Test Error" });
         }
 
+        /// <summary>Gets the mixed.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "validators/get/with/mixed/success/failures")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidatorSuccess4), continuation: ValidationContinuation.Always, 0)]
@@ -32,6 +40,8 @@
             return ApiResponse.BadRequest(errors: new string[] { "Test Error" });
         }
 
+        /// <summary>Gets the mixed multi failures.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "validators/get/with/mixed/success/failures/multi")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator1), continuation: ValidationContinuation.Always, 5)]
@@ -43,6 +53,8 @@
             return ApiResponse.BadRequest(errors: new string[] { "Test Error" });
         }
 
+        /// <summary>Gets the failure with404 status code.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "validators/get/failure/404")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator5), order: -1)]
@@ -51,12 +63,17 @@
             return ApiResponse.BadRequest(errors: new string[] { "Test Error" });
         }
 
+        /// <summary>Gets the failure with mixed configured and attribute.</summary>
+        /// <returns></returns>
         [ApiEndpointValidation(validatorType: typeof(RequestPipelineModelValidator5), continuation: ValidationContinuation.Always, order: 6)]
         public IApiResponse GetFailureWithMixedConfiguredAndAttribute()
         {
             return ApiResponse.BadRequest(errors: new string[] { "Test Error" });
         }
 
+        /// <summary>Gets the routes.</summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <returns></returns>
         public Task<IList<ApiRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
         {
             var routes = new List<ApiRouteRegistration>();
@@ -82,8 +99,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator1 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -93,8 +117,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator2 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -104,8 +135,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator3 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="apiRequestContextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver apiRequestContextResolver)
         {
             var context = apiRequestContextResolver?.GetContext();
@@ -115,8 +153,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator4 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -131,24 +176,45 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator5 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(ApiValidationResult.Single("VALIDATOR-5", suggestedHttpStatusCode: 404));
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidatorSuccess4 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(null as IList<ApiValidationResult>);
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidatorSuccess5 : IEndpointValidator
     {
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             return Task.FromResult(ApiValidationResult.Success());

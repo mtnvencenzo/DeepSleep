@@ -4,8 +4,13 @@
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryCrossOriginController
     {
+        /// <summary>Gets the cross origin default.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -15,6 +20,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the cross origin default with caching.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/default/with/caching")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -25,6 +32,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the cross origin specified empty.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified/empty")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -34,6 +43,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the cross origin specified.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -43,6 +54,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the cross origin specified with cache control.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/crossorigin/specified/with/caching")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

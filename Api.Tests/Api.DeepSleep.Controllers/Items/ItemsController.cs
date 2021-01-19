@@ -5,10 +5,15 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ItemsController
     {
         private readonly IApiRequestContextResolver contextResolver;
 
+        /// <summary>Initializes a new instance of the <see cref="ItemsController"/> class.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
         public ItemsController(IApiRequestContextResolver contextResolver)
         {
             this.contextResolver = contextResolver;
@@ -37,18 +42,37 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ItemsRs
     {
+        /// <summary>Gets or sets the value1.</summary>
+        /// <value>The value1.</value>
         public string Value1 { get; set; }
+        /// <summary>Gets or sets a value indicating whether this <see cref="ItemsRs"/> is found1.</summary>
+        /// <value><c>true</c> if found1; otherwise, <c>false</c>.</value>
         public bool Found1 { get; set; }
 
+        /// <summary>Gets or sets the value2.</summary>
+        /// <value>The value2.</value>
         public string Value2 { get; set; }
+        /// <summary>Gets or sets a value indicating whether this <see cref="ItemsRs"/> is found2.</summary>
+        /// <value><c>true</c> if found2; otherwise, <c>false</c>.</value>
         public bool Found2 { get; set; }
 
+        /// <summary>Gets or sets the value3.</summary>
+        /// <value>The value3.</value>
         public string Value3 { get; set; }
+        /// <summary>Gets or sets a value indicating whether this <see cref="ItemsRs"/> is found3.</summary>
+        /// <value><c>true</c> if found3; otherwise, <c>false</c>.</value>
         public bool Found3 { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class ItemsRsValidator : IEndpointValidator
     {
         /// <summary>Validates the specified API request context resolver.</summary>

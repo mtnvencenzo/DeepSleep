@@ -4,6 +4,7 @@
     using DeepSleep.Discovery;
     using DeepSleep.Formatting;
     using DeepSleep.Formatting.Formatters;
+    using DeepSleep.OpenApi;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
     using DeepSleep.Web.Controllers;
@@ -31,36 +32,8 @@
 
             var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
             var routingTable = builder.ApplicationServices.GetService<IApiRoutingTable>();
-            var discoveryStrategies = config?.DiscoveryStrategies ?? DiscoveryStrategies.Default();
 
-            foreach (var strategy in discoveryStrategies)
-            {
-                if (strategy == null)
-                {
-                    continue;
-                }
-
-                var task = Task.Run(async () =>
-                {
-                    using (var scope = builder.ApplicationServices.CreateScope())
-                    {
-                        return await strategy.DiscoverRoutes(scope.ServiceProvider).ConfigureAwait(false);
-                    }
-                });
-
-                var registrations = task.Result;
-
-                foreach (var registration in registrations)
-                {
-                    if (registration == null)
-                    {
-                        continue;
-                    }
-
-                    routingTable.AddRoute(registration);
-                }
-            }
-
+            DiscoverRoutes(builder, routingTable, config);
 
             if (config as DefaultApiServiceConfiguration != null)
             {
@@ -68,6 +41,19 @@
                 {
                     AddPingEndpoint(routingTable, ((DefaultApiServiceConfiguration)config).PingEndpoint.RelativePath);
                 }
+            }
+
+            IOpenApiConfigurationProvider openApiConfiguration = null;
+
+            try
+            {
+                openApiConfiguration = builder.ApplicationServices.GetService<IOpenApiConfigurationProvider>();
+            }
+            catch { }
+
+            if (openApiConfiguration != null)
+            {
+                AddOpenApiEndpoints(routingTable, openApiConfiguration);
             }
 
             if (config?.WriteConsoleHeader ?? true)
@@ -141,6 +127,88 @@
         private static IApiRoutingTable GetDefaultRoutingTable()
         {
             return new DefaultApiRoutingTable();
+        }
+
+        /// <summary>Discovers the routes.</summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="routingTable">The routing table.</param>
+        /// <param name="config">The configuration.</param>
+        private static void DiscoverRoutes(IApplicationBuilder builder, IApiRoutingTable routingTable, IApiServiceConfiguration config)
+        {
+            var discoveryStrategies = config?.DiscoveryStrategies ?? DiscoveryStrategies.Default();
+
+            foreach (var strategy in discoveryStrategies)
+            {
+                if (strategy == null)
+                {
+                    continue;
+                }
+
+                var task = Task.Run(async () =>
+                {
+                    using (var scope = builder.ApplicationServices.CreateScope())
+                    {
+                        return await strategy.DiscoverRoutes(scope.ServiceProvider).ConfigureAwait(false);
+                    }
+                });
+
+                var registrations = task.Result;
+
+                foreach (var registration in registrations)
+                {
+                    if (registration == null)
+                    {
+                        continue;
+                    }
+
+                    routingTable.AddRoute(registration);
+                }
+            }
+        }
+
+        /// <summary>Adds the open API endpoints.</summary>
+        /// <param name="routingTable">The routing table.</param>
+        /// <param name="openApiConfiguration">The open API configuration.</param>
+        private static void AddOpenApiEndpoints(IApiRoutingTable routingTable, IOpenApiConfigurationProvider openApiConfiguration)
+        {
+            Action<string, string> add = (string endpoint, string template) =>
+            {
+                routingTable.AddRoute(new ApiRouteRegistration(
+                    template: template,
+                    httpMethods: new[] { "GET" },
+                    controller: Type.GetType(typeof(OpenApiController).AssemblyQualifiedName),
+                    endpoint: endpoint,
+                    config: new DefaultApiRequestConfiguration
+                    {
+                        AllowAnonymous = true,
+                        ReadWriteConfiguration = new ApiReadWriteConfiguration
+                        {
+                            AcceptHeaderFallback = "application/json; q=1.0, application/yaml; q=0.9",
+                            WriterResolver = (resolver) =>
+                            {
+                                var context = resolver.GetContext();
+                                var jsonFormatter = context.RequestServices.GetService<OpenApiJsonFormatter>();
+                                var yamlFormatter = context.RequestServices.GetService<OpenApiYamlFormatter>();
+
+                                return Task.FromResult(new FormatterWriteOverrides(new List<IFormatStreamReaderWriter>
+                                {
+                                    jsonFormatter,
+                                    yamlFormatter
+                                }));
+                            }
+                        }
+                    }));
+            };
+
+            if (!string.IsNullOrWhiteSpace(openApiConfiguration.V2RouteTemplate))
+            {
+                add(nameof(OpenApiController.DocV2), openApiConfiguration.V2RouteTemplate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(openApiConfiguration.V3RouteTemplate))
+            {
+                add(nameof(OpenApiController.DocV3), openApiConfiguration.V3RouteTemplate);
+            }
         }
 
         /// <summary>Adds the ping endpoint.</summary>

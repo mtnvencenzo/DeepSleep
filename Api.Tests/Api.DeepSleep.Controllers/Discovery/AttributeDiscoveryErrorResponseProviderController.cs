@@ -3,15 +3,22 @@
     using global::DeepSleep;
     using global::DeepSleep.Auth;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryErrorResponseProviderController
     {
         private readonly IApiRequestContextResolver contextResolver;
 
+        /// <summary>Initializes a new instance of the <see cref="AttributeDiscoveryErrorResponseProviderController"/> class.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
         public AttributeDiscoveryErrorResponseProviderController(IApiRequestContextResolver contextResolver)
         {
             this.contextResolver = contextResolver;
         }
 
+        /// <summary>Gets the request validationt default.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/errorresponseprovider/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

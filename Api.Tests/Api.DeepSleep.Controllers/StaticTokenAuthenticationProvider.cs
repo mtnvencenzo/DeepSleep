@@ -20,7 +20,7 @@
         public string Scheme => "Token";
 
         /// <summary>Authenticates the specified context.</summary>
-        /// <param name="context">The context.</param>
+        /// <param name="contextResolver">The API request context resolver.</param>
         /// <returns>The <see cref="T:System.Threading.Tasks.Task" />.</returns>
         /// <exception cref="ArgumentException">StaticToken.Token is null or empty</exception>
         public Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)

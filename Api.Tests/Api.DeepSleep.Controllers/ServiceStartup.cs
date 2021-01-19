@@ -23,8 +23,13 @@
     using System.Reflection;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ServiceStartup
     {
+        /// <summary>Registers the services.</summary>
+        /// <param name="services">The services.</param>
         public static void RegisterServices(IServiceCollection services)
         {
             services.AddTransient<SimpleUrlBindingController>();
@@ -68,6 +73,8 @@
             services.AddScoped<CustomXmlFormatStreamReaderWriter>();
         }
 
+        /// <summary>Discoveries the strategies.</summary>
+        /// <returns></returns>
         public static IList<IRouteDiscoveryStrategy> DiscoveryStrategies()
         {
             var staticDiscovery = new StaticRouteDiscoveryStrategy();
@@ -1320,6 +1327,8 @@
             };
         }
 
+        /// <summary>Defaults the request configuration.</summary>
+        /// <returns></returns>
         public static IApiRequestConfiguration DefaultRequestConfiguration()
         {
             return new DefaultApiRequestConfiguration

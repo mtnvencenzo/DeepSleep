@@ -10,7 +10,7 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="DeepSleep.IApiErrorResponseProvider" />
+    /// <seealso cref="global::DeepSleep.Validation.IValidationErrorResponseProvider" />
     public class CommonErrorResponseProvider : IValidationErrorResponseProvider
     {
         /// <summary>Processes the specified API request context resolver.</summary>

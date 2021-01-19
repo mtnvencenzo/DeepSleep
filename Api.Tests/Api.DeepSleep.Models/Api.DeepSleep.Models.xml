@@ -9,6 +9,10 @@
             
             </summary>
         </member>
+        <member name="P:Api.DeepSleep.Models.CommonErrorResponse.Messages">
+            <summary>Gets or sets the messages.</summary>
+            <value>The messages.</value>
+        </member>
         <member name="T:Api.DeepSleep.Models.ErrorMessage">
             <summary>
             

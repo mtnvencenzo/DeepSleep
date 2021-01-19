@@ -5,6 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.ApiRouteErrorResponseProviderAttribute" />
     public class CustomListErrorResponseProviderAttribute : ApiRouteErrorResponseProviderAttribute
     {
         /// <summary>Processes the specified API request context resolver.</summary>

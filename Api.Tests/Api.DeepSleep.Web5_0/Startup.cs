@@ -1,15 +1,12 @@
 namespace Api.DeepSleep.Web5_0
 {
     using Api.DeepSleep.Controllers;
-    using global::DeepSleep.OpenApi.Web;
     using global::DeepSleep.Validation;
-    using global::DeepSleep.Validation.DataAnnotations;
     using global::DeepSleep.Web;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.OpenApi.Models;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -131,7 +128,6 @@ namespace Api.DeepSleep.Web5_0
         public void Configure(IApplicationBuilder app)
         {
             app
-                .UseOpenApiEndpoint()
                 .UseApiCoreHttp()
                 .UseForwardedHeaders();
         }

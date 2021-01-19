@@ -3,8 +3,13 @@
     using global::DeepSleep;
     using global::DeepSleep.Auth;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryRequestValidationController
     {
+        /// <summary>Gets the request validationt default.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -14,6 +19,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the request validationt specified.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -28,6 +35,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the length of the request validation requires content.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/require/contentlength")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -42,6 +51,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the request validation request body not allowed.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "discovery/attribute/requestvalidation/specified/requestbody/not/allowed")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

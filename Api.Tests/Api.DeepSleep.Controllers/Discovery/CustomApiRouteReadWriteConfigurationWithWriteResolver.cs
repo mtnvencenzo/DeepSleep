@@ -5,8 +5,16 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.ApiRouteReadWriteConfigurationAttribute" />
+    /// <seealso cref="global::DeepSleep.IApiRouteWriterResolver" />
     public class CustomApiRouteReadWriteConfigurationWithWriteResolver : ApiRouteReadWriteConfigurationAttribute, IApiRouteWriterResolver
     {
+        /// <summary>Resolves the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         Task<FormatterWriteOverrides> IApiRouteWriterResolver.Resolve(IApiRequestContextResolver contextResolver)
         {
             var formatters = new List<IFormatStreamReaderWriter>

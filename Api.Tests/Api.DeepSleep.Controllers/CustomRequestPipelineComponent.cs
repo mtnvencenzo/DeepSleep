@@ -7,7 +7,7 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="DeepSleep.Pipeline.IPipelineComponent" />
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent : IPipelineComponent
     {
         /// <summary>Invokes the specified context resolver.</summary>

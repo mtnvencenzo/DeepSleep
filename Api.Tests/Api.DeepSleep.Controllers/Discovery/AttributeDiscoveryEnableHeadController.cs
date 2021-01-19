@@ -4,8 +4,13 @@
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class AttributeDiscoveryEnableHeadController
     {
+        /// <summary>Gets the enable head default.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -15,6 +20,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the enable head true.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -24,6 +31,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the enable head true with caching.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/true/with/caching")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -34,6 +43,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the enable head false.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
@@ -43,6 +54,8 @@
             return new AttributeDiscoveryModel();
         }
 
+        /// <summary>Gets the enable head false with caching.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/enablehead/false/with/caching")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]

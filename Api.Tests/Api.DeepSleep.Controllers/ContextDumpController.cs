@@ -2,6 +2,9 @@
 {
     using global::DeepSleep;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ContextDumpController
     {
         /// <summary>Gets the with items.</summary>
@@ -11,6 +14,7 @@
         }
 
         /// <summary>Gets the with items.</summary>
+        /// <param name="model">The model.</param>
         /// <returns></returns>
         public ContextDump PostDump([BodyBound] ContextDump model)
         {
@@ -18,6 +22,9 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ContextDump
     {
         /// <summary>Gets or sets the value.</summary>

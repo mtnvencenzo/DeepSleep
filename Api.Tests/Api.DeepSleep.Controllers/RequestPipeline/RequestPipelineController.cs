@@ -9,15 +9,23 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Discovery.IRouteRegistrationProvider" />
     public class RequestPipelineController : IRouteRegistrationProvider
     {
         private readonly IApiRequestContextResolver contextResolver;
 
+        /// <summary>Initializes a new instance of the <see cref="RequestPipelineController"/> class.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
         public RequestPipelineController(IApiRequestContextResolver contextResolver)
         {
             this.contextResolver = contextResolver;
         }
 
+        /// <summary>Gets the configured after endpoint.</summary>
+        /// <returns></returns>
         public RequestPipelineModel GetConfiguredAfterEndpoint()
         {
             this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
@@ -28,6 +36,8 @@
             };
         }
 
+        /// <summary>Gets the configured before endpoint.</summary>
+        /// <returns></returns>
         public RequestPipelineModel GetConfiguredBeforeEndpoint()
         {
             this.contextResolver.GetContext().TryGetItem(nameof(CustomRequestPipelineComponent), out string item);
@@ -38,6 +48,8 @@
             };
         }
 
+        /// <summary>Gets the configured before validation.</summary>
+        /// <returns></returns>
         [ApiEndpointValidation(typeof(RequestPipelineModelValidator))]
         public RequestPipelineModel GetConfiguredBeforeValidation()
         {
@@ -49,6 +61,8 @@
             };
         }
 
+        /// <summary>Gets the attribute after endpoint.</summary>
+        /// <returns></returns>
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.AfterEndpointInvocation, 0)]
         public RequestPipelineModel GetAttributeAfterEndpoint()
         {
@@ -60,6 +74,8 @@
             };
         }
 
+        /// <summary>Gets the attribute before endpoint.</summary>
+        /// <returns></returns>
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointInvocation, 0)]
         public RequestPipelineModel GetAttributeBeforeEndpoint()
         {
@@ -71,6 +87,8 @@
             };
         }
 
+        /// <summary>Gets the attribute before validation.</summary>
+        /// <returns></returns>
         [ApiEndpointValidation(typeof(RequestPipelineModelValidator))]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent), PipelinePlacement.BeforeEndpointValidation, 0)]
         public RequestPipelineModel GetAttributeBeforeValidation()
@@ -83,6 +101,8 @@
             };
         }
 
+        /// <summary>Gets the attributes multiple.</summary>
+        /// <returns></returns>
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent4), PipelinePlacement.BeforeEndpointInvocation, 1)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent5), PipelinePlacement.BeforeEndpointInvocation, 0)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent3), PipelinePlacement.BeforeEndpointInvocation, 2)]
@@ -99,6 +119,8 @@
             };
         }
 
+        /// <summary>Gets the mixed multiple.</summary>
+        /// <returns></returns>
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent4), PipelinePlacement.BeforeEndpointInvocation, 1)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent5), PipelinePlacement.BeforeEndpointInvocation, 0)]
         [ApiRequestPipeline(typeof(CustomRequestPipelineComponent3), PipelinePlacement.BeforeEndpointInvocation, 2)]
@@ -116,6 +138,9 @@
         }
 
 
+        /// <summary>Gets the routes.</summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <returns></returns>
         public Task<IList<ApiRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
         {
             var routes = new List<ApiRouteRegistration>();
@@ -220,15 +245,29 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class RequestPipelineModel
     {
+        /// <summary>Gets or sets the value.</summary>
+        /// <value>The value.</value>
         public string Value { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Validation.IEndpointValidator" />
     public class RequestPipelineModelValidator : IEndpointValidator
     {
+        /// <summary>Gets the order.</summary>
+        /// <value>The order.</value>
         public int Order { get; }
 
+        /// <summary>Validates the specified API request context resolver.</summary>
+        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <returns></returns>
         public Task<IList<ApiValidationResult>> Validate(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -248,8 +287,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent1 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -263,8 +309,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent2 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -278,8 +331,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent3 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -293,8 +353,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent4 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -308,8 +375,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent5 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -323,8 +397,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent6 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -338,8 +419,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent7 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -353,8 +441,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent8 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();
@@ -368,8 +463,15 @@
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.Pipeline.IPipelineComponent" />
     public class CustomRequestPipelineComponent9 : IPipelineComponent
     {
+        /// <summary>Invokes the specified context resolver.</summary>
+        /// <param name="contextResolver">The context resolver.</param>
+        /// <returns></returns>
         public Task Invoke(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver?.GetContext();

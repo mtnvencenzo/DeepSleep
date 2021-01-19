@@ -4,6 +4,10 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="global::DeepSleep.ApiRouteErrorResponseProviderAttribute" />
     public class CustomApiRouteErrorResponseProviderAttribute : ApiRouteErrorResponseProviderAttribute
     {
         /// <summary>Processes the specified API request context resolver.</summary>

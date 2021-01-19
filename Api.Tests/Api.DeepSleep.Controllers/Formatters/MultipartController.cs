@@ -17,6 +17,8 @@
         {
         }
 
+        /// <summary>Posts the custom.</summary>
+        /// <param name="data">The data.</param>
         public void PostCustom([BodyBound] CustomMultiPart data)
         {
         }

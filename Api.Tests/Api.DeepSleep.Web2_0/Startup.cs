@@ -1,10 +1,8 @@
 namespace Api.DeepSleep.Web2_0
 {
     using Api.DeepSleep.Controllers;
-    using global::DeepSleep.OpenApi.Web;
-    using global::DeepSleep.Validation;
-    using global::DeepSleep.Validation.DataAnnotations;
     using global::DeepSleep.Web;
+    using global::DeepSleep.Validation;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -129,7 +127,6 @@ namespace Api.DeepSleep.Web2_0
         public void Configure(IApplicationBuilder app)
         {
             app
-                .UseOpenApiEndpoint()
                 .UseApiCoreHttp()
                 .UseForwardedHeaders();
         }

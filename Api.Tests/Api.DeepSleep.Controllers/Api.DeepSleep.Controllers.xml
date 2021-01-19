@@ -4,6 +4,70 @@
         <name>Api.DeepSleep.Controllers</name>
     </assembly>
     <members>
+        <member name="T:Api.DeepSleep.Controllers.Authentication.AuthenticationController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authentication.AuthenticationController.GetWithSingleSupportedScheme">
+            <summary>Gets the with single supported scheme.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authentication.AuthenticationController.GetWithMultipleSupportedScheme">
+            <summary>Gets the with multiple supported scheme.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authentication.AuthenticationController.GetWithNoSupportedScheme">
+            <summary>Gets the with no supported scheme.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authentication.AuthenticationController.GetWithSupportedSchemesNotDefined">
+            <summary>Gets the with supported schemes not defined.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authentication.AuthenticationController.GetWithAllowAnonymousTrue">
+            <summary>Gets the with allow anonymous true.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Authentication.AuthenticatedModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Authentication.AuthenticatedModel.Value">
+            <summary>Gets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Authorization.AuthorizationController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authorization.AuthorizationController.#ctor(DeepSleep.IApiRequestContextResolver)">
+            <summary>Initializes a new instance of the <see cref="T:Api.DeepSleep.Controllers.Authorization.AuthorizationController"/> class.</summary>
+            <param name="contextResolver">The context resolver.</param>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Authorization.AuthorizationController.GetWithAuthorization">
+            <summary>Gets the with authorization.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Authorization.AuthorizationModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Authorization.AuthorizationModel.Value">
+            <summary>Gets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Authorization.AuthorizationModel.IsAuthorized">
+            <summary>Gets or sets the is authorized.</summary>
+            <value>The is authorized.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Authorization.AuthorizationModel.AuthorizedBy">
+            <summary>Gets or sets the authorized by.</summary>
+            <value>The authorized by.</value>
+        </member>
         <member name="T:Api.DeepSleep.Controllers.Binding.ArrayController">
             <summary>
             
@@ -465,13 +529,24 @@
             <param name="errors">The errors.</param>
             <returns></returns>
         </member>
+        <member name="T:Api.DeepSleep.Controllers.ContextDumpController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:Api.DeepSleep.Controllers.ContextDumpController.GetDump">
             <summary>Gets the with items.</summary>
             <returns></returns>
         </member>
         <member name="M:Api.DeepSleep.Controllers.ContextDumpController.PostDump(Api.DeepSleep.Controllers.ContextDump)">
             <summary>Gets the with items.</summary>
+            <param name="model">The model.</param>
             <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.ContextDump">
+            <summary>
+            
+            </summary>
         </member>
         <member name="P:Api.DeepSleep.Controllers.ContextDump.Value">
             <summary>Gets or sets the value.</summary>
@@ -524,6 +599,209 @@
             <param name="contextResolver">The API request context resolver.</param>
             <returns></returns>
         </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthenticationController.GetAuthenticationAnonymousTrue">
+            <summary>Gets the authentication anonymous true.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthenticationController.GetAuthenticationAnonymousFalse">
+            <summary>Gets the authentication anonymous false.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthenticationController.GetAuthenticationSchemesNotSpecified">
+            <summary>Gets the authentication schemes not specified.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthenticationController.GetAuthenticationSchemesSpecifiedEmpty">
+            <summary>Gets the authentication schemes specified empty.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthenticationController.GetAuthenticationSchemesSpecified">
+            <summary>Gets the authentication schemes specified.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthorizationController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthorizationController.GetAuthorizationPolicyNull">
+            <summary>Gets the authorization policy null.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthorizationController.GetAuthorizationPolicyNotMatched">
+            <summary>Gets the authorization policy not matched.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthorizationController.GetAuthorizationPolicyEmpty">
+            <summary>Gets the authorization policy empty.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryAuthorizationController.GetAuthorizationPolicyDefault">
+            <summary>Gets the authorization policy default.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCacheDirectiveController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCacheDirectiveController.GetCacheDirectiveDefault">
+            <summary>Gets the cache directive default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCacheDirectiveController.GetAuthorizationPolicyNotMatched">
+            <summary>Gets the authorization policy not matched.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryController.#ctor(DeepSleep.IApiRequestContextResolver)">
+            <summary>Initializes a new instance of the <see cref="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryController"/> class.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <exception cref="T:System.ArgumentNullException">contextResolver</exception>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryController.Get">
+            <summary>Gets this instance.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController.GetCrossOriginDefault">
+            <summary>Gets the cross origin default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController.GetCrossOriginDefaultWithCaching">
+            <summary>Gets the cross origin default with caching.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController.GetCrossOriginSpecifiedEmpty">
+            <summary>Gets the cross origin specified empty.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController.GetCrossOriginSpecified">
+            <summary>Gets the cross origin specified.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryCrossOriginController.GetCrossOriginSpecifiedWithCacheControl">
+            <summary>Gets the cross origin specified with cache control.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryDeprecatedController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryDeprecatedController.GetDeprecated">
+            <summary>Gets the deprecated.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryDeprecatedController.GetDeprecatedTrue">
+            <summary>Gets the deprecated true.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryDeprecatedController.GetDeprecatedFalse">
+            <summary>Gets the deprecated false.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController.GetEnableHeadDefault">
+            <summary>Gets the enable head default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController.GetEnableHeadTrue">
+            <summary>Gets the enable head true.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController.GetEnableHeadTrueWithCaching">
+            <summary>Gets the enable head true with caching.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController.GetEnableHeadFalse">
+            <summary>Gets the enable head false.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryEnableHeadController.GetEnableHeadFalseWithCaching">
+            <summary>Gets the enable head false with caching.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryErrorResponseProviderController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryErrorResponseProviderController.#ctor(DeepSleep.IApiRequestContextResolver)">
+            <summary>Initializes a new instance of the <see cref="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryErrorResponseProviderController"/> class.</summary>
+            <param name="contextResolver">The context resolver.</param>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryErrorResponseProviderController.GetRequestValidationtDefault">
+            <summary>Gets the request validationt default.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryIncludeRequestHeaderController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryIncludeRequestHeaderController.GetIncludeRequestHeaderDefault">
+            <summary>Gets the include request header default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryIncludeRequestHeaderController.GetIncludeRequestHeaderTrue">
+            <summary>Gets the include request header true.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryIncludeRequestHeaderController.GetIncludeRequestHeaderFalse">
+            <summary>Gets the include request header false.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController.GetLanguageSupportDefault">
+            <summary>Gets the language support default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController.GetLanguageSupportWithFallbackDeDe">
+            <summary>Gets the language support with fallback de de.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController.GetLanguageSupportWithFallbackEn">
+            <summary>Gets the language support with fallback en.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController.GetLanguageSupportWithFallbackEnAndSupported">
+            <summary>Gets the language support with fallback en and supported.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageSupportController.GetLanguageSupportWithFallbackEnAndSupportedSetsThreadCultures">
+            <summary>Gets the language support with fallback en and supported sets thread cultures.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageModel.CurrentUICulture">
+            <summary>Gets or sets the current UI culture.</summary>
+            <value>The current UI culture.</value>
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryLanguageModel.CurrentCulture">
+            <summary>Gets or sets the current culture.</summary>
+            <value>The current culture.</value>
+        </member>
         <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel">
             <summary>
             
@@ -541,10 +819,137 @@
             <summary>Gets or sets the custom int.</summary>
             <value>The custom int.</value>
         </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryPipelineController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryPipelineController.GetPipelineBeforeValidation">
+            <summary>Gets the pipeline before validation.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteDefault">
+            <summary>Gets the read write default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteAcceptHeaderOverride">
+            <summary>Gets the read write accept header override.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteWriteableMediaTypesOverride">
+            <summary>Gets the read write writeable media types override.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteReadableMediaTypesOverride(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the read write readable media types override.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteReaderResolverOverride(System.String)">
+            <summary>Gets the read write reader resolver override.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryReadWriteController.GetReadWriteWriterResolverOverride">
+            <summary>Gets the read write writer resolver override.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryRequestValidationController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryRequestValidationController.GetRequestValidationtDefault">
+            <summary>Gets the request validationt default.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryRequestValidationController.GetRequestValidationtSpecified">
+            <summary>Gets the request validationt specified.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryRequestValidationController.GetRequestValidationRequiresContentLength">
+            <summary>Gets the length of the request validation requires content.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryRequestValidationController.GetRequestValidationRequestBodyNotAllowed">
+            <summary>Gets the request validation request body not allowed.</summary>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorDefault(System.Nullable{System.Int32},Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error default.</summary>
+            <param name="queryValue">The query value.</param>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorSpecifiedEmpty(System.Nullable{System.Int32},Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error specified empty.</summary>
+            <param name="queryValue">The query value.</param>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorSpecifiedCustomNoReplacements(System.Nullable{System.Int32},Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error specified custom no replacements.</summary>
+            <param name="queryValue">The query value.</param>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorSpecifiedCustomWithReplacements(System.Nullable{System.Int32},Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error specified custom with replacements.</summary>
+            <param name="queryValue">The query value.</param>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorDefaultDeserializationError(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error default deserialization error.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorCustomDeserializationError(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error custom deserialization error.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorUse450DeserializationError(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error use450 deserialization error.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorUse400DeserializationErrorForStrict(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error use400 deserialization error for strict.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryValidationErrorController.GetValidationErrorUse400DeserializationErrorForCommon(Api.DeepSleep.Controllers.Discovery.AttributeDiscoveryModel)">
+            <summary>Gets the validation error use400 deserialization error for common.</summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
         <member name="M:Api.DeepSleep.Controllers.Discovery.CustomApiRouteErrorResponseProviderAttribute.Process(DeepSleep.IApiRequestContextResolver,System.Collections.Generic.IList{System.String})">
             <summary>Processes the specified API request context resolver.</summary>
             <param name="contextResolver">The API request context resolver.</param>
             <param name="errors">The errors.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Discovery.CustomApiRouteReadWriteConfigurationWithWriteResolver">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.ApiRouteReadWriteConfigurationAttribute" />
+            <seealso cref="!:DeepSleep.IApiRouteWriterResolver" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Discovery.CustomApiRouteReadWriteConfigurationWithWriteResolver.DeepSleep#IApiRouteWriterResolver#Resolve(DeepSleep.IApiRequestContextResolver)">
+            <summary>Resolves the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
             <returns></returns>
         </member>
         <member name="T:Api.DeepSleep.Controllers.Ex500AuthenticationProvider">
@@ -777,6 +1182,184 @@
             <param name="contextResolver">The API request context resolver.</param>
             <returns></returns>
         </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Discovery.IRouteRegistrationProvider" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.#ctor(DeepSleep.IApiRequestContextResolver)">
+            <summary>Initializes a new instance of the <see cref="T:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController"/> class.</summary>
+            <param name="contextResolver">The context resolver.</param>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetConfiguredAfterEndpoint">
+            <summary>Gets the configured after endpoint.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetConfiguredBeforeEndpoint">
+            <summary>Gets the configured before endpoint.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetConfiguredBeforeValidation">
+            <summary>Gets the configured before validation.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetAttributeAfterEndpoint">
+            <summary>Gets the attribute after endpoint.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetAttributeBeforeEndpoint">
+            <summary>Gets the attribute before endpoint.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetAttributeBeforeValidation">
+            <summary>Gets the attribute before validation.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetAttributesMultiple">
+            <summary>Gets the attributes multiple.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetMixedMultiple">
+            <summary>Gets the mixed multiple.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineController.GetRoutes(System.IServiceProvider)">
+            <summary>Gets the routes.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineModelValidator">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineModelValidator.Order">
+            <summary>Gets the order.</summary>
+            <value>The order.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.RequestPipelineModelValidator.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent1">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent1.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent2">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent2.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent3">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent3.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent4">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent4.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent5">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent5.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent6">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent6.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent7">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent7.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent8">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent8.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent9">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Pipeline.IPipelineComponent" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.RequestPipeline.CustomRequestPipelineComponent9.Invoke(DeepSleep.IApiRequestContextResolver)">
+            <summary>Invokes the specified context resolver.</summary>
+            <param name="contextResolver">The context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.ServiceUnavailableExceptionThrowValidator">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.ServiceUnavailableExceptionThrowValidator.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:DeepSleep.ApiServiceUnavailableException"></exception>
+        </member>
         <member name="T:Api.DeepSleep.Controllers.Static2TokenAuthenticationProvider">
             <summary>
             
@@ -845,6 +1428,178 @@
         <member name="M:Api.DeepSleep.Controllers.SuccessAuthenticationProvider.CanHandleAuthScheme(System.String)">
             <summary>Determines whether this instance [can handle authentication scheme] the specified scheme.</summary>
             <param name="scheme">The scheme.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.UnhandledExceptionThrowValidator">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.UnhandledExceptionThrowValidator.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.DataAnnotationsValidateObjectController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.DataAnnotationsValidateObjectController.PostMixedEndpointObjectValidations(Api.DeepSleep.Controllers.Validation.ValidateObjectUriModel,Api.DeepSleep.Controllers.Validation.ValidateObjectBodyModel)">
+            <summary>Posts the mixed endpoint object validations.</summary>
+            <param name="uri">The URI.</param>
+            <param name="body">The body.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.ValidateObjectUriModel">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:System.ComponentModel.DataAnnotations.IValidatableObject" />
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Validation.ValidateObjectUriModel.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidateObjectUriModel.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>Determines whether the specified object is valid.</summary>
+            <param name="validationContext">The validation context.</param>
+            <returns>A collection that holds failed-validation information.</returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.ValidateObjectBodyModel">
+            <summary>
+            
+            </summary>
+            <seealso cref="T:System.ComponentModel.DataAnnotations.IValidatableObject" />
+        </member>
+        <member name="P:Api.DeepSleep.Controllers.Validation.ValidateObjectBodyModel.Value">
+            <summary>Gets or sets the value.</summary>
+            <value>The value.</value>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidateObjectBodyModel.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>Determines whether the specified object is valid.</summary>
+            <param name="validationContext">The validation context.</param>
+            <returns>A collection that holds failed-validation information.</returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.ValidateObjectModelValidator">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidateObjectModelValidator.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.ValidatorController">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Discovery.IRouteRegistrationProvider" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.Get">
+            <summary>Gets this instance.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.GetMixed">
+            <summary>Gets the mixed.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.GetMixedMultiFailures">
+            <summary>Gets the mixed multi failures.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.GetFailureWith404StatusCode">
+            <summary>Gets the failure with404 status code.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.GetFailureWithMixedConfiguredAndAttribute">
+            <summary>Gets the failure with mixed configured and attribute.</summary>
+            <returns></returns>
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.ValidatorController.GetRoutes(System.IServiceProvider)">
+            <summary>Gets the routes.</summary>
+            <param name="serviceProvider">The service provider.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator1">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator1.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator2">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator2.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator3">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator3.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="apiRequestContextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator4">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator4.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator5">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidator5.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidatorSuccess4">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidatorSuccess4.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidatorSuccess5">
+            <summary>
+            
+            </summary>
+            <seealso cref="!:DeepSleep.Validation.IEndpointValidator" />
+        </member>
+        <member name="M:Api.DeepSleep.Controllers.Validation.RequestPipelineModelValidatorSuccess5.Validate(DeepSleep.IApiRequestContextResolver)">
+            <summary>Validates the specified API request context resolver.</summary>
+            <param name="contextResolver">The API request context resolver.</param>
             <returns></returns>
         </member>
     </members>
