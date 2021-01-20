@@ -212,6 +212,19 @@
         /// <returns></returns>
         private OpenApiSchema GetRouteVariableSchema(string routeVar, ApiEndpointLocation location)
         {
+            if (location.SimpleParameters != null)
+            {
+                var simpleParameter = location.SimpleParameters.FirstOrDefault(p => string.Compare($"{p.Name}", routeVar, true) == 0);
+
+                if (simpleParameter != null)
+                {
+                    return new OpenApiSchema
+                    {
+                        Type = Helpers.GetOpenApiSchemaType(simpleParameter.ParameterType)
+                    };
+                }
+            }
+
             var uriParameter = location.GetUriParameterInfo();
 
             if (uriParameter != null)
@@ -220,7 +233,7 @@
                    .Where(p => p.CanWrite)
                    .ToArray();
 
-                var prop = properties.FirstOrDefault(p => string.Compare($"{{{p.Name}}}", routeVar, true) == 0);
+                var prop = properties.FirstOrDefault(p => string.Compare($"{p.Name}", routeVar, true) == 0);
 
                 if (prop != null)
                 {
@@ -230,6 +243,7 @@
                     };
                 }
             }
+
 
             return null;
         }

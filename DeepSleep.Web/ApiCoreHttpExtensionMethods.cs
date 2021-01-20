@@ -72,19 +72,17 @@
         /// <param name="services">The services.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config)
+        public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config = null)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
-
             var routingTable = new DefaultApiRoutingTable();
 
-            config.JsonFormatterConfiguration = config.JsonFormatterConfiguration ?? GetDefaultJsonFormattingConfiguration();
-            config.XmlFormatterConfiguration = config.XmlFormatterConfiguration ?? GetDefaultXmlFormattingConfiguration();
-            config.MultipartFormDataFormatterConfiguration = config.MultipartFormDataFormatterConfiguration ?? GetDefaultMultipartFormDataFormattingConfiguration();
-            config.FormUrlEncodedFormatterConfiguration = config.FormUrlEncodedFormatterConfiguration ?? GetDefaultFormUrlEncodedFormattingConfiguration();
+            var cconfiguration = config ?? new DefaultApiServiceConfiguration();
+
+            cconfiguration.JsonFormatterConfiguration = config?.JsonFormatterConfiguration ?? GetDefaultJsonFormattingConfiguration();
+            cconfiguration.XmlFormatterConfiguration = config?.XmlFormatterConfiguration ?? GetDefaultXmlFormattingConfiguration();
+            cconfiguration.MultipartFormDataFormatterConfiguration = config?.MultipartFormDataFormatterConfiguration ?? GetDefaultMultipartFormDataFormattingConfiguration();
+            cconfiguration.FormUrlEncodedFormatterConfiguration = config?.FormUrlEncodedFormatterConfiguration ?? GetDefaultFormUrlEncodedFormattingConfiguration();
+            cconfiguration.DefaultRequestConfiguration = config?.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration();
 
             services
                 .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
@@ -94,27 +92,27 @@
                 .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
                 .AddScoped<IApiValidationProvider, ApiEndpointValidationProvider>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => ApiRequestPipeline.GetDefaultRequestPipeline())
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => config.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration())
-                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => config)
+                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => cconfiguration.DefaultRequestConfiguration)
+                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => cconfiguration)
                 .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
 
 
-            if (config.JsonFormatterConfiguration.DisableFormatter == false)
+            if (cconfiguration.JsonFormatterConfiguration?.DisableFormatter == false)
             {
                 services.AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>();
             }
 
-            if (config.XmlFormatterConfiguration.DisableFormatter == false)
+            if (cconfiguration.XmlFormatterConfiguration?.DisableFormatter == false)
             {
                 services.AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>();
             }
 
-            if (config.MultipartFormDataFormatterConfiguration.DisableFormatter == false)
+            if (cconfiguration.MultipartFormDataFormatterConfiguration?.DisableFormatter == false)
             {
                 services.AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>();
             }
 
-            if (config.FormUrlEncodedFormatterConfiguration.DisableFormatter == false)
+            if (cconfiguration.FormUrlEncodedFormatterConfiguration?.DisableFormatter == false)
             {
                 services.AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>();
             }

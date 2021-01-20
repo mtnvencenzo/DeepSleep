@@ -10,7 +10,7 @@
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("[{HttpMethod}] {Template}")]
+    [DebuggerDisplay("[{HttpMethods}] {Template}")]
     public class ApiRouteRegistration
     {
         /// <summary>Initializes a new instance of the <see cref="ApiRouteRegistration"/> class.</summary>
@@ -18,7 +18,11 @@
         /// <param name="httpMethods">The HTTP methods.</param>
         /// <param name="controller">The controller.</param>
         /// <param name="endpoint">The endpoint.</param>
-        public ApiRouteRegistration(string template, IList<string> httpMethods, Type controller, string endpoint)
+        public ApiRouteRegistration(
+            string template, 
+            IList<string> httpMethods, 
+            Type controller, 
+            string endpoint)
             : this(template, httpMethods, controller, endpoint, null)
         {
         }
@@ -36,7 +40,12 @@
         /// or
         /// </exception>
         /// <exception cref="System.MissingMethodException"></exception>
-        public ApiRouteRegistration(string template, IList<string> httpMethods, Type controller, string endpoint, IApiRequestConfiguration config)
+        public ApiRouteRegistration(
+            string template, 
+            IList<string> httpMethods, 
+            Type controller, 
+            string endpoint, 
+            IApiRequestConfiguration config)
         {
             if (controller == null)
             {

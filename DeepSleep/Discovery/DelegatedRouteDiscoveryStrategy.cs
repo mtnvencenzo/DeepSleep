@@ -13,17 +13,27 @@
     /// <seealso cref="DeepSleep.Discovery.IRouteDiscoveryStrategy" />
     public class DelegatedRouteDiscoveryStrategy : IRouteDiscoveryStrategy
     {
-        private readonly string assemblyDirectoryPath;
-        private readonly string assemblyMatchPattern;
+        /// <summary>The assembly directory path</summary>
+        protected readonly string assemblyDirectoryPath;
+        /// <summary>The assembly match pattern</summary>
+        protected readonly string assemblyMatchPattern;
+        /// <summary>The search option</summary>
+        protected readonly SearchOption searchOption;
 
-        /// <summary>Initializes a new instance of the <see cref="DelegatedRouteDiscoveryStrategy"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="DelegatedRouteDiscoveryStrategy" /> class.</summary>
         /// <param name="assemblyDirectoryPath">The assembly directory path.</param>
         /// <param name="assemblyMatchPattern">The assembly match pattern.</param>
-        public DelegatedRouteDiscoveryStrategy(string assemblyDirectoryPath, string assemblyMatchPattern = null)
+        /// <param name="searchOption">The search option.</param>
+        public DelegatedRouteDiscoveryStrategy(
+            string assemblyDirectoryPath, 
+            string assemblyMatchPattern = null, 
+            SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             this.assemblyDirectoryPath = assemblyDirectoryPath;
 
             this.assemblyMatchPattern = assemblyMatchPattern ?? "*";
+
+            this.searchOption = searchOption;
         }
 
         /// <summary>Discovers the routes.</summary>
@@ -44,11 +54,14 @@
         /// <param name="assemblyDirectoryPath">The assembly directory path.</param>
         /// <param name="assemblyMatchPattern">The assembly match pattern.</param>
         /// <returns></returns>
-        protected virtual async Task<IList<ApiRouteRegistration>> DiscoverRoutes(IServiceProvider serviceProvider, string assemblyDirectoryPath, string assemblyMatchPattern)
+        protected virtual async Task<IList<ApiRouteRegistration>> DiscoverRoutes(
+            IServiceProvider serviceProvider, 
+            string assemblyDirectoryPath, 
+            string assemblyMatchPattern)
         {
             var registrations = new List<ApiRouteRegistration>();
 
-            var files = Directory.GetFiles(assemblyDirectoryPath, assemblyMatchPattern, SearchOption.AllDirectories);
+            var files = Directory.GetFiles(assemblyDirectoryPath, assemblyMatchPattern, this.searchOption);
 
             foreach (var file in files)
             {

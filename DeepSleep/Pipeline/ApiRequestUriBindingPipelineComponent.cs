@@ -52,9 +52,8 @@
 
         /// <summary>Processes the HTTP request URI binding.</summary>
         /// <param name="context">The context.</param>
-        /// <param name="formUrlEncodedObjectSerializer">The form url serializer.</param>
+        /// <param name="formUrlEncodedObjectSerializer">The form URL encoded object serializer.</param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         internal static async Task<bool> ProcessHttpRequestUriBinding(this ApiRequestContext context, IFormUrlEncodedObjectSerializer formUrlEncodedObjectSerializer)
         {
             if (!context.RequestAborted.IsCancellationRequested)
@@ -87,84 +86,81 @@
                         }
                     }
 
-                    if (!addedBindingError)
+                    // ----------------------------------------
+                    // Bind the Simple Parameters if exists
+                    // ----------------------------------------
+                    if ((context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
                     {
-                        // ----------------------------------------
-                        // Bind the UrlModel if UrlModelType exists
-                        // ----------------------------------------
-                        if (context.Routing.Route.Location.UriParameterType != null)
+                        foreach (var nameValue in nameValues)
                         {
-                            var bindingValues = nameValues
-                                .Select(kv => $"{kv.Key}={kv.Value}");
+                            var simpleParameter = context.Request.InvocationContext.SimpleParameters
+                                .Where(s => s.Value == null)
+                                .FirstOrDefault(p => p.Key.Name == nameValue.Key).Key;
 
-                            var formUrlEncoded = string.Join("&", bindingValues);
-
-                            try
+                            // case insensitive check
+                            if (simpleParameter == null)
                             {
-                                var uriModel = await formUrlEncodedObjectSerializer.Deserialize(
-                                    formUrlEncoded,
-                                    context.Routing.Route.Location.UriParameterType,
-                                    true).ConfigureAwait(false);
-
-                                context.Request.InvocationContext.UriModel = uriModel;
+                                simpleParameter = context.Request.InvocationContext.SimpleParameters
+                                    .Where(s => s.Value == null)
+                                    .FirstOrDefault(p => string.Compare(p.Key.Name, nameValue.Key, true) == 0).Key;
                             }
-                            catch (JsonException ex)
+
+                            if (simpleParameter != null && context.Request.InvocationContext.SimpleParameters.ContainsKey(simpleParameter))
                             {
-                                addedBindingError = true;
-
-                                var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingError ?? string.Empty;
-
-                                var errorMessage = error.Replace("{paramName}", ex.Path?.TrimStart('$', '.') ?? string.Empty);
-
-                                if (!string.IsNullOrWhiteSpace(errorMessage))
+                                try
                                 {
-                                    context.Validation.Errors.Add(errorMessage);
+                                    context.Request.InvocationContext.SimpleParameters[simpleParameter] = ConvertValue(nameValue.Value, simpleParameter.ParameterType);
+                                }
+                                catch
+                                {
+                                    addedBindingError = true;
+
+                                    var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingValueError ?? string.Empty;
+
+                                    var errorMessage = error
+                                        .Replace("{paramName}", simpleParameter.Name)
+                                        .Replace("{paramValue}", nameValue.Value ?? string.Empty)
+                                        .Replace("{paramType}", simpleParameter.ParameterType.Name);
+
+                                    if (!string.IsNullOrWhiteSpace(errorMessage))
+                                    {
+                                        context.Validation.Errors.Add(errorMessage);
+                                    }
                                 }
                             }
                         }
+                    }
 
-                        // ----------------------------------------
-                        // Bind the Simple Parameters if exists
-                        // ----------------------------------------
-                        if ((context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
+                    // ----------------------------------------
+                    // Bind the UrlModel if UrlModelType exists
+                    // ----------------------------------------
+                    if (context.Routing.Route.Location.UriParameterType != null)
+                    {
+                        var bindingValues = nameValues
+                            .Select(kv => $"{kv.Key}={kv.Value}");
+
+                        var formUrlEncoded = string.Join("&", bindingValues);
+
+                        try
                         {
-                            foreach (var nameValue in nameValues)
+                            var uriModel = await formUrlEncodedObjectSerializer.Deserialize(
+                                formUrlEncoded,
+                                context.Routing.Route.Location.UriParameterType,
+                                true).ConfigureAwait(false);
+
+                            context.Request.InvocationContext.UriModel = uriModel;
+                        }
+                        catch (JsonException ex)
+                        {
+                            addedBindingError = true;
+
+                            var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingError ?? string.Empty;
+
+                            var errorMessage = error.Replace("{paramName}", ex.Path?.TrimStart('$', '.') ?? string.Empty);
+
+                            if (!string.IsNullOrWhiteSpace(errorMessage))
                             {
-                                var simpleParameter = context.Request.InvocationContext.SimpleParameters
-                                    .Where(s => s.Value == null)
-                                    .FirstOrDefault(p => p.Key.Name == nameValue.Key).Key;
-
-                                // case insensitive check
-                                if (simpleParameter == null)
-                                {
-                                    simpleParameter = context.Request.InvocationContext.SimpleParameters
-                                        .Where(s => s.Value == null)
-                                        .FirstOrDefault(p => string.Compare(p.Key.Name, nameValue.Key, true) == 0).Key;
-                                }
-
-                                if (simpleParameter != null && context.Request.InvocationContext.SimpleParameters.ContainsKey(simpleParameter))
-                                {
-                                    try
-                                    {
-                                        context.Request.InvocationContext.SimpleParameters[simpleParameter] = ConvertValue(nameValue.Value, simpleParameter.ParameterType);
-                                    }
-                                    catch
-                                    {
-                                        addedBindingError = true;
-
-                                        var error = context.Configuration?.ValidationErrorConfiguration?.UriBindingValueError ?? string.Empty;
-
-                                        var errorMessage = error
-                                            .Replace("{paramName}", simpleParameter.Name)
-                                            .Replace("{paramValue}", nameValue.Value ?? string.Empty)
-                                            .Replace("{paramType}", simpleParameter.ParameterType.Name);
-
-                                        if (!string.IsNullOrWhiteSpace(errorMessage))
-                                        {
-                                            context.Validation.Errors.Add(errorMessage);
-                                        }
-                                    }
-                                }
+                                context.Validation.Errors.Add(errorMessage);
                             }
                         }
                     }
