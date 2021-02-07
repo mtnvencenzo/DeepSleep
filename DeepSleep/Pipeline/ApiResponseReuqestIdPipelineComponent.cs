@@ -30,7 +30,7 @@
                      .GetContext()
                      .SetThreadCulure();
 
-                var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
+                var defaultRequestConfig = context?.RequestServices?.GetService<IDeepSleepRequestConfiguration>();
 
                 await context.ProcessHttpResponseRequestId(defaultRequestConfig).ConfigureAwait(false);
             }
@@ -54,7 +54,7 @@
         /// <param name="context">The context.</param>
         /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpResponseRequestId(this ApiRequestContext context, IApiRequestConfiguration defaultRequestConfiguration)
+        internal static Task<bool> ProcessHttpResponseRequestId(this ApiRequestContext context, IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

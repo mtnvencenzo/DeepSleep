@@ -31,7 +31,7 @@
 
             var routes = context?.RequestServices?.GetService<IApiRoutingTable>();
             var resolver = context?.RequestServices?.GetService<IUriRouteResolver>();
-            var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
+            var defaultRequestConfig = context?.RequestServices?.GetService<IDeepSleepRequestConfiguration>();
 
             if (await context.ProcessHttpRequestRouting(routes, resolver, defaultRequestConfig).ConfigureAwait(false))
             {
@@ -62,7 +62,7 @@
         internal static async Task<bool> ProcessHttpRequestRouting(this ApiRequestContext context,
             IApiRoutingTable routes,
             IUriRouteResolver resolver,
-            IApiRequestConfiguration defaultRequestConfig)
+            IDeepSleepRequestConfiguration defaultRequestConfig)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -72,7 +72,10 @@
                     context.Routing.Template = await context.GetRoutingTemplate(resolver, routes).ConfigureAwait(false);
                 }
 
-                context.Configuration = MergeConfigurations(context, defaultRequestConfig, context.Routing?.Route?.Configuration);
+                context.Configuration = MergeConfigurations(
+                    serviceProvider: context?.RequestServices, 
+                    defaultConfig: defaultRequestConfig, 
+                    endpointConfig: context.Routing?.Route?.Configuration);
 
                 if (context.Routing.Route?.Location?.MethodInfo != null)
                 {
@@ -144,7 +147,7 @@
         private static async Task<ApiRoutingItem> GetRoutingItem(this ApiRequestContext context,
             IUriRouteResolver resolver,
             IApiRoutingTable routes,
-            IApiRequestConfiguration defaultRequestConfiguration)
+            IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             // -----------------------------------------------------------------
             // We want to trick the routing engine to treat HEAD requests as GET
@@ -255,9 +258,8 @@
 
                     template.Locations.Add(new ApiEndpointLocation(
                         controller: route.Location.Controller,
-                        endpoint: route.Location.Endpoint,
-                        httpMethod: route.Location.HttpMethod,
                         methodInfo: route.Location.MethodInfo,
+                        httpMethod: route.Location.HttpMethod,
                         bodyParameterType: route.Location.BodyParameterType,
                         uriParameterType: route.Location.UriParameterType,
                         simpleParameters: route.Location.SimpleParameters,
@@ -269,20 +271,20 @@
         }
 
         /// <summary>Merges the configurations.</summary>
-        /// <param name="context">The context.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <param name="defaultConfig">The default configuration.</param>
         /// <param name="endpointConfig">The endpoint configuration.</param>
         /// <returns></returns>
-        private static IApiRequestConfiguration MergeConfigurations(
-            ApiRequestContext context,
-            IApiRequestConfiguration defaultConfig,
-            IApiRequestConfiguration endpointConfig)
+        internal static IDeepSleepRequestConfiguration MergeConfigurations(
+            IServiceProvider serviceProvider,
+            IDeepSleepRequestConfiguration defaultConfig,
+            IDeepSleepRequestConfiguration endpointConfig)
         {
-            IApiRequestConfiguration systemConfig = ApiRequestContext.GetDefaultRequestConfiguration();
+            IDeepSleepRequestConfiguration systemConfig = ApiRequestContext.GetDefaultRequestConfiguration();
 
-            IApiRequestConfiguration requestConfig = (endpointConfig != null)
-                ? GetNewConfiguration(context, endpointConfig)
-                : GetNewConfiguration(context, defaultConfig);
+            IDeepSleepRequestConfiguration requestConfig = (endpointConfig != null)
+                ? GetNewConfiguration(serviceProvider, endpointConfig)
+                : GetNewConfiguration(serviceProvider, defaultConfig);
 
             if (requestConfig == null)
             {
@@ -560,7 +562,7 @@
             // ----------------------------
             if (endpointConfig?.ReadWriteConfiguration != null || defaultConfig?.ReadWriteConfiguration != null)
             {
-                requestConfig.ReadWriteConfiguration = new ApiReadWriteConfiguration
+                requestConfig.ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     ReaderResolver = endpointConfig?.ReadWriteConfiguration?.ReaderResolver
                         ?? defaultConfig?.ReadWriteConfiguration?.ReaderResolver
@@ -639,30 +641,30 @@
         }
 
         /// <summary>Resolves the configuration.</summary>
-        /// <param name="context">The context.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        private static IApiRequestConfiguration GetNewConfiguration(ApiRequestContext context, IApiRequestConfiguration config)
+        private static IDeepSleepRequestConfiguration GetNewConfiguration(IServiceProvider serviceProvider, IDeepSleepRequestConfiguration config)
         {
             if (config == null)
             {
                 return null;
             }
 
-            IApiRequestConfiguration init = null;
+            IDeepSleepRequestConfiguration init = null;
 
-            if (context?.RequestServices != null)
+            if (serviceProvider != null)
             {
                 try
                 {
-                    init = context.RequestServices.GetService(config.GetType()) as IApiRequestConfiguration;
+                    init = serviceProvider.GetService(config.GetType()) as IDeepSleepRequestConfiguration;
                 }
                 catch { }
             }
 
             if (init == null)
             {
-                init = Activator.CreateInstance(config.GetType()) as IApiRequestConfiguration;
+                init = Activator.CreateInstance(config.GetType()) as IDeepSleepRequestConfiguration;
             }
 
             return init;

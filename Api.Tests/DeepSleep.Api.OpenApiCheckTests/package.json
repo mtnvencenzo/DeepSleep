@@ -1,0 +1,13 @@
+{
+  "name": "deepsleep.api",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "generate-v3": "set NODE_TLS_REJECT_UNAUTHORIZED=0&autorest --v3 --input-file=http://localhost:5000/openapi/v3/doc --output-folder=./v3/Clients/DeepSleepApi --namespace=DeepSleep.Api.OpenApiCheckTests.v3 --override-client-name=DeepSleepApi --csharp --add-credentials --use-datetimeoffset",
+    "generate-v2": "set NODE_TLS_REJECT_UNAUTHORIZED=0&autorest --v3 --input-file=http://localhost:5000/openapi/v2/doc --output-folder=./v2/Clients/DeepSleepApi --namespace=DeepSleep.Api.OpenApiCheckTests.v2 --override-client-name=DeepSleepApi --csharp --add-credentials --use-datetimeoffset"
+  },
+  "devDependencies": {
+    "autorest": "3.0.6336"
+  }
+}

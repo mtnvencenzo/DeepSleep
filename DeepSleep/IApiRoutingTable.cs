@@ -15,11 +15,11 @@
         /// <summary>Adds the route.</summary>
         /// <param name="registration">The registration.</param>
         /// <returns></returns>
-        IApiRoutingTable AddRoute(ApiRouteRegistration registration);
+        IApiRoutingTable AddRoute(DeepSleepRouteRegistration registration);
 
         /// <summary>Adds the routes.</summary>
         /// <param name="registrations">The registrations.</param>
         /// <returns></returns>
-        IApiRoutingTable AddRoutes(IList<ApiRouteRegistration> registrations);
+        IApiRoutingTable AddRoutes(IList<DeepSleepRouteRegistration> registrations);
     }
 }

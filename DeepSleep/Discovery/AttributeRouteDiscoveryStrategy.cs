@@ -11,8 +11,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="DeepSleep.Discovery.IRouteDiscoveryStrategy" />
-    public class AttributeRouteDiscoveryStrategy : IRouteDiscoveryStrategy
+    /// <seealso cref="DeepSleep.Discovery.IDeepSleepDiscoveryStrategy" />
+    public class AttributeRouteDiscoveryStrategy : IDeepSleepDiscoveryStrategy
     {
         /// <summary>The assembly directory path</summary>
         protected readonly string assemblyDirectoryPath;
@@ -40,7 +40,7 @@
         /// <summary>Discovers the routes.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        public virtual async Task<IList<ApiRouteRegistration>> DiscoverRoutes(
+        public virtual async Task<IList<DeepSleepRouteRegistration>> DiscoverRoutes(
             IServiceProvider serviceProvider)
         {
             if (this.assemblyDirectoryPath != null)
@@ -48,7 +48,7 @@
                 return await this.DiscoverRoutes(serviceProvider, this.assemblyDirectoryPath, this.assemblyMatchPattern).ConfigureAwait(false);
             }
 
-            return new List<ApiRouteRegistration>();
+            return new List<DeepSleepRouteRegistration>();
         }
 
         /// <summary>Discovers the routes.</summary>
@@ -56,12 +56,12 @@
         /// <param name="assemblyDirectoryPath">The assembly directory path.</param>
         /// <param name="assemblyMatchPattern">The assembly match pattern.</param>
         /// <returns></returns>
-        protected virtual Task<IList<ApiRouteRegistration>> DiscoverRoutes(
+        protected virtual Task<IList<DeepSleepRouteRegistration>> DiscoverRoutes(
             IServiceProvider serviceProvider, 
             string assemblyDirectoryPath, 
             string assemblyMatchPattern)
         {
-            var registrations = new List<ApiRouteRegistration>();
+            var registrations = new List<DeepSleepRouteRegistration>();
 
             var files = Directory.GetFiles(assemblyDirectoryPath, assemblyMatchPattern, this.searchOption);
 
@@ -78,16 +78,22 @@
 
                 if (assembly != null)
                 {
-                    var methods = assembly
-                        .GetTypes()
-                        .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod))
-                        .Where(m => m.GetCustomAttribute<ApiRouteAttribute>() != null);
+                    IEnumerable<MethodInfo> methods = new List<MethodInfo>();
+
+                    try
+                    {
+                        methods = assembly
+                            .GetTypes()
+                            .SelectMany(t => t.GetMethods(bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod))
+                            .Where(m => m.GetCustomAttribute<ApiRouteAttribute>() != null);
+                    }
+                    catch { }
 
                     foreach (var method in methods)
                     {
                         var apiRoute = method.GetCustomAttribute<ApiRouteAttribute>(false);
 
-                        DefaultApiRequestConfiguration configuration = null;
+                        DeepSleepRequestConfiguration configuration = null;
                         configuration = this.AssignRouteAttribute(configuration, method.GetCustomAttribute<ApiRouteAttribute>());
                         configuration = this.AssignRouteAllowAnonymousAttribute(configuration, method.GetCustomAttribute<ApiRouteAllowAnonymousAttribute>());
                         configuration = this.AssignRouteCacheDirectiveAttribute(configuration, method.GetCustomAttribute<ApiRouteCacheDirectiveAttribute>());
@@ -98,13 +104,13 @@
                         configuration = this.AssignRouteIncludeRequestIdHeaderAttribute(configuration, method.GetCustomAttribute<ApiRouteIncludeRequestIdHeaderAttribute>());
                         configuration = this.AssignRouteValidationErrorConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteValidationErrorConfigurationAttribute>());
                         configuration = this.AssignRouteErrorResponseProviderAttribute(configuration, method.GetCustomAttribute<ApiRouteErrorResponseProviderAttribute>());
-                        configuration = this.AssignRouteReadWriteConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteReadWriteConfigurationAttribute>());
+                        configuration = this.AssignRouteMediaSerializerConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteMediaSerializerConfigurationAttribute>());
 
-                        var registration = new ApiRouteRegistration(
+                        var registration = new DeepSleepRouteRegistration(
                             template: apiRoute.Template,
                             httpMethods: apiRoute.HttpMethods,
                             controller: Type.GetType(method.DeclaringType.AssemblyQualifiedName),
-                            endpoint: method.Name,
+                            methodInfo: method,
                             config: configuration);
 
                         registrations.Add(registration);
@@ -112,45 +118,45 @@
                 }
             }
 
-            return Task.FromResult(registrations as IList<ApiRouteRegistration>);
+            return Task.FromResult(registrations as IList<DeepSleepRouteRegistration>);
         }
 
-        private DefaultApiRequestConfiguration AssignRouteAttribute(DefaultApiRequestConfiguration configuration, ApiRouteAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteAttribute(DeepSleepRequestConfiguration configuration, ApiRouteAttribute attribute)
         {
             if (attribute?.Deprecated == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.Deprecated = attribute.Deprecated;
 
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteAllowAnonymousAttribute(DefaultApiRequestConfiguration configuration, ApiRouteAllowAnonymousAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteAllowAnonymousAttribute(DeepSleepRequestConfiguration configuration, ApiRouteAllowAnonymousAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.AllowAnonymous = attribute.AllowAnonymous;
 
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteCacheDirectiveAttribute(DefaultApiRequestConfiguration configuration, ApiRouteCacheDirectiveAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteCacheDirectiveAttribute(DeepSleepRequestConfiguration configuration, ApiRouteCacheDirectiveAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.CacheDirective = new ApiCacheDirectiveConfiguration
             {
@@ -163,14 +169,14 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteCrossOriginAttribute(DefaultApiRequestConfiguration configuration, ApiRouteCrossOriginAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteCrossOriginAttribute(DeepSleepRequestConfiguration configuration, ApiRouteCrossOriginAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.CrossOriginConfig = new ApiCrossOriginConfiguration
             {
@@ -184,28 +190,28 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteEnableHeadAttribute(DefaultApiRequestConfiguration configuration, ApiRouteEnableHeadAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteEnableHeadAttribute(DeepSleepRequestConfiguration configuration, ApiRouteEnableHeadAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.EnableHeadForGetRequests = attribute.EnableHeadForGetRequests;
 
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteLanguageAttribute(DefaultApiRequestConfiguration configuration, ApiRouteLanguageSupportAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteLanguageAttribute(DeepSleepRequestConfiguration configuration, ApiRouteLanguageSupportAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.LanguageSupport = new ApiLanguageSupportConfiguration
             {
@@ -218,14 +224,14 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteRequestValidationAttribute(DefaultApiRequestConfiguration configuration, ApiRouteRequestValidationAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteRequestValidationAttribute(DeepSleepRequestConfiguration configuration, ApiRouteRequestValidationAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.RequestValidation = new ApiRequestValidationConfiguration
             {
@@ -239,28 +245,28 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteIncludeRequestIdHeaderAttribute(DefaultApiRequestConfiguration configuration, ApiRouteIncludeRequestIdHeaderAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteIncludeRequestIdHeaderAttribute(DeepSleepRequestConfiguration configuration, ApiRouteIncludeRequestIdHeaderAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.IncludeRequestIdHeaderInResponse = attribute.IncludeRequestIdHeaderInResponse;
 
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteValidationErrorConfigurationAttribute(DefaultApiRequestConfiguration configuration, ApiRouteValidationErrorConfigurationAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteValidationErrorConfigurationAttribute(DeepSleepRequestConfiguration configuration, ApiRouteValidationErrorConfigurationAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.ValidationErrorConfiguration = new ApiValidationErrorConfiguration
             {
@@ -273,30 +279,30 @@
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteErrorResponseProviderAttribute(DefaultApiRequestConfiguration configuration, ApiRouteErrorResponseProviderAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteErrorResponseProviderAttribute(DeepSleepRequestConfiguration configuration, ApiRouteErrorResponseProviderAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.ApiErrorResponseProvider = (p) => attribute;
 
             return config;
         }
 
-        private DefaultApiRequestConfiguration AssignRouteReadWriteConfigurationAttribute(DefaultApiRequestConfiguration configuration, ApiRouteReadWriteConfigurationAttribute attribute)
+        private DeepSleepRequestConfiguration AssignRouteMediaSerializerConfigurationAttribute(DeepSleepRequestConfiguration configuration, ApiRouteMediaSerializerConfigurationAttribute attribute)
         {
             if (attribute == null)
             {
                 return configuration;
             }
 
-            var config = configuration ?? new DefaultApiRequestConfiguration();
+            var config = configuration ?? new DeepSleepRequestConfiguration();
 
-            config.ReadWriteConfiguration = new ApiReadWriteConfiguration
+            config.ReadWriteConfiguration = new ApiMediaSerializerConfiguration
             {
                 ReadableMediaTypes = attribute.ReadableMediaTypes,
                 WriteableMediaTypes = attribute.WriteableMediaTypes

@@ -8,24 +8,24 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="DeepSleep.Discovery.IRouteDiscoveryStrategy" />
-    public class StaticRouteDiscoveryStrategy : IRouteDiscoveryStrategy
+    /// <seealso cref="DeepSleep.Discovery.IDeepSleepDiscoveryStrategy" />
+    public class StaticRouteDiscoveryStrategy : IDeepSleepDiscoveryStrategy
     {
-        private readonly List<ApiRouteRegistration> registrations;
+        private readonly List<DeepSleepRouteRegistration> registrations;
 
         /// <summary>Initializes a new instance of the <see cref="StaticRouteDiscoveryStrategy"/> class.
         /// </summary>
         public StaticRouteDiscoveryStrategy()
         {
-            this.registrations = new List<ApiRouteRegistration>();
+            this.registrations = new List<DeepSleepRouteRegistration>();
         }
 
         /// <summary>Discovers the routes.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        public virtual Task<IList<ApiRouteRegistration>> DiscoverRoutes(IServiceProvider serviceProvider)
+        public virtual Task<IList<DeepSleepRouteRegistration>> DiscoverRoutes(IServiceProvider serviceProvider)
         {
-            return Task.FromResult(this.registrations as IList<ApiRouteRegistration>);
+            return Task.FromResult(this.registrations as IList<DeepSleepRouteRegistration>);
         }
 
         /// <summary>Adds the route.</summary>
@@ -46,9 +46,9 @@
         /// <param name="endpoint">The endpoint.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public StaticRouteDiscoveryStrategy AddRoute(string template, IList<string> httpMethods, Type controller, string endpoint, IApiRequestConfiguration config)
+        public StaticRouteDiscoveryStrategy AddRoute(string template, IList<string> httpMethods, Type controller, string endpoint, IDeepSleepRequestConfiguration config)
         {
-            var registration = new ApiRouteRegistration(
+            var registration = new DeepSleepRouteRegistration(
                 template: template,
                 httpMethods: httpMethods,
                 controller: controller,

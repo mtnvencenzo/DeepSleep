@@ -9,7 +9,7 @@
         [Fact]
         public void apiRequestContextResolve___does_not_allow_multiple_sets()
         {
-            var resolver = new DefaultApiRequestContextResolver();
+            var resolver = new ApiRequestContextResolver();
 
             resolver.SetContext(new ApiRequestContext());
 

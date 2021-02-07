@@ -5,6 +5,7 @@
     using FluentAssertions;
     using Moq;
     using System;
+    using System.Reflection;
     using Xunit;
 
     /// <summary>
@@ -134,11 +135,8 @@
             Assert.False(true);
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public async void ThrowsForNullEndpoint(string endpoint)
+        [Fact]
+        public async void ThrowsForNullMethod()
         {
             var controllerType = typeof(StandardController);
 
@@ -151,7 +149,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controllerType,
-                            endpoint: endpoint,
+                            methodInfo: null,
                             httpMethod: null)
                     }
                 }
@@ -164,7 +162,7 @@
             }
             catch (Exception ex)
             {
-                ex.Message.Should().Be("Routing item's endpoint name is null");
+                ex.Message.Should().Be("Routing item's method is null");
                 return;
             }
 
@@ -186,7 +184,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpoint)),
                             httpMethod: null)
                     }
                 },
@@ -203,7 +201,7 @@
             context.Routing.Route.Location.UriParameterType?.Should().BeNull();
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Fact]
@@ -218,7 +216,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpoint)),
                             httpMethod: null)
                     }
                 }
@@ -234,7 +232,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Fact]
@@ -252,7 +250,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpoint),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpoint)),
                             httpMethod: null)
                     }
                 },
@@ -269,7 +267,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Fact]
@@ -287,7 +285,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointInternal),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointInternal)),
                             httpMethod: null)
                     }
                 },
@@ -304,7 +302,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Fact]
@@ -322,7 +320,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: "DefaultEndpointPrivate",
+                            methodInfo: typeof(InjectionController).GetMethod(name: "DefaultEndpointPrivate", bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
                             httpMethod: null)
                     }
                 },
@@ -339,7 +337,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Fact]
@@ -357,7 +355,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: "DefaultEndpointProtected",
+                            methodInfo: typeof(InjectionController).GetMethod(name: "DefaultEndpointProtected", bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
                             httpMethod: null)
                     }
                 },
@@ -374,7 +372,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Theory]
@@ -405,7 +403,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithUri),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithUri)),
                             httpMethod: method)
                     }
                 },
@@ -422,7 +420,7 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.MethodInfo.Name);
         }
 
         [Theory]
@@ -446,7 +444,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithBody),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithBody)),
                             httpMethod: method)
                     }
                 },
@@ -463,7 +461,6 @@
             context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.UriParameterType.Should().BeNull();
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -487,7 +484,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBody),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithUriAndBody)),
                             httpMethod: method)
                     }
                 },
@@ -504,7 +501,6 @@
             context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
             context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -528,7 +524,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBody),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithUriAndBody)),
                             httpMethod: method)
                     }
                 },
@@ -545,7 +541,6 @@
             context.Routing.Route.Location.BodyParameterType.Should().BeNull();
             context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -569,7 +564,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersBefore),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersBefore)),
                             httpMethod: method)
                     }
                 },
@@ -587,7 +582,6 @@
             context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
             context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
 
         [Theory]
@@ -611,7 +605,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: typeof(InjectionController),
-                            endpoint: nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersAfter),
+                            methodInfo: typeof(InjectionController).GetMethod(nameof(InjectionController.DefaultEndpointWithUriAndBodyAndOthersAfter)),
                             httpMethod: method)
                     }
                 },
@@ -629,7 +623,6 @@
             context.Routing.Route.Location.BodyParameterType.Should().Be(typeof(StandardNullableModel));
             context.Routing.Route.Location.UriParameterType.Should().Be(typeof(StandardModel));
             context.Routing.Route.Location.MethodInfo.Should().NotBeNull();
-            context.Routing.Route.Location.MethodInfo.Name.Should().Be(context.Routing.Route.Location.Endpoint);
         }
     }
 }

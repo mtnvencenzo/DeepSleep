@@ -33,6 +33,6 @@
         /// <summary>Gets or sets the exceptions.</summary>
         /// <value>The exceptions.</value>
         [JsonIgnore]
-        internal IList<Exception> Exceptions { get; set; } = new List<Exception>();
+        internal IList<Exception> Exceptions { get; } = new List<Exception>();
     }
 }

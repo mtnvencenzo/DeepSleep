@@ -15,7 +15,7 @@
     /// If at least one authorization provider fails authorization, the request will be responded to with a 403 Forbidden response.
     /// </para>
     /// <para>
-    /// Authorization providers are bypassed if the request is configured for anonymous access. <seealso cref="DeepSleep.Configuration.IApiRequestConfiguration.AllowAnonymous" />. 
+    /// Authorization providers are bypassed if the request is configured for anonymous access. <seealso cref="DeepSleep.Configuration.IDeepSleepRequestConfiguration.AllowAnonymous" />. 
     /// Unless specifically configured, the default for anonymous access is <c>false</c>.
     /// </para>
     /// </remarks>

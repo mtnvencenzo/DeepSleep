@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___errorresponseprovider_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

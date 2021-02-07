@@ -17,13 +17,13 @@
             throw new NotImplementedException();
         }
 
-        [OpenApiResponse("200", typeof(IList<ListObj2>))]
+        [OasResponse("200", typeof(IList<ListObj2>))]
         public Task<IList<ListObj2>> List2()
         {
             throw new NotImplementedException();
         }
 
-        [OpenApiResponse("200", typeof(ListResponseContainer))]
+        [OasResponse("200", typeof(ListResponseContainer))]
         public Task<ListResponseContainer> ListContainer()
         {
             throw new NotImplementedException();

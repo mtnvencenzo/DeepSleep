@@ -18,9 +18,7 @@
         [InlineData("other/xml; q=0")]
         public async Task writeabletypes___should_only_allow_xml(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -57,9 +55,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("application/*, text/xml; q=0.9")]
         public async Task writeabletypes___uses_writeable_types_xml(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -102,9 +98,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("text/json, application/*; q=1, other/xml; q=0.1, text/xml; q=0")]
         public async Task writeabletypes___uses_writeable_types_but_none_match_existing_formatters(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

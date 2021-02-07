@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___enablehead_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -50,9 +48,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___enablehead_true()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -86,9 +82,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___enablehead_true_with_caching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -125,9 +119,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___enablehead_false()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -161,9 +153,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___enablehead_false_with_caching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

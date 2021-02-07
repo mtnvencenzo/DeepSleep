@@ -99,6 +99,7 @@
                         }
                         catch (Exception ex)
                         {
+                            context.AddInternalException(ex);
                             context.Log(ex.ToString());
                         }
                     }

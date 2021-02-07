@@ -13,9 +13,7 @@
         [Fact]
         public async Task requestid___should_be_set()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -51,9 +49,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task requestid___should_be_set_for_nocontent_responses()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -84,9 +80,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task requestid___should_be_set_for_exception_responses()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -117,9 +111,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task requestid___should_not_be_set_when_disabled_for_endpoint()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

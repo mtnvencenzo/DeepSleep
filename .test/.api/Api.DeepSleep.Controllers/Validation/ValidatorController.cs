@@ -11,8 +11,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="global::DeepSleep.Discovery.IRouteRegistrationProvider" />
-    public class ValidatorController : IRouteRegistrationProvider
+    /// <seealso cref="global::DeepSleep.Discovery.IDeepSleepRegistrationProvider" />
+    public class ValidatorController : IDeepSleepRegistrationProvider
     {
         /// <summary>Gets this instance.</summary>
         /// <returns></returns>
@@ -74,16 +74,16 @@
         /// <summary>Gets the routes.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        public Task<IList<ApiRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
+        public Task<IList<DeepSleepRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
         {
-            var routes = new List<ApiRouteRegistration>();
+            var routes = new List<DeepSleepRouteRegistration>();
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "validators/get/failure/mixed/configured",
                 httpMethods: new string[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetFailureWithMixedConfiguredAndAttribute),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                     Validators = new List<IEndpointValidatorComponent>
@@ -95,7 +95,7 @@
                     }
                 }));
 
-            return Task.FromResult(routes as IList<ApiRouteRegistration>);
+            return Task.FromResult(routes as IList<DeepSleepRouteRegistration>);
         }
     }
 

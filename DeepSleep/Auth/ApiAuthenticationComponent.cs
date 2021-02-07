@@ -13,7 +13,7 @@
     /// If the authentication provider fails authenticating the request, a 401 Unauthorized response will be returned.
     /// </para>
     /// <para>
-    /// Authentication providers are bypassed if the request is configured for anonymous access. <seealso cref="DeepSleep.Configuration.IApiRequestConfiguration.AllowAnonymous" />. 
+    /// Authentication providers are bypassed if the request is configured for anonymous access. <seealso cref="DeepSleep.Configuration.IDeepSleepRequestConfiguration.AllowAnonymous" />. 
     /// Unless specifically configured, the default for anonymous access is <c>false</c>.
     /// </para>
     /// </remarks>

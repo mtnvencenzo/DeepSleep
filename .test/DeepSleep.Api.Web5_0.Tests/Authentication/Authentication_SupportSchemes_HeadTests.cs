@@ -16,9 +16,7 @@
         [Fact]
         public async Task authentication_head___single_supported_scheme_unauthenticated_no_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -53,9 +51,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___single_supported_scheme_unauthenticated_header_no_scheme()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -91,9 +87,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___single_supported_scheme_unauthenticated_header_scheme_no_value()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -129,9 +123,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___single_supported_scheme_unauthenticated_header_scheme_invalid_value()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -167,9 +159,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___single_supported_scheme_unauthenticated_header_scheme_valid_value()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -212,9 +202,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___multiple_supported_scheme_unauthenticated_no_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -250,9 +238,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___multiple_supported_scheme_unauthenticated_header_no_scheme()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -291,9 +277,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___multiple_scheme_unauthenticated_header_scheme_no_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -332,9 +316,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___multiple_scheme_unauthenticated_header_scheme_invalid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -373,9 +355,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___multiple_supported_scheme_unauthenticated_header_scheme_valid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -418,9 +398,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___notdefined_supported_scheme_unauthenticated_no_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -462,9 +440,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___notdefined_supported_scheme_unauthenticated_header_no_scheme()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -509,9 +485,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___notdefined_supported_scheme_unauthenticated_header_scheme_no_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -556,9 +530,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___notdefined_supported_scheme_unauthenticated_header_scheme_invalid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -603,9 +575,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___notdefined_supported_scheme_unauthenticated_header_scheme_valid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -648,9 +618,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___empty_supported_scheme_unauthenticated_no_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -692,9 +660,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authentication_head___empty_supported_scheme_unauthenticated_header_no_scheme()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -739,9 +705,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___empty_supported_scheme_unauthenticated_header_scheme_no_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -786,9 +750,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___empty_supported_scheme_unauthenticated_header_scheme_invalid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -833,9 +795,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("Token2")]
         public async Task authentication_head___empty_supported_scheme_unauthenticated_header_scheme_valid_value(string scheme)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___crossorigin_preflight_default()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -57,9 +55,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_preflight_default_with_caching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -100,9 +96,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_preflight_specified_empty()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -143,9 +137,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_preflight_specified_using_unmatched_values()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -187,9 +179,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_preflight_specified_using_matched_values()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -231,9 +221,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_default()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -271,9 +259,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_default_with_caching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -313,9 +299,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_specified_using_unmatched_values()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -354,9 +338,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_specified_using_matched_values()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -395,9 +377,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___crossorigin_specified_with_caching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

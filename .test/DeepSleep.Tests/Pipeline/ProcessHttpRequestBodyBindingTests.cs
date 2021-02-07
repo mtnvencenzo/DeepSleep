@@ -1,8 +1,8 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
     using DeepSleep.Configuration;
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Media;
+    using DeepSleep.Media.Serializers;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using Moq;
@@ -24,7 +24,7 @@
                 Request = null
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -51,7 +51,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpRequestBodyBinding(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestBodyBinding(new ApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -74,7 +74,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -102,7 +102,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -128,7 +128,7 @@
                 },
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -160,7 +160,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -171,7 +170,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -203,7 +202,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -214,7 +212,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, null).ConfigureAwait(false);
@@ -249,7 +247,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -260,7 +257,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -288,7 +285,6 @@
                     ContentType = "application/json",
                     InvocationContext = new ApiInvocationContext
                     {
-                        //BodyModelType = typeof(string)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -297,7 +293,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -308,7 +303,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -346,7 +341,7 @@
                         },
                         Body = memoryStream
                     },
-                    Configuration = new DefaultApiRequestConfiguration
+                    Configuration = new DeepSleepRequestConfiguration
                     {
                         RequestValidation = new ApiRequestValidationConfiguration
                         {
@@ -359,7 +354,6 @@
                         {
                             Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -370,7 +364,7 @@
                     }
                 };
 
-                var contextResolver = new DefaultApiRequestContextResolver();
+                var contextResolver = new ApiRequestContextResolver();
                 contextResolver.SetContext(context);
 
                 var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -414,7 +408,6 @@
                         {
                             Location = new ApiEndpointLocation(
                                 controller: null,
-                                endpoint: null,
                                 httpMethod: null,
                                 methodInfo: null,
                                 uriParameterType: null,
@@ -425,7 +418,7 @@
                     }
                 };
 
-                var contextResolver = new DefaultApiRequestContextResolver();
+                var contextResolver = new ApiRequestContextResolver();
                 contextResolver.SetContext(context);
 
                 var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -467,7 +460,7 @@
                         },
                         Body = memoryStream
                     },
-                    Configuration = new DefaultApiRequestConfiguration
+                    Configuration = new DeepSleepRequestConfiguration
                     {
                         ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                         {
@@ -480,7 +473,6 @@
                         {
                             Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: null,
@@ -491,7 +483,7 @@
                     }
                 };
 
-                var contextResolver = new DefaultApiRequestContextResolver();
+                var contextResolver = new ApiRequestContextResolver();
                 contextResolver.SetContext(context);
 
                 var processed = await context.ProcessHttpRequestBodyBinding(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -509,22 +501,22 @@
 
 
 
-        private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        private Mock<DeepSleepMediaSerializerWriterFactory> SetupFormatterFactory(params IDeepSleepMediaSerializer[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamReaderWriterFactory>(new object[] { null })
+            var mockFactory = new Mock<DeepSleepMediaSerializerWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };
 
             mockFactory.Setup(m => m.GetFormatters())
-                .Returns(new List<IFormatStreamReaderWriter>(formatters));
+                .Returns(new List<IDeepSleepMediaSerializer>(formatters));
 
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
+        private Mock<DeepSleepJsonMediaSerializer> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
-            var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
+            var mockFormatter = new Mock<DeepSleepJsonMediaSerializer>(new object[] { null })
             {
                 CallBase = true
             };
@@ -533,9 +525,9 @@
             return mockFormatter;
         }
 
-        private Mock<XmlHttpFormatter> SetupXmlFormatterMock(string[] readableTypes, string[] writeableTypes)
+        private Mock<DeepSleepXmlMediaSerializer> SetupXmlFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
-            var mockFormatter = new Mock<XmlHttpFormatter>()
+            var mockFormatter = new Mock<DeepSleepXmlMediaSerializer>(new object[] { null })
             {
                 CallBase = true
             };

@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -33,11 +33,11 @@
 
         /// <summary>Gets or sets the headers.</summary>
         /// <value>The headers.</value>
-        public virtual IList<ApiHeader> Headers { get; set; } = new List<ApiHeader>();
+        public virtual IList<ApiHeader> Headers { get; } = new List<ApiHeader>();
 
         /// <summary>Gets or sets the cokkies associated with the response.</summary>
         /// <value>The cokies.</value>
-        public virtual IList<ApiCookie> Cookies { get; set; } = new List<ApiCookie>();
+        public virtual IList<ApiCookie> Cookies { get; } = new List<ApiCookie>();
 
         /// <summary>The response header date used in generating the response
         /// </summary>
@@ -45,11 +45,11 @@
 
         /// <summary>The response writer available to write the response
         /// </summary>
-        public virtual IFormatStreamReaderWriter ResponseWriter { get; set; }
+        public virtual IDeepSleepMediaSerializer ResponseWriter { get; set; }
 
         /// <summary>The response writer formatting options available to write the response
         /// </summary>
-        public virtual IFormatStreamOptions ResponseWriterOptions { get; set; }
+        public virtual IMediaSerializerOptions ResponseWriterOptions { get; set; }
     }
 
     /// <summary>
@@ -109,11 +109,6 @@
             if (response == null)
                 return response;
 
-            if (response.Headers == null)
-            {
-                response.Headers = new List<ApiHeader>();
-            }
-
             if (!string.IsNullOrWhiteSpace(etag))
             {
                 response.AddHeader(
@@ -161,11 +156,6 @@
         {
             if (response == null)
                 return response;
-
-            if (response.Headers == null)
-            {
-                response.Headers = new List<ApiHeader>();
-            }
 
             if (!string.IsNullOrWhiteSpace(name))
             {

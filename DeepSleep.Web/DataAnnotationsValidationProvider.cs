@@ -117,29 +117,4 @@
             return Task.CompletedTask;
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static class DataAnnotationsValidationProviderExtensionMethods
-    {
-        /// <summary>Uses the data annotation validations.</summary>
-        /// <param name="services">The services.</param>
-        /// <param name="continuation">The continuation.</param>
-        /// <param name="validateAllProperties">if set to <c>true</c> [validate all properties].</param>
-        /// <returns></returns>
-        public static IServiceCollection UseDataAnnotationValidations(
-            this IServiceCollection services,
-            ValidationContinuation continuation = ValidationContinuation.OnlyIfValid,
-            bool validateAllProperties = true)
-        {
-            services
-                .AddScoped<IApiValidationProvider, DataAnnotationsValidationProvider>((p) =>
-                {
-                    return new DataAnnotationsValidationProvider(continuation: continuation, validateAllProperties: validateAllProperties);
-                });
-
-            return services;
-        }
-    }
 }

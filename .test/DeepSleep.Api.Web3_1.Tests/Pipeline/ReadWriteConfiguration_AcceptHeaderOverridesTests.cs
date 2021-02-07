@@ -16,9 +16,7 @@
         [InlineData("application/json; q=1, application/xml; q=0, text/xml; q=0")]
         public async Task acceptheaderoverride___should_be_xml(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -54,9 +52,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task acceptheaderoverride___null_request_header_should_be_xml()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -94,9 +90,7 @@ X-CorrelationId: {correlationId}";
         [InlineData(null)]
         public async Task acceptheaderoverride___empty_request_header_should_be_xml(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -132,9 +126,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task acceptheaderoverride___not_acceptable_should_be_406()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

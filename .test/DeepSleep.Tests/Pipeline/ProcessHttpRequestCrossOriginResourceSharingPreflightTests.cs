@@ -134,15 +134,15 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PUT"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PUT"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PATCH"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "get"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "DelEte"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: " "));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: ""));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "PUT"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "PUT"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "PATCH"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "get"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "DelEte"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: " "));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: ""));
 
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
@@ -179,7 +179,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
 
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
@@ -223,7 +223,7 @@
                 {
                     Template = new ApiRoutingTemplate("/test")
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -232,7 +232,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
@@ -278,7 +278,7 @@
                 {
                     StatusCode = statusCode
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -287,7 +287,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();
@@ -323,7 +323,7 @@
                 {
                     Template = new ApiRoutingTemplate("/test")
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -333,7 +333,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(null, null, null).ConfigureAwait(false);
             processed.Should().BeFalse();

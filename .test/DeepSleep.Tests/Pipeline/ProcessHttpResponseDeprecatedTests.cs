@@ -69,7 +69,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     Deprecated = null
                 }
@@ -90,7 +90,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     Deprecated = false
                 }
@@ -111,7 +111,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     Deprecated = true
                 }

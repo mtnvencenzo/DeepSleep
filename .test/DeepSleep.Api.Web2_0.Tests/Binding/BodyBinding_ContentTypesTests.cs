@@ -16,9 +16,7 @@
         [InlineData("patch")]
         public async Task body_binding___charset_utf8_json_simple_post(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -61,9 +59,7 @@ X-CorrelationId: {correlationId}
         [InlineData("patch")]
         public async Task body_binding___charset_usascii_json_simple_post(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -106,9 +102,7 @@ X-CorrelationId: {correlationId}
         [InlineData("patch")]
         public async Task body_binding___charset_utf8_xml_simple(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -151,9 +145,7 @@ X-CorrelationId: {correlationId}
         [InlineData("patch")]
         public async Task body_binding___charset_usascii_xml_simple(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -193,9 +185,7 @@ X-CorrelationId: {correlationId}
         [Fact]
         public async Task body_binding___charset_utf8_multipart_simple()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
 
@@ -214,7 +204,6 @@ User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {multipartFormData}; charset=utf-8
 X-CorrelationId: {correlationId}
-X-PrettyPrint: true
 
 {multipart.Replace(System.Environment.NewLine, "\r\n")}";
 
@@ -229,11 +218,9 @@ X-PrettyPrint: true
                 shouldHaveResponse: true,
                 expectedContentType: applicationJson,
                 expectedValidationState: ApiValidationState.Succeeded,
-                expectedPrettyPrint: true,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
-                    { "X-PrettyPrint", $"true"}
+                    { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<SimpleMultipartRs>(response).ConfigureAwait(false);
@@ -244,9 +231,7 @@ X-PrettyPrint: true
         [Fact]
         public async Task body_binding___chartset_usascii_multipart_simple()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
 

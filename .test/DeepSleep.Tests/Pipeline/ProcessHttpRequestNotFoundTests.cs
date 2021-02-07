@@ -113,7 +113,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();
@@ -134,8 +134,8 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
 
             var processed = await context.ProcessHttpRequestNotFound().ConfigureAwait(false);
             processed.Should().BeTrue();

@@ -2,8 +2,10 @@
 {
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Media;
+    using DeepSleep.Media.Converters;
+    using DeepSleep.Media.Serializers;
+    using DeepSleep.Health;
     using DeepSleep.OpenApi;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
@@ -15,7 +17,11 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Versioning;
+    using System.Text;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
+    using System.Xml;
 
     /// <summary>
     /// 
@@ -25,29 +31,41 @@
         /// <summary>Uses the API request context.</summary>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseApiCoreHttp(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseDeepSleep(this IApplicationBuilder builder)
         {
-            var ret = builder
-                .UseApiRequestContext();
+            builder.UseApiRequestContext();
 
-            var config = builder.ApplicationServices.GetService<IApiServiceConfiguration>();
+            var config = builder.ApplicationServices.GetService<IDeepSleepServiceConfiguration>();
             var routingTable = builder.ApplicationServices.GetService<IApiRoutingTable>();
 
             DiscoverRoutes(builder, routingTable, config);
 
-            if (config as DefaultApiServiceConfiguration != null)
-            {
-                if (((DefaultApiServiceConfiguration)config).PingEndpoint?.Enabled == true)
-                {
-                    AddPingEndpoint(routingTable, ((DefaultApiServiceConfiguration)config).PingEndpoint.RelativePath);
-                }
-            }
 
-            IOpenApiConfigurationProvider openApiConfiguration = null;
+            // ---------------------------------
+            // Setup Ping Endpoint if being used
+            // ---------------------------------
+            IPingEndpointConfigurationProvider pingConfiguration = null;
 
             try
             {
-                openApiConfiguration = builder.ApplicationServices.GetService<IOpenApiConfigurationProvider>();
+                pingConfiguration = builder.ApplicationServices.GetService<IPingEndpointConfigurationProvider>();
+            }
+            catch { }
+
+            if (pingConfiguration != null)
+            {
+                AddPingEndpoint(routingTable, pingConfiguration);
+            }
+
+
+            // ---------------------------------
+            // Setup OpenApi Endpoint(s) if being used
+            // ---------------------------------
+            IDeepSleepOasConfigurationProvider openApiConfiguration = null;
+
+            try
+            {
+                openApiConfiguration = builder.ApplicationServices.GetService<IDeepSleepOasConfigurationProvider>();
             }
             catch { }
 
@@ -56,6 +74,9 @@
                 AddOpenApiEndpoints(routingTable, openApiConfiguration);
             }
 
+            // ---------------------------------
+            // Setup Console header if being used
+            // ---------------------------------
             if (config?.WriteConsoleHeader ?? true)
             {
                 try
@@ -65,75 +86,145 @@
                 catch { }
             }
 
-            return ret;
+            return builder;
         }
 
-        /// <summary>Uses the API core services.</summary>
+        /// <summary>Uses the deep sleep services.</summary>
         /// <param name="services">The services.</param>
-        /// <param name="config">The configuration.</param>
+        /// <param name="configure">The configure.</param>
         /// <returns></returns>
-        public static IServiceCollection UseApiCoreServices(this IServiceCollection services, IApiServiceConfiguration config = null)
+        public static IServiceCollection UseDeepSleepServices(this IServiceCollection services, Action<IDeepSleepServiceConfiguration> configure = null)
         {
-            var routingTable = new DefaultApiRoutingTable();
+            var routingTable = new ApiRoutingTable();
+            var configuration = new DeepSleepServiceConfiguration
+            {
+                DefaultRequestConfiguration = ApiRequestContext.GetDefaultRequestConfiguration(),
+                ExcludePaths = new List<string>(),
+                WriteConsoleHeader = true,
+                DiscoveryStrategies = new List<IDeepSleepDiscoveryStrategy>()
+            };
 
-            var cconfiguration = config ?? new DefaultApiServiceConfiguration();
+            if (configure != null)
+            {
+                configure(configuration);
+            }
 
-            cconfiguration.JsonFormatterConfiguration = config?.JsonFormatterConfiguration ?? GetDefaultJsonFormattingConfiguration();
-            cconfiguration.XmlFormatterConfiguration = config?.XmlFormatterConfiguration ?? GetDefaultXmlFormattingConfiguration();
-            cconfiguration.MultipartFormDataFormatterConfiguration = config?.MultipartFormDataFormatterConfiguration ?? GetDefaultMultipartFormDataFormattingConfiguration();
-            cconfiguration.FormUrlEncodedFormatterConfiguration = config?.FormUrlEncodedFormatterConfiguration ?? GetDefaultFormUrlEncodedFormattingConfiguration();
-            cconfiguration.DefaultRequestConfiguration = config?.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration();
+            configuration.DefaultRequestConfiguration = configuration.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration();
+            configuration.ExcludePaths = configuration.ExcludePaths ?? new List<string>();
 
             services
-                .AddScoped<IApiRequestContextResolver, DefaultApiRequestContextResolver>()
+                .AddScoped<IApiRequestContextResolver, ApiRequestContextResolver>()
                 .AddScoped<IFormUrlEncodedObjectSerializer, FormUrlEncodedObjectSerializer>()
-                .AddScoped<IUriRouteResolver, DefaultRouteResolver>()
+                .AddScoped<IUriRouteResolver, ApiRouteResolver>()
                 .AddScoped<IMultipartStreamReader, MultipartStreamReader>()
-                .AddScoped<IFormatStreamReaderWriterFactory, HttpMediaTypeStreamReaderWriterFactory>()
+                .AddScoped<IDeepSleepMediaSerializerFactory, DeepSleepMediaSerializerWriterFactory>()
                 .AddScoped<IApiValidationProvider, ApiEndpointValidationProvider>()
                 .AddSingleton<IApiRequestPipeline, IApiRequestPipeline>((p) => ApiRequestPipeline.GetDefaultRequestPipeline())
-                .AddSingleton<IApiRequestConfiguration, IApiRequestConfiguration>((p) => cconfiguration.DefaultRequestConfiguration)
-                .AddSingleton<IApiServiceConfiguration, IApiServiceConfiguration>((p) => cconfiguration)
+                .AddSingleton<IDeepSleepRequestConfiguration, IDeepSleepRequestConfiguration>((p) => configuration.DefaultRequestConfiguration)
+                .AddSingleton<IDeepSleepServiceConfiguration, IDeepSleepServiceConfiguration>((p) => configuration)
                 .AddSingleton<IApiRoutingTable, IApiRoutingTable>((p) => routingTable);
-
-
-            if (cconfiguration.JsonFormatterConfiguration?.DisableFormatter == false)
-            {
-                services.AddScoped<IFormatStreamReaderWriter, JsonHttpFormatter>();
-            }
-
-            if (cconfiguration.XmlFormatterConfiguration?.DisableFormatter == false)
-            {
-                services.AddScoped<IFormatStreamReaderWriter, XmlHttpFormatter>();
-            }
-
-            if (cconfiguration.MultipartFormDataFormatterConfiguration?.DisableFormatter == false)
-            {
-                services.AddScoped<IFormatStreamReaderWriter, MultipartFormDataFormatter>();
-            }
-
-            if (cconfiguration.FormUrlEncodedFormatterConfiguration?.DisableFormatter == false)
-            {
-                services.AddScoped<IFormatStreamReaderWriter, FormUrlEncodedFormatter>();
-            }
 
             return services;
         }
+
+        /// <summary>Uses the deep sleep json negotiation.</summary>
+        /// <param name="services">The services.</param>
+        /// <param name="configure">The configure.</param>
+        /// <returns></returns>
+        public static IServiceCollection UseDeepSleepJsonNegotiation(this IServiceCollection services, Action<JsonMediaSerializerConfiguration> configure = null)
+        {
+            var configuration = new JsonMediaSerializerConfiguration
+            {
+                SerializerOptions = GetJsonSerializerSettings()
+            };
+
+            if (configure != null)
+            {
+                configure(configuration);
+            }
+
+            services.AddScoped<IDeepSleepMediaSerializer, DeepSleepJsonMediaSerializer>();
+            services.AddSingleton<JsonMediaSerializerConfiguration>((p) => configuration);
+
+            return services;
+        }
+
+        /// <summary>Uses the deep sleep multipart form data.</summary>
+        /// <param name="services">The services.</param>
+        /// <returns></returns>
+        public static IServiceCollection UseDeepSleepMultipartFormDataNegotiation(this IServiceCollection services)
+        {
+            services.AddScoped<IDeepSleepMediaSerializer, DeepSleepMultipartFormDataMediaSerializer>();
+
+            return services;
+        }
+
+        /// <summary>Uses the deep sleep XML negotiation.</summary>
+        /// <param name="services">The services.</param>
+        /// <param name="configure">The configure.</param>
+        /// <returns></returns>
+        public static IServiceCollection UseDeepSleepXmlNegotiation(this IServiceCollection services, Action<XmlMediaSerializerConfiguration> configure = null)
+        {
+            var configuration = new XmlMediaSerializerConfiguration
+            {
+                ReaderSerializerSettings = new XmlReaderSettings
+                {
+                    CloseInput = false,
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    IgnoreComments = true,
+                    ValidationType = ValidationType.None
+                },
+                WriterSerializerSettings = new XmlWriterSettings
+                {
+                    NewLineOnAttributes = false,
+                    CloseOutput = false,
+                    Encoding = Encoding.UTF8,
+                    Indent = false,
+                    NamespaceHandling = NamespaceHandling.Default,
+                    OmitXmlDeclaration = true,
+                    WriteEndDocumentOnClose = false,
+                    Async = true,
+                }
+            };
+
+            if (configure != null)
+            {
+                configure(configuration);
+            }
+
+            services.AddScoped<IDeepSleepMediaSerializer, DeepSleepXmlMediaSerializer>();
+            services.AddSingleton<XmlMediaSerializerConfiguration>((p) => configuration);
+
+            return services;
+        }
+
+        /// <summary>Uses the deep sleep form URL encoded negotiation.</summary>
+        /// <param name="services">The services.</param>
+        /// <returns></returns>
+        public static IServiceCollection UseDeepSleepFormUrlEncodedNegotiation(this IServiceCollection services)
+        {
+            services.AddScoped<IDeepSleepMediaSerializer, DeepSleepFormUrlEncodedMediaSerializer>();
+
+            return services;
+        }
+
 
         /// <summary>Gets the default routing table.</summary>
         /// <returns></returns>
         private static IApiRoutingTable GetDefaultRoutingTable()
         {
-            return new DefaultApiRoutingTable();
+            return new ApiRoutingTable();
         }
 
         /// <summary>Discovers the routes.</summary>
         /// <param name="builder">The builder.</param>
         /// <param name="routingTable">The routing table.</param>
         /// <param name="config">The configuration.</param>
-        private static void DiscoverRoutes(IApplicationBuilder builder, IApiRoutingTable routingTable, IApiServiceConfiguration config)
+        private static void DiscoverRoutes(IApplicationBuilder builder, IApiRoutingTable routingTable, IDeepSleepServiceConfiguration config)
         {
-            var discoveryStrategies = config?.DiscoveryStrategies ?? DiscoveryStrategies.Default();
+            var discoveryStrategies = config?.DiscoveryStrategies == null || config.DiscoveryStrategies.Count == 0
+                ? DiscoveryStrategies.Default()
+                : config.DiscoveryStrategies.Where(d => d != null).ToList();
 
             foreach (var strategy in discoveryStrategies)
             {
@@ -167,28 +258,27 @@
         /// <summary>Adds the open API endpoints.</summary>
         /// <param name="routingTable">The routing table.</param>
         /// <param name="openApiConfiguration">The open API configuration.</param>
-        private static void AddOpenApiEndpoints(IApiRoutingTable routingTable, IOpenApiConfigurationProvider openApiConfiguration)
+        private static void AddOpenApiEndpoints(IApiRoutingTable routingTable, IDeepSleepOasConfigurationProvider openApiConfiguration)
         {
             Action<string, string> add = (string endpoint, string template) =>
             {
-                routingTable.AddRoute(new ApiRouteRegistration(
+                routingTable.AddRoute(new DeepSleepRouteRegistration(
                     template: template,
                     httpMethods: new[] { "GET" },
-                    controller: Type.GetType(typeof(OpenApiController).AssemblyQualifiedName),
+                    controller: Type.GetType(typeof(OasController).AssemblyQualifiedName),
                     endpoint: endpoint,
-                    config: new DefaultApiRequestConfiguration
+                    config: new DeepSleepRequestConfiguration
                     {
                         AllowAnonymous = true,
-                        ReadWriteConfiguration = new ApiReadWriteConfiguration
+                        ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                         {
                             AcceptHeaderFallback = "application/json; q=1.0, application/yaml; q=0.9",
-                            WriterResolver = (resolver) =>
+                            WriterResolver = (serviceProvider) =>
                             {
-                                var context = resolver.GetContext();
-                                var jsonFormatter = context.RequestServices.GetService<OpenApiJsonFormatter>();
-                                var yamlFormatter = context.RequestServices.GetService<OpenApiYamlFormatter>();
+                                var jsonFormatter = serviceProvider.GetService<DeepSleepOasJsonFormatter>();
+                                var yamlFormatter = serviceProvider.GetService<DeepSleepOasYamlFormatter>();
 
-                                return Task.FromResult(new FormatterWriteOverrides(new List<IFormatStreamReaderWriter>
+                                return Task.FromResult(new MediaSerializerWriteOverrides(new List<IDeepSleepMediaSerializer>
                                 {
                                     jsonFormatter,
                                     yamlFormatter
@@ -200,28 +290,28 @@
 
             if (!string.IsNullOrWhiteSpace(openApiConfiguration.V2RouteTemplate))
             {
-                add(nameof(OpenApiController.DocV2), openApiConfiguration.V2RouteTemplate);
+                add(nameof(OasController.DocV2), openApiConfiguration.V2RouteTemplate);
             }
 
             if (!string.IsNullOrWhiteSpace(openApiConfiguration.V3RouteTemplate))
             {
-                add(nameof(OpenApiController.DocV3), openApiConfiguration.V3RouteTemplate);
+                add(nameof(OasController.DocV3), openApiConfiguration.V3RouteTemplate);
             }
         }
 
         /// <summary>Adds the ping endpoint.</summary>
         /// <param name="table">The table.</param>
-        /// <param name="path">The path.</param>
-        private static void AddPingEndpoint(IApiRoutingTable table, string path)
+        /// <param name="pingConfiguration">The ping configuration.</param>
+        private static void AddPingEndpoint(IApiRoutingTable table, IPingEndpointConfigurationProvider pingConfiguration)
         {
-            string template = path ?? "ping";
+            string template = pingConfiguration?.Template ?? "ping";
 
-            table.AddRoute(new ApiRouteRegistration(
+            table.AddRoute(new DeepSleepRouteRegistration(
                template: template,
                httpMethods: new[] { "GET" },
                controller: typeof(PingController),
                endpoint: nameof(PingController.Ping),
-               config: new DefaultApiRequestConfiguration
+               config: new DeepSleepRequestConfiguration
                {
                    AllowAnonymous = true,
                    CacheDirective = new ApiCacheDirectiveConfiguration
@@ -236,47 +326,6 @@
                    },
                    Deprecated = false
                }));
-        }
-
-        /// <summary>Gets the default json formatting configuration
-        /// </summary>
-        /// <returns></returns>
-        private static JsonFormattingConfiguration GetDefaultJsonFormattingConfiguration()
-        {
-            return new JsonFormattingConfiguration
-            {
-                DisableFormatter = false
-            };
-        }
-
-        /// <summary>Gets the default XML formatting configuration.</summary>
-        /// <returns></returns>
-        private static XmlFormattingConfiguration GetDefaultXmlFormattingConfiguration()
-        {
-            return new XmlFormattingConfiguration
-            {
-                DisableFormatter = false
-            };
-        }
-
-        /// <summary>Gets the default multipart form data formatting configuration.</summary>
-        /// <returns></returns>
-        private static MultipartFormDataFormattingConfiguration GetDefaultMultipartFormDataFormattingConfiguration()
-        {
-            return new MultipartFormDataFormattingConfiguration
-            {
-                DisableFormatter = false
-            };
-        }
-
-        /// <summary>Gets the default form URL encoded formatting configuration.</summary>
-        /// <returns></returns>
-        private static FormUrlEncodedFormattingConfiguration GetDefaultFormUrlEncodedFormattingConfiguration()
-        {
-            return new FormUrlEncodedFormattingConfiguration
-            {
-                DisableFormatter = false
-            };
         }
 
         /// <summary>Writes the deepsleep to console.</summary>
@@ -395,6 +444,40 @@
 
             Console.WriteLine("");
             Console.ForegroundColor = existingColor;
+        }
+
+        /// <summary>Gets the writer settings.</summary>
+        /// <returns></returns>
+        private static JsonSerializerOptions GetJsonSerializerSettings()
+        {
+            var settings = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                IgnoreReadOnlyProperties = false,
+                IgnoreReadOnlyFields = true,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                WriteIndented = false
+            };
+
+            settings.Converters.Add(new NullableBooleanConverter());
+            settings.Converters.Add(new BooleanConverter());
+            settings.Converters.Add(new JsonStringEnumConverter(namingPolicy: new OasDefaultNamingPolicy(), allowIntegerValues: true));
+            settings.Converters.Add(new NullableTimeSpanConverter());
+            settings.Converters.Add(new TimeSpanConverter());
+            settings.Converters.Add(new NullableDateTimeConverter());
+            settings.Converters.Add(new DateTimeConverter());
+            settings.Converters.Add(new NullableDateTimeOffsetConverter());
+            settings.Converters.Add(new DateTimeOffsetConverter());
+            settings.Converters.Add(new ContentDispositionConverter());
+            settings.Converters.Add(new ContentTypeConverter());
+            settings.Converters.Add(new ObjectConverter());
+
+            return settings;
         }
 
         /// <summary>Mays the fourth.</summary>

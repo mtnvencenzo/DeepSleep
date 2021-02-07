@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -26,7 +26,7 @@
                 .GetContext()
                 .SetThreadCulure();
 
-            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
+            var formatterFactory = context?.RequestServices?.GetService<IDeepSleepMediaSerializerFactory>();
 
             if (await context.ProcessHttpRequestAccept(contextResolver, formatterFactory).ConfigureAwait(false))
             {
@@ -53,22 +53,29 @@
         /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpRequestAccept(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IDeepSleepMediaSerializerFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.Request != null)
                 {
+                    var returnType = context.Routing.Route.Location.MethodReturnType;
+
+                    if (returnType == typeof(void) || returnType == typeof(Task))
+                    {
+                        return true;
+                    }
+
                     var accept = !string.IsNullOrWhiteSpace(context.Request.Accept)
                         ? context.Request.Accept
                         : AcceptHeader.All();
 
-                    IFormatStreamReaderWriter formatter = null;
-                    IList<IFormatStreamReaderWriter> overridingFormatters = null;
+                    IDeepSleepMediaSerializer formatter = null;
+                    IList<IDeepSleepMediaSerializer> overridingFormatters = null;
 
                     if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                     {
-                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(context?.RequestServices).ConfigureAwait(false);
                         overridingFormatters = overrides?.Formatters;
                     }
 
@@ -76,6 +83,7 @@
                     {
                         formatter = await formatterFactory.GetAcceptableFormatter(
                             acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                            objType: returnType,
                             writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                             writeableFormatters: overridingFormatters,
                             formatterType: out var _).ConfigureAwait(false);
@@ -85,6 +93,7 @@
                         {
                             formatter = await formatterFactory.GetAcceptableFormatter(
                                 acceptHeader: context.Configuration?.ReadWriteConfiguration.AcceptHeaderFallback,
+                                objType: returnType,
                                 writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                                 writeableFormatters: overridingFormatters,
                                 formatterType: out var _).ConfigureAwait(false);
@@ -94,8 +103,8 @@
                     if (formatter == null)
                     {
                         var formatterTypes = formatterFactory != null
-                            ? formatterFactory.GetWriteableTypes(overridingFormatters) ?? new List<string>()
-                            : new HttpMediaTypeStreamReaderWriterFactory(context.RequestServices).GetWriteableTypes(overridingFormatters) ?? new List<string>();
+                            ? formatterFactory.GetWriteableTypes(objType: returnType, overridingFormatters: overridingFormatters) ?? new List<string>()
+                            : new DeepSleepMediaSerializerWriterFactory(context.RequestServices).GetWriteableTypes(objType: returnType, overridingFormatters) ?? new List<string>();
 
                         var writeableMediaTypes = context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes ?? formatterTypes ?? new List<string>();
 

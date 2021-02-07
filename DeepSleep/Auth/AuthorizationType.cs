@@ -19,7 +19,7 @@
         Provider = 1,
 
         /// <summary>
-        /// Authorization was bypassed due to the request configuration having <see cref="Configuration.IApiRequestConfiguration.AllowAnonymous"/> set to <c>true</c>.
+        /// Authorization was bypassed due to the request configuration having <see cref="Configuration.IDeepSleepRequestConfiguration.AllowAnonymous"/> set to <c>true</c>.
         /// </summary>
         Anonymous = 2
     }

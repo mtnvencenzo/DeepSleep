@@ -19,6 +19,7 @@
     {
         protected readonly int uriBindingErrorStatusCode = 404;
         protected readonly int bodyBindingErrorStatusCode = 422;
+        protected IServiceProvider serviceProvider;
         private Startup startup;
 
         public PipelineTestBase()
@@ -41,17 +42,20 @@
             };
 
             startup.ConfigureServices(services);
-            startup.Configure(new ApplicationBuilder(startup.ServiceProvider));
+
+            this.serviceProvider = services.BuildServiceProvider();
+
+            startup.Configure(new ApplicationBuilder(this.serviceProvider));
         }
 
-        public IServiceProvider ServiceProvider => startup?.ServiceProvider;
+        public IServiceProvider ServiceProvider => this.serviceProvider;
 
         protected async Task<ApiRequestContext> Invoke(HttpContext httpContext)
         {
             var contextPipeline = new ApiRequestContextPipelineComponent(null);
             var contextResolver = this.ServiceProvider.GetService<IApiRequestContextResolver>();
             var requestPipeline = this.ServiceProvider.GetService<IApiRequestPipeline>();
-            var serviceConfiguration = this.ServiceProvider.GetService<IApiServiceConfiguration>();
+            var serviceConfiguration = this.ServiceProvider.GetService<IDeepSleepServiceConfiguration>();
 
             await contextPipeline.Invoke(httpContext, contextResolver, requestPipeline, serviceConfiguration);
             return contextResolver.GetContext();

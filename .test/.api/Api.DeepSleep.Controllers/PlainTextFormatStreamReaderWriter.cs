@@ -1,6 +1,8 @@
 ﻿namespace Api.DeepSleep.Controllers
 {
-    using global::DeepSleep.Formatting;
+    using global::DeepSleep;
+    using global::DeepSleep.Media;
+    using Microsoft.OpenApi.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -9,8 +11,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="global::DeepSleep.Formatting.IFormatStreamReaderWriter" />
-    public class PlainTextFormatStreamReaderWriter : IFormatStreamReaderWriter
+    /// <seealso cref="global::DeepSleep.Media.IDeepSleepMediaSerializer" />
+    public class PlainTextFormatStreamReaderWriter : IDeepSleepMediaSerializer
     {
         /// <summary>Gets the readable media types.</summary>
         /// <value>The readable media types.</value>
@@ -19,10 +21,6 @@
         /// <summary>Gets or sets the writeable media types.</summary>
         /// <value>The writeable media types.</value>
         public IList<string> WriteableMediaTypes => new string[] { "text/plain" };
-
-        /// <summary>Gets a value indicating whether [supports pretty print].</summary>
-        /// <value><c>true</c> if [supports pretty print]; otherwise, <c>false</c>.</value>
-        public bool SupportsPrettyPrint => false;
 
         /// <summary>Whether the formatter can read content</summary>
         public bool SupportsRead => true;
@@ -44,7 +42,7 @@
         /// <param name="objType">Type of the object.</param>
         /// <param name="options">The options.</param>
         /// <returns></returns>
-        public async Task<object> ReadType(Stream stream, Type objType, IFormatStreamOptions options)
+        public async Task<object> ReadType(Stream stream, Type objType, IMediaSerializerOptions options)
         {
             string obj = null;
 
@@ -72,7 +70,7 @@
         /// <param name="options">The options.</param>
         /// <param name="preWriteCallback">The pre write callback.</param>
         /// <returns></returns>
-        public async Task<long> WriteType(Stream stream, object obj, IFormatStreamOptions options, Action<long> preWriteCallback = null)
+        public async Task<long> WriteType(Stream stream, object obj, IMediaSerializerOptions options, Action<long> preWriteCallback = null)
         {
             long length = 0;
 
@@ -93,6 +91,34 @@
             }
 
             return length;
+        }
+
+        /// <summary>Determines whether this instance [can handle type] the specified type.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if this instance [can handle type] the specified type; otherwise, <c>false</c>.</returns>
+        public bool CanHandleType(Type type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            if (Type.GetType(type.AssemblyQualifiedName) == Type.GetType(typeof(OpenApiDocument).AssemblyQualifiedName))
+            {
+                return false;
+            }
+
+            if (Type.GetType(type.AssemblyQualifiedName) == Type.GetType(typeof(MultipartHttpRequest).AssemblyQualifiedName))
+            {
+                return false;
+            }
+
+            if (Type.GetType(type.AssemblyQualifiedName) == Type.GetType(typeof(MultipartHttpRequestSection).AssemblyQualifiedName))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

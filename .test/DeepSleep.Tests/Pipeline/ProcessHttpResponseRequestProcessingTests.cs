@@ -24,7 +24,7 @@
             };
 
 
-            var processed = await context.ProcessHttpResponseRequestProcessing(new DefaultApiRequestContextResolver(), config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestProcessing(new ApiRequestContextResolver(), config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -47,7 +47,7 @@
             };
 
 
-            var processed = await context.ProcessHttpResponseRequestProcessing(new DefaultApiRequestContextResolver(), config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestProcessing(new ApiRequestContextResolver(), config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -70,7 +70,7 @@
             };
 
 
-            var processed = await context.ProcessHttpResponseRequestProcessing(new DefaultApiRequestContextResolver(), config).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseRequestProcessing(new ApiRequestContextResolver(), config).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();

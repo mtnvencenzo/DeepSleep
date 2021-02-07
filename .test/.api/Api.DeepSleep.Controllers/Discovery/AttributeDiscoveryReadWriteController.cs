@@ -13,7 +13,7 @@
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/default")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
-        [ApiRouteReadWriteConfiguration]
+        [ApiRouteMediaSerializerConfiguration]
         public AttributeDiscoveryModel GetReadWriteDefault()
         {
             return new AttributeDiscoveryModel();
@@ -24,7 +24,7 @@
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/acceptheader/override")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
-        [ApiRouteReadWriteConfiguration(acceptHeaderOverride: "application/xml")]
+        [ApiRouteMediaSerializerConfiguration(acceptHeaderOverride: "application/xml")]
         public AttributeDiscoveryModel GetReadWriteAcceptHeaderOverride()
         {
             return new AttributeDiscoveryModel();
@@ -35,7 +35,7 @@
         [ApiRoute(new[] { "GET" }, "discovery/attribute/readwrite/writeablemediatypes/override")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
-        [ApiRouteReadWriteConfiguration(writeableMediaTypes: new[] { "application/xml" })]
+        [ApiRouteMediaSerializerConfiguration(writeableMediaTypes: new[] { "application/xml" })]
         public AttributeDiscoveryModel GetReadWriteWriteableMediaTypesOverride()
         {
             return new AttributeDiscoveryModel();
@@ -47,7 +47,7 @@
         [ApiRoute(new[] { "POST" }, "discovery/attribute/readwrite/readablemediatypes/override")]
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
-        [ApiRouteReadWriteConfiguration(readableMediaTypes: new[] { "application/xml" })]
+        [ApiRouteMediaSerializerConfiguration(readableMediaTypes: new[] { "application/xml" })]
         public AttributeDiscoveryModel GetReadWriteReadableMediaTypesOverride([BodyBound] AttributeDiscoveryModel request)
         {
             return request;

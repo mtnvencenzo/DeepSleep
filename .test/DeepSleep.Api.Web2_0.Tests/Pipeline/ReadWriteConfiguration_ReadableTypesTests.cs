@@ -18,9 +18,7 @@
         [InlineData("image/jog")]
         public async Task readabletypes___uses_readable_types_but_not_existent_xml(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -57,9 +55,7 @@ X-CorrelationId: {correlationId}
         [InlineData("text/xml")]
         public async Task readabletypes___uses_readable_types_xml(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

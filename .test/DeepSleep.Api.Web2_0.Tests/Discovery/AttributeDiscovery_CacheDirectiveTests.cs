@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___cachedirective_default()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -50,9 +48,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___cachedirective_specified()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

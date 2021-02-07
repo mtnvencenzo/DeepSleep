@@ -65,7 +65,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
+                            methodInfo: null,
                             httpMethod: null)
                     }
                 }
@@ -149,7 +149,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultGenericTaskEndpoint),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultGenericTaskEndpoint)),
                             httpMethod: null)
                     }
                 }
@@ -185,7 +185,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultGenericTaskWithFullApiResponseEndpoint),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultGenericTaskWithFullApiResponseEndpoint)),
                             httpMethod: null)
                     }
                 }
@@ -221,7 +221,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultFullApiResponseEndpoint),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpoint)),
                             httpMethod: null)
                     }
                 }
@@ -265,7 +265,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed)),
                             httpMethod: null)
                     }
                 }
@@ -309,7 +309,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed)),
                             httpMethod: null)
                     }
                 }
@@ -357,7 +357,7 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: controller.GetType(),
-                            endpoint: nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters),
+                            methodInfo: controller.GetType().GetMethod(nameof(controller.DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters)),
                             httpMethod: null)
                     }
                 }

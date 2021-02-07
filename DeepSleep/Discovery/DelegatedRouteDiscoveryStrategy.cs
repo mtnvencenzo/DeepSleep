@@ -10,8 +10,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="DeepSleep.Discovery.IRouteDiscoveryStrategy" />
-    public class DelegatedRouteDiscoveryStrategy : IRouteDiscoveryStrategy
+    /// <seealso cref="DeepSleep.Discovery.IDeepSleepDiscoveryStrategy" />
+    public class DelegatedRouteDiscoveryStrategy : IDeepSleepDiscoveryStrategy
     {
         /// <summary>The assembly directory path</summary>
         protected readonly string assemblyDirectoryPath;
@@ -39,14 +39,14 @@
         /// <summary>Discovers the routes.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        public virtual async Task<IList<ApiRouteRegistration>> DiscoverRoutes(IServiceProvider serviceProvider)
+        public virtual async Task<IList<DeepSleepRouteRegistration>> DiscoverRoutes(IServiceProvider serviceProvider)
         {
             if (this.assemblyDirectoryPath != null)
             {
                 return await this.DiscoverRoutes(serviceProvider, this.assemblyDirectoryPath, this.assemblyMatchPattern).ConfigureAwait(false);
             }
 
-            return new List<ApiRouteRegistration>();
+            return new List<DeepSleepRouteRegistration>();
         }
 
         /// <summary>Discovers the routes.</summary>
@@ -54,12 +54,12 @@
         /// <param name="assemblyDirectoryPath">The assembly directory path.</param>
         /// <param name="assemblyMatchPattern">The assembly match pattern.</param>
         /// <returns></returns>
-        protected virtual async Task<IList<ApiRouteRegistration>> DiscoverRoutes(
+        protected virtual async Task<IList<DeepSleepRouteRegistration>> DiscoverRoutes(
             IServiceProvider serviceProvider, 
             string assemblyDirectoryPath, 
             string assemblyMatchPattern)
         {
-            var registrations = new List<ApiRouteRegistration>();
+            var registrations = new List<DeepSleepRouteRegistration>();
 
             var files = Directory.GetFiles(assemblyDirectoryPath, assemblyMatchPattern, this.searchOption);
 
@@ -76,23 +76,30 @@
 
                 if (assembly != null)
                 {
-                    var types = assembly
-                        .GetTypes()
-                        .Where(t => t.GetInterface(nameof(IRouteRegistrationProvider)) != null);
+                    IEnumerable<Type> types = new List<Type>();
+
+                    try
+                    {
+                        types = assembly
+                            .GetTypes()
+                            .Where(t => t.GetInterface(nameof(IDeepSleepRegistrationProvider)) != null);
+                    }
+                    catch { }
+
 
                     foreach (var type in types)
                     {
-                        IRouteRegistrationProvider instance = null;
+                        IDeepSleepRegistrationProvider instance = null;
 
                         var fullyQualifiedType = Type.GetType(type.AssemblyQualifiedName);
 
-                        instance = serviceProvider?.GetService(fullyQualifiedType) as IRouteRegistrationProvider;
+                        instance = serviceProvider?.GetService(fullyQualifiedType) as IDeepSleepRegistrationProvider;
 
                         if (instance == null)
                         {
                             try
                             {
-                                instance = Activator.CreateInstance(fullyQualifiedType) as IRouteRegistrationProvider;
+                                instance = Activator.CreateInstance(fullyQualifiedType) as IDeepSleepRegistrationProvider;
                             }
                             catch { }
                         }

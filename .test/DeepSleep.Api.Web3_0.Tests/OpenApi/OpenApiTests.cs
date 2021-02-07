@@ -17,9 +17,7 @@
         [Fact]
         public async Task openapiv3___default_version_json_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -69,9 +67,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task openapiv3___specific_version_json_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -121,9 +117,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task openapiv3___yaml_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -163,9 +157,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task openapiv2___default_version_json_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -215,9 +207,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task openapiv2___specific_version_json_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -267,9 +257,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task openapiv2___yaml_validate_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

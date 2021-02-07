@@ -16,5 +16,9 @@
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
         public abstract Task<object> Process(IApiRequestContextResolver contextResolver, IList<string> errors);
+
+        /// <summary>Gets the type of the error.</summary>
+        /// <returns></returns>
+        public abstract Type GetErrorType();
     }
 }

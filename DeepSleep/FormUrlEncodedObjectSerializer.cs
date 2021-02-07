@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Formatting.Converters;
+    using DeepSleep.Media.Converters;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -215,6 +215,8 @@
                     ? "[]"
                     : "{}";
             }
+
+            //System.Diagnostics.Debug.Write(json);
 
             var obj = JsonSerializer.Deserialize(json, objType, readerOptions);
             return obj;

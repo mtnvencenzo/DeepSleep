@@ -12,8 +12,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="global::DeepSleep.Discovery.IRouteRegistrationProvider" />
-    public class RequestPipelineController : IRouteRegistrationProvider
+    /// <seealso cref="global::DeepSleep.Discovery.IDeepSleepRegistrationProvider" />
+    public class RequestPipelineController : IDeepSleepRegistrationProvider
     {
         private readonly IApiRequestContextResolver contextResolver;
 
@@ -141,16 +141,16 @@
         /// <summary>Gets the routes.</summary>
         /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        public Task<IList<ApiRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
+        public Task<IList<DeepSleepRouteRegistration>> GetRoutes(IServiceProvider serviceProvider)
         {
-            var routes = new List<ApiRouteRegistration>();
+            var routes = new List<DeepSleepRouteRegistration>();
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getafterendpoint/with/static/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetConfiguredAfterEndpoint),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                     PipelineComponents = new List<IRequestPipelineComponent>
@@ -159,12 +159,12 @@
                     }
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getbeforeendpoint/with/static/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetConfiguredBeforeEndpoint),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                     PipelineComponents = new List<IRequestPipelineComponent>
@@ -173,12 +173,12 @@
                     }
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getbeforevalidation/with/static/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetConfiguredBeforeValidation),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                     PipelineComponents = new List<IRequestPipelineComponent>
@@ -187,52 +187,52 @@
                     }
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getafterendpoint/with/attribute/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetAttributeAfterEndpoint),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getbeforeendpoint/with/attribute/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetAttributeBeforeEndpoint),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getbeforevalidation/with/attribute/configured/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetAttributeBeforeValidation),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/getAttributesMultiple/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetAttributesMultiple),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                 }));
 
-            routes.Add(new ApiRouteRegistration(
+            routes.Add(new DeepSleepRouteRegistration(
                 template: "requestpipeline/mixed/pipeline",
                 httpMethods: new[] { "GET" },
                 controller: this.GetType(),
                 endpoint: nameof(GetMixedMultiple),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true,
                     PipelineComponents = new List<IRequestPipelineComponent>
@@ -241,7 +241,7 @@
                     }
                 }));
 
-            return Task.FromResult(routes as IList<ApiRouteRegistration>);
+            return Task.FromResult(routes as IList<DeepSleepRouteRegistration>);
         }
     }
 

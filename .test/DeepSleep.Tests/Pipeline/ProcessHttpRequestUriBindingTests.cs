@@ -64,14 +64,9 @@
                     Route = new ApiRoutingItem
                     {
                         Location = new ApiEndpointLocation(
-                            controller: null,
-                            endpoint: null,
-                            httpMethod: null,
-                            methodInfo: null,
-                            uriParameterType: null,
-                            bodyParameterType: null,
-                            simpleParameters: null,
-                            methodReturnType: null)
+                            controller: typeof(TestController),
+                            methodInfo: typeof(TestController).GetMethod(nameof(TestController.Get)),
+                            httpMethod: "GET")
                     }
                 }
             };
@@ -101,7 +96,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -138,7 +132,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -175,7 +168,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -204,7 +196,6 @@
                 {
                     InvocationContext = new ApiInvocationContext
                     {
-                        //UriModelType = typeof(NonDefaultConstructorModel)
                     }
                 },
                 Routing = new ApiRoutingInfo
@@ -213,9 +204,8 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
-                            httpMethod: null,
                             methodInfo: null,
+                            httpMethod: null,
                             uriParameterType: typeof(NonDefaultConstructorModel),
                             bodyParameterType: null,
                             simpleParameters: null,
@@ -270,9 +260,8 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
-                            httpMethod: null,
                             methodInfo: null,
+                            httpMethod: null,
                             uriParameterType: typeof(StandardModel),
                             bodyParameterType: null,
                             simpleParameters: null,
@@ -338,7 +327,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -393,7 +381,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -466,7 +453,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardNullableModel),
@@ -548,7 +534,6 @@
                     {
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -632,7 +617,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardNullableModel),
@@ -737,7 +721,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -824,9 +807,8 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
-                            httpMethod: null,
                             methodInfo: null,
+                            httpMethod: null,
                             uriParameterType: typeof(StandardModel),
                             bodyParameterType: null,
                             simpleParameters: null,
@@ -894,7 +876,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -903,7 +884,7 @@
                             methodReturnType: null)
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -954,7 +935,6 @@
                         },
                         Location = new ApiEndpointLocation(
                             controller: null,
-                            endpoint: null,
                             httpMethod: null,
                             methodInfo: null,
                             uriParameterType: typeof(StandardModel),
@@ -963,7 +943,7 @@
                             methodReturnType: null)
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {

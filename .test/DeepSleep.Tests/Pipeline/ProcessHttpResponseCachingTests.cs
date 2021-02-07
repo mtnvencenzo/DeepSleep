@@ -263,7 +263,7 @@
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CacheDirective = null
                 }
@@ -301,7 +301,7 @@
                 {
                     StatusCode = 200
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CacheDirective = new ApiCacheDirectiveConfiguration
                     {
@@ -345,7 +345,7 @@
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CacheDirective = new ApiCacheDirectiveConfiguration
                     {
@@ -400,7 +400,7 @@
                     StatusCode = 200,
                     ResponseObject = null
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CacheDirective = cacheDirective
                 }
@@ -450,7 +450,7 @@
                 {
                     StatusCode = 200
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CacheDirective = cacheDirective
                 }

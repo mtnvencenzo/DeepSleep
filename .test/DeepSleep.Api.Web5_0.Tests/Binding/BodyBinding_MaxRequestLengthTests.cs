@@ -2,8 +2,8 @@
 {
     using DeepSleep.Api.Web.Tests.Mocks;
     using DeepSleep.Configuration;
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Media;
+    using DeepSleep.Media.Serializers;
     using DeepSleep.Validation;
     using global::Api.DeepSleep.Models;
     using Microsoft.Extensions.DependencyInjection;
@@ -22,9 +22,7 @@
         [InlineData("PATCH")]
         public async Task body_binding___returns_413_payloadtoolarge_for_post_exceeding_configured_max(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -61,15 +59,15 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment(services =>
             {
-                var serviceConfigurationMock = new Mock<IApiServiceConfiguration>();
+                var configurationMock = new Mock<JsonMediaSerializerConfiguration>();
 
-                var instanceMock = new Mock<JsonHttpFormatter>(serviceConfigurationMock.Object) { CallBase = true };
+                var instanceMock = new Mock<DeepSleepJsonMediaSerializer>(configurationMock.Object) { CallBase = true };
                 instanceMock
-                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IFormatStreamOptions>()))
+                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IMediaSerializerOptions>()))
                     .Throws(new MockBadHttpRequestException());
 
-                services.RemoveAll(typeof(IFormatStreamReaderWriter));
-                services.AddScoped(typeof(IFormatStreamReaderWriter), (p) => instanceMock.Object);
+                services.RemoveAll(typeof(IDeepSleepMediaSerializer));
+                services.AddScoped(typeof(IDeepSleepMediaSerializer), (p) => instanceMock.Object);
             });
 
 
@@ -109,15 +107,15 @@ Content-Length: 1
         {
             base.SetupEnvironment(services =>
             {
-                var jsonFormattingConfiguration = new JsonFormattingConfiguration();
+                var jsonFormattingConfiguration = new JsonMediaSerializerConfiguration();
 
-                var instanceMock = new Mock<XmlHttpFormatter> { CallBase = true };
+                var instanceMock = new Mock<DeepSleepXmlMediaSerializer>(new object[] { null }) { CallBase = true };
                 instanceMock
-                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IFormatStreamOptions>()))
+                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IMediaSerializerOptions>()))
                     .Throws(new MockBadHttpRequestException());
 
-                services.RemoveAll(typeof(IFormatStreamReaderWriter));
-                services.AddScoped(typeof(IFormatStreamReaderWriter), (p) => instanceMock.Object);
+                services.RemoveAll(typeof(IDeepSleepMediaSerializer));
+                services.AddScoped(typeof(IDeepSleepMediaSerializer), (p) => instanceMock.Object);
             });
 
 
@@ -161,14 +159,14 @@ Content-Length: 1
                 multipartStreamReaderMock.Setup(m => m.ReadAsMultipart(It.IsAny<Stream>()))
                     .Throws(new MockBadHttpRequestException());
 
-                var instanceMock = new Mock<MultipartFormDataFormatter>(multipartStreamReaderMock.Object, null) { CallBase = true };
+                var instanceMock = new Mock<DeepSleepMultipartFormDataMediaSerializer>(multipartStreamReaderMock.Object, null) { CallBase = true };
                 instanceMock
-                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IFormatStreamOptions>()))
+                    .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IMediaSerializerOptions>()))
                     .Throws(new MockBadHttpRequestException());
 
-                services.RemoveAll(typeof(IFormatStreamReaderWriter));
-                services.AddScoped(typeof(IFormatStreamReaderWriter), (p) => instanceMock.Object);
-                services.AddScoped(typeof(IFormatStreamReaderWriter), (p) => new XmlHttpFormatter());
+                services.RemoveAll(typeof(IDeepSleepMediaSerializer));
+                services.AddScoped(typeof(IDeepSleepMediaSerializer), (p) => instanceMock.Object);
+                services.AddScoped(typeof(IDeepSleepMediaSerializer), (p) => new DeepSleepXmlMediaSerializer(null));
             });
 
 

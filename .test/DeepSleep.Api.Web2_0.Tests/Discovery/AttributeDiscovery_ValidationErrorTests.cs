@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingerror_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -52,9 +50,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingvalueerror_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -90,9 +86,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingerror_specified_empty()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -125,9 +119,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingvalueerror_specified_empty()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -160,9 +152,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingerror_specified_no_replacements()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -198,9 +188,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingvalueerror_specified_no_replacements()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -236,9 +224,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingerror_specified_with_replacements()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -274,9 +260,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___validationerror_urlbindingvalueerror_specified_with_replacements()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -387,9 +371,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___deserializationerror_custom()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -429,9 +411,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___deserializationerror_450_statuscode_for_custom()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -471,9 +451,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___deserializationerror_400_statuscode_for_strict()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -513,9 +491,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___deserializationerror_400_statuscode_for_common()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

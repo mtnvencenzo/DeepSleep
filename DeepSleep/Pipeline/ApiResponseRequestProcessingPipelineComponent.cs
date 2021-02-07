@@ -24,7 +24,7 @@
                 .GetContext()
                 .SetThreadCulure();
 
-            var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
+            var apiServiceConfiguration = context?.RequestServices?.GetService<IDeepSleepServiceConfiguration>();
 
             await context.ProcessHttpResponseRequestProcessing(contextResolver, apiServiceConfiguration).ConfigureAwait(false);
         }
@@ -51,7 +51,7 @@
         public static async Task<bool> ProcessHttpResponseRequestProcessing(
             this ApiRequestContext context,
             IApiRequestContextResolver contextResolver,
-            IApiServiceConfiguration apiServiceConfiguration)
+            IDeepSleepServiceConfiguration apiServiceConfiguration)
         {
             if (apiServiceConfiguration?.OnRequestProcessed != null)
             {

@@ -17,9 +17,7 @@
         [InlineData("something/xml")]
         public async Task readerresolver___should_reject_unsupported_types(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -57,9 +55,7 @@ X-CorrelationId: {correlationId}
         [InlineData("other/xml")]
         public async Task readerresolver___should_allow_supported_types(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -70,7 +66,6 @@ User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
 X-CorrelationId: {correlationId}
-X-PrettyPrint: true
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -85,13 +80,11 @@ X-PrettyPrint: true
                 response: response,
                 expectedHttpStatus: 200,
                 expectedContentType: textJson,
-                expectedPrettyPrint: true,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
-                    { "X-PrettyPrint", "true"}
+                    { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -111,9 +104,7 @@ X-PrettyPrint: true
         [InlineData("application/xml")]
         public async Task readerresolver___should_reject_unsupported_readable_types(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -150,9 +141,7 @@ X-CorrelationId: {correlationId}
         [InlineData("other/xml")]
         public async Task readerresolver___should_allow_supported_readable_types(string contentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -163,7 +152,6 @@ User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
 X-CorrelationId: {correlationId}
-X-PrettyPrint: true
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -178,13 +166,11 @@ X-PrettyPrint: true
                 response: response,
                 expectedHttpStatus: 200,
                 expectedContentType: textJson,
-                expectedPrettyPrint: true,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "X-CorrelationId", $"{correlationId}"},
-                    { "X-PrettyPrint", "true"}
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -210,7 +196,6 @@ User-Agent: UnitTest/1.0 DEV
 Accept: {textPlain}
 Content-Type: {textPlain}
 X-CorrelationId: {correlationId}
-X-PrettyPrint: true
 
 This is my text data";
 
@@ -223,7 +208,6 @@ This is my text data";
                 response: response,
                 expectedHttpStatus: 200,
                 expectedContentType: textPlain,
-                expectedPrettyPrint: true,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>

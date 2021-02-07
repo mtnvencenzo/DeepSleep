@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___authorization_policy_null()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -50,9 +48,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authorization_policy_empty()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -86,9 +82,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authorization_policy_default()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

@@ -32,7 +32,7 @@
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
                 Request = null,
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -61,7 +61,7 @@
                 {
                     RequestUri = requestUri
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -89,7 +89,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -117,7 +117,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -145,7 +145,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -174,7 +174,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -202,7 +202,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -230,7 +230,7 @@
                 {
                     RequestUri = url
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {

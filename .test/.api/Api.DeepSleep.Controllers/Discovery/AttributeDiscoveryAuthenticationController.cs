@@ -10,6 +10,15 @@
     {
         /// <summary>Gets the authentication anonymous true.</summary>
         /// <returns></returns>
+        [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/default")]
+        [ApiRouteAllowAnonymous()]
+        public AttributeDiscoveryModel GetAuthenticationAnonymousDefault()
+        {
+            return new AttributeDiscoveryModel();
+        }
+
+        /// <summary>Gets the authentication anonymous true.</summary>
+        /// <returns></returns>
         [ApiRoute(new[] { "GET" }, "discovery/attribute/authentication/allowanonymous/true")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         public AttributeDiscoveryModel GetAuthenticationAnonymousTrue()

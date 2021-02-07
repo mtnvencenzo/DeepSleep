@@ -44,7 +44,6 @@
             NameValuePairs<string, string> extendedHeaders = null,
             bool shouldBeCancelledReuqest = false,
             string expectedProtocol = "HTTP/1.1",
-            bool expectedPrettyPrint = false,
             bool expectRequestIdHeader = true,
             bool? expectedAuthenticationResult = null,
             string expectedAuthenticationScheme = null,
@@ -152,7 +151,6 @@
 
                 apiContext.Response.ResponseWriter.Should().NotBeNull();
                 apiContext.Response.ResponseWriterOptions.Should().NotBeNull();
-                apiContext.Response.ResponseWriterOptions.PrettyPrint.Should().Be(expectedPrettyPrint);
 
                 if (apiContext.Request.IsHeadRequest())
                 {

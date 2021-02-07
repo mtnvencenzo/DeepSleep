@@ -716,6 +716,51 @@
         {
             return Task.CompletedTask;
         }
+
+        // UnprocessableEntity Responses
+        // ------------
+
+        /// <summary>Unprocessables the entity.</summary>
+        /// <returns></returns>
+        public IApiResponse UnprocessableEntity()
+        {
+            var response = ApiResponse.UnprocessableEntity(value: new HelperResponseModel());
+
+            return response;
+        }
+
+        /// <summary>Unprocessables the entity null.</summary>
+        /// <returns></returns>
+        public Task<IApiResponse> UnprocessableEntity_Null()
+        {
+            var response = ApiResponse.UnprocessableEntity();
+
+            return Task.FromResult(response);
+        }
+
+        /// <summary>Unprocessables the entity null with errors.</summary>
+        /// <returns></returns>
+        [ApiRoute(new[] { "GET" }, "helper/responses/unprocessableentity/null/with/errors")]
+        public Task<IApiResponse> UnprocessableEntity_Null_WithErrors()
+        {
+            var response = ApiResponse.UnprocessableEntity(errors: new string[] { "Test-Error" });
+
+            return Task.FromResult(response);
+        }
+
+        /// <summary>Unprocessables the entity headers.</summary>
+        /// <returns></returns>
+        public async Task<IApiResponse> UnprocessableEntity_Headers()
+        {
+            await Awaiter();
+
+            var response = ApiResponse.UnprocessableEntity(value: new HelperResponseModel(), headers: new List<ApiHeader>
+            {
+                new ApiHeader("Test", "Value")
+            });
+
+            return response;
+        }
     }
 
     /// <summary>

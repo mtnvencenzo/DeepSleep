@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Validation
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -13,5 +14,9 @@
         /// <param name="errors">The errors.</param>
         /// <returns></returns>
         Task<object> Process(IApiRequestContextResolver contextResolver, IList<string> errors);
+
+        /// <summary>Gets the type of the error.</summary>
+        /// <returns></returns>
+        Type GetErrorType();
     }
 }

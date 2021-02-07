@@ -16,9 +16,7 @@
         [InlineData("text/xml")]
         public async Task writerresolver___should_reject_unsupported_types(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -53,9 +51,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("text/xml, other/xml; q=0.1, application/xml; q=0.2", "application/xml")]
         public async Task writerresolver___should_allow_supported_types(string accept, string expectedContentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -101,9 +97,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("text/xml, other/xml; q=0.1, application/xml; q=0.2")]
         public async Task writerresolver___should_always_reject_when_writerresolver_retunrs_no_formatters(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -139,9 +133,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("text/xml, application/xml")]
         public async Task writerresolver___should_reject_unsupported_writeable_types(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -177,9 +169,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("text/xml, other/xml; q=0.1, application/xml; q=0.2", "other/xml")]
         public async Task writerresolver___should_allow_supported_writeable_types(string accept, string expectedContentType)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -188,8 +178,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {accept}
-X-CorrelationId: {correlationId}
-X-PrettyPrint: true";
+X-CorrelationId: {correlationId}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -202,11 +191,9 @@ X-PrettyPrint: true";
                 expectedContentType: expectedContentType,
                 shouldHaveResponse: true,
                 expectedValidationState: ApiValidationState.Succeeded,
-                expectedPrettyPrint: true,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
-                    { "X-PrettyPrint", "true"}
+                    { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);

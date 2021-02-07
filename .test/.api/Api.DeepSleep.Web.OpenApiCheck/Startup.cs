@@ -1,17 +1,14 @@
 namespace Api.DeepSleep.Web.OpenApiCheck
 {
+    using global::DeepSleep;
+    using global::DeepSleep.Configuration;
     using global::DeepSleep.Validation;
     using global::DeepSleep.Web;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// 
@@ -24,8 +21,6 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName?.ToLower()}.json", optional: true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -40,20 +35,20 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .UseOpenApiServices(
-                    info: null,
-                    v2RouteTemplate: "openapi/v2/doc",
-                    v3RouteTemplate: "openapi/v3/doc",
-                    prefixNamesWithNamespace: false,
-                    includeHeadOperationsForGets: true,
-                    xmlDocumentationFileNames: new List<string>
-                    {
-                        "Api.DeepSleep.Web.OpenApiCheck.xml",
-                        "deepsleep.xml",
-                        "deepsleep.web.xml"
-                    })
-                .UseDataAnnotationValidations(continuation: ValidationContinuation.OnlyIfValid, validateAllProperties: true)
-                .UseApiCoreServices();
+                .AddLogging()
+                .UseDeepSleepJsonNegotiation()
+                .UseDeepSleepOpenApi((o) =>
+                {
+                    o.V2RouteTemplate = "openapi/v2/doc";
+                    o.V3RouteTemplate = "openapi/v3/doc";
+                    o.XmlDocumentationFileNames.Add("Api.DeepSleep.Web.OpenApiCheck.xml");
+                })
+                .UseDeepSleepDataAnnotationValidations()
+                .UseDeepSleepServices((o) =>
+                {
+                    o.DefaultRequestConfiguration = DefaultRequestConfiguration();
+                    o.WriteConsoleHeader = false;
+                });
         }
 
         /// <summary>Configures the specified application.</summary>
@@ -61,8 +56,20 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         public void Configure(IApplicationBuilder app)
         {
             app
-                .UseApiCoreHttp()
+                .UseDeepSleep()
                 .UseForwardedHeaders();
+
+            app.Build();
+        }
+
+        /// <summary>Defaults the request configuration.</summary>
+        /// <returns></returns>
+        public static IDeepSleepRequestConfiguration DefaultRequestConfiguration()
+        {
+            return new DeepSleepRequestConfiguration
+            {
+                AllowAnonymous = true
+            };
         }
     }
 }

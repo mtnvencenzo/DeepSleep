@@ -291,5 +291,62 @@
             equals = value.Equals(header);
             equals.Should().Be(false);
         }
+
+        [Fact]
+        public void acceptcharset___implicit_to_string_from_null_success()
+        {
+            string value = null as AcceptCharsetHeader;
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void acceptcharset___null_equals_operator_null_success()
+        {
+            var equals = (null as AcceptCharsetHeader) == (null as AcceptCharsetHeader);
+
+            equals.Should().BeTrue();
+        }
+
+        [Fact]
+        public void acceptcharset___null_not_equals_operator_null_success()
+        {
+            var equals = (null as AcceptCharsetHeader) != (null as AcceptCharsetHeader);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void acceptcharset___gethashcode_success()
+        {
+            AcceptCharsetHeader header = "en-us;";
+
+            header.Should().NotBeNull();
+
+            var hashCode = header.GetHashCode();
+            hashCode.Should().NotBe(0);
+        }
+
+        [Fact]
+        public void acceptcharset___equals_overload_null_sccess()
+        {
+            AcceptCharsetHeader header1 = "en-us;";
+            AcceptCharsetHeader header2 = null;
+
+            var equals = header1.Equals(header2);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void acceptcharset___equals_overload_not_string_or_equivelent_sccess()
+        {
+            AcceptCharsetHeader header1 = "en-us;";
+            var other = 2;
+
+            var equals = header1.Equals(other);
+
+            equals.Should().BeFalse();
+        }
     }
 }

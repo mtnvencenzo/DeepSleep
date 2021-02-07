@@ -6,27 +6,27 @@
 
     public class BasicController
     {
-        [OpenApiResponse("204", typeof(void))]
-        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        [OasResponse("204", typeof(void))]
+        [OasResponse("200", typeof(ComplexClassModel))]
         public Task<ComplexClassModel> EndpointNoParams()
         {
             throw new NotImplementedException();
         }
 
-        [OpenApiResponse("204", typeof(void))]
-        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        [OasResponse("204", typeof(void))]
+        [OasResponse("200", typeof(ComplexClassModel))]
         public Task<ComplexClassModel> EndpointNoParamsPatch()
         {
             throw new NotImplementedException();
         }
 
-        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        [OasResponse("200", typeof(ComplexClassModel))]
         public Task<ComplexClassModel> EndpointWithRouteParam([UriBound] ComplexRequest request)
         {
             throw new NotImplementedException();
         }
 
-        [OpenApiResponse("200", typeof(ComplexClassModel))]
+        [OasResponse("200", typeof(ComplexClassModel))]
         public Task<ComplexClassModel> EndpointWithBodyParam([BodyBound] ComplexResponse request)
         {
             throw new NotImplementedException();

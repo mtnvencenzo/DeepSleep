@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___requestvalidation_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -51,9 +49,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___requestvalidation_max_url_length()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string toolong = new string('a', 70);
             var correlationId = Guid.NewGuid();
@@ -87,9 +83,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___requestvalidation_max_header_length()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string toolong = new string('a', 101);
             var correlationId = Guid.NewGuid();
@@ -124,9 +118,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___requestvalidation_max_request_length()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string toolong = new string('a', 101);
             var correlationId = Guid.NewGuid();
@@ -165,9 +157,7 @@ Accept: {applicationJson}
         [Fact]
         public async Task discovery_attribute___requestvalidation_missing_content_length_not_required()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -205,9 +195,7 @@ Accept: {applicationJson}
         [Fact]
         public async Task discovery_attribute___requestvalidation_missing_content_length_required()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -244,9 +232,7 @@ Accept: {applicationJson}
         [Fact]
         public async Task discovery_attribute___requestvalidation_request_body_not_allowed()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -284,9 +270,7 @@ Content-Type: {applicationJson}
         [Fact] // This test isn't really attribute related and should be moved to new test class
         public async Task discovery_attribute___requestvalidation_missing_content_type_length()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string toolong = new string('a', 101);
             var correlationId = Guid.NewGuid();

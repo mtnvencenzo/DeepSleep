@@ -41,7 +41,7 @@ X-CorrelationId: {correlationId}";
             var data = apiContext.Dump();
             data.Should().NotBeNullOrWhiteSpace();
 
-            System.Diagnostics.Debug.Write(data);
+            //System.Diagnostics.Debug.Write(data);
 
             data.Should().NotBeNull();
         }
@@ -84,7 +84,7 @@ X-CorrelationId: {correlationId}
             var data = apiContext.Dump();
             data.Should().NotBeNullOrWhiteSpace();
 
-            System.Diagnostics.Debug.Write(data);
+            //System.Diagnostics.Debug.Write(data);
 
             data.Should().NotBeNull();
         }

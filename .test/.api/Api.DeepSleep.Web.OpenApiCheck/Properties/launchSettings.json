@@ -1,9 +1,10 @@
 ﻿{
   "profiles": {
-    "Api.DeepSleep.Web.OpenApiCheck": {
+    "Api.DeepSleep.Web5_0": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "launchBrowser": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "https://localhost:5001/openapi/v3/doc",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

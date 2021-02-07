@@ -15,9 +15,7 @@
         [Fact]
         public async Task discovery_attribute___languagesupport_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -55,9 +53,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___languagesupport_fallback_deDe_no_accept_language()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -96,9 +92,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___languagesupport_fallback_deDe_accept_language_not_matching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -138,9 +132,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___languagesupport_fallback_en_accept_language_matching()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -180,9 +172,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___languagesupport_fallback_en_accept_language_notmatching_supported()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -222,9 +212,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___languagesupport_fallback_en_accept_language_notmatching_supported_sets_thread_cultures()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

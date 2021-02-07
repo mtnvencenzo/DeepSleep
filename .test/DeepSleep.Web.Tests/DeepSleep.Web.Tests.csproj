@@ -24,4 +24,10 @@
     <ProjectReference Include="..\..\DeepSleep.Web\DeepSleep.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

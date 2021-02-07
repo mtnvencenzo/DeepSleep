@@ -1,10 +1,13 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Media.Converters;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -42,6 +45,36 @@
     /// </summary>
     public static class ApiRequestUriBindingPipelineComponentExtensionMethods
     {
+        private static readonly JsonSerializerOptions arraySerializationOptions;
+
+        static ApiRequestUriBindingPipelineComponentExtensionMethods()
+        {
+            arraySerializationOptions = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = false,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+            };
+
+            arraySerializationOptions.Converters.Add(new NullableBooleanConverter());
+            arraySerializationOptions.Converters.Add(new BooleanConverter());
+            arraySerializationOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: true));
+            arraySerializationOptions.Converters.Add(new NullableTimeSpanConverter());
+            arraySerializationOptions.Converters.Add(new TimeSpanConverter());
+            arraySerializationOptions.Converters.Add(new NullableDateTimeConverter());
+            arraySerializationOptions.Converters.Add(new DateTimeConverter());
+            arraySerializationOptions.Converters.Add(new NullableDateTimeOffsetConverter());
+            arraySerializationOptions.Converters.Add(new DateTimeOffsetConverter());
+            arraySerializationOptions.Converters.Add(new ObjectConverter());
+            arraySerializationOptions.Converters.Add(new ContentDispositionConverter());
+            arraySerializationOptions.Converters.Add(new ContentTypeConverter());
+        }
+
         /// <summary>Uses the API request URI binding.</summary>
         /// <param name="pipeline">The pipeline.</param>
         /// <returns></returns>
@@ -60,7 +93,7 @@
             {
                 var addedBindingError = false;
 
-                if (context.Routing?.Route?.Location?.UriParameterType != null || (context.Request?.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
+                if (context.Routing?.Route?.Location?.UriParameterType != null || (context.Routing?.Route?.Location?.SimpleParameters.Count ?? 0) > 0)
                 {
                     var nameValues = new Dictionary<string, string>();
 
@@ -89,6 +122,14 @@
                     // ----------------------------------------
                     // Bind the Simple Parameters if exists
                     // ----------------------------------------
+                    var simpleParameters = new Dictionary<ParameterInfo, object>();
+
+                    if (context.Routing.Route.Location.SimpleParameters != null)
+                    {
+                        context.Request.InvocationContext.SimpleParameters = context.Routing.Route.Location.SimpleParameters
+                            .ToDictionary((k) => k, (k) => null as object);
+                    }
+
                     if ((context.Request.InvocationContext?.SimpleParameters.Count ?? 0) > 0)
                     {
                         foreach (var nameValue in nameValues)
@@ -109,7 +150,9 @@
                             {
                                 try
                                 {
-                                    context.Request.InvocationContext.SimpleParameters[simpleParameter] = ConvertValue(nameValue.Value, simpleParameter.ParameterType);
+                                    context.Request.InvocationContext.SimpleParameters[simpleParameter] = TypeExtensions.IsArrayType(simpleParameter.ParameterType)
+                                        ? ConvertArrayValue(nameValue.Value, simpleParameter.ParameterType)
+                                        : ConvertValue(nameValue.Value, simpleParameter.ParameterType);
                                 }
                                 catch
                                 {
@@ -179,11 +222,9 @@
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="convertTo"></param>
+        /// <summary>Converts the value.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="convertTo">The convert to.</param>
         /// <returns></returns>
         private static object ConvertValue(string value, Type convertTo)
         {
@@ -246,6 +287,30 @@
             }
 
             return Convert.ChangeType(value, type, CultureInfo.CurrentCulture);
+        }
+
+        /// <summary>Converts the array value.</summary>
+        /// <param name="value">The value.</param>
+        /// <param name="convertTo">The convert to.</param>
+        /// <returns></returns>
+        private static object ConvertArrayValue(string value, Type convertTo)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var stringValues = new List<string>();
+
+            foreach (var val in value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                stringValues.Add(val);
+            }
+
+            var serialized = JsonSerializer.Serialize(stringValues, stringValues.GetType());
+
+            var obj = JsonSerializer.Deserialize(serialized, convertTo, arraySerializationOptions);
+            return obj;
         }
     }
 }

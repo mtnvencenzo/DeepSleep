@@ -21,9 +21,7 @@
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_correct_case_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -139,9 +137,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_case_insensitive_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -257,9 +253,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_nulls_for_nullables_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -380,9 +374,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("True", 377)]
         public async Task HEAD_binding_simple_url_querystring_bool_vars_success(string value, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -425,9 +417,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_unknown_variables_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -550,9 +540,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("12", 911)]
         public async Task HEAD_binding_simple_url_querystring_enum_values_success(string value, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -666,9 +654,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_empty_values_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = "?";
             qs += $"stringVar=&";
@@ -742,9 +728,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_no_vars_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -781,9 +765,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("")]
         public async Task HEAD_binding_simple_url_querystring_no_query_success(string qs)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -818,9 +800,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_querystring_dup_query_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = "?";
             qs += $"stringVar=test1&";
@@ -862,9 +842,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_route_correct_case_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -984,9 +962,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task HEAD_binding_simple_url_mixed_correct_case_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var nowDt = DateTime.Now;
             var nowOff = DateTimeOffset.Now;
@@ -1148,9 +1124,7 @@ X-CorrelationId: {correlationId}";
         [InlineData("NullEnumVar", "a", 157)]
         public async Task HEAD_binding_simple_url_querystring_unconvertable_char_type_fail(string varName, string value, int expectedContentLength)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 

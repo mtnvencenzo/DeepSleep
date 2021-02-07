@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___readwrite_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -51,9 +49,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___readwrite_acceptheader_override()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -90,9 +86,7 @@ Accept: {applicationJson}";
         [InlineData("text/application")]
         public async Task discovery_attribute___readwrite_supported_writeablemediatypes__nomatch(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -125,9 +119,7 @@ Accept: {accept}";
         [Fact]
         public async Task discovery_attribute___readwrite_supported_writeablemediatypes__match()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -167,9 +159,7 @@ Accept: {applicationXml}";
         [InlineData("application/json")]
         public async Task discovery_attribute___readwrite_custom_writerresolver_nomatch(string accept)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -202,9 +192,7 @@ Accept: {accept}";
         [Fact]
         public async Task discovery_attribute___readwrite_custom_writerresolver_match()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -238,9 +226,7 @@ Accept: {textPlain}";
         [Fact]
         public async Task discovery_attribute___readwrite_supported_readablemediatypes__nomatch()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -278,9 +264,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task discovery_attribute___readwrite_supported_readablemediatypes__match()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -320,9 +304,7 @@ Content-Type: {applicationXml}
         [Fact]
         public async Task discovery_attribute___readwrite_custom_readerresolver_nomatch()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -360,9 +342,7 @@ Content-Type: {textJson}
         [Fact]
         public async Task discovery_attribute___readwrite_custom_readerresolver_match()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

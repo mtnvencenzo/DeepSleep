@@ -3,6 +3,7 @@
     using Api.DeepSleep.Models;
     using global::DeepSleep;
     using global::DeepSleep.Validation;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -38,5 +39,9 @@
 
             return Task.FromResult(null as object);
         }
+
+        /// <summary>Gets the type of the error.</summary>
+        /// <returns></returns>
+        public Type GetErrorType() => typeof(CommonErrorResponse);
     }
 }

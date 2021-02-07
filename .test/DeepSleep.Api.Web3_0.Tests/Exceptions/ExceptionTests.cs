@@ -14,9 +14,7 @@
         [Fact]
         public async Task exception_notimplemented_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -46,9 +44,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_notimplemented_from_validator_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -78,9 +74,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_notimplemented_from_authorization_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -115,9 +109,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_notimplemented_from_authentication_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -151,9 +143,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_badgateway_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -183,9 +173,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_badgateway_from_validator_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -215,9 +203,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_badgateway_from_authorization_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -248,9 +234,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_badgateway_from_authentication_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -284,9 +268,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_gatewaytimeout_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -316,9 +298,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_gatewaytimeout_from_validator_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -348,9 +328,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_gatewaytimeout_from_authorization_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -385,9 +363,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_gatewaytimeout_from_authentication_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -421,9 +397,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_serviceunavailable_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -453,9 +427,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_serviceunavailable_from_validator_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -485,9 +457,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_serviceunavailable_from_authorization_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -522,9 +492,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_serviceunavailable_from_authentication_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -558,9 +526,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_unhandled_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -590,9 +556,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_unhandled_from_validator_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -622,9 +586,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_unhandled_from_authorization_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -659,9 +621,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task exception_unhandled_from_authentication_returns_correct_response()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

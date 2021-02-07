@@ -37,7 +37,7 @@
         /// <param name="requestPipeline">The request pipeline.</param>
         /// <param name="config">The config.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IApiServiceConfiguration config)
+        public async Task Invoke(HttpContext httpcontext, IApiRequestContextResolver contextResolver, IApiRequestPipeline requestPipeline, IDeepSleepServiceConfiguration config)
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
@@ -64,7 +64,7 @@
             Console.WriteLine($"{context.Request.Method.ToUpper()} {context.Request.RequestUri} {context.Request.Protocol}");
             Console.ForegroundColor = previousForeColor;
 #endif
-            var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IApiRequestConfiguration)) as IApiRequestConfiguration;
+            var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IDeepSleepRequestConfiguration)) as IDeepSleepRequestConfiguration;
 
             await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, defaultRequestConfiguration);
         }
@@ -94,15 +94,14 @@
                     AcceptLanguage = GetAcceptLanguage(context.Request),
                     AcceptCulture = CultureInfo.CurrentUICulture,
                     AcceptEncoding = GetAcceptEncoding(context.Request),
-                    ContentType = context.Request.ContentType,
-                    ContentLength = context.Request.ContentLength,
+                    ContentType = GetContentType(context.Request),
+                    ContentLength = GetContentLength(context.Request),
                     RequestDate = GetRequestDate(context.Request, serverTime),
                     CorrelationId = GetCorrelationId(context.Request),
                     RemoteUser = GetRemoteUserFromServerVariables(context.Request),
                     ClientAuthenticationInfo = GetClientAuthInfo(context.Request),
                     CrossOriginRequest = GetCrossOriginRequestValues(context.Request),
                     QueryVariables = GetQueryStringVariables(context),
-                    PrettyPrint = GetPrettyPrint(context.Request),
                     Cookies = GetRequestCookies(context.Request),
                     // GETTING FULL URI BASED ON HEADER HOST AND NOT DIRECTLY FROM RequestURI.
                     // THIS CAN BE CHANGED VIA PROXY SERVERS BUT CLIENT APPS USE THE HOST HEADER
@@ -300,10 +299,7 @@
                 return null;
             }
 
-
             string correlationID = null;
-
-
 
             var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-correlationid");
             if (header.Key != null)
@@ -314,16 +310,6 @@
                     {
                         correlationID = val;
                     }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xcorrelationid");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    correlationID = queryString.Value;
                 }
             }
 
@@ -354,25 +340,6 @@
                 }
             }
 
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-accept");
-            if (header.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    accept = header.Value;
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xaccept");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    accept = queryString.Value;
-                }
-            }
-
             return accept;
         }
 
@@ -395,25 +362,6 @@
                 if (!string.IsNullOrWhiteSpace(header.Value))
                 {
                     accept = header.Value;
-                }
-            }
-
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-accept-language");
-            if (header.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    accept = header.Value;
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xacceptlanguage");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    accept = queryString.Value;
                 }
             }
 
@@ -442,25 +390,6 @@
                 }
             }
 
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-accept-encoding");
-            if (header.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    accept = header.Value;
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xacceptencoding");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    accept = queryString.Value;
-                }
-            }
-
             return accept;
         }
 
@@ -486,25 +415,46 @@
                 }
             }
 
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-accept-charset");
-            if (header.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(header.Value))
-                {
-                    charset = header.Value;
-                }
-            }
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xacceptcharset");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    charset = queryString.Value;
-                }
-            }
-
             return charset;
+        }
+
+        /// <summary>Gets the type of the content.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        private string GetContentType(HttpRequest request)
+        {
+            if (!string.IsNullOrWhiteSpace(request.ContentType))
+            {
+                return request.ContentType;
+            }
+
+            if (request.Headers.ContainsKey("Content-Type"))
+            {
+                return request.Headers["Content-Type"];
+            }
+
+            return null;
+        }
+
+        /// <summary>Gets the length of the content.</summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
+        private long? GetContentLength(HttpRequest request)
+        {
+            if (request.ContentLength.HasValue)
+            {
+                return request.ContentLength;
+            }
+
+            if (request.Headers.ContainsKey("Content-Length"))
+            {
+                if (long.TryParse(request.Headers["Content-Length"], out var contentLength))
+                {
+                    return contentLength;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>Gets the client authentication information.</summary>
@@ -537,40 +487,6 @@
                     authValue = authParts[1];
                 }
             }
-
-
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-authorization");
-            if (header.Key != null)
-            {
-                var authParts = header.Value.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                if (authParts.Length == 1)
-                {
-                    authScheme = authParts[0];
-                    authValue = null;
-                }
-                else if (authParts.Length == 2)
-                {
-                    authScheme = authParts[0];
-                    authValue = authParts[1];
-                }
-            }
-
-
-            var authSchemeQueryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xscheme");
-            var authValueQueryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xauth");
-            if (authSchemeQueryString.Key != null && authValueQueryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(authSchemeQueryString.Value))
-                {
-                    authScheme = authSchemeQueryString.Value.ToString();
-
-                    if (!string.IsNullOrWhiteSpace(authValueQueryString.Value))
-                    {
-                        authValue = authValueQueryString.Value.ToString();
-                    }
-                }
-            }
-
 
             if (!string.IsNullOrWhiteSpace(authScheme))
             {
@@ -739,47 +655,8 @@
             return csvList
                 .TrimEnd(',')
                 .Split(',')
-                .AsEnumerable<string>()
                 .Select(s => s.Trim())
                 .ToList();
-        }
-
-        /// <summary>Gets the pretty print.</summary>
-        /// <param name="request">The request.</param>
-        /// <returns></returns>
-        private bool GetPrettyPrint(HttpRequest request)
-        {
-            if (request == null)
-            {
-                return false;
-            }
-
-            bool prettyPrint = false;
-            bool returnPrettyPrint = false;
-
-            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-prettyprint");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (bool.TryParse(val, out prettyPrint) && prettyPrint)
-                    {
-                        returnPrettyPrint = true;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xprettyprint");
-            if (queryString.Key != null)
-            {
-                if (bool.TryParse(queryString.Value, out prettyPrint) && prettyPrint)
-                {
-                    returnPrettyPrint = true;
-                }
-            }
-
-            return returnPrettyPrint;
         }
 
         /// <summary>Gets the query string variables.</summary>
@@ -846,29 +723,6 @@
                 }
             }
 
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-match");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (val != null)
-                    {
-                        returnValue = val;
-                        break;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifmatch");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    returnValue = queryString.Value;
-                }
-            }
-
             return returnValue;
         }
 
@@ -894,29 +748,6 @@
                         returnValue = val;
                         break;
                     }
-                }
-            }
-
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-none-match");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (val != null)
-                    {
-                        returnValue = val;
-                        break;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifnonematch");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    returnValue = queryString.Value;
                 }
             }
 
@@ -952,35 +783,6 @@
                 }
             }
 
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-modified-since");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (val != null)
-                    {
-                        if (DateTimeOffset.TryParse(val, out parsed))
-                        {
-                            returnValue = parsed;
-                        }
-                        break;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifmodifiedsince");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    if (DateTimeOffset.TryParse(queryString.Value, out parsed))
-                    {
-                        returnValue = parsed;
-                    }
-                }
-            }
-
             return returnValue;
         }
 
@@ -1009,35 +811,6 @@
                             returnValue = parsed;
                         }
                         break;
-                    }
-                }
-            }
-
-            header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-if-unmodified-since");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (val != null)
-                    {
-                        if (DateTimeOffset.TryParse(val, out parsed))
-                        {
-                            returnValue = parsed;
-                        }
-                        break;
-                    }
-                }
-            }
-
-
-            var queryString = request.Query.FirstOrDefault(i => i.Key.ToLower() == "xifunmodifiedsince");
-            if (queryString.Key != null)
-            {
-                if (!string.IsNullOrWhiteSpace(queryString.Value))
-                {
-                    if (DateTimeOffset.TryParse(queryString.Value, out parsed))
-                    {
-                        returnValue = parsed;
                     }
                 }
             }
@@ -1086,7 +859,7 @@
             HttpContext httpcontext, 
             IApiRequestContextResolver contextResolver, 
             IApiRequestPipeline requestPipeline,
-            IApiRequestConfiguration defaultRequestConfiguration)
+            IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -1143,15 +916,7 @@
                     catch { }
                 }
 
-                // Add any headers to the http context
-                void addHeadersToResponse() => context.Response.Headers.ForEach(h =>
-                {
-                    if (!httpcontext.Response.Headers.ContainsKey(h.Name))
-                    {
-                        httpcontext.Response.Headers.Add(h.Name, context.Response.GetHeaderValues(h.Name).ToArray());
-                    }
-                });
-
+ 
                 if (context.Response.ResponseWriter != null && context.Response.ResponseWriterOptions != null)
                 {
                     context.Response.AddHeader(
@@ -1186,7 +951,7 @@
                                     append: false,
                                     allowMultiple: false);
 
-                                addHeadersToResponse();
+                                AddHeadersToResponse(httpcontext, context);
                             }).ConfigureAwait(false);
 
                         context.Response.ContentLength = contentLength;
@@ -1209,7 +974,7 @@
                                 append: false,
                                 allowMultiple: false);
 
-                            addHeadersToResponse();
+                            AddHeadersToResponse(httpcontext, context);
                         }
                     }
                 }
@@ -1217,13 +982,24 @@
                 {
                     context.Response.ContentLength = 0;
                     context.Response.AddHeader("Content-Length", "0");
-                    addHeadersToResponse();
+                    AddHeadersToResponse(httpcontext, context);
                 }
 
                 context.Runtime.Duration.UtcEnd = DateTime.UtcNow;
             }
 
             return true;
+        }
+
+        private static void AddHeadersToResponse(HttpContext httpContext, ApiRequestContext apiContext)
+        {
+            foreach (var header in apiContext.Response.Headers)
+            {
+                if (!httpContext.Response.Headers.ContainsKey(header.Name))
+                {
+                    httpContext.Response.Headers.Add(header.Name, apiContext.Response.GetHeaderValues(header.Name).ToArray());
+                }
+            }
         }
     }
 }

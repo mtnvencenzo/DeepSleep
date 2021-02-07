@@ -111,7 +111,7 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
 
             var processed = await context.ProcessHttpRequestMethod(null, null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
@@ -137,19 +137,19 @@
                 }
             };
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "put"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: ""));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PATCH"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "DelEte"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "get"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "put"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: ""));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "PATCH"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "DelEte"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "get"));
 
 
-            var resolver = new DefaultRouteResolver();
-            var routes = new DefaultApiRoutingTable();
+            var resolver = new ApiRouteResolver();
+            var routes = new ApiRoutingTable();
 
-            routes.AddRoute(new ApiRouteRegistration(
+            routes.AddRoute(new DeepSleepRouteRegistration(
                 template: "test/path",
                 httpMethods: new[] { "GET" },
                 controller: typeof(Mocks.MockController),
@@ -183,16 +183,16 @@
             };
 
 
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "POST"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "put"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "put"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: " "));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "HeAd"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: ""));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "PATCH"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: null));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "DelEte"));
-            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, endpoint: null, httpMethod: "get"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "POST"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "put"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "put"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: " "));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "HeAd"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: ""));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "PATCH"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: null));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "DelEte"));
+            context.Routing.Template.Locations.Add(new ApiEndpointLocation(controller: null, methodInfo: null, httpMethod: "get"));
 
 
             var processed = await context.ProcessHttpRequestMethod(null, null, null).ConfigureAwait(false);

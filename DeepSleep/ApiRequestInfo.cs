@@ -76,12 +76,6 @@
         /// <value>The correlation id.</value>
         public virtual string CorrelationId { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [pretty print].
-        /// </summary>
-        /// <value><c>true</c> if [pretty print]; otherwise, <c>false</c>.</value>
-        public virtual bool PrettyPrint { get; set; }
-
         /// <summary>Gets or sets the method.</summary>
         /// <value>The method.</value>
         public virtual string Method { get; set; }

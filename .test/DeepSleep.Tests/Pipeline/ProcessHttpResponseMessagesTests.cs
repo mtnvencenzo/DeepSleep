@@ -26,7 +26,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -54,13 +54,13 @@
                 {
                     StatusCode = 400
                 },
-                Configuration = new Configuration.DefaultApiRequestConfiguration
+                Configuration = new Configuration.DeepSleepRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -86,13 +86,13 @@
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
                 Runtime = null,
-                Configuration = new Configuration.DefaultApiRequestConfiguration
+                Configuration = new Configuration.DeepSleepRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -109,13 +109,13 @@
                 {
                     Errors = null
                 },
-                Configuration = new Configuration.DefaultApiRequestConfiguration
+                Configuration = new Configuration.DeepSleepRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -132,13 +132,13 @@
                 {
                     Errors = new List<string>()
                 },
-                Configuration = new Configuration.DefaultApiRequestConfiguration
+                Configuration = new Configuration.DeepSleepRequestConfiguration
                 {
                     ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider()
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -161,7 +161,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseMessages(new DefaultApiRequestContextResolver()).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseMessages(new ApiRequestContextResolver()).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();

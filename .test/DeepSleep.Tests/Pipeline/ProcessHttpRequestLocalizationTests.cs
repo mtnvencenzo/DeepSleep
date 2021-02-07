@@ -73,7 +73,7 @@ namespace DeepSleep.Tests.Pipeline
         {
             var context = new ApiRequestContext
             {
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     LanguageSupport = new ApiLanguageSupportConfiguration
                     {

@@ -2,7 +2,7 @@
 {
     using DeepSleep.Auth;
     using DeepSleep.Configuration;
-    using DeepSleep.Formatting.Converters;
+    using DeepSleep.Media.Converters;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
     using System;
@@ -27,7 +27,7 @@
 
         /// <summary>Gets or sets the request configuration.</summary>
         /// <value>The request configuration.</value>
-        public virtual IApiRequestConfiguration Configuration { get; set; } = new DefaultApiRequestConfiguration();
+        public virtual IDeepSleepRequestConfiguration Configuration { get; set; } = new DeepSleepRequestConfiguration();
 
         /// <summary>Gets or sets the response information.</summary>
         /// <value>The response information.</value>
@@ -80,9 +80,9 @@
 
         /// <summary>Gets the default request configuration.</summary>
         /// <returns></returns>
-        public static IApiRequestConfiguration GetDefaultRequestConfiguration()
+        public static IDeepSleepRequestConfiguration GetDefaultRequestConfiguration()
         {
-            return new DefaultApiRequestConfiguration
+            return new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = false,
                 ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider(),
@@ -119,7 +119,7 @@
                     UseAcceptedLanguageAsThreadCulture = false,
                     UseAcceptedLanguageAsThreadUICulture = false
                 },
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     ReadableMediaTypes = null,
                     WriteableMediaTypes = null,
@@ -197,11 +197,6 @@
                 context.Runtime = new ApiRuntimeInfo();
             }
 
-            if (context.Runtime.Exceptions == null)
-            {
-                context.Runtime.Exceptions = new List<Exception>();
-            }
-
             context.Runtime.Exceptions.Add(ex);
             return context;
         }
@@ -218,17 +213,6 @@
             if (context.Runtime == null)
             {
                 context.Runtime = new ApiRuntimeInfo();
-            }
-
-            if (context.Runtime.Internals == null)
-            {
-                context.Runtime.Internals = new ApiInternals();
-            }
-
-
-            if (context.Runtime.Internals.Exceptions == null)
-            {
-                context.Runtime.Internals.Exceptions = new List<Exception>();
             }
 
             context.Runtime.Internals.Exceptions.Add(ex);

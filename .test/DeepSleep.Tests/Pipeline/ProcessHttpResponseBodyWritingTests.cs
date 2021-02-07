@@ -1,7 +1,7 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Media;
+    using DeepSleep.Media.Serializers;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using Moq;
@@ -23,7 +23,7 @@
                 Response = null
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().BeNull();
@@ -45,7 +45,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().BeNull();
@@ -69,7 +69,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().BeNull();
@@ -93,7 +93,7 @@
                 Request = mockRequestInfo.Object
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -104,7 +104,7 @@
         [Fact]
         public async void ReturnsTrueAndDoesNotWriteForNullFormatter()
         {
-            var mockFactory = SetupFormatterFactory(new IFormatStreamReaderWriter[] { });
+            var mockFactory = SetupFormatterFactory(new IDeepSleepMediaSerializer[] { });
 
             var context = new ApiRequestContext
             {
@@ -115,7 +115,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -147,7 +147,7 @@
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
@@ -178,7 +178,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpResponseBodyWriting(contextResolver, mockFactory.Object).ConfigureAwait(false);
@@ -190,42 +190,6 @@
             context.Response.Headers.Should().HaveCount(0);
             context.Response.ContentType.Should().NotBeNull();
             context.Response.ContentType.Should().Be("application/json");
-            context.Response.ContentLength.Should().Be(0);
-        }
-
-        [Theory]
-        [InlineData("application/json", "application/json")]
-        [InlineData("text/json", "text/json")]
-        [InlineData("*/*", "application/json")]
-        [InlineData(null, "application/json")]
-        public async void ReturnsTrueAndDoesWritesUsingMatchedFormatter(string accept, string expectedContentType)
-        {
-            var formatter = SetupJsonFormatterMock(null, new string[] { "application/json", "text/json" });
-            var mockFactory = SetupFormatterFactory(formatter.Object);
-
-            var context = new ApiRequestContext
-            {
-                RequestAborted = new System.Threading.CancellationToken(false),
-                Response = new ApiResponseInfo
-                {
-                    StatusCode = 201,
-                    ResponseObject = "test"
-                },
-                Request = new ApiRequestInfo
-                {
-                    Accept = accept
-                }
-            };
-
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
-            processed.Should().BeTrue();
-
-            context.Response.ResponseObject.Should().NotBeNull();
-            context.Response.StatusCode.Should().Be(201);
-            context.Response.Headers.Should().NotBeNull();
-            context.Response.Headers.Should().HaveCount(0);
-            context.Response.ContentType.Should().NotBeNull();
-            context.Response.ContentType.Should().Be(expectedContentType);
             context.Response.ContentLength.Should().Be(0);
         }
 
@@ -254,7 +218,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -294,7 +258,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -333,7 +297,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
@@ -375,7 +339,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -419,7 +383,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -463,7 +427,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -505,7 +469,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("ETag", etag));
@@ -546,7 +510,7 @@
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             context.Response.Headers.Add(new ApiHeader("Last-Modified", lastModifed.ToString("r")));
@@ -564,7 +528,7 @@
         }
 
         [Fact]
-        public async void ReturnsTrueAndDoesWritesUsingMatchedFormatterAndPrettyPrint()
+        public async void ReturnsTrueAndDoesWritesUsingMatchedFormatter()
         {
             var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
             var mockFactory = SetupFormatterFactory(formatter.Object);
@@ -579,41 +543,37 @@
                 },
                 Request = new ApiRequestInfo
                 {
-                    Accept = "application/json",
-                    PrettyPrint = true
+                    Accept = "application/json"
                 }
             };
 
-            var processed = await context.ProcessHttpResponseBodyWriting(new DefaultApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
+            var processed = await context.ProcessHttpResponseBodyWriting(new ApiRequestContextResolver(), mockFactory.Object).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.ResponseObject.Should().NotBeNull();
             context.Response.StatusCode.Should().Be(201);
             context.Response.Headers.Should().NotBeNull();
-            context.Response.Headers.Should().HaveCount(1);
-            context.Response.Headers[0].Name.Should().Be("X-PrettyPrint");
-            context.Response.Headers[0].Value.Should().Be("true");
             context.Response.ContentType.Should().NotBeNull();
             context.Response.ContentType.Should().Be("application/json");
             context.Response.ContentLength.Should().Be(0);
         }
 
-        private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        private Mock<DeepSleepMediaSerializerWriterFactory> SetupFormatterFactory(params IDeepSleepMediaSerializer[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamReaderWriterFactory>(new object[] { null })
+            var mockFactory = new Mock<DeepSleepMediaSerializerWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };
 
             mockFactory.Setup(m => m.GetFormatters())
-                .Returns(new List<IFormatStreamReaderWriter>(formatters));
+                .Returns(new List<IDeepSleepMediaSerializer>(formatters));
 
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
+        private Mock<DeepSleepJsonMediaSerializer> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
-            var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
+            var mockFormatter = new Mock<DeepSleepJsonMediaSerializer>(new object[] { null })
             {
                 CallBase = true
             };

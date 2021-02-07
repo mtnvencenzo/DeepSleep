@@ -13,10 +13,7 @@
         [Fact]
         public async Task body_binding___multipart_binds_to_multipart_object()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
-
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
 

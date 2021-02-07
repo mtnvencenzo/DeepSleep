@@ -16,9 +16,7 @@
         [Fact]
         public async Task authorization___anonymous_with_default_configuration()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -57,9 +55,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_with_configured_policy_failing_auth_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -102,9 +98,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_with_configured_policy_success_auth_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -147,9 +141,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_with_configured_policy_not_matching_any_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -192,9 +184,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_head_with_default_configuration()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -232,9 +222,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_head_with_configured_policy_failing_auth_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -276,9 +264,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_head_with_configured_policy_success_auth_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -320,9 +306,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task authorization___anonymous_head_with_configured_policy_not_matching_any_provider()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

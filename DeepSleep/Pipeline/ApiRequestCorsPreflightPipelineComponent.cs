@@ -29,7 +29,7 @@
 
             var routes = context.RequestServices.GetService<IApiRoutingTable>();
             var resolver = context.RequestServices.GetService<IUriRouteResolver>();
-            var defaultRequestConfiguration = context.RequestServices.GetService<IApiRequestConfiguration>();
+            var defaultRequestConfiguration = context.RequestServices.GetService<IDeepSleepRequestConfiguration>();
 
             if (await context.ProcessHttpRequestCrossOriginResourceSharingPreflight(routes, resolver, defaultRequestConfiguration).ConfigureAwait(false))
             {
@@ -61,7 +61,7 @@
             this ApiRequestContext context,
             IApiRoutingTable routes,
             IUriRouteResolver resolver,
-            IApiRequestConfiguration defaultRequestConfiguration)
+            IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

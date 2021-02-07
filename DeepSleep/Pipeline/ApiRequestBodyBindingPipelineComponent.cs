@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,7 +28,7 @@
                  .GetContext()
                  .SetThreadCulure();
 
-            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
+            var formatterFactory = context?.RequestServices?.GetService<IDeepSleepMediaSerializerFactory>();
 
             if (await context.ProcessHttpRequestBodyBinding(contextResolver, formatterFactory).ConfigureAwait(false))
             {
@@ -55,7 +55,7 @@
         /// <param name="contextResolver">The API request context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpRequestBodyBinding(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IDeepSleepMediaSerializerFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -96,26 +96,30 @@
 
                     if (context.Routing.Route.Location.BodyParameterType != null && context.Request.ContentLength > 0 && !string.IsNullOrWhiteSpace(context.Request.ContentType))
                     {
-                        IFormatStreamReaderWriter formatter = null;
+                        IDeepSleepMediaSerializer formatter = null;
 
-                        var formatterTypes = context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes ?? formatterFactory?.GetReadableTypes(null) ?? new List<string>();
+                        var formatterTypes = context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes 
+                            ?? formatterFactory?.GetReadableTypes(objType: context.Routing.Route.Location.BodyParameterType, overridingFormatters: null) 
+                            ?? new List<string>();
 
                         if (formatterFactory != null)
                         {
                             formatter = await formatterFactory.GetContentTypeFormatter(
                                 contentTypeHeader: context.Request.ContentType,
+                                objType: context.Routing.Route.Location.BodyParameterType,
                                 formatterType: out var _,
                                 readableMediaTypes: context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
                         }
 
                         if (context.Configuration.ReadWriteConfiguration?.ReaderResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(contextResolver).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.ReaderResolver(context?.RequestServices).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
                                 formatter = await formatterFactory.GetContentTypeFormatter(
                                     contentTypeHeader: context.Request.ContentType,
+                                    objType: context.Routing.Route.Location.BodyParameterType,
                                     formatterType: out var _,
                                     readableFormatters: overrides.Formatters,
                                     readableMediaTypes: context.Configuration?.ReadWriteConfiguration?.ReadableMediaTypes).ConfigureAwait(false);
@@ -124,6 +128,7 @@
                                     .Where(f => f != null)
                                     .Where(f => f.SupportsRead)
                                     .Where(f => f.ReadableMediaTypes != null)
+                                    .Where(f => f.CanHandleType(context.Routing.Route.Location.BodyParameterType))
                                     .SelectMany(f => f.ReadableMediaTypes)
                                     .Distinct()
                                     .ToList();
@@ -172,7 +177,7 @@
                             context.Request.InvocationContext.BodyModel = await formatter.ReadType(
                                 stream: context.Request.Body,
                                 objType: context.Routing.Route.Location.BodyParameterType,
-                                options: new FormatterOptions
+                                options: new MediaSerializerOptions
                                 {
                                     Culture = context.Request.AcceptCulture,
                                     Encoding = contextTypeEncoding ?? Encoding.UTF8

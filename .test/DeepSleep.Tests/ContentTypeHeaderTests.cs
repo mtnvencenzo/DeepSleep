@@ -300,5 +300,62 @@
             equals = value.Equals(header);
             equals.Should().Be(false);
         }
+
+        [Fact]
+        public void contenttype___implicit_to_string_from_null_success()
+        {
+            string value = null as ContentTypeHeader;
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void contenttype___null_equals_operator_null_success()
+        {
+            var equals = (null as ContentTypeHeader) == (null as ContentTypeHeader);
+
+            equals.Should().BeTrue();
+        }
+
+        [Fact]
+        public void contenttype___null_not_equals_operator_null_success()
+        {
+            var equals = (null as ContentTypeHeader) != (null as ContentTypeHeader);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void contenttype___gethashcode_success()
+        {
+            ContentTypeHeader header = "text/json";
+
+            header.Should().NotBeNull();
+
+            var hashCode = header.GetHashCode();
+            hashCode.Should().NotBe(0);
+        }
+
+        [Fact]
+        public void contenttype___equals_overload_null_sccess()
+        {
+            ContentTypeHeader header1 = "text/json";
+            ContentTypeHeader header2 = null;
+
+            var equals = header1.Equals(header2);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void contenttype___equals_overload_not_string_or_equivelent_sccess()
+        {
+            ContentTypeHeader header1 = "text/json";
+            var other = 2;
+
+            var equals = header1.Equals(other);
+
+            equals.Should().BeFalse();
+        }
     }
 }

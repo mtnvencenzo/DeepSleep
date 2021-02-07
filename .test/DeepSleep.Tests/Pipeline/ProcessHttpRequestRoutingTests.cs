@@ -3,7 +3,7 @@
     using DeepSleep.Auth;
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
     using DeepSleep.Pipeline;
     using DeepSleep.Tests.Mocks;
     using DeepSleep.Validation;
@@ -43,7 +43,7 @@
                 RequestAborted = new CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), null, null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(new ApiRoutingTable(), null, null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -61,7 +61,7 @@
                 RequestAborted = new CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(null, new DefaultRouteResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(null, new ApiRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -79,7 +79,7 @@
                 RequestAborted = new CancellationToken(false)
             };
 
-            var processed = await context.ProcessHttpRequestRouting(new DefaultApiRoutingTable(), new DefaultRouteResolver(), null).ConfigureAwait(false);
+            var processed = await context.ProcessHttpRequestRouting(new ApiRoutingTable(), new ApiRouteResolver(), null).ConfigureAwait(false);
             processed.Should().BeTrue();
 
             context.Response.Should().NotBeNull();
@@ -98,7 +98,7 @@
         public async void returns_get_endpoint_for_head_request(string head)
         {
             var routingTable = GetRoutingTable(null);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -120,7 +120,7 @@
             context.Routing.Route.RouteVariables.Should().ContainKey("id");
             context.Routing.Route.RouteVariables["id"].Should().Be("1");
             context.Routing.Route.Location.Should().NotBeNull();
-            context.Routing.Route.Location.Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(nameof(MockController.Get));
             context.Routing.Route.Location.Controller.Should().Be(typeof(MockController));
             context.Routing.Route.Location.HttpMethod.Should().Be("GET");
             context.Routing.Template.Should().NotBeNull();
@@ -130,7 +130,7 @@
             context.Routing.Template.Locations.Should().NotBeNull();
             context.Routing.Template.Locations.Should().HaveCount(1);
             context.Routing.Template.Locations[0].Controller.Should().Be(typeof(MockController));
-            context.Routing.Template.Locations[0].Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Template.Locations[0].MethodInfo.Name.Should().Be(nameof(MockController.Get));
             context.Routing.Template.Locations[0].HttpMethod.Should().Be("GET");
             context.Configuration.Should().NotBeNull();
         }
@@ -142,14 +142,14 @@
         {
             var routingTable = GetRoutingTable(null);
 
-            routingTable = routingTable.AddRoute(new ApiRouteRegistration(
+            routingTable = routingTable.AddRoute(new DeepSleepRouteRegistration(
                 template: "test/{id}/name",
                 httpMethods: new[] { head },
                 controller: typeof(MockController),
                 endpoint: nameof(MockController.Head),
                 config: null));
 
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -171,7 +171,7 @@
             context.Routing.Route.RouteVariables.Should().ContainKey("id");
             context.Routing.Route.RouteVariables["id"].Should().Be("1");
             context.Routing.Route.Location.Should().NotBeNull();
-            context.Routing.Route.Location.Endpoint.Should().Be(nameof(MockController.Head));
+            context.Routing.Route.Location.MethodInfo.Name.Should().Be(nameof(MockController.Head));
             context.Routing.Route.Location.Controller.Should().Be(typeof(MockController));
             context.Routing.Route.Location.HttpMethod.Should().Be("HEAD");
             context.Routing.Template.Should().NotBeNull();
@@ -181,10 +181,10 @@
             context.Routing.Template.Locations.Should().NotBeNull();
             context.Routing.Template.Locations.Should().HaveCount(2);
             context.Routing.Template.Locations[0].Controller.Should().Be(typeof(MockController));
-            context.Routing.Template.Locations[0].Endpoint.Should().Be(nameof(MockController.Get));
+            context.Routing.Template.Locations[0].MethodInfo.Name.Should().Be(nameof(MockController.Get));
             context.Routing.Template.Locations[0].HttpMethod.Should().Be("GET");
             context.Routing.Template.Locations[1].Controller.Should().Be(typeof(MockController));
-            context.Routing.Template.Locations[1].Endpoint.Should().Be(nameof(MockController.Head));
+            context.Routing.Template.Locations[1].MethodInfo.Name.Should().Be(nameof(MockController.Head));
             context.Routing.Template.Locations[1].HttpMethod.Should().Be("HEAD");
             context.Configuration.Should().NotBeNull();
         }
@@ -196,11 +196,11 @@
         [Fact]
         public async void request_config___returns_system_default_when_default_and_endpoint_are_null()
         {
-            IApiRequestConfiguration defaultConfig = null;
-            IApiRequestConfiguration endpointConfig = null;
+            IDeepSleepRequestConfiguration defaultConfig = null;
+            IDeepSleepRequestConfiguration endpointConfig = null;
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -232,18 +232,18 @@
         [InlineData(false, true, false)]
         public async void request_config___allowanoymous_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = def
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = endpoint
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -278,18 +278,18 @@
         [InlineData(true, false, true)]
         public async void request_config___enableHeadForGetRequests_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 EnableHeadForGetRequests = def
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 EnableHeadForGetRequests = endpoint
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -318,15 +318,15 @@
         [Fact]
         public async void request_config___allowanoymous_endpoint_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = true
             };
 
-            DefaultApiRequestConfiguration endpointConfig = null;
+            DeepSleepRequestConfiguration endpointConfig = null;
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -354,15 +354,15 @@
         [Fact]
         public async void request_config___allowanoymous_endpoint_notnull_default_null_returns_expected()
         {
-            DefaultApiRequestConfiguration defaultConfig = null;
+            DeepSleepRequestConfiguration defaultConfig = null;
 
-            DefaultApiRequestConfiguration endpointConfig = new DefaultApiRequestConfiguration
+            DeepSleepRequestConfiguration endpointConfig = new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = true
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -396,7 +396,7 @@
         [InlineData(false, true, false)]
         public async void request_config___allowrequestbodywhennomodeldefined_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -404,7 +404,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -413,7 +413,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -447,18 +447,18 @@
         [InlineData(false, true, false)]
         public async void request_config___deprecated_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 Deprecated = def
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 Deprecated = endpoint
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -492,18 +492,18 @@
         [InlineData(true, false, true)]
         public async void request_config___includeRequestIdHeaderInResponse_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 IncludeRequestIdHeaderInResponse = def
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 IncludeRequestIdHeaderInResponse = endpoint
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -542,9 +542,9 @@
                 ? new AcceptHeader(expected)
                 : null;
 
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     AcceptHeaderOverride = def != null
                         ? new AcceptHeader(def)
@@ -552,9 +552,9 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     AcceptHeaderOverride = endpoint != null
                         ? new AcceptHeader(endpoint)
@@ -563,7 +563,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -597,9 +597,9 @@
         [InlineData("text/json", "application/json", "text/json")]
         public async void request_config___readWriteConfiguration_readblemediatypes_returns_expected(string expected, string def, string endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     ReadableMediaTypes = def != null
                         ? def.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
@@ -607,9 +607,9 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     ReadableMediaTypes = endpoint != null
                         ? endpoint.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
@@ -618,7 +618,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -656,9 +656,9 @@
         [InlineData("text/json", "application/json", "text/json")]
         public async void request_config___readWriteConfiguration_writeablemediatypes_returns_expected(string expected, string def, string endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     WriteableMediaTypes = def != null
                         ? def.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
@@ -666,9 +666,9 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                 {
                     WriteableMediaTypes = endpoint != null
                         ? endpoint.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
@@ -677,7 +677,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -713,38 +713,36 @@
         [InlineData(false, true, false)]
         public async void request_config___readWriteConfiguration_readerresolver_returns_expected(bool? expected, bool? def, bool? endpoint)
         {
-            var defaultMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            var defaultMockFormatter = new Mock<IDeepSleepMediaSerializer>();
             defaultMockFormatter.Setup(f => f.SupportsRead).Returns(def ?? false);
             defaultMockFormatter.Setup(f => f.SupportsWrite).Returns(def ?? false);
-            defaultMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(def ?? false);
 
-            var endpointMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            var endpointMockFormatter = new Mock<IDeepSleepMediaSerializer>();
             endpointMockFormatter.Setup(f => f.SupportsRead).Returns(endpoint ?? false);
             endpointMockFormatter.Setup(f => f.SupportsWrite).Returns(endpoint ?? false);
-            endpointMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(endpoint ?? false);
 
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration()
             };
 
             if (def.HasValue)
             {
-                defaultConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new FormatterReadOverrides(new[] { defaultMockFormatter.Object }));
+                defaultConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new MediaSerializerReadOverrides(new[] { defaultMockFormatter.Object }));
             }
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration()
             };
 
             if (endpoint.HasValue)
             {
-                endpointConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new FormatterReadOverrides(new[] { endpointMockFormatter.Object }));
+                endpointConfig.ReadWriteConfiguration.ReaderResolver = (args) => Task.FromResult(new MediaSerializerReadOverrides(new[] { endpointMockFormatter.Object }));
             }
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -779,7 +777,6 @@
                 overrides.Formatters.Should().HaveCount(1);
                 overrides.Formatters[0].SupportsRead.Should().Be(expected.Value);
                 overrides.Formatters[0].SupportsWrite.Should().Be(expected.Value);
-                overrides.Formatters[0].SupportsPrettyPrint.Should().Be(expected.Value);
             }
         }
 
@@ -790,38 +787,36 @@
         [InlineData(false, true, false)]
         public async void request_config___readWriteConfiguration_writerresolver_returns_expected(bool? expected, bool? def, bool? endpoint)
         {
-            var defaultMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            var defaultMockFormatter = new Mock<IDeepSleepMediaSerializer>();
             defaultMockFormatter.Setup(f => f.SupportsRead).Returns(def ?? false);
             defaultMockFormatter.Setup(f => f.SupportsWrite).Returns(def ?? false);
-            defaultMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(def ?? false);
 
-            var endpointMockFormatter = new Mock<IFormatStreamReaderWriter>();
+            var endpointMockFormatter = new Mock<IDeepSleepMediaSerializer>();
             endpointMockFormatter.Setup(f => f.SupportsRead).Returns(endpoint ?? false);
             endpointMockFormatter.Setup(f => f.SupportsWrite).Returns(endpoint ?? false);
-            endpointMockFormatter.Setup(f => f.SupportsPrettyPrint).Returns(endpoint ?? false);
 
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration()
             };
 
             if (def.HasValue)
             {
-                defaultConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new FormatterWriteOverrides(new[] { defaultMockFormatter.Object }));
+                defaultConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new MediaSerializerWriteOverrides(new[] { defaultMockFormatter.Object }));
             }
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
-                ReadWriteConfiguration = new ApiReadWriteConfiguration()
+                ReadWriteConfiguration = new ApiMediaSerializerConfiguration()
             };
 
             if (endpoint.HasValue)
             {
-                endpointConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new FormatterWriteOverrides(new[] { endpointMockFormatter.Object }));
+                endpointConfig.ReadWriteConfiguration.WriterResolver = (args) => Task.FromResult(new MediaSerializerWriteOverrides(new[] { endpointMockFormatter.Object }));
             }
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -856,7 +851,6 @@
                 overrides.Formatters.Should().HaveCount(1);
                 overrides.Formatters[0].SupportsRead.Should().Be(expected.Value);
                 overrides.Formatters[0].SupportsWrite.Should().Be(expected.Value);
-                overrides.Formatters[0].SupportsPrettyPrint.Should().Be(expected.Value);
             }
         }
 
@@ -867,7 +861,7 @@
         [InlineData("en-US", null, "en-US")]
         public async void request_config___fallbacklanguage_returns_expected(string expected, string def, string endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -875,7 +869,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -884,7 +878,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -918,7 +912,7 @@
         {
             var hasSet = false;
 
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -926,7 +920,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -935,7 +929,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -973,7 +967,7 @@
         [Fact]
         public async void request_config___maxrequestlength_does_not_fail_with_null_maxlengthsetter()
         {
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -982,7 +976,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1013,7 +1007,7 @@
         {
             var hasSet = false;
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1022,7 +1016,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1060,7 +1054,7 @@
         [InlineData(6, null, 6)]
         public async void request_config___maxrequesturiLength_returns_expected(int expected, int? def, int? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1068,7 +1062,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1077,7 +1071,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1112,7 +1106,7 @@
         [InlineData(true, false, true)]
         public async void request_config___requirecontentlengthonrequestbodyrequests_returns_expected(bool expected, bool? def, bool? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1120,7 +1114,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1129,7 +1123,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1157,7 +1151,7 @@
         [Fact]
         public async void request_config___endpoint_supportedlanguages_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1165,7 +1159,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1174,7 +1168,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1205,7 +1199,7 @@
         [Fact]
         public async void request_config___endpoint_supportedlanguages_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1213,7 +1207,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1222,7 +1216,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1253,7 +1247,7 @@
         [Fact]
         public async void request_config___endpoint_supportedlanguages_notnull_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1261,7 +1255,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 LanguageSupport = new ApiLanguageSupportConfiguration
                 {
@@ -1270,7 +1264,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1301,12 +1295,12 @@
         [Fact]
         public async void request_config___endpoint_cachedirective_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1318,7 +1312,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1350,7 +1344,7 @@
         [Fact]
         public async void request_config___endpoint_cachedirective_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1361,13 +1355,13 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1403,7 +1397,7 @@
         [InlineData(HttpCacheType.Cacheable, null, HttpCacheType.Cacheable)]
         public async void request_config___cachedirective_cacheability_returns_expected(HttpCacheType expected, HttpCacheType? def, HttpCacheType? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1411,7 +1405,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1420,7 +1414,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1455,7 +1449,7 @@
         [InlineData(HttpCacheLocation.Public, null, HttpCacheLocation.Public)]
         public async void request_config___cachedirective_cachelocation_returns_expected(HttpCacheLocation expected, HttpCacheLocation? def, HttpCacheLocation? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1463,7 +1457,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1472,7 +1466,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1507,7 +1501,7 @@
         [InlineData(100, null, 100)]
         public async void request_config___cachedirective_expirationseconds_returns_expected(int expected, int? def, int? endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1515,7 +1509,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1524,7 +1518,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1559,7 +1553,7 @@
         [InlineData("Test", null, "Test")]
         public async void request_config___cachedirective_varyheadervalue_returns_expected(string expected, string def, string endpoint)
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1567,7 +1561,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
@@ -1576,7 +1570,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1607,18 +1601,18 @@
         [Fact]
         public async void request_config___crossoriginconfig_null_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1656,12 +1650,12 @@
         [Fact]
         public async void request_config___crossoriginconfig_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
@@ -1674,7 +1668,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1716,7 +1710,7 @@
         [Fact]
         public async void request_config___crossoriginconfig_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
@@ -1728,13 +1722,13 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1776,7 +1770,7 @@
         [Fact]
         public async void request_config___crossoriginconfig__default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
@@ -1788,7 +1782,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 CrossOriginConfig = new ApiCrossOriginConfiguration
                 {
@@ -1801,7 +1795,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -1845,16 +1839,16 @@
         [Fact]
         public async void request_config___headervalidationconfig_null_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1880,11 +1874,11 @@
         [Fact]
         public async void request_config___headervalidationconfig_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1893,7 +1887,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1919,7 +1913,7 @@
         [Fact]
         public async void request_config___headervalidationconfig_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1927,12 +1921,12 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -1958,7 +1952,7 @@
         [Fact]
         public async void request_config___headervalidationconfig_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1966,7 +1960,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 RequestValidation = new ApiRequestValidationConfiguration
                 {
@@ -1975,7 +1969,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2003,18 +1997,18 @@
         [Fact]
         public async void request_config___validationerrorconfig_null_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -2046,12 +2040,12 @@
         [Fact]
         public async void request_config___validationerrorconfig_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2061,7 +2055,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -2091,7 +2085,7 @@
         [Fact]
         public async void request_config___validationerrorconfig_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2100,13 +2094,13 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -2136,7 +2130,7 @@
         [Fact]
         public async void request_config___validationerrorconfig_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2145,7 +2139,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2155,7 +2149,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2187,7 +2181,7 @@
         [Fact]
         public async void request_config___validationerrorconfig_default_notnull_endpoint_mixed_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2196,7 +2190,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                 {
@@ -2205,7 +2199,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2237,7 +2231,7 @@
         [Fact]
         public async void request_config___pipelinecomponents_default_notnull_returns_endpoint()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 PipelineComponents = new List<IRequestPipelineComponent>
                 {
@@ -2245,7 +2239,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 PipelineComponents = new List<IRequestPipelineComponent>
                 {
@@ -2255,7 +2249,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2286,7 +2280,7 @@
         [Fact]
         public async void request_config___pipelinecomponents_default_notnull_returns_default()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 PipelineComponents = new List<IRequestPipelineComponent>
                 {
@@ -2294,12 +2288,12 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2330,11 +2324,11 @@
         [Fact]
         public async void request_config___pipelinecomponents_default_null_returns_endpoint()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 PipelineComponents = new List<IRequestPipelineComponent>
                 {
@@ -2343,7 +2337,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2374,16 +2368,16 @@
         [Fact]
         public async void request_config___pipelinecomponents_default_null_endpoint_null_returns_system()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2414,7 +2408,7 @@
         [Fact]
         public async void request_config___validators_default_notnull_returns_endpoint()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 Validators = new List<IEndpointValidatorComponent>
                 {
@@ -2422,7 +2416,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 Validators = new List<IEndpointValidatorComponent>
                 {
@@ -2432,7 +2426,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2463,7 +2457,7 @@
         [Fact]
         public async void request_config___validators_default_notnull_returns_default()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 Validators = new List<IEndpointValidatorComponent>
                 {
@@ -2471,12 +2465,12 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2507,11 +2501,11 @@
         [Fact]
         public async void request_config___validators_default_null_returns_endpoint()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 Validators = new List<IEndpointValidatorComponent>
                 {
@@ -2520,7 +2514,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2551,16 +2545,16 @@
         [Fact]
         public async void request_config___validators_default_null_endpoint_null_returns_system()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2591,12 +2585,12 @@
         [Fact]
         public async void request_config___authorizationproviders_endpoint_notnull_default_null_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = null
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = new List<IAuthorizationComponent>
                 {
@@ -2605,7 +2599,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -2635,7 +2629,7 @@
         [Fact]
         public async void request_config___authorizationproviders_endpoint_null_default_notnull_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = new List<IAuthorizationComponent>
                 {
@@ -2643,13 +2637,13 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = null
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
             var context = new ApiRequestContext
             {
                 RequestAborted = new CancellationToken(false),
@@ -2679,7 +2673,7 @@
         [Fact]
         public async void request_config___authorizationproviders_endpoint_and_default_returns_expected()
         {
-            var defaultConfig = new DefaultApiRequestConfiguration
+            var defaultConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = new List<IAuthorizationComponent>
                 {
@@ -2687,7 +2681,7 @@
                 }
             };
 
-            var endpointConfig = new DefaultApiRequestConfiguration
+            var endpointConfig = new DeepSleepRequestConfiguration
             {
                 AuthorizationProviders = new List<IAuthorizationComponent>
                 {
@@ -2696,7 +2690,7 @@
             };
 
             var routingTable = GetRoutingTable(endpointConfig);
-            var routeResolver = new DefaultRouteResolver();
+            var routeResolver = new ApiRouteResolver();
 
             var context = new ApiRequestContext
             {
@@ -2726,7 +2720,7 @@
         }
 
 
-        private void AssertConfiguration(IApiRequestConfiguration request, IApiRequestConfiguration endpoint, IApiRequestConfiguration def)
+        private void AssertConfiguration(IDeepSleepRequestConfiguration request, IDeepSleepRequestConfiguration endpoint, IDeepSleepRequestConfiguration def)
         {
             var system = ApiRequestContext.GetDefaultRequestConfiguration();
 
@@ -2913,11 +2907,11 @@
             };
         }
 
-        private IApiRoutingTable GetRoutingTable(IApiRequestConfiguration routeConfig)
+        private IApiRoutingTable GetRoutingTable(IDeepSleepRequestConfiguration routeConfig)
         {
-            var routingTable = new DefaultApiRoutingTable();
+            var routingTable = new ApiRoutingTable();
 
-            return routingTable.AddRoute(new ApiRouteRegistration(
+            return routingTable.AddRoute(new DeepSleepRouteRegistration(
                 template: "test/{id}/name",
                 httpMethods: new[] { "GET" },
                 controller: typeof(MockController),

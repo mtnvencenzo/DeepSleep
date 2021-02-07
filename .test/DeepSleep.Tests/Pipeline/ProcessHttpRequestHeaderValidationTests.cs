@@ -76,7 +76,7 @@
                         new ApiHeader("X-Header2", "MyValue2")
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -106,7 +106,7 @@
                         new ApiHeader("X-Header2", "MyValue233")
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {

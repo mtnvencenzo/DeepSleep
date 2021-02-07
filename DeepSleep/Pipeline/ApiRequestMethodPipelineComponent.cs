@@ -27,7 +27,7 @@
 
             var routes = context?.RequestServices.GetService<IApiRoutingTable>();
             var resolver = context?.RequestServices.GetService<IUriRouteResolver>();
-            var defaultRequestConfig = context?.RequestServices?.GetService<IApiRequestConfiguration>();
+            var defaultRequestConfig = context?.RequestServices?.GetService<IDeepSleepRequestConfiguration>();
 
             if (await context.ProcessHttpRequestMethod(routes, resolver, defaultRequestConfig).ConfigureAwait(false))
             {
@@ -58,7 +58,7 @@
         internal static async Task<bool> ProcessHttpRequestMethod(this ApiRequestContext context,
             IApiRoutingTable routes,
             IUriRouteResolver resolver,
-            IApiRequestConfiguration defaultRequestConfiguration)
+            IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {

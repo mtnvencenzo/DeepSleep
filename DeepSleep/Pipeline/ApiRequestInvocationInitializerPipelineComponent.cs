@@ -65,11 +65,10 @@
                     throw new Exception("Routing item's controller type is null");
                 }
 
-                if (string.IsNullOrWhiteSpace(context.Routing.Route.Location.Endpoint))
+                if (context.Routing.Route.Location.MethodInfo == null)
                 {
-                    throw new Exception("Routing item's endpoint name is null");
+                    throw new Exception("Routing item's method is null");
                 }
-
 
                 object endpointController = null;
 
@@ -105,18 +104,9 @@
                     }
                 }
 
-                var simpleParameters = new Dictionary<ParameterInfo, object>();
-
-                if (context.Routing.Route.Location.SimpleParameters != null)
-                {
-                    simpleParameters = context.Routing.Route.Location.SimpleParameters
-                        .ToDictionary((k) => k, (k) => null as object);
-                }
-
                 context.Request.InvocationContext = new ApiInvocationContext
                 {
-                    ControllerInstance = endpointController,
-                    SimpleParameters = simpleParameters
+                    ControllerInstance = endpointController
                 };
 
                 return Task.FromResult(true);

@@ -178,8 +178,6 @@
 
             if (!string.IsNullOrWhiteSpace(bodyText))
             {
-                //System.Diagnostics.Debug.Write(bodyText);
-
                 request.Body.Seek(0, SeekOrigin.Begin);
 
                 var writer = new StreamWriter(request.Body);

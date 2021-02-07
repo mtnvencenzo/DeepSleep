@@ -31,7 +31,7 @@
                     .GetContext()
                     .SetThreadCulure();
 
-                var apiServiceConfiguration = context?.RequestServices?.GetService<IApiServiceConfiguration>();
+                var apiServiceConfiguration = context?.RequestServices?.GetService<IDeepSleepServiceConfiguration>();
 
                 await context.ProcessHttpResponseUnhandledException(contextResolver, ex, apiServiceConfiguration).ConfigureAwait(false);
             }
@@ -57,7 +57,7 @@
         /// <param name="exception">The exception.</param>
         /// <param name="config">The configuration.</param>
         /// <returns></returns>
-        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, IApiRequestContextResolver contextResolver, Exception exception, IApiServiceConfiguration config)
+        public static async Task<bool> ProcessHttpResponseUnhandledException(this ApiRequestContext context, IApiRequestContextResolver contextResolver, Exception exception, IDeepSleepServiceConfiguration config)
         {
             if (exception != null)
             {

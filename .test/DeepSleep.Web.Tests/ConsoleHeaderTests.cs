@@ -8,9 +8,9 @@ namespace DeepSleep.Web.Tests
         [Fact]
         public void console___writes_header()
         {
-            var routingTable = new DefaultApiRoutingTable();
+            var routingTable = new ApiRoutingTable();
 
-            routingTable.AddRoute(new ApiRouteRegistration(
+            routingTable.AddRoute(new DeepSleepRouteRegistration(
                 template: "/myroute/{test}/other/{test2}/id",
                 httpMethods: new[] { "GET" },
                 controller: typeof(TestController),

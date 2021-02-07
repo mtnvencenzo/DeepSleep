@@ -19,15 +19,15 @@
         /// <summary>Gets or sets the exception.</summary>
         /// <value>The exception.</value>
         [JsonIgnore]
-        public IList<Exception> Exceptions { get; internal set; } = new List<Exception>();
+        public IList<Exception> Exceptions { get; } = new List<Exception>();
 
         /// <summary>Gets or sets the duration of the request.</summary>
         /// <value>The duration of the request.</value>
-        public ApiRequestDuration Duration { get; internal set; } = new ApiRequestDuration();
+        public ApiRequestDuration Duration { get; } = new ApiRequestDuration();
 
         /// <summary>Gets the internals.</summary>
         /// <value>The internals.</value>
-        internal ApiInternals Internals { get; set; } = new ApiInternals();
+        internal ApiInternals Internals { get; } = new ApiInternals();
 
         /// <summary>Logs the dump.</summary>
         /// <returns></returns>

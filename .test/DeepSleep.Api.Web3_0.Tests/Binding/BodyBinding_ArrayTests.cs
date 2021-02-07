@@ -18,9 +18,7 @@
         [Fact]
         public async Task body_binding___array_ilist_json()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -63,9 +61,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task body_binding___array_list_json()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -108,9 +104,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task body_binding___array_array_json()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -153,9 +147,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task body_binding___array_ienumerable_json()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -200,9 +192,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task body_binding___array_icollection_json()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -250,9 +240,7 @@ Content-Type: {applicationJson}
         [Fact]
         public async Task body_binding___array_list_xml()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -295,9 +283,7 @@ Content-Type: {applicationXml}
         [Fact]
         public async Task body_binding___array_array_xml()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

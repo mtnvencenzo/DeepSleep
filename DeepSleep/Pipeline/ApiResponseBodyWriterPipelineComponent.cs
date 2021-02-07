@@ -1,6 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -27,7 +27,7 @@
                  .GetContext()
                  .SetThreadCulure();
 
-            var formatterFactory = context?.RequestServices?.GetService<IFormatStreamReaderWriterFactory>();
+            var formatterFactory = context?.RequestServices?.GetService<IDeepSleepMediaSerializerFactory>();
 
             await context.ProcessHttpResponseBodyWriting(contextResolver, formatterFactory).ConfigureAwait(false);
         }
@@ -52,7 +52,7 @@
         /// <param name="contextResolver">The context resolver.</param>
         /// <param name="formatterFactory">The formatter factory.</param>
         /// <returns></returns>
-        internal static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IFormatStreamReaderWriterFactory formatterFactory)
+        internal static async Task<bool> ProcessHttpResponseBodyWriting(this ApiRequestContext context, IApiRequestContextResolver contextResolver, IDeepSleepMediaSerializerFactory formatterFactory)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
@@ -63,7 +63,6 @@
                     var accept = !string.IsNullOrWhiteSpace(context.Request.Accept)
                         ? context.Request.Accept
                         : AcceptHeader.All();
-
 
                     var isConditionalRequestMatch = ApiCondtionalMatchType.None;
 
@@ -96,25 +95,28 @@
                             }
                         }
 
-                        IFormatStreamOptions options = new FormatterOptions
+                        IMediaSerializerOptions options = new MediaSerializerOptions
                         {
-                            PrettyPrint = context.Request.PrettyPrint,
                             Culture = context.Request.AcceptCulture,
                             Encoding = acceptEncoding ?? Encoding.UTF8
                         };
 
+                        var returnType = context.Response.ResponseObject.GetType();
+
                         var formatter = await formatterFactory.GetAcceptableFormatter(
+                            objType: returnType,
                             acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
                             writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                             formatterType: out var formatterType).ConfigureAwait(false);
 
                         if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
                         {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(contextResolver).ConfigureAwait(false);
+                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(context?.RequestServices).ConfigureAwait(false);
 
                             if (overrides?.Formatters != null)
                             {
                                 formatter = await formatterFactory.GetAcceptableFormatter(
+                                    objType: returnType,
                                     acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
                                     writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
                                     writeableFormatters: overrides.Formatters,
@@ -124,11 +126,6 @@
 
                         if (formatter != null)
                         {
-                            if (formatter.SupportsPrettyPrint && context.Request.PrettyPrint)
-                            {
-                                context.Response.AddHeader("X-PrettyPrint", (options?.PrettyPrint ?? false).ToString().ToLower());
-                            }
-
                             isWriteableResponse = true;
                             context.Response.ResponseWriter = formatter;
                             context.Response.ResponseWriterOptions = options;

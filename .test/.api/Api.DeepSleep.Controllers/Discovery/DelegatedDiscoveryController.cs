@@ -9,8 +9,8 @@
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="global::DeepSleep.Discovery.IRouteRegistrationProvider" />
-    public class DelegatedDiscoveryController : IRouteRegistrationProvider
+    /// <seealso cref="global::DeepSleep.Discovery.IDeepSleepRegistrationProvider" />
+    public class DelegatedDiscoveryController : IDeepSleepRegistrationProvider
     {
         private readonly IApiRequestContextResolver contextResolver;
 
@@ -29,16 +29,16 @@
             return new DelegatedDiscoveryModel();
         }
 
-        Task<IList<ApiRouteRegistration>> IRouteRegistrationProvider.GetRoutes(IServiceProvider serviceProvider)
+        Task<IList<DeepSleepRouteRegistration>> IDeepSleepRegistrationProvider.GetRoutes(IServiceProvider serviceProvider)
         {
-            return Task.FromResult(new List<ApiRouteRegistration>
+            return Task.FromResult(new List<DeepSleepRouteRegistration>
             {
-                new ApiRouteRegistration(
+                new DeepSleepRouteRegistration(
                     template: "discovery/delegated",
                     httpMethods: new[] { "GET" },
                     controller: this.GetType(),
                     endpoint: nameof(Get))
-            } as IList<ApiRouteRegistration>);
+            } as IList<DeepSleepRouteRegistration>);
         }
     }
 

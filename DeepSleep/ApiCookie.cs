@@ -42,11 +42,6 @@
         /// <summary>
         /// 
         /// </summary>
-        public DateTime? Expires { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public string ToCookie()
         {
@@ -68,16 +63,9 @@
                 ? $"; Max-Age={this.MaxAgeSeconds}"
                 : string.Empty;
 
-            string expires = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(maxAge) && this.Expires.HasValue)
-            {
-                expires = $"; Expires={this.Expires.Value.ToString("r")}";
-            }
-
             string samesite = $"; SameSite={this.SameSite}";
 
-            var cookie = $"{cookieNameValue}{secure}{httpOnly}{maxAge}{expires}{samesite}";
+            var cookie = $"{cookieNameValue}{secure}{httpOnly}{maxAge}{samesite}";
             return cookie;
         }
     }

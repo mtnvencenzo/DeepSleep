@@ -1,10 +1,11 @@
 ﻿namespace DeepSleep.Tests.Pipeline
 {
-    using DeepSleep.Formatting;
-    using DeepSleep.Formatting.Formatters;
+    using DeepSleep.Media;
+    using DeepSleep.Media.Serializers;
     using DeepSleep.Pipeline;
     using FluentAssertions;
     using Moq;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
@@ -22,7 +23,7 @@
                 RequestAborted = new System.Threading.CancellationToken(true)
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
@@ -41,7 +42,7 @@
                 Request = null
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
@@ -57,10 +58,20 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(TestController),
+                            methodInfo: typeof(TestController).GetMethod(nameof(TestController.Get)),
+                            httpMethod: "GET")
+                    }
+                },
                 Request = new ApiRequestInfo()
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var processed = await context.ProcessHttpRequestAccept(contextResolver, null).ConfigureAwait(false);
@@ -81,15 +92,25 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(TestController),
+                            methodInfo: typeof(TestController).GetMethod(nameof(TestController.Get)),
+                            httpMethod: "GET")
+                    }
+                },
                 Request = new ApiRequestInfo()
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
-            var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
+            var mockFormatterFactory = new Mock<IDeepSleepMediaSerializerFactory>();
             mockFormatterFactory
-                .Setup(m => m.GetWriteableTypes(It.IsAny<IList<IFormatStreamReaderWriter>>()))
+                .Setup(m => m.GetWriteableTypes(It.IsAny<Type>(), It.IsAny<IList<IDeepSleepMediaSerializer>>()))
                 .Returns(new string[] { "application/json", "text/xml", "text/plain" });
 
             var processed = await context.ProcessHttpRequestAccept(contextResolver, mockFormatterFactory.Object).ConfigureAwait(false);
@@ -110,18 +131,28 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(TestController),
+                            methodInfo: typeof(TestController).GetMethod(nameof(TestController.Get)),
+                            httpMethod: "GET")
+                    }
+                },
                 Request = new ApiRequestInfo()
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             string formatterType;
-            var mockFormatter = new Mock<IFormatStreamReaderWriter>();
+            var mockFormatter = new Mock<IDeepSleepMediaSerializer>();
 
-            var mockFormatterFactory = new Mock<IFormatStreamReaderWriterFactory>();
+            var mockFormatterFactory = new Mock<IDeepSleepMediaSerializerFactory>();
             mockFormatterFactory
-                .Setup(m => m.GetAcceptableFormatter(It.IsAny<AcceptHeader>(), out formatterType, It.IsAny<IList<IFormatStreamReaderWriter>>(), It.IsAny<IList<string>>()))
+                .Setup(m => m.GetAcceptableFormatter(It.IsAny<AcceptHeader>(), It.IsAny<Type>(), out formatterType, It.IsAny<IList<IDeepSleepMediaSerializer>>(), It.IsAny<IList<string>>()))
                 .Returns(Task.FromResult(mockFormatter.Object));
 
             var processed = await context.ProcessHttpRequestAccept(contextResolver, mockFormatterFactory.Object).ConfigureAwait(false);
@@ -141,13 +172,23 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
+                Routing = new ApiRoutingInfo
+                {
+                    Route = new ApiRoutingItem
+                    {
+                        Location = new ApiEndpointLocation(
+                            controller: typeof(TestController),
+                            methodInfo: typeof(TestController).GetMethod(nameof(TestController.Get)),
+                            httpMethod: "GET")
+                    }
+                },
                 Request = new ApiRequestInfo
                 {
                     Accept = new AcceptHeader(requestAccept)
                 }
             };
 
-            var contextResolver = new DefaultApiRequestContextResolver();
+            var contextResolver = new ApiRequestContextResolver();
             contextResolver.SetContext(context);
 
             var formatter = SetupJsonFormatterMock(null, new string[] { "application/json" });
@@ -162,22 +203,22 @@
             context.Response.Headers.Should().HaveCount(0);
         }
 
-        private Mock<HttpMediaTypeStreamReaderWriterFactory> SetupFormatterFactory(params IFormatStreamReaderWriter[] formatters)
+        private Mock<DeepSleepMediaSerializerWriterFactory> SetupFormatterFactory(params IDeepSleepMediaSerializer[] formatters)
         {
-            var mockFactory = new Mock<HttpMediaTypeStreamReaderWriterFactory>(new object[] { null })
+            var mockFactory = new Mock<DeepSleepMediaSerializerWriterFactory>(new object[] { null })
             {
                 CallBase = true
             };
 
             mockFactory.Setup(m => m.GetFormatters())
-                .Returns(new List<IFormatStreamReaderWriter>(formatters));
+                .Returns(new List<IDeepSleepMediaSerializer>(formatters));
 
             return mockFactory;
         }
 
-        private Mock<JsonHttpFormatter> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
+        private Mock<DeepSleepJsonMediaSerializer> SetupJsonFormatterMock(string[] readableTypes, string[] writeableTypes)
         {
-            var mockFormatter = new Mock<JsonHttpFormatter>(new object[] { null })
+            var mockFormatter = new Mock<DeepSleepJsonMediaSerializer>(new object[] { null })
             {
                 CallBase = true
             };

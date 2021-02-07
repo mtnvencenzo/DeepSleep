@@ -1,6 +1,7 @@
 ﻿namespace Api.DeepSleep.Controllers.Discovery
 {
     using global::DeepSleep;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -18,5 +19,9 @@
         {
             return Task.FromResult(new CustomResponseErrorObject(errors) as object);
         }
+
+        /// <summary>Gets the type of the error.</summary>
+        /// <returns></returns>
+        public override Type GetErrorType() => typeof(CustomResponseErrorObject);
     }
 }

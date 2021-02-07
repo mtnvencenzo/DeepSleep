@@ -12,11 +12,42 @@
     public class AttributeDiscovery_AuthenticationTests : PipelineTestBase
     {
         [Fact]
+        public async Task discovery_attribute___authentication_anonymous_default()
+        {
+            base.SetupEnvironment();
+
+            var utcNow = DateTimeOffset.UtcNow;
+            var request = @$"
+GET https://{host}/discovery/attribute/authentication/allowanonymous/default HTTP/1.1
+Date: {utcNow.ToString("r")}
+Host: {host}
+Accept: {applicationJson}";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 200,
+                shouldHaveResponse: true,
+                expectedContentType: applicationJson,
+                expectedAuthenticatedBy: AuthenticationType.Anonymous,
+                expectedValidationState: ApiValidationState.Succeeded,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<AttributeDiscoveryModel>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Value.Should().Be("Test");
+        }
+
+        [Fact]
         public async Task discovery_attribute___authentication_anonymous_true()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
             var correlationId = Guid.NewGuid();
@@ -50,9 +81,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_anonymous_false_no_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
             var correlationId = Guid.NewGuid();
@@ -93,9 +122,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_anonymous_false_invalid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
             var correlationId = Guid.NewGuid();
@@ -136,9 +163,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_anonymous_false_valid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
             var correlationId = Guid.NewGuid();
@@ -173,9 +198,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_null_no_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -214,9 +237,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_null_valid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -249,9 +270,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_null_invalid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -288,9 +307,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_empty_no_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -329,9 +346,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_empty_invalid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -371,9 +386,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_empty_valid_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -406,9 +419,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_specified_no_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -440,9 +451,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_specified_valid_unsupported_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -475,9 +484,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_specified_invalid_supported_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -510,9 +517,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___authentication_schemes_specified_valid_supported_auth_header()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

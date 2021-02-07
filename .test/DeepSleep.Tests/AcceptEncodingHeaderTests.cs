@@ -291,5 +291,62 @@
             equals = value.Equals(header);
             equals.Should().Be(false);
         }
+
+        [Fact]
+        public void acceptencoding___implicit_to_string_from_null_success()
+        {
+            string value = null as AcceptEncodingHeader;
+
+            value.Should().BeNull();
+        }
+
+        [Fact]
+        public void acceptencoding___null_equals_operator_null_success()
+        {
+            var equals = (null as AcceptEncodingHeader) == (null as AcceptEncodingHeader);
+
+            equals.Should().BeTrue();
+        }
+
+        [Fact]
+        public void acceptencoding___null_not_equals_operator_null_success()
+        {
+            var equals = (null as AcceptEncodingHeader) != (null as AcceptEncodingHeader);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void acceptencoding___gethashcode_success()
+        {
+            AcceptEncodingHeader header = "en-us;";
+
+            header.Should().NotBeNull();
+
+            var hashCode = header.GetHashCode();
+            hashCode.Should().NotBe(0);
+        }
+
+        [Fact]
+        public void acceptencoding___equals_overload_null_sccess()
+        {
+            AcceptEncodingHeader header1 = "en-us;";
+            AcceptEncodingHeader header2 = null;
+
+            var equals = header1.Equals(header2);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void acceptencoding___equals_overload_not_string_or_equivelent_sccess()
+        {
+            AcceptEncodingHeader header1 = "en-us;";
+            var other = 2;
+
+            var equals = header1.Equals(other);
+
+            equals.Should().BeFalse();
+        }
     }
 }

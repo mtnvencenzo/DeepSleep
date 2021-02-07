@@ -86,7 +86,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = null
                 }
@@ -109,7 +109,7 @@
             var context = new ApiRequestContext
             {
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = false
                 }
@@ -137,7 +137,7 @@
                     RequestIdentifier = requestId
                 },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }
@@ -164,7 +164,7 @@
                     RequestIdentifier = requestId
                 },
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }
@@ -188,7 +188,7 @@
             {
                 Request = new ApiRequestInfo(),
                 RequestAborted = new System.Threading.CancellationToken(false),
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = true
                 }

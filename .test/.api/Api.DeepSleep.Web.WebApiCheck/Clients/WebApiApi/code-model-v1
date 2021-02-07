@@ -1,0 +1,5379 @@
+{
+ "$id": "1",
+ "modelTypes": [
+  {
+   "$id": "2",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "3",
+     "isReadOnly": true,
+     "realPath": [
+      "ticks"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "4",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "5",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "6",
+      "fixed": false,
+      "raw": "ticks"
+     },
+     "serializedName": "ticks",
+     "modelType": {
+      "$id": "7",
+      "$type": "PrimaryType",
+      "format": "int64",
+      "knownPrimaryType": "long",
+      "name": {
+       "$id": "8",
+       "fixed": false,
+       "raw": "Long"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "9",
+     "isReadOnly": true,
+     "realPath": [
+      "days"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "10",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "11",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "12",
+      "fixed": false,
+      "raw": "days"
+     },
+     "serializedName": "days",
+     "modelType": {
+      "$id": "13",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "14",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "15",
+     "isReadOnly": true,
+     "realPath": [
+      "hours"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "16",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "17",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "18",
+      "fixed": false,
+      "raw": "hours"
+     },
+     "serializedName": "hours",
+     "modelType": {
+      "$id": "19",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "20",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "21",
+     "isReadOnly": true,
+     "realPath": [
+      "milliseconds"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "22",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "23",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "24",
+      "fixed": false,
+      "raw": "milliseconds"
+     },
+     "serializedName": "milliseconds",
+     "modelType": {
+      "$id": "25",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "26",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "27",
+     "isReadOnly": true,
+     "realPath": [
+      "minutes"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "28",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "29",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "30",
+      "fixed": false,
+      "raw": "minutes"
+     },
+     "serializedName": "minutes",
+     "modelType": {
+      "$id": "31",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "32",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "33",
+     "isReadOnly": true,
+     "realPath": [
+      "seconds"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "34",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "35",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "36",
+      "fixed": false,
+      "raw": "seconds"
+     },
+     "serializedName": "seconds",
+     "modelType": {
+      "$id": "37",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "38",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "39",
+     "isReadOnly": true,
+     "realPath": [
+      "totalDays"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "40",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "41",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "42",
+      "fixed": false,
+      "raw": "totalDays"
+     },
+     "serializedName": "totalDays",
+     "modelType": {
+      "$id": "43",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "44",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "45",
+     "isReadOnly": true,
+     "realPath": [
+      "totalHours"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "46",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "47",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "48",
+      "fixed": false,
+      "raw": "totalHours"
+     },
+     "serializedName": "totalHours",
+     "modelType": {
+      "$id": "49",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "50",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "51",
+     "isReadOnly": true,
+     "realPath": [
+      "totalMilliseconds"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "52",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "53",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "54",
+      "fixed": false,
+      "raw": "totalMilliseconds"
+     },
+     "serializedName": "totalMilliseconds",
+     "modelType": {
+      "$id": "55",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "56",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "57",
+     "isReadOnly": true,
+     "realPath": [
+      "totalMinutes"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "58",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "59",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "60",
+      "fixed": false,
+      "raw": "totalMinutes"
+     },
+     "serializedName": "totalMinutes",
+     "modelType": {
+      "$id": "61",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "62",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "63",
+     "isReadOnly": true,
+     "realPath": [
+      "totalSeconds"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "64",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "65",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "66",
+      "fixed": false,
+      "raw": "totalSeconds"
+     },
+     "serializedName": "totalSeconds",
+     "modelType": {
+      "$id": "67",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "68",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    }
+   ],
+   "serializedName": "TimeSpan",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "69",
+    "fixed": false,
+    "raw": "TimeSpan"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "TimeSpan",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/TimeSpan"
+     ]
+    }
+   },
+   "deprecated": false
+  },
+  {
+   "$id": "70",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "71",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableInt32"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "72",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "73",
+      "fixed": false,
+      "raw": "Gets or sets the nullable int32."
+     },
+     "extensions": {
+      "x-nullable": true
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "74",
+      "fixed": false,
+      "raw": "nullableInt32"
+     },
+     "serializedName": "nullableInt32",
+     "modelType": {
+      "$id": "75",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "76",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "77",
+     "isReadOnly": false,
+     "realPath": [
+      "int32"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "78",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "79",
+      "fixed": false,
+      "raw": "Gets or sets the int32."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "80",
+      "fixed": false,
+      "raw": "int32"
+     },
+     "serializedName": "int32",
+     "modelType": {
+      "$id": "81",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "82",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "83",
+     "isReadOnly": false,
+     "realPath": [
+      "guidObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "84",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "85",
+      "fixed": false,
+      "raw": "Gets or sets the unique identifier object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "86",
+      "fixed": false,
+      "raw": "guidObject"
+     },
+     "serializedName": "guidObject",
+     "modelType": {
+      "$id": "87",
+      "$type": "PrimaryType",
+      "format": "uuid",
+      "knownPrimaryType": "uuid",
+      "name": {
+       "$id": "88",
+       "fixed": false,
+       "raw": "Uuid"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "89",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableGuidObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "90",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "91",
+      "fixed": false,
+      "raw": "Gets or sets the nullable unique identifier object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "92",
+      "fixed": false,
+      "raw": "nullableGuidObject"
+     },
+     "serializedName": "nullableGuidObject",
+     "modelType": {
+      "$id": "93",
+      "$type": "PrimaryType",
+      "format": "uuid",
+      "knownPrimaryType": "uuid",
+      "name": {
+       "$id": "94",
+       "fixed": false,
+       "raw": "Uuid"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "95",
+     "isReadOnly": false,
+     "realPath": [
+      "uriObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "96",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "97",
+      "fixed": false,
+      "raw": "Gets or sets the URI object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "98",
+      "fixed": false,
+      "raw": "uriObject"
+     },
+     "serializedName": "uriObject",
+     "modelType": {
+      "$id": "99",
+      "$type": "PrimaryType",
+      "format": "uri",
+      "knownPrimaryType": "string",
+      "name": {
+       "$id": "100",
+       "fixed": false,
+       "raw": "String"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "101",
+     "isReadOnly": false,
+     "realPath": [
+      "stringObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "102",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "103",
+      "fixed": false,
+      "raw": "Gets or sets the string object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "104",
+      "fixed": false,
+      "raw": "stringObject"
+     },
+     "serializedName": "stringObject",
+     "modelType": {
+      "$id": "105",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "name": {
+       "$id": "106",
+       "fixed": false,
+       "raw": "String"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "107",
+     "isReadOnly": false,
+     "realPath": [
+      "enumObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "108",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "109",
+      "fixed": false
+     },
+     "extensions": {
+      "x-ms-metadata": {
+       "apiVersions": [
+        "1.0"
+       ],
+       "filename": [
+        "mem:///103?oai3.shaken.json"
+       ],
+       "name": "BasicEnum",
+       "originalLocations": [
+        "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/BasicEnum"
+       ]
+      }
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "110",
+      "fixed": false,
+      "raw": "enumObject"
+     },
+     "serializedName": "enumObject",
+     "modelType": {
+      "$id": "111",
+      "$type": "EnumType",
+      "values": [
+       {
+        "$id": "112",
+        "name": "None",
+        "serializedName": "None"
+       },
+       {
+        "$id": "113",
+        "name": "Something1",
+        "serializedName": "Something1"
+       },
+       {
+        "$id": "114",
+        "name": "Something2",
+        "serializedName": "Something2"
+       }
+      ],
+      "oldModelAsString": false,
+      "modelAsString": true,
+      "underlyingType": {
+       "$id": "115",
+       "$type": "PrimaryType",
+       "knownPrimaryType": "string",
+       "name": {
+        "$id": "116",
+        "fixed": false,
+        "raw": "String"
+       },
+       "deprecated": false
+      },
+      "name": {
+       "$id": "117",
+       "fixed": false,
+       "raw": ""
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "118",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableEnumObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "119",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "120",
+      "fixed": false
+     },
+     "extensions": {
+      "x-ms-metadata": {
+       "apiVersions": [
+        "1.0"
+       ],
+       "filename": [
+        "mem:///103?oai3.shaken.json"
+       ],
+       "name": "BasicEnum",
+       "originalLocations": [
+        "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/BasicEnum"
+       ]
+      }
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "121",
+      "fixed": false,
+      "raw": "nullableEnumObject"
+     },
+     "serializedName": "nullableEnumObject",
+     "modelType": {
+      "$id": "122",
+      "$type": "EnumType",
+      "values": [
+       {
+        "$id": "123",
+        "name": "None",
+        "serializedName": "None"
+       },
+       {
+        "$id": "124",
+        "name": "Something1",
+        "serializedName": "Something1"
+       },
+       {
+        "$id": "125",
+        "name": "Something2",
+        "serializedName": "Something2"
+       }
+      ],
+      "oldModelAsString": false,
+      "modelAsString": true,
+      "underlyingType": {
+       "$id": "126",
+       "$type": "PrimaryType",
+       "knownPrimaryType": "string",
+       "name": {
+        "$id": "127",
+        "fixed": false,
+        "raw": "String"
+       },
+       "deprecated": false
+      },
+      "name": {
+       "$id": "128",
+       "fixed": false,
+       "raw": ""
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "129",
+     "isReadOnly": false,
+     "realPath": [
+      "floatObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "130",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "131",
+      "fixed": false,
+      "raw": "Gets or sets the float object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "132",
+      "fixed": false,
+      "raw": "floatObject"
+     },
+     "serializedName": "floatObject",
+     "modelType": {
+      "$id": "133",
+      "$type": "PrimaryType",
+      "format": "float",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "134",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "135",
+     "isReadOnly": false,
+     "realPath": [
+      "decimalObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "136",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "137",
+      "fixed": false,
+      "raw": "Gets or sets the decimal object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "138",
+      "fixed": false,
+      "raw": "decimalObject"
+     },
+     "serializedName": "decimalObject",
+     "modelType": {
+      "$id": "139",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "140",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "141",
+     "isReadOnly": false,
+     "realPath": [
+      "doubleObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "142",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "143",
+      "fixed": false,
+      "raw": "Gets or sets the double object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "144",
+      "fixed": false,
+      "raw": "doubleObject"
+     },
+     "serializedName": "doubleObject",
+     "modelType": {
+      "$id": "145",
+      "$type": "PrimaryType",
+      "format": "double",
+      "knownPrimaryType": "double",
+      "name": {
+       "$id": "146",
+       "fixed": false,
+       "raw": "Double"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "147",
+     "isReadOnly": false,
+     "realPath": [
+      "shortObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "148",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "149",
+      "fixed": false,
+      "raw": "Gets or sets the short object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "150",
+      "fixed": false,
+      "raw": "shortObject"
+     },
+     "serializedName": "shortObject",
+     "modelType": {
+      "$id": "151",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "152",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "153",
+     "isReadOnly": false,
+     "realPath": [
+      "byteObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "154",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "155",
+      "fixed": false,
+      "raw": "Gets or sets the byte object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "156",
+      "fixed": false,
+      "raw": "byteObject"
+     },
+     "serializedName": "byteObject",
+     "modelType": {
+      "$id": "157",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "158",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "159",
+     "isReadOnly": false,
+     "realPath": [
+      "sByteObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "160",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "161",
+      "fixed": false,
+      "raw": "Gets or sets the s byte object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "162",
+      "fixed": false,
+      "raw": "sByteObject"
+     },
+     "serializedName": "sByteObject",
+     "modelType": {
+      "$id": "163",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "164",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "165",
+     "isReadOnly": false,
+     "realPath": [
+      "timeSpanObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "166",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "167",
+      "fixed": false
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "168",
+      "fixed": false,
+      "raw": "timeSpanObject"
+     },
+     "serializedName": "timeSpanObject",
+     "modelType": {
+      "$ref": "2"
+     }
+    },
+    {
+     "$id": "169",
+     "isReadOnly": false,
+     "realPath": [
+      "boolObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "170",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "171",
+      "fixed": false,
+      "raw": "Gets or sets a value indicating whether [bool object]."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "172",
+      "fixed": false,
+      "raw": "boolObject"
+     },
+     "serializedName": "boolObject",
+     "modelType": {
+      "$id": "173",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "boolean",
+      "name": {
+       "$id": "174",
+       "fixed": false,
+       "raw": "Boolean"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "175",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableBoolObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "176",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "177",
+      "fixed": false,
+      "raw": "Gets or sets the nullable bool object."
+     },
+     "extensions": {
+      "x-nullable": true
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "178",
+      "fixed": false,
+      "raw": "nullableBoolObject"
+     },
+     "serializedName": "nullableBoolObject",
+     "modelType": {
+      "$id": "179",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "boolean",
+      "name": {
+       "$id": "180",
+       "fixed": false,
+       "raw": "Boolean"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "181",
+     "isReadOnly": false,
+     "realPath": [
+      "dateTimeObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "182",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "183",
+      "fixed": false,
+      "raw": "Gets or sets the date time object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "184",
+      "fixed": false,
+      "raw": "dateTimeObject"
+     },
+     "serializedName": "dateTimeObject",
+     "modelType": {
+      "$id": "185",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "name": {
+       "$id": "186",
+       "fixed": false,
+       "raw": "DateTime"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "187",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableDateTimeObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "188",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "189",
+      "fixed": false,
+      "raw": "Gets or sets the nullable date time object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "190",
+      "fixed": false,
+      "raw": "nullableDateTimeObject"
+     },
+     "serializedName": "nullableDateTimeObject",
+     "modelType": {
+      "$id": "191",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "name": {
+       "$id": "192",
+       "fixed": false,
+       "raw": "DateTime"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "193",
+     "isReadOnly": false,
+     "realPath": [
+      "dateTimeOffsetObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "194",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "195",
+      "fixed": false,
+      "raw": "Gets or sets the date time offset object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "196",
+      "fixed": false,
+      "raw": "dateTimeOffsetObject"
+     },
+     "serializedName": "dateTimeOffsetObject",
+     "modelType": {
+      "$id": "197",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "name": {
+       "$id": "198",
+       "fixed": false,
+       "raw": "DateTime"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "199",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableDateTimeOffsetObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "200",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "201",
+      "fixed": false,
+      "raw": "Gets or sets the nullable date time offset object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "202",
+      "fixed": false,
+      "raw": "nullableDateTimeOffsetObject"
+     },
+     "serializedName": "nullableDateTimeOffsetObject",
+     "modelType": {
+      "$id": "203",
+      "$type": "PrimaryType",
+      "format": "date-time",
+      "knownPrimaryType": "dateTime",
+      "name": {
+       "$id": "204",
+       "fixed": false,
+       "raw": "DateTime"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "205",
+     "isReadOnly": false,
+     "realPath": [
+      "longObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "206",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "207",
+      "fixed": false,
+      "raw": "Gets or sets the long object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "208",
+      "fixed": false,
+      "raw": "longObject"
+     },
+     "serializedName": "longObject",
+     "modelType": {
+      "$id": "209",
+      "$type": "PrimaryType",
+      "format": "int64",
+      "knownPrimaryType": "long",
+      "name": {
+       "$id": "210",
+       "fixed": false,
+       "raw": "Long"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "211",
+     "isReadOnly": false,
+     "realPath": [
+      "charObject"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "212",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "213",
+      "fixed": false,
+      "raw": "Gets or sets the character object."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "214",
+      "fixed": false,
+      "raw": "charObject"
+     },
+     "serializedName": "charObject",
+     "modelType": {
+      "$id": "215",
+      "$type": "PrimaryType",
+      "knownPrimaryType": "string",
+      "name": {
+       "$id": "216",
+       "fixed": false,
+       "raw": "String"
+      },
+      "deprecated": false
+     }
+    }
+   ],
+   "serializedName": "BasicObject",
+   "documentation": "The basic object",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "217",
+    "fixed": false,
+    "raw": "BasicObject"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "BasicObject",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/BasicObject"
+     ]
+    }
+   },
+   "deprecated": false
+  },
+  {
+   "$id": "218",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "219",
+     "isReadOnly": false,
+     "realPath": [
+      "testEnumProperty"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "220",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "221",
+      "fixed": false
+     },
+     "extensions": {
+      "x-ms-metadata": {
+       "apiVersions": [
+        "1.0"
+       ],
+       "filename": [
+        "mem:///103?oai3.shaken.json"
+       ],
+       "name": "TestEnum",
+       "originalLocations": [
+        "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/TestEnum"
+       ]
+      }
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "222",
+      "fixed": false,
+      "raw": "testEnumProperty"
+     },
+     "serializedName": "testEnumProperty",
+     "modelType": {
+      "$id": "223",
+      "$type": "EnumType",
+      "values": [
+       {
+        "$id": "224",
+        "name": "None",
+        "serializedName": "None"
+       },
+       {
+        "$id": "225",
+        "name": "Item1",
+        "serializedName": "Item1"
+       },
+       {
+        "$id": "226",
+        "name": "Item2",
+        "serializedName": "Item2"
+       }
+      ],
+      "oldModelAsString": false,
+      "modelAsString": true,
+      "underlyingType": {
+       "$id": "227",
+       "$type": "PrimaryType",
+       "knownPrimaryType": "string",
+       "name": {
+        "$id": "228",
+        "fixed": false,
+        "raw": "String"
+       },
+       "deprecated": false
+      },
+      "name": {
+       "$id": "229",
+       "fixed": false,
+       "raw": ""
+      },
+      "deprecated": false
+     }
+    }
+   ],
+   "serializedName": "EnumUriObjectModelRs",
+   "documentation": "Represents a uri object model used in responses that contains enum items",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "230",
+    "fixed": false,
+    "raw": "EnumUriObjectModelRs"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "EnumUriObjectModelRs",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/EnumUriObjectModelRs"
+     ]
+    }
+   },
+   "deprecated": false
+  },
+  {
+   "$id": "231",
+   "$type": "CompositeType",
+   "properties": [
+    {
+     "$id": "232",
+     "isReadOnly": false,
+     "realPath": [
+      "int32Property"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "233",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "234",
+      "fixed": false,
+      "raw": "Gets or sets the int32 property."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "235",
+      "fixed": false,
+      "raw": "int32Property"
+     },
+     "serializedName": "int32Property",
+     "modelType": {
+      "$id": "236",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "237",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "238",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableInt32Property"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "239",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "240",
+      "fixed": false,
+      "raw": "Gets or sets the nullable int32 property."
+     },
+     "extensions": {
+      "x-nullable": true
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "241",
+      "fixed": false,
+      "raw": "nullableInt32Property"
+     },
+     "serializedName": "nullableInt32Property",
+     "modelType": {
+      "$id": "242",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "243",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "244",
+     "isReadOnly": false,
+     "realPath": [
+      "uInt32Property"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "245",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "246",
+      "fixed": false,
+      "raw": "Gets or sets the u int32 property."
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "247",
+      "fixed": false,
+      "raw": "uInt32Property"
+     },
+     "serializedName": "uInt32Property",
+     "modelType": {
+      "$id": "248",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "249",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    },
+    {
+     "$id": "250",
+     "isReadOnly": false,
+     "realPath": [
+      "nullableUInt32Property"
+     ],
+     "collectionFormat": "none",
+     "defaultValue": {
+      "$id": "251",
+      "fixed": false
+     },
+     "deprecated": false,
+     "documentation": {
+      "$id": "252",
+      "fixed": false,
+      "raw": "Gets or sets the nullable u int32 property."
+     },
+     "extensions": {
+      "x-nullable": true
+     },
+     "isRequired": false,
+     "isConstant": false,
+     "name": {
+      "$id": "253",
+      "fixed": false,
+      "raw": "nullableUInt32Property"
+     },
+     "serializedName": "nullableUInt32Property",
+     "modelType": {
+      "$id": "254",
+      "$type": "PrimaryType",
+      "format": "int32",
+      "knownPrimaryType": "int",
+      "name": {
+       "$id": "255",
+       "fixed": false,
+       "raw": "Int"
+      },
+      "deprecated": false
+     }
+    }
+   ],
+   "serializedName": "Int32ObjectModelRq",
+   "documentation": "Represents a uri object model used in requests that contains int32 items",
+   "containsConstantProperties": false,
+   "name": {
+    "$id": "256",
+    "fixed": false,
+    "raw": "Int32ObjectModelRq"
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "Int32ObjectModelRq",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/schemas/Int32ObjectModelRq"
+     ]
+    }
+   },
+   "deprecated": false
+  }
+ ],
+ "name": "ApiDeepSleepWebWebApiCheck",
+ "namespace": "Api.DeepSleep.Web.WebApiCheck.Clients",
+ "modelsName": "Models",
+ "apiVersion": "1.0",
+ "baseUrl": "http://localhost",
+ "properties": [
+  {
+   "$id": "257",
+   "isReadOnly": false,
+   "realPath": [
+    "id"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "258",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "259",
+    "fixed": false,
+    "raw": "The route identifier."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·73wsyt·basic-object-model-no-doc-attributes-id·post·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·73wsyt·basic-object-model-no-doc-attributes-id·post·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "260",
+    "fixed": false,
+    "raw": "id"
+   },
+   "serializedName": "id",
+   "modelType": {
+    "$id": "261",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "262",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "263",
+   "isReadOnly": false,
+   "realPath": [
+    "ExplicitEnumProperty"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "264",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "265",
+    "fixed": false,
+    "raw": "Gets or sets the explicit enum property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1ptswti·enum-uri-model-no-doc-attributes·post·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1ptswti·enum-uri-model-no-doc-attributes·post·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "266",
+    "fixed": false,
+    "raw": "ExplicitEnumProperty"
+   },
+   "serializedName": "ExplicitEnumProperty",
+   "modelType": {
+    "$id": "267",
+    "$type": "EnumType",
+    "values": [
+     {
+      "$id": "268",
+      "name": "None",
+      "serializedName": "None"
+     },
+     {
+      "$id": "269",
+      "name": "Item1",
+      "serializedName": "Item1"
+     },
+     {
+      "$id": "270",
+      "name": "Item2",
+      "serializedName": "Item2"
+     }
+    ],
+    "oldModelAsString": false,
+    "modelAsString": true,
+    "underlyingType": {
+     "$id": "271",
+     "$type": "PrimaryType",
+     "knownPrimaryType": "string",
+     "name": {
+      "$id": "272",
+      "fixed": false,
+      "raw": "String"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "273",
+     "fixed": false,
+     "raw": ""
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "274",
+   "isReadOnly": false,
+   "realPath": [
+    "ExplicitEnumProperty"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "275",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "276",
+    "fixed": false,
+    "raw": "Gets or sets the explicit enum property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1lhwh0s·enum-uri-model-no-doc-attributes·put·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1lhwh0s·enum-uri-model-no-doc-attributes·put·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "277",
+    "fixed": false,
+    "raw": "ExplicitEnumProperty1"
+   },
+   "serializedName": "ExplicitEnumProperty",
+   "modelType": {
+    "$id": "278",
+    "$type": "EnumType",
+    "values": [
+     {
+      "$id": "279",
+      "name": "None",
+      "serializedName": "None"
+     },
+     {
+      "$id": "280",
+      "name": "Item1",
+      "serializedName": "Item1"
+     },
+     {
+      "$id": "281",
+      "name": "Item2",
+      "serializedName": "Item2"
+     }
+    ],
+    "oldModelAsString": false,
+    "modelAsString": true,
+    "underlyingType": {
+     "$id": "282",
+     "$type": "PrimaryType",
+     "knownPrimaryType": "string",
+     "name": {
+      "$id": "283",
+      "fixed": false,
+      "raw": "String"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "284",
+     "fixed": false,
+     "raw": ""
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "285",
+   "isReadOnly": false,
+   "realPath": [
+    "ExplicitEnumProperty"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "286",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "287",
+    "fixed": false,
+    "raw": "The explicit enum property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·rqsotp·enum-uri-model-no-doc-attributes·patch·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·rqsotp·enum-uri-model-no-doc-attributes·patch·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "288",
+    "fixed": false,
+    "raw": "ExplicitEnumProperty2"
+   },
+   "serializedName": "ExplicitEnumProperty",
+   "modelType": {
+    "$id": "289",
+    "$type": "EnumType",
+    "values": [
+     {
+      "$id": "290",
+      "name": "None",
+      "serializedName": "None"
+     },
+     {
+      "$id": "291",
+      "name": "Item1",
+      "serializedName": "Item1"
+     },
+     {
+      "$id": "292",
+      "name": "Item2",
+      "serializedName": "Item2"
+     }
+    ],
+    "oldModelAsString": false,
+    "modelAsString": true,
+    "underlyingType": {
+     "$id": "293",
+     "$type": "PrimaryType",
+     "knownPrimaryType": "string",
+     "name": {
+      "$id": "294",
+      "fixed": false,
+      "raw": "String"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "295",
+     "fixed": false,
+     "raw": ""
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "296",
+   "isReadOnly": false,
+   "realPath": [
+    "NullableExplicitEnumProperty"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "297",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "298",
+    "fixed": false,
+    "raw": "The nullable explicit enum property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1hmrqgx·enum-uri-model-no-doc-attributes·patch·parameters·1",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1hmrqgx·enum-uri-model-no-doc-attributes·patch·parameters·1"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "299",
+    "fixed": false,
+    "raw": "NullableExplicitEnumProperty"
+   },
+   "serializedName": "NullableExplicitEnumProperty",
+   "modelType": {
+    "$id": "300",
+    "$type": "EnumType",
+    "values": [
+     {
+      "$id": "301",
+      "name": "None",
+      "serializedName": "None"
+     },
+     {
+      "$id": "302",
+      "name": "Item1",
+      "serializedName": "Item1"
+     },
+     {
+      "$id": "303",
+      "name": "Item2",
+      "serializedName": "Item2"
+     }
+    ],
+    "oldModelAsString": false,
+    "modelAsString": true,
+    "underlyingType": {
+     "$id": "304",
+     "$type": "PrimaryType",
+     "knownPrimaryType": "string",
+     "name": {
+      "$id": "305",
+      "fixed": false,
+      "raw": "String"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "306",
+     "fixed": false,
+     "raw": ""
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "307",
+   "isReadOnly": false,
+   "realPath": [
+    "enumValue"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "308",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "309",
+    "fixed": false,
+    "raw": "The enum value."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·th0qb5·enum-in-route-enumvalue-simple-member·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·th0qb5·enum-in-route-enumvalue-simple-member·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": true,
+   "isConstant": false,
+   "name": {
+    "$id": "310",
+    "fixed": false,
+    "raw": "enumValue"
+   },
+   "serializedName": "enumValue",
+   "modelType": {
+    "$id": "311",
+    "$type": "EnumType",
+    "values": [
+     {
+      "$id": "312",
+      "name": "None",
+      "serializedName": "None"
+     },
+     {
+      "$id": "313",
+      "name": "Item1",
+      "serializedName": "Item1"
+     },
+     {
+      "$id": "314",
+      "name": "Item2",
+      "serializedName": "Item2"
+     }
+    ],
+    "oldModelAsString": false,
+    "modelAsString": true,
+    "underlyingType": {
+     "$id": "315",
+     "$type": "PrimaryType",
+     "knownPrimaryType": "string",
+     "name": {
+      "$id": "316",
+      "fixed": false,
+      "raw": "String"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "317",
+     "fixed": false,
+     "raw": ""
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "318",
+   "isReadOnly": false,
+   "realPath": [
+    "Int32Property"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "319",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "320",
+    "fixed": false,
+    "raw": "Gets or sets the int32 property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·xh3ibr·int32-uri-model-no-doc-attributes·post·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·xh3ibr·int32-uri-model-no-doc-attributes·post·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "321",
+    "fixed": false,
+    "raw": "Int32Property"
+   },
+   "serializedName": "Int32Property",
+   "modelType": {
+    "$id": "322",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "323",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "324",
+   "isReadOnly": false,
+   "realPath": [
+    "NullableInt32Property"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "325",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "326",
+    "fixed": false,
+    "raw": "Gets or sets the nullable int32 property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1ex6aat·int32-uri-model-no-doc-attributes·post·parameters·1",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1ex6aat·int32-uri-model-no-doc-attributes·post·parameters·1"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "327",
+    "fixed": false,
+    "raw": "NullableInt32Property"
+   },
+   "serializedName": "NullableInt32Property",
+   "modelType": {
+    "$id": "328",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "329",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "330",
+   "isReadOnly": false,
+   "realPath": [
+    "UInt32Property"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "331",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "332",
+    "fixed": false,
+    "raw": "Gets or sets the u int32 property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1rs73qx·int32-uri-model-no-doc-attributes·post·parameters·2",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1rs73qx·int32-uri-model-no-doc-attributes·post·parameters·2"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "333",
+    "fixed": false,
+    "raw": "UInt32Property"
+   },
+   "serializedName": "UInt32Property",
+   "modelType": {
+    "$id": "334",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "335",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "336",
+   "isReadOnly": false,
+   "realPath": [
+    "NullableUInt32Property"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "337",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "338",
+    "fixed": false,
+    "raw": "Gets or sets the nullable u int32 property."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1tjg9oi·int32-uri-model-no-doc-attributes·post·parameters·3",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1tjg9oi·int32-uri-model-no-doc-attributes·post·parameters·3"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "339",
+    "fixed": false,
+    "raw": "NullableUInt32Property"
+   },
+   "serializedName": "NullableUInt32Property",
+   "modelType": {
+    "$id": "340",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "341",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "342",
+   "isReadOnly": false,
+   "realPath": [
+    "count"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "343",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "344",
+    "fixed": false,
+    "raw": "The count."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·12egadt·simple-ilist-int-array-response·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·12egadt·simple-ilist-int-array-response·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "345",
+    "fixed": false,
+    "raw": "count"
+   },
+   "serializedName": "count",
+   "modelType": {
+    "$id": "346",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "347",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "348",
+   "isReadOnly": false,
+   "realPath": [
+    "count"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "349",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "350",
+    "fixed": false,
+    "raw": "The count."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·nqsk2q·simple-ienumerable-int-array-response·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·nqsk2q·simple-ienumerable-int-array-response·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "351",
+    "fixed": false,
+    "raw": "Count1"
+   },
+   "serializedName": "count",
+   "modelType": {
+    "$id": "352",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "353",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "354",
+   "isReadOnly": false,
+   "realPath": [
+    "count"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "355",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "356",
+    "fixed": false,
+    "raw": "The count."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·12kfp7n·simple-array-int-array-response·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·12kfp7n·simple-array-int-array-response·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "357",
+    "fixed": false,
+    "raw": "Count2"
+   },
+   "serializedName": "count",
+   "modelType": {
+    "$id": "358",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "359",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "360",
+   "isReadOnly": false,
+   "realPath": [
+    "count"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "361",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "362",
+    "fixed": false,
+    "raw": "The count."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·1g7lpq6·simple-arraysegment-int-array-response·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1g7lpq6·simple-arraysegment-int-array-response·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "363",
+    "fixed": false,
+    "raw": "Count3"
+   },
+   "serializedName": "count",
+   "modelType": {
+    "$id": "364",
+    "$type": "PrimaryType",
+    "format": "int32",
+    "knownPrimaryType": "int",
+    "name": {
+     "$id": "365",
+     "fixed": false,
+     "raw": "Int"
+    },
+    "deprecated": false
+   }
+  },
+  {
+   "$id": "366",
+   "isReadOnly": false,
+   "realPath": [
+    "queryItems"
+   ],
+   "collectionFormat": "none",
+   "defaultValue": {
+    "$id": "367",
+    "fixed": false
+   },
+   "deprecated": false,
+   "documentation": {
+    "$id": "368",
+    "fixed": false,
+    "raw": "The query items."
+   },
+   "extensions": {
+    "x-ms-metadata": {
+     "apiVersions": [
+      "1.0"
+     ],
+     "filename": [
+      "mem:///103?oai3.shaken.json"
+     ],
+     "name": "paths·8hjsqf·simple-ilist-int-array-querystring·get·parameters·0",
+     "originalLocations": [
+      "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·8hjsqf·simple-ilist-int-array-querystring·get·parameters·0"
+     ]
+    },
+    "x-ms-parameter-location": "method"
+   },
+   "isRequired": false,
+   "isConstant": false,
+   "name": {
+    "$id": "369",
+    "fixed": false,
+    "raw": "queryItems"
+   },
+   "serializedName": "queryItems",
+   "modelType": {
+    "$id": "370",
+    "$type": "SequenceType",
+    "elementType": {
+     "$id": "371",
+     "$type": "PrimaryType",
+     "format": "int32",
+     "knownPrimaryType": "int",
+     "name": {
+      "$id": "372",
+      "fixed": false,
+      "raw": "Int"
+     },
+     "deprecated": false
+    },
+    "name": {
+     "$id": "373",
+     "fixed": false
+    },
+    "deprecated": false
+   }
+  }
+ ],
+ "operations": [
+  {
+   "$id": "374",
+   "methods": [
+    {
+     "$id": "375",
+     "parameters": [
+      {
+       "$id": "376",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "377",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "378",
+        "fixed": false,
+        "raw": "The request."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1a71r6z·basic-object-model-no-doc-attributes-id·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·1a71r6z·basic-object-model-no-doc-attributes-id·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "379",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$ref": "70"
+       }
+      },
+      {
+       "$id": "380",
+       "clientProperty": {
+        "$ref": "257"
+       },
+       "location": "path",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "381",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "382",
+        "fixed": false,
+        "raw": "The route identifier."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·73wsyt·basic-object-model-no-doc-attributes-id·post·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·73wsyt·basic-object-model-no-doc-attributes-id·post·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "383",
+        "fixed": false,
+        "raw": "id"
+       },
+       "serializedName": "id",
+       "modelType": {
+        "$id": "384",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "385",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "386",
+      "fixed": false,
+      "raw": "PostBasicObjectModelNoDocAttributes"
+     },
+     "group": {
+      "$id": "387",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostBasicObjectModelNoDocAttributes",
+     "url": "/basic/object/model/no/doc/attributes/{id}",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "388",
+       "body": {
+        "$ref": "70"
+       },
+       "extensions": {
+        "$id": "389",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1gbjqnk·basic-object-model-no-doc-attributes-id·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1gbjqnk·basic-object-model-no-doc-attributes-id·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "390",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "391",
+      "body": {
+       "$ref": "70"
+      },
+      "isNullable": true
+     },
+     "description": "Offically posts the basic object model.\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the basic object model with no doc attributes.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "392",
+     "parameters": [
+      {
+       "$id": "393",
+       "clientProperty": {
+        "$ref": "263"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "394",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "395",
+        "fixed": false,
+        "raw": "Gets or sets the explicit enum property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1ptswti·enum-uri-model-no-doc-attributes·post·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1ptswti·enum-uri-model-no-doc-attributes·post·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "396",
+        "fixed": false,
+        "raw": "ExplicitEnumProperty"
+       },
+       "serializedName": "ExplicitEnumProperty",
+       "modelType": {
+        "$id": "397",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "398",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "399",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "400",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "401",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "402",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "403",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "404",
+      "fixed": false,
+      "raw": "PostEnumUriObjectNoDocAttributes"
+     },
+     "group": {
+      "$id": "405",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostEnumUriObjectNoDocAttributes",
+     "url": "/enum/uri/model/no/doc/attributes",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "406",
+       "body": {
+        "$ref": "218"
+       },
+       "extensions": {
+        "$id": "407",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1byekmj·enum-uri-model-no-doc-attributes·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1byekmj·enum-uri-model-no-doc-attributes·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "408",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "409",
+      "body": {
+       "$ref": "218"
+      },
+      "isNullable": true
+     },
+     "description": "Offically posts the enum object to the service\r\n\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the enum model with URI bound enums.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "410",
+     "parameters": [
+      {
+       "$id": "411",
+       "clientProperty": {
+        "$ref": "263"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "412",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "413",
+        "fixed": false,
+        "raw": "Gets or sets the explicit enum property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1lhwh0s·enum-uri-model-no-doc-attributes·put·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1lhwh0s·enum-uri-model-no-doc-attributes·put·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "414",
+        "fixed": false,
+        "raw": "ExplicitEnumProperty"
+       },
+       "serializedName": "ExplicitEnumProperty",
+       "modelType": {
+        "$id": "415",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "416",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "417",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "418",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "419",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "420",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "421",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "422",
+      "fixed": false,
+      "raw": "PutEnumUriObjectNoDocAttributes"
+     },
+     "group": {
+      "$id": "423",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PutEnumUriObjectNoDocAttributes",
+     "url": "/enum/uri/model/no/doc/attributes",
+     "isAbsoluteUrl": false,
+     "httpMethod": "put",
+     "responses": {
+      "OK": {
+       "$id": "424",
+       "body": {
+        "$ref": "218"
+       },
+       "extensions": {
+        "$id": "425",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1tgau7a·enum-uri-model-no-doc-attributes·put·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1tgau7a·enum-uri-model-no-doc-attributes·put·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "426",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "427",
+      "body": {
+       "$ref": "218"
+      },
+      "isNullable": true
+     },
+     "description": "Offically puts the enum object to the service\r\n\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Puts the enum model with URI bound enums.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "428",
+     "parameters": [
+      {
+       "$id": "429",
+       "clientProperty": {
+        "$ref": "263"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "430",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "431",
+        "fixed": false,
+        "raw": "The explicit enum property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·rqsotp·enum-uri-model-no-doc-attributes·patch·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·rqsotp·enum-uri-model-no-doc-attributes·patch·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "432",
+        "fixed": false,
+        "raw": "ExplicitEnumProperty"
+       },
+       "serializedName": "ExplicitEnumProperty",
+       "modelType": {
+        "$id": "433",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "434",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "435",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "436",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "437",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "438",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "439",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       }
+      },
+      {
+       "$id": "440",
+       "clientProperty": {
+        "$ref": "296"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "441",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "442",
+        "fixed": false,
+        "raw": "The nullable explicit enum property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1hmrqgx·enum-uri-model-no-doc-attributes·patch·parameters·1",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1hmrqgx·enum-uri-model-no-doc-attributes·patch·parameters·1"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "443",
+        "fixed": false,
+        "raw": "NullableExplicitEnumProperty"
+       },
+       "serializedName": "NullableExplicitEnumProperty",
+       "modelType": {
+        "$id": "444",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "445",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "446",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "447",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "448",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "449",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "450",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "451",
+      "fixed": false,
+      "raw": "PatchEnumUriObjectNoDocAttributes"
+     },
+     "group": {
+      "$id": "452",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PatchEnumUriObjectNoDocAttributes",
+     "url": "/enum/uri/model/no/doc/attributes",
+     "isAbsoluteUrl": false,
+     "httpMethod": "patch",
+     "responses": {
+      "OK": {
+       "$id": "453",
+       "body": {
+        "$ref": "218"
+       },
+       "extensions": {
+        "$id": "454",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·e9mtnr·enum-uri-model-no-doc-attributes·patch·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·e9mtnr·enum-uri-model-no-doc-attributes·patch·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "455",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "456",
+      "body": {
+       "$ref": "218"
+      },
+      "isNullable": true
+     },
+     "description": "Offically patches the enum object to the service\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Patch the enum model with URI bound enums.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "457",
+     "parameters": [
+      {
+       "$id": "458",
+       "clientProperty": {
+        "$ref": "307"
+       },
+       "location": "path",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "459",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "460",
+        "fixed": false,
+        "raw": "The enum value."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·th0qb5·enum-in-route-enumvalue-simple-member·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·th0qb5·enum-in-route-enumvalue-simple-member·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": true,
+       "isConstant": false,
+       "name": {
+        "$id": "461",
+        "fixed": false,
+        "raw": "enumValue"
+       },
+       "serializedName": "enumValue",
+       "modelType": {
+        "$id": "462",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "463",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "464",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "465",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "466",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "467",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "468",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "469",
+      "fixed": false,
+      "raw": "GetEnumInRouteSimpleMemberNoDocAttributes"
+     },
+     "group": {
+      "$id": "470",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "GetEnumInRouteSimpleMemberNoDocAttributes",
+     "url": "/enum/in/route/{enumValue}/simple/member",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "471",
+       "body": {
+        "$id": "472",
+        "$type": "EnumType",
+        "values": [
+         {
+          "$id": "473",
+          "name": "None",
+          "serializedName": "None"
+         },
+         {
+          "$id": "474",
+          "name": "Item1",
+          "serializedName": "Item1"
+         },
+         {
+          "$id": "475",
+          "name": "Item2",
+          "serializedName": "Item2"
+         }
+        ],
+        "oldModelAsString": false,
+        "modelAsString": true,
+        "underlyingType": {
+         "$id": "476",
+         "$type": "PrimaryType",
+         "knownPrimaryType": "string",
+         "name": {
+          "$id": "477",
+          "fixed": false,
+          "raw": "String"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "478",
+         "fixed": false,
+         "raw": ""
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "479",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1wz7qfe·enum-in-route-enumvalue-simple-member·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1wz7qfe·enum-in-route-enumvalue-simple-member·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "480",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "481",
+      "body": {
+       "$ref": "472"
+      },
+      "isNullable": true
+     },
+     "description": "Offically posts the enum nul object to the service\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Gets the enum from route.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "482",
+     "parameters": [
+      {
+       "$id": "483",
+       "clientProperty": {
+        "$ref": "318"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "484",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "485",
+        "fixed": false,
+        "raw": "Gets or sets the int32 property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·xh3ibr·int32-uri-model-no-doc-attributes·post·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·xh3ibr·int32-uri-model-no-doc-attributes·post·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "486",
+        "fixed": false,
+        "raw": "Int32Property"
+       },
+       "serializedName": "Int32Property",
+       "modelType": {
+        "$id": "487",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "488",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      },
+      {
+       "$id": "489",
+       "clientProperty": {
+        "$ref": "324"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "490",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "491",
+        "fixed": false,
+        "raw": "Gets or sets the nullable int32 property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1ex6aat·int32-uri-model-no-doc-attributes·post·parameters·1",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1ex6aat·int32-uri-model-no-doc-attributes·post·parameters·1"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "492",
+        "fixed": false,
+        "raw": "NullableInt32Property"
+       },
+       "serializedName": "NullableInt32Property",
+       "modelType": {
+        "$id": "493",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "494",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      },
+      {
+       "$id": "495",
+       "clientProperty": {
+        "$ref": "330"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "496",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "497",
+        "fixed": false,
+        "raw": "Gets or sets the u int32 property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1rs73qx·int32-uri-model-no-doc-attributes·post·parameters·2",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1rs73qx·int32-uri-model-no-doc-attributes·post·parameters·2"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "498",
+        "fixed": false,
+        "raw": "UInt32Property"
+       },
+       "serializedName": "UInt32Property",
+       "modelType": {
+        "$id": "499",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "500",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      },
+      {
+       "$id": "501",
+       "clientProperty": {
+        "$ref": "336"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "502",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "503",
+        "fixed": false,
+        "raw": "Gets or sets the nullable u int32 property."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1tjg9oi·int32-uri-model-no-doc-attributes·post·parameters·3",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1tjg9oi·int32-uri-model-no-doc-attributes·post·parameters·3"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "504",
+        "fixed": false,
+        "raw": "NullableUInt32Property"
+       },
+       "serializedName": "NullableUInt32Property",
+       "modelType": {
+        "$id": "505",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "506",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "507",
+      "fixed": false,
+      "raw": "PostInt32UriModelNoDocAttributes"
+     },
+     "group": {
+      "$id": "508",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostInt32UriModelNoDocAttributes",
+     "url": "/int32/uri/model/no/doc/attributes",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "509",
+       "body": {
+        "$ref": "231"
+       },
+       "extensions": {
+        "$id": "510",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1tehm1e·int32-uri-model-no-doc-attributes·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1tehm1e·int32-uri-model-no-doc-attributes·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "511",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "512",
+      "body": {
+       "$ref": "231"
+      },
+      "isNullable": true
+     },
+     "description": "Offically posts the int32 uri to the service\r\n\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the int32 model with URI bound values.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "513",
+     "parameters": [
+      {
+       "$id": "514",
+       "clientProperty": {
+        "$ref": "342"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "515",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "516",
+        "fixed": false,
+        "raw": "The count."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·12egadt·simple-ilist-int-array-response·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·12egadt·simple-ilist-int-array-response·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "517",
+        "fixed": false,
+        "raw": "count"
+       },
+       "serializedName": "count",
+       "modelType": {
+        "$id": "518",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "519",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "520",
+      "fixed": false,
+      "raw": "SimpleIListIntArrayResponse"
+     },
+     "group": {
+      "$id": "521",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleIListIntArrayResponse",
+     "url": "/simple/ilist/int/array/response",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "522",
+       "body": {
+        "$id": "523",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "524",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "525",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "526",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "527",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·vh6c5v·simple-ilist-int-array-response·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·vh6c5v·simple-ilist-int-array-response·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "528",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "529",
+      "body": {
+       "$ref": "523"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the i list int array response.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "530",
+     "parameters": [
+      {
+       "$id": "531",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "532",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "533",
+        "fixed": false,
+        "raw": "The ints."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1yk9e5s·simple-ilist-int-array-request·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·1yk9e5s·simple-ilist-int-array-request·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "534",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$id": "535",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "536",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "537",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "538",
+         "fixed": false
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "539",
+      "fixed": false,
+      "raw": "SimpleIListIntArrayRequest"
+     },
+     "group": {
+      "$id": "540",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleIListIntArrayRequest",
+     "url": "/simple/ilist/int/array/request",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "541",
+       "body": {
+        "$id": "542",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "543",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "544",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "545",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "546",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·11i0or4·simple-ilist-int-array-request·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·11i0or4·simple-ilist-int-array-request·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "547",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "548",
+      "body": {
+       "$ref": "542"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the i list int array request.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "549",
+     "parameters": [
+      {
+       "$id": "550",
+       "clientProperty": {
+        "$ref": "342"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "551",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "552",
+        "fixed": false,
+        "raw": "The count."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·nqsk2q·simple-ienumerable-int-array-response·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·nqsk2q·simple-ienumerable-int-array-response·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "553",
+        "fixed": false,
+        "raw": "count"
+       },
+       "serializedName": "count",
+       "modelType": {
+        "$id": "554",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "555",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "556",
+      "fixed": false,
+      "raw": "SimpleIEnumerableIntArrayResponse"
+     },
+     "group": {
+      "$id": "557",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleIEnumerableIntArrayResponse",
+     "url": "/simple/ienumerable/int/array/response",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "558",
+       "body": {
+        "$id": "559",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "560",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "561",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "562",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "563",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·qslas·simple-ienumerable-int-array-response·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·qslas·simple-ienumerable-int-array-response·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "564",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "565",
+      "body": {
+       "$ref": "559"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the i enumerable int array response.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "566",
+     "parameters": [
+      {
+       "$id": "567",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "568",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "569",
+        "fixed": false,
+        "raw": "The ints."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·7iwsp7·simple-ienumerable-int-array-request·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·7iwsp7·simple-ienumerable-int-array-request·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "570",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$id": "571",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "572",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "573",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "574",
+         "fixed": false
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "575",
+      "fixed": false,
+      "raw": "SimpleIEnumerableIntArrayRequest"
+     },
+     "group": {
+      "$id": "576",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleIEnumerableIntArrayRequest",
+     "url": "/simple/ienumerable/int/array/request",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "577",
+       "body": {
+        "$id": "578",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "579",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "580",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "581",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "582",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·10wtr2f·simple-ienumerable-int-array-request·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·10wtr2f·simple-ienumerable-int-array-request·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "583",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "584",
+      "body": {
+       "$ref": "578"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the i enumerable int array request.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "585",
+     "parameters": [
+      {
+       "$id": "586",
+       "clientProperty": {
+        "$ref": "342"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "587",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "588",
+        "fixed": false,
+        "raw": "The count."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·12kfp7n·simple-array-int-array-response·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·12kfp7n·simple-array-int-array-response·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "589",
+        "fixed": false,
+        "raw": "count"
+       },
+       "serializedName": "count",
+       "modelType": {
+        "$id": "590",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "591",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "592",
+      "fixed": false,
+      "raw": "SimpleArrayIntArrayResponse"
+     },
+     "group": {
+      "$id": "593",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleArrayIntArrayResponse",
+     "url": "/simple/array/int/array/response",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "594",
+       "body": {
+        "$id": "595",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "596",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "597",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "598",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "599",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·kxgpv8·simple-array-int-array-response·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·kxgpv8·simple-array-int-array-response·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "600",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "601",
+      "body": {
+       "$ref": "595"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the array int array response.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "602",
+     "parameters": [
+      {
+       "$id": "603",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "604",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "605",
+        "fixed": false,
+        "raw": "The ints."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1qw4aj·simple-array-int-array-request·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·1qw4aj·simple-array-int-array-request·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "606",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$id": "607",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "608",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "609",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "610",
+         "fixed": false
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "611",
+      "fixed": false,
+      "raw": "SimpleArrayIntArrayRequest"
+     },
+     "group": {
+      "$id": "612",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleArrayIntArrayRequest",
+     "url": "/simple/array/int/array/request",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "613",
+       "body": {
+        "$id": "614",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "615",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "616",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "617",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "618",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·n1aynt·simple-array-int-array-request·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·n1aynt·simple-array-int-array-request·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "619",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "620",
+      "body": {
+       "$ref": "614"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the array int array request.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "621",
+     "parameters": [
+      {
+       "$id": "622",
+       "clientProperty": {
+        "$ref": "342"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "623",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "624",
+        "fixed": false,
+        "raw": "The count."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1g7lpq6·simple-arraysegment-int-array-response·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·1g7lpq6·simple-arraysegment-int-array-response·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "625",
+        "fixed": false,
+        "raw": "count"
+       },
+       "serializedName": "count",
+       "modelType": {
+        "$id": "626",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "627",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "628",
+      "fixed": false,
+      "raw": "SimpleArraySegmentIntArrayResponse"
+     },
+     "group": {
+      "$id": "629",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleArraySegmentIntArrayResponse",
+     "url": "/simple/arraysegment/int/array/response",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "630",
+       "body": {
+        "$id": "631",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "632",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "633",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "634",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "635",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·6htj74·simple-arraysegment-int-array-response·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·6htj74·simple-arraysegment-int-array-response·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "636",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "637",
+      "body": {
+       "$ref": "631"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the array segment int array response.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "638",
+     "parameters": [
+      {
+       "$id": "639",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "640",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "641",
+        "fixed": false,
+        "raw": "The ints."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·52bihk·simple-arraysegment-int-array-request·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·52bihk·simple-arraysegment-int-array-request·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "642",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$id": "643",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "644",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "645",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "646",
+         "fixed": false
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "647",
+      "fixed": false,
+      "raw": "SimpleArraySegmentIntArrayRequest"
+     },
+     "group": {
+      "$id": "648",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleArraySegmentIntArrayRequest",
+     "url": "/simple/arraysegment/int/array/request",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "649",
+       "body": {
+        "$id": "650",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "651",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "652",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "653",
+         "fixed": false
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "654",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·ffsonb·simple-arraysegment-int-array-request·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·ffsonb·simple-arraysegment-int-array-request·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "655",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "656",
+      "body": {
+       "$ref": "650"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the array segment int array request.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "657",
+     "parameters": [
+      {
+       "$id": "658",
+       "clientProperty": {
+        "$ref": "366"
+       },
+       "location": "query",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "659",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "660",
+        "fixed": false,
+        "raw": "The query items."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·8hjsqf·simple-ilist-int-array-querystring·get·parameters·0",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/parameters/paths·8hjsqf·simple-ilist-int-array-querystring·get·parameters·0"
+         ]
+        },
+        "x-ms-parameter-location": "method"
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "661",
+        "fixed": false,
+        "raw": "queryItems"
+       },
+       "serializedName": "queryItems",
+       "modelType": {
+        "$id": "662",
+        "$type": "SequenceType",
+        "elementType": {
+         "$id": "663",
+         "$type": "PrimaryType",
+         "format": "int32",
+         "knownPrimaryType": "int",
+         "name": {
+          "$id": "664",
+          "fixed": false,
+          "raw": "Int"
+         },
+         "deprecated": false
+        },
+        "name": {
+         "$id": "665",
+         "fixed": false
+        },
+        "deprecated": false
+       }
+      }
+     ],
+     "name": {
+      "$id": "666",
+      "fixed": false,
+      "raw": "SimpleIListIntArrayQueryString"
+     },
+     "group": {
+      "$id": "667",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "SimpleIListIntArrayQueryString",
+     "url": "/simple/ilist/int/array/querystring",
+     "isAbsoluteUrl": false,
+     "httpMethod": "get",
+     "responses": {
+      "OK": {
+       "$id": "668",
+       "body": {
+        "$id": "669",
+        "$type": "PrimaryType",
+        "format": "int32",
+        "knownPrimaryType": "int",
+        "name": {
+         "$id": "670",
+         "fixed": false,
+         "raw": "Int"
+        },
+        "deprecated": false
+       },
+       "extensions": {
+        "$id": "671",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·nhobg1·simple-ilist-int-array-querystring·get·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·nhobg1·simple-ilist-int-array-querystring·get·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "672",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "673",
+      "body": {
+       "$ref": "669"
+      },
+      "isNullable": true
+     },
+     "summary": "Simples the i list int array query string.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "text/plain",
+      "application/json",
+      "text/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "674",
+     "parameters": [
+      {
+       "$id": "675",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "676",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "677",
+        "fixed": false,
+        "raw": "The request."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1ownlss·basic-object-model-return-void·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·1ownlss·basic-object-model-return-void·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "678",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$ref": "70"
+       }
+      }
+     ],
+     "name": {
+      "$id": "679",
+      "fixed": false,
+      "raw": "PostBasicObjectModelReturnVoid"
+     },
+     "group": {
+      "$id": "680",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostBasicObjectModelReturnVoid",
+     "url": "/basic/object/model/return/void",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "681",
+       "extensions": {
+        "$id": "682",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·135n07w·basic-object-model-return-void·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·135n07w·basic-object-model-return-void·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "683",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "684",
+      "isNullable": true
+     },
+     "description": "Offically posts the basic object model with void return.\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the basic object model with void return.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "application/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "685",
+     "parameters": [
+      {
+       "$id": "686",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "687",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "688",
+        "fixed": false,
+        "raw": "The request."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·fgw7vb·basic-object-model-return-task·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·fgw7vb·basic-object-model-return-task·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "689",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$ref": "70"
+       }
+      }
+     ],
+     "name": {
+      "$id": "690",
+      "fixed": false,
+      "raw": "PostBasicObjectModelReturnTask"
+     },
+     "group": {
+      "$id": "691",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostBasicObjectModelReturnTask",
+     "url": "/basic/object/model/return/task",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "OK": {
+       "$id": "692",
+       "extensions": {
+        "$id": "693",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·1lprpmx·basic-object-model-return-task·post·responses·200",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·1lprpmx·basic-object-model-return-task·post·responses·200"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "694",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "695",
+      "isNullable": true
+     },
+     "description": "Offically posts the basic object model with task return.\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the basic object model with task return.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "application/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    },
+    {
+     "$id": "696",
+     "parameters": [
+      {
+       "$id": "697",
+       "location": "body",
+       "collectionFormat": "none",
+       "defaultValue": {
+        "$id": "698",
+        "fixed": false
+       },
+       "deprecated": false,
+       "documentation": {
+        "$id": "699",
+        "fixed": false,
+        "raw": "The request."
+       },
+       "extensions": {
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·oc78qt·basic-object-model-return-task-with-202-attribute·post·requestbody",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/requestBodies/paths·oc78qt·basic-object-model-return-task-with-202-attribute·post·requestbody"
+         ]
+        }
+       },
+       "isRequired": false,
+       "isConstant": false,
+       "name": {
+        "$id": "700",
+        "fixed": false,
+        "raw": "body"
+       },
+       "serializedName": "body",
+       "modelType": {
+        "$ref": "70"
+       }
+      }
+     ],
+     "name": {
+      "$id": "701",
+      "fixed": false,
+      "raw": "PostBasicObjectModelReturnTaskWith202Attribute"
+     },
+     "group": {
+      "$id": "702",
+      "fixed": false,
+      "raw": ""
+     },
+     "serializedName": "PostBasicObjectModelReturnTaskWith202Attribute",
+     "url": "/basic/object/model/return/task/with/202/attribute",
+     "isAbsoluteUrl": false,
+     "httpMethod": "post",
+     "responses": {
+      "Accepted": {
+       "$id": "703",
+       "extensions": {
+        "$id": "704",
+        "x-ms-metadata": {
+         "apiVersions": [
+          "1.0"
+         ],
+         "filename": [
+          "mem:///103?oai3.shaken.json"
+         ],
+         "name": "paths·ebb8lz·basic-object-model-return-task-with-202-attribute·post·responses·202",
+         "originalLocations": [
+          "https://localhost:44390/swagger/v1/swagger.json#/components/responses/paths·ebb8lz·basic-object-model-return-task-with-202-attribute·post·responses·202"
+         ]
+        }
+       },
+       "isNullable": true
+      }
+     },
+     "defaultResponse": {
+      "$id": "705",
+      "isNullable": true
+     },
+     "returnType": {
+      "$id": "706",
+      "isNullable": true
+     },
+     "description": "Offically posts the basic object model with task 202 return.\r\nHere's some documentation:\r\n<a href=\"http://www.google.com\" />.",
+     "summary": "Posts the basic object model with task 202 return.",
+     "requestContentType": "application/json; charset=utf-8",
+     "responseContentTypes": [
+      "application/json"
+     ],
+     "extensions": {
+      "servers": []
+     },
+     "deprecated": false,
+     "hidden": false
+    }
+   ],
+   "name": {
+    "$id": "707",
+    "fixed": false,
+    "raw": ""
+   },
+   "typeName": {
+    "$id": "708",
+    "fixed": false
+   },
+   "nameForProperty": "ApiDeepSleepWebWebApiCheck"
+  }
+ ]
+}

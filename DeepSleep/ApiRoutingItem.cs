@@ -26,7 +26,7 @@
 
         /// <summary>Gets or sets the configuration.</summary>
         /// <value>The configuration.</value>
-        public IApiRequestConfiguration Configuration { get; set; }
+        public IDeepSleepRequestConfiguration Configuration { get; set; }
 
         /// <summary>Gets or sets the name.</summary>
         /// <value>The name.</value>

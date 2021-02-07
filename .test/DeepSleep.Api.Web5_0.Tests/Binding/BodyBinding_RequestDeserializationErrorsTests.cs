@@ -16,10 +16,7 @@
         [InlineData("PATCH")]
         public async Task body_binding___returns_450_badrequestformat_for_json_invalid_request(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
-
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -64,10 +61,7 @@ Content-Length: 1
         [InlineData("PATCH")]
         public async Task body_binding___returns_450_badrequestformat_for_xml_invalid_request(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
-
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -111,10 +105,7 @@ Content-Length: 1
         [InlineData("PATCH")]
         public async Task body_binding___returns_450_badrequestformat_for_multipart_invalid_request(string method)
         {
-            base.SetupEnvironment(services =>
-            {
-            });
-
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

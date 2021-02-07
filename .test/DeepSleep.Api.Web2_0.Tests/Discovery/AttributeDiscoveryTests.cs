@@ -13,9 +13,7 @@
         [Fact]
         public async Task discovery_attribute___has_route_registered()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

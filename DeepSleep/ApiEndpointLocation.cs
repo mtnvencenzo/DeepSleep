@@ -11,53 +11,54 @@
     /// <summary>
     /// 
     /// </summary>
-    [DebuggerDisplay("{Controller?.Name} {Endpoint}")]
+    [DebuggerDisplay("{Controller?.Name} {MethodInfo?.Name}")]
     public class ApiEndpointLocation
     {
         private ParameterInfo[] boundParameters;
 
-        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation" /> class.</summary>
         /// <param name="controller">The controller.</param>
-        /// <param name="endpoint">The endpoint.</param>
+        /// <param name="methodInfo">The method information.</param>
         /// <param name="httpMethod">The HTTP method.</param>
         public ApiEndpointLocation(
             Type controller,
-            string endpoint,
+            MethodInfo methodInfo,
             string httpMethod)
         {
-            this.Controller = controller;
-            this.Endpoint = endpoint;
             this.HttpMethod = httpMethod;
-            this.MethodInfo = this.GetEndpointMethodInfo();
+
+            if (controller != null)
+            {
+                this.Controller = Type.GetType(controller.AssemblyQualifiedName);
+            }
+
+            this.MethodInfo = this.ResolveMethodInfo(this.Controller, methodInfo);
             this.UriParameterType = this.GetUriParameterInfo()?.ParameterType;
             this.BodyParameterType = this.GetBodyParameterInfo()?.ParameterType;
             this.MethodReturnType = this.GetMethodInfoReturnType();
             this.SimpleParameters = this.GetSimpleParametersInfo();
         }
 
-        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ApiEndpointLocation" /> class.</summary>
         /// <param name="controller">The controller.</param>
-        /// <param name="endpoint">The endpoint.</param>
-        /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="methodInfo">The method information.</param>
+        /// <param name="httpMethod">The HTTP method.</param>
         /// <param name="uriParameterType">The URI parameter type.</param>
         /// <param name="bodyParameterType">The body parameter.</param>
         /// <param name="simpleParameters">The simple parameters.</param>
         /// <param name="methodReturnType">Type of the method return.</param>
         internal ApiEndpointLocation(
             Type controller,
-            string endpoint,
-            string httpMethod,
             MethodInfo methodInfo,
+            string httpMethod,
             Type uriParameterType,
             Type bodyParameterType,
             IList<ParameterInfo> simpleParameters,
             Type methodReturnType)
         {
             this.Controller = controller;
-            this.Endpoint = endpoint;
-            this.HttpMethod = httpMethod;
             this.MethodInfo = methodInfo;
+            this.HttpMethod = httpMethod;
             this.UriParameterType = uriParameterType;
             this.BodyParameterType = bodyParameterType;
             this.MethodReturnType = methodReturnType;
@@ -69,12 +70,9 @@
         [JsonIgnore]
         public Type Controller { get; }
 
-        /// <summary>Gets or sets the endpoint.</summary>
-        /// <value>The endpoint.</value>
-        public string Endpoint { get; }
-
         /// <summary>Gets or sets the HTTP method.</summary>
         /// <value>The HTTP method.</value>
+        [JsonIgnore]
         public string HttpMethod { get; }
 
         /// <summary>Gets the method information.</summary>
@@ -96,26 +94,6 @@
         /// <summary>Gets the type of the method return.</summary>
         /// <value>The type of the method return.</value>
         internal Type MethodReturnType { get; }
-
-        /// <summary>Gets the endpoint method.</summary>
-        /// <returns></returns>
-        /// <exception cref="Exception">Routing items endpoint method '{this.Endpoint}' does not exist on controller '{this.Controller.Name}'.</exception>
-        public MethodInfo GetEndpointMethodInfo()
-        {
-            var methods = this.Controller?.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod);
-            if (methods != null)
-            {
-                foreach (var methodinfo in methods)
-                {
-                    if (string.Compare(methodinfo.Name, this.Endpoint, false) == 0)
-                    {
-                        return methodinfo;
-                    }
-                }
-            }
-
-            return null;
-        }
 
         /// <summary>Gets the type of the endpoint return.</summary>
         /// <returns></returns>
@@ -192,6 +170,60 @@
             }
 
             return new List<ParameterInfo>();
+        }
+
+        /// <summary>Resolves the method information.</summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="methodInfo">The method information.</param>
+        /// <returns></returns>
+        internal MethodInfo ResolveMethodInfo(Type controller, MethodInfo methodInfo)
+        {
+            if (controller == null || methodInfo == null)
+            {
+                return null;
+            }
+
+            var parameterTypes = methodInfo
+                .GetParameters()
+                .Select(p => Type.GetType(p.ParameterType.AssemblyQualifiedName))
+                .ToList();
+
+            var methods = Controller
+                .GetMethods(bindingAttr: BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod)
+                .Where(m => m.Name == methodInfo.Name)
+                .Where(m => m.GetParameters().Length == parameterTypes.Count)
+                .ToList();
+
+            if (methods.Count <= 1)
+            {
+                return methods.FirstOrDefault();
+            }
+
+            foreach (var method in methods)
+            {
+                bool hasUnmatched = false;
+
+                var methodParameterTypes = method
+                   .GetParameters()
+                   .Select(p => Type.GetType(p.ParameterType.AssemblyQualifiedName))
+                   .ToList();
+
+                for (int i = 0; i < parameterTypes.Count; i++)
+                {
+                    if (methodParameterTypes[i] != parameterTypes[i])
+                    {
+                        hasUnmatched = true;
+                        break;
+                    }
+                }
+
+                if (!hasUnmatched)
+                {
+                    return method;
+                }
+            }
+
+            throw new Exception($"Method {methodInfo.Name}({parameterTypes.Count}) not found on controller {controller.FullName}");
         }
     }
 }

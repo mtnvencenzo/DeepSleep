@@ -14,9 +14,7 @@
         [Fact]
         public async Task discovery_attribute___includerequestheader_defaults_correctly()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -51,9 +49,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___includerequestheader_true()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -88,9 +84,7 @@ Accept: {applicationJson}";
         [Fact]
         public async Task discovery_attribute___includerequestheader_false()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

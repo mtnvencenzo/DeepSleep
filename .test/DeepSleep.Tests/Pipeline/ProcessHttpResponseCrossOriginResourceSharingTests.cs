@@ -67,7 +67,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -102,7 +102,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -137,7 +137,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -172,7 +172,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -207,7 +207,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -242,7 +242,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -277,7 +277,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -312,7 +312,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -350,7 +350,7 @@
                         Origin = origin,
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -386,7 +386,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
@@ -424,7 +424,7 @@
                         Origin = origin
                     }
                 },
-                Configuration = new DefaultApiRequestConfiguration
+                Configuration = new DeepSleepRequestConfiguration
                 {
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {

@@ -3,6 +3,7 @@
     using Api.DeepSleep.Controllers.Authentication;
     using Api.DeepSleep.Controllers.Authorization;
     using Api.DeepSleep.Controllers.Binding;
+    using Api.DeepSleep.Controllers.Cookies;
     using Api.DeepSleep.Controllers.Discovery;
     using Api.DeepSleep.Controllers.Exceptions;
     using Api.DeepSleep.Controllers.Formatters;
@@ -15,7 +16,7 @@
     using global::DeepSleep.Auth;
     using global::DeepSleep.Configuration;
     using global::DeepSleep.Discovery;
-    using global::DeepSleep.Formatting;
+    using global::DeepSleep.Media;
     using Microsoft.Extensions.DependencyInjection;
     using System.Collections.Generic;
     using System.IO;
@@ -36,8 +37,8 @@
             services.AddTransient<MultipartController>();
             services.AddTransient<ExceptionController>();
             services.AddTransient<ReadWriteConfigurationController>();
-            services.AddSingleton<AuthorizationController>();
-            services.AddScoped<RequestIdController>();
+            services.AddTransient<AuthorizationController>();
+            services.AddTransient<RequestIdController>();
             services.AddTransient<AuthenticationController>();
             services.AddTransient<EnableHeadController>();
             services.AddTransient<CommonErrorResponseProvider>();
@@ -49,6 +50,7 @@
             services.AddTransient<ErrorResponseProviderController>();
             services.AddTransient<AttributeDiscoveryErrorResponseProviderController>();
             services.AddTransient<RequestPipelineController>();
+            services.AddTransient<CookiesController>();
 
             // Only one of these to check both injection and no-injection resolution
             services.AddTransient<NotImplementedExceptionThrowValidator>();
@@ -75,7 +77,7 @@
 
         /// <summary>Discoveries the strategies.</summary>
         /// <returns></returns>
-        public static IList<IRouteDiscoveryStrategy> DiscoveryStrategies()
+        public static IList<IDeepSleepDiscoveryStrategy> DiscoveryStrategies()
         {
             var staticDiscovery = new StaticRouteDiscoveryStrategy();
 
@@ -84,14 +86,14 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: $"binding/simple/url/empty/binding/error",
                 httpMethods: new[] { "GET" },
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -104,7 +106,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithQuery),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -117,49 +119,49 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithRoute),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "binding/simple/url/{stringVar}/mixed",
                 httpMethods: new[] { "GET" },
                 controller: typeof(SimpleUrlBindingController),
                 endpoint: nameof(SimpleUrlBindingController.GetWithMixed),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "formatters/multipart/formdata",
                 httpMethods: new[] { "POST" },
                 controller: typeof(MultipartController),
                 endpoint: nameof(MultipartController.Post),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "formatters/multipart/formdata/custom",
                 httpMethods: new[] { "POST" },
                 controller: typeof(MultipartController),
                 endpoint: nameof(MultipartController.PostCustom),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/notimplemented",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplemented),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/validator/notimplemented",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplementedFromValidator),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/authentication/notimplemented",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplementedFromAuthentication),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -173,7 +175,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.NotImplementedFromAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -191,21 +193,21 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGateway),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/validator/badgateway",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGatewayFromValidator),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/authentication/badgateway",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGatewayFromAuthentication),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -219,7 +221,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.BadGatewayFromAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -237,21 +239,21 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeout),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/validator/gatewaytimeout",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeoutFromValidator),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/authentication/gatewaytimeout",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeoutFromAuthentication),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -265,7 +267,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.GatewayTimeoutFromAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -283,21 +285,21 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailable),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/validator/serviceunavailable",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailableFromValidator),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/authentication/serviceunavailable",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailableFromAuthentication),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -311,7 +313,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.ServiceUnavailableFromAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -329,21 +331,21 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.Unhandled),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/validator/unhandled",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.UnhandledFromValidator),
-                config: new DefaultApiRequestConfiguration());
+                config: new DeepSleepRequestConfiguration());
 
             staticDiscovery.AddRoute(
                 template: "exceptions/authentication/unhandled",
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.UnhandledFromAuthentication),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -357,7 +359,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ExceptionController),
                 endpoint: nameof(ExceptionController.UnhandledFromAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -375,7 +377,7 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PostForMaxRequestLength),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -388,7 +390,7 @@
                 httpMethods: new[] { "PUT" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PutForMaxRequestLength),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -401,7 +403,7 @@
                 httpMethods: new[] { "PATCH" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PatchForMaxRequestLength),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     RequestValidation = new ApiRequestValidationConfiguration
                     {
@@ -415,7 +417,7 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PostForBadRequestFormat),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -428,7 +430,7 @@
                 httpMethods: new[] { "PUT" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PutForBadRequestFormat),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -441,7 +443,7 @@
                 httpMethods: new[] { "PATCH" },
                 controller: typeof(BodyBindingController),
                 endpoint: nameof(BodyBindingController.PatchForBadRequestFormat),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
@@ -508,7 +510,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(RequestIdController),
                 endpoint: nameof(RequestIdController.GetDisabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     IncludeRequestIdHeaderInResponse = false
                 });
@@ -518,9 +520,9 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.GetWithAcceptOverride),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
                         AcceptHeaderOverride = "text/xml"
                     }
@@ -531,9 +533,9 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.GetWith406AcceptOverride),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
                         AcceptHeaderOverride = "image/jpg; q=1, text/xml; q=0, application/json; q=0"
                     }
@@ -545,9 +547,9 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableTypesTextXml),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
                         WriteableMediaTypes = new[] { "text/xml", "other/xml" }
                     }
@@ -559,9 +561,9 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
                         ReadableMediaTypes = new[] { "text/xml", "other/xml" }
                     }
@@ -572,21 +574,21 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
-                        WriterResolver = (args) =>
+                        WriterResolver = (serviceProvider) =>
                         {
-                            var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatters = new List<IDeepSleepMediaSerializer>();
+                            var formatter = serviceProvider.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {
                                 formatters.Add(formatter);
                             }
 
-                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerWriteOverrides(formatters));
                         }
                     }
                 });
@@ -596,14 +598,14 @@
                  httpMethods: new[] { "GET" },
                  controller: typeof(ReadWriteConfigurationController),
                  endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
-                 config: new DefaultApiRequestConfiguration
+                 config: new DeepSleepRequestConfiguration
                  {
-                     ReadWriteConfiguration = new ApiReadWriteConfiguration
+                     ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                      {
                          WriterResolver = (args) =>
                          {
-                             var formatters = new List<IFormatStreamReaderWriter>();
-                             return Task.FromResult(new FormatterWriteOverrides(formatters));
+                             var formatters = new List<IDeepSleepMediaSerializer>();
+                             return Task.FromResult(new MediaSerializerWriteOverrides(formatters));
                          }
                      }
                  });
@@ -613,21 +615,21 @@
                  httpMethods: new[] { "GET" },
                  controller: typeof(ReadWriteConfigurationController),
                  endpoint: nameof(ReadWriteConfigurationController.GetWithWriteableOverrides),
-                 config: new DefaultApiRequestConfiguration
+                 config: new DeepSleepRequestConfiguration
                  {
-                     ReadWriteConfiguration = new ApiReadWriteConfiguration
+                     ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                      {
-                         WriterResolver = (args) =>
+                         WriterResolver = (serviceProvider) =>
                          {
-                             var formatters = new List<IFormatStreamReaderWriter>();
-                             var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                             var formatters = new List<IDeepSleepMediaSerializer>();
+                             var formatter = serviceProvider.GetService<CustomXmlFormatStreamReaderWriter>();
 
                              if (formatter != null)
                              {
                                  formatters.Add(formatter);
                              }
 
-                             return Task.FromResult(new FormatterWriteOverrides(formatters));
+                             return Task.FromResult(new MediaSerializerWriteOverrides(formatters));
                          },
                          WriteableMediaTypes = new[] { "other/xml", "text/xml" }
                      }
@@ -638,21 +640,21 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
-                        ReaderResolver = (args) =>
+                        ReaderResolver = (serviceProvider) =>
                         {
-                            var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatters = new List<IDeepSleepMediaSerializer>();
+                            var formatter = serviceProvider.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {
                                 formatters.Add(formatter);
                             }
 
-                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerReadOverrides(formatters));
                         },
                     }
                 });
@@ -662,28 +664,28 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesPlainText),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
                         ReaderResolver = (args) =>
                         {
 
-                            var formatters = new List<IFormatStreamReaderWriter>
+                            var formatters = new List<IDeepSleepMediaSerializer>
                             {
                                 new PlainTextFormatStreamReaderWriter()
                             };
 
-                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerReadOverrides(formatters));
                         },
                         WriterResolver = (args) =>
                         {
-                            var formatters = new List<IFormatStreamReaderWriter>
+                            var formatters = new List<IDeepSleepMediaSerializer>
                             {
                                 new PlainTextFormatStreamReaderWriter()
                             };
 
-                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerWriteOverrides(formatters));
                         }
                     }
                 });
@@ -693,25 +695,25 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesPlainText),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
-                        ReaderResolver = (args) =>
+                        ReaderResolver = (serviceProvider) =>
                         {
-                            var formatters = args.GetContext().RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+                            var formatters = serviceProvider.GetServices<IDeepSleepMediaSerializer>().ToList();
 
                             formatters.Add(new PlainTextFormatStreamReaderWriter());
 
-                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerReadOverrides(formatters));
                         },
-                        WriterResolver = (args) =>
+                        WriterResolver = (serviceProvider) =>
                         {
-                            var formatters = args.GetContext().RequestServices.GetServices<IFormatStreamReaderWriter>().ToList();
+                            var formatters = serviceProvider.GetServices<IDeepSleepMediaSerializer>().ToList();
 
                             formatters.Add(new PlainTextFormatStreamReaderWriter());
 
-                            return Task.FromResult(new FormatterWriteOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerWriteOverrides(formatters));
                         },
                     }
                 });
@@ -722,21 +724,21 @@
                 httpMethods: new[] { "POST" },
                 controller: typeof(ReadWriteConfigurationController),
                 endpoint: nameof(ReadWriteConfigurationController.PostWithReadableTypesTextXml),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
-                    ReadWriteConfiguration = new ApiReadWriteConfiguration
+                    ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                     {
-                        ReaderResolver = (args) =>
+                        ReaderResolver = (serviceProvider) =>
                         {
-                            var formatters = new List<IFormatStreamReaderWriter>();
-                            var formatter = args.GetContext().RequestServices.GetService<CustomXmlFormatStreamReaderWriter>();
+                            var formatters = new List<IDeepSleepMediaSerializer>();
+                            var formatter = serviceProvider.GetService<CustomXmlFormatStreamReaderWriter>();
 
                             if (formatter != null)
                             {
                                 formatters.Add(formatter);
                             }
 
-                            return Task.FromResult(new FormatterReadOverrides(formatters));
+                            return Task.FromResult(new MediaSerializerReadOverrides(formatters));
                         },
                         ReadableMediaTypes = new[] { "other/xml" }
                     }
@@ -748,7 +750,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthenticationController),
                 endpoint: nameof(AuthenticationController.GetWithSingleSupportedScheme),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -762,7 +764,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthenticationController),
                 endpoint: nameof(AuthenticationController.GetWithMultipleSupportedScheme),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -777,7 +779,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthenticationController),
                 endpoint: nameof(AuthenticationController.GetWithSupportedSchemesNotDefined),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false
                 });
@@ -787,7 +789,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthenticationController),
                 endpoint: nameof(AuthenticationController.GetWithNoSupportedScheme),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false
                 });
@@ -797,7 +799,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthenticationController),
                 endpoint: nameof(AuthenticationController.GetWithAllowAnonymousTrue),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true
                 });
@@ -807,7 +809,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false
                 });
@@ -817,7 +819,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -832,7 +834,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -846,7 +848,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -860,7 +862,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadDisbabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -874,7 +876,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -888,7 +890,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -903,7 +905,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -918,7 +920,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -934,7 +936,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithConfiguredHeadEnabled),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
@@ -961,7 +963,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(EnableHeadController),
                 endpoint: nameof(EnableHeadController.GetWithExplicitHead),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false
                 });
@@ -971,7 +973,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(MethodNotFoundController),
                 endpoint: nameof(MethodNotFoundController.Get),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true
                 });
@@ -987,7 +989,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(MethodNotFoundController),
                 endpoint: nameof(MethodNotFoundController.GetNoHead),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = false
                 });
@@ -1003,7 +1005,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(NotFoundController),
                 endpoint: nameof(NotFoundController.Get),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     EnableHeadForGetRequests = true
                 });
@@ -1013,7 +1015,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthorizationController),
                 endpoint: nameof(AuthorizationController.GetWithAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = true
                 });
@@ -1023,7 +1025,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthorizationController),
                 endpoint: nameof(AuthorizationController.GetWithAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -1041,7 +1043,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthorizationController),
                 endpoint: nameof(AuthorizationController.GetWithAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -1059,7 +1061,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthorizationController),
                 endpoint: nameof(AuthorizationController.GetWithAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -1078,7 +1080,7 @@
                 httpMethods: new[] { "GET" },
                 controller: typeof(AuthorizationController),
                 endpoint: nameof(AuthorizationController.GetWithAuthorization),
-                config: new DefaultApiRequestConfiguration
+                config: new DeepSleepRequestConfiguration
                 {
                     AllowAnonymous = false,
                     AuthenticationProviders = new List<IAuthenticationComponent>
@@ -1313,9 +1315,28 @@
                 controller: typeof(HelperResponsesController),
                 endpoint: nameof(HelperResponsesController.TemporaryRedirect_Headers));
 
+            staticDiscovery.AddRoute(
+                template: "helper/responses/unprocessableentity",
+                httpMethods: new[] { "GET" },
+                controller: typeof(HelperResponsesController),
+                endpoint: nameof(HelperResponsesController.UnprocessableEntity));
+
+            staticDiscovery.AddRoute(
+                template: "helper/responses/unprocessableentity/null",
+                httpMethods: new[] { "GET" },
+                controller: typeof(HelperResponsesController),
+                endpoint: nameof(HelperResponsesController.UnprocessableEntity_Null));
+
+            staticDiscovery.AddRoute(
+                template: "helper/responses/unprocessableentity/headers",
+                httpMethods: new[] { "GET" },
+                controller: typeof(HelperResponsesController),
+                endpoint: nameof(HelperResponsesController.UnprocessableEntity_Headers));
+
+
             var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return new List<IRouteDiscoveryStrategy>
+            return new List<IDeepSleepDiscoveryStrategy>
             {
                 staticDiscovery,
                 new DelegatedRouteDiscoveryStrategy(
@@ -1330,9 +1351,9 @@
 
         /// <summary>Defaults the request configuration.</summary>
         /// <returns></returns>
-        public static IApiRequestConfiguration DefaultRequestConfiguration()
+        public static IDeepSleepRequestConfiguration DefaultRequestConfiguration()
         {
-            return new DefaultApiRequestConfiguration
+            return new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = true,
                 ApiErrorResponseProvider = (p) => p.GetService<CommonErrorResponseProvider>(),

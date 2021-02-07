@@ -12,9 +12,7 @@
         [Fact]
         public async Task ping___json_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"
@@ -49,9 +47,7 @@ X-CorrelationId: {correlationId}";
         [Fact]
         public async Task ping___xml_success()
         {
-            base.SetupEnvironment(services =>
-            {
-            });
+            base.SetupEnvironment();
 
             var correlationId = Guid.NewGuid();
             var request = @$"

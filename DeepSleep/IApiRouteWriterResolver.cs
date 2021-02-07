@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep
 {
-    using DeepSleep.Formatting;
+    using DeepSleep.Media;
+    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -9,8 +10,8 @@
     public interface IApiRouteWriterResolver
     {
         /// <summary>Resolves the specified API request context resolver.</summary>
-        /// <param name="contextResolver">The API request context resolver.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <returns></returns>
-        Task<FormatterWriteOverrides> Resolve(IApiRequestContextResolver contextResolver);
+        Task<MediaSerializerWriteOverrides> Resolve(IServiceProvider serviceProvider);
     }
 }
