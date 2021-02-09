@@ -179,6 +179,22 @@
                 document: document,
                 route: route);
 
+            if (route.HttpMethod.ToLower() == "put" || route.HttpMethod.ToLower() == "post" || route.HttpMethod.ToLower() == "patch")
+            {
+                var bodyParameter = route.Location.GetBodyParameterInfo();
+
+                if (bodyParameter != null)
+                {
+                    operation.RequestBody = await AddRequestBody(
+                        document: document,
+                        type: bodyParameter.ParameterType,
+                        method: route.Location.MethodInfo,
+                        memberName: bodyParameter.Name,
+                        routeConfiguration: routeConfiguration,
+                        useReferences: false).ConfigureAwait(false);
+                }
+            }
+
             var queryStringParameters = this.GetQueryStringParameters(
                 document: document,
                 route: route);
@@ -201,22 +217,6 @@
                 foreach (var headerParameter in headerParameters)
                 {
                     operation.Parameters.Add(headerParameter);
-                }
-            }
-
-            if (route.HttpMethod.ToLower() == "put" || route.HttpMethod.ToLower() == "post" || route.HttpMethod.ToLower() == "patch")
-            {
-                var bodyParameter = route.Location.GetBodyParameterInfo();
-
-                if (bodyParameter != null)
-                {
-                    operation.RequestBody = await AddRequestBody(
-                        document: document,
-                        type: bodyParameter.ParameterType,
-                        method: route.Location.MethodInfo,
-                        memberName: bodyParameter.Name,
-                        routeConfiguration: routeConfiguration,
-                        useReferences: false).ConfigureAwait(false);
                 }
             }
 
