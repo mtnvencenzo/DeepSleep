@@ -193,6 +193,7 @@
 
             var headerParameters = this.GetHeaderParameters(
                 document: document,
+                routeConfiguration: routeConfiguration,
                 route: route);
 
             if (headerParameters?.Any() ?? false)
@@ -263,6 +264,19 @@
                                 foreach (var queryParameter in headQueryStringParameters)
                                 {
                                     headOperation.Parameters.Add(queryParameter);
+                                }
+                            }
+
+                            var headHeaderParameters = this.GetHeaderParameters(
+                                document: document,
+                                routeConfiguration: routeConfiguration,
+                                route: route);
+
+                            if (headHeaderParameters?.Any() ?? false)
+                            {
+                                foreach (var headerParameter in headHeaderParameters)
+                                {
+                                    headOperation.Parameters.Add(headerParameter);
                                 }
                             }
                         }
@@ -483,59 +497,45 @@
             IDeepSleepRequestConfiguration routeConfiguration,
             string overridingStatusCode = null)
         {
-            var successStatusCode = overridingStatusCode ?? "200";
+            var rootReturnTyoe = TypeExtensions.GetRootType(route.Location.GetMethodInfoReturnType());
+            var responseTypes = new Dictionary<string, Type>();
 
-            var exactType = route.Location.GetMethodInfoReturnType();
-            var returnType = TypeExtensions.GetRootType(exactType);
+            if (rootReturnTyoe == typeof(Task) || string.Equals(httpMethod, "head", StringComparison.OrdinalIgnoreCase))
+            {
+                rootReturnTyoe = typeof(void);
+            }
+            else if(rootReturnTyoe == typeof(IApiResponse) || rootReturnTyoe.GetInterface(nameof(IApiResponse)) != null)
+            {
+                rootReturnTyoe = typeof(object);
+            }
 
-            if (returnType == typeof(Task) || string.Equals(httpMethod, "head", StringComparison.OrdinalIgnoreCase))
-            {
-                returnType = typeof(void);
-                exactType = typeof(void);
-            }
-            else if(returnType == typeof(IApiResponse) || returnType.GetInterface(nameof(IApiResponse)) != null)
-            {
-                returnType = typeof(object);
-                exactType = typeof(object);
-            }
+            var successStatusCode = overridingStatusCode 
+                ?? (rootReturnTyoe == typeof(void) ? "204" : "200");
 
 
             var openApiResponseAttributes = route.Location.MethodInfo.GetCustomAttributes(typeof(OasResponseAttribute), false)
                 .Cast<OasResponseAttribute>()
                 .ToList();
 
-            var responseTypes = new List<(string key, Type rootType, Type exactType)>();
 
             foreach (var attribute in openApiResponseAttributes)
             {
-                var rootType = TypeExtensions.GetRootType(attribute.ResponseType);
-
-                if (!responseTypes.Any(r => r.key == attribute.StatusCode))
+                if (!responseTypes.Any(r => r.Key == attribute.StatusCode))
                 {
-                    responseTypes.Add((key: attribute.StatusCode, rootType: rootType, exactType: attribute.ResponseType));
+                    responseTypes.Add(
+                        key: attribute.StatusCode, 
+                        value: TypeExtensions.GetRootType(attribute.ResponseType));
                 }
             }
 
-            if (responseTypes.FirstOrDefault(f => f.key.StartsWith("2")).key == null)
+            if (!responseTypes.Keys.Any(k => k.StartsWith("2")))
             {
-                if (returnType == typeof(void))
-                {
-                    responseTypes.Add((key: overridingStatusCode ?? "204", rootType: typeof(void), exactType: typeof(void)));
-                }
-                else
-                {
-                    responseTypes.Add((key: overridingStatusCode ?? "200", rootType: returnType, exactType: exactType));
-                }
+                responseTypes.Add(
+                    key: successStatusCode ?? "204",
+                    value: rootReturnTyoe);
             }
 
-
-            if (responseTypes.Count == 0)
-            {
-                responseTypes.Add((key: overridingStatusCode ?? "204", rootType: typeof(void), exactType: typeof(void)));
-            }
-
-
-            if (responseTypes.FirstOrDefault(r => r.key == "default").key != "default")
+            if (!responseTypes.Keys.Any(k => k == "default"))
             {
                 var validationProvider = routeConfiguration.ApiErrorResponseProvider != null
                     ? routeConfiguration.ApiErrorResponseProvider(this.serviceProvider)
@@ -546,37 +546,47 @@
 
                 if (validationErrorType != null)
                 {
-                    responseTypes.Add((key: "default", rootType: validationErrorRootType, exactType: validationErrorType));
+                    responseTypes.Add(
+                        key: "default",
+                        value: TypeExtensions.GetRootType(validationErrorType));
                 }
             }
 
-
-            successStatusCode = responseTypes.FirstOrDefault(k => k.key.StartsWith("2")).key ?? successStatusCode;
+            successStatusCode = responseTypes.Keys.FirstOrDefault(k => k.StartsWith("2")) ?? successStatusCode;
 
             foreach (var responseType in responseTypes)
             {
-                if (responseType.rootType != typeof(void) && responseType.rootType != typeof(object))
+                if (responseType.Value != typeof(void) && responseType.Value != typeof(object))
                 {
-                    var typeName = OasHelpers.GetDocumentTypeSchemaName(responseType.rootType, this.configurationProvider.PrefixNamesWithNamespace);
+                    var typeName = OasHelpers.GetDocumentTypeSchemaName(responseType.Value, this.configurationProvider.PrefixNamesWithNamespace);
 
-                    operation.Responses.Add(responseType.key, new OpenApiResponse
+                    operation.Responses.Add(responseType.Key, new OpenApiResponse
                     {
                         Description = OasDocHelpers.GetReturnTypeDocumentationSummary(route.Location.MethodInfo, this.commentDocs) 
-                            ?? OasDocHelpers.GetDocumentationSummary(responseType.rootType, this.commentDocs) 
-                            ?? OasHelpers.GetDefaultResponseDescription(responseType.key),
+                            ?? OasDocHelpers.GetDocumentationSummary(responseType.Value, this.commentDocs) 
+                            ?? OasHelpers.GetDefaultResponseDescription(responseType.Key),
 
                         Content = await GetResponseContents(
                             document: document, 
-                            responseType: responseType.rootType,
-                            exactResponseType: responseType.exactType,
-                            routeConfiguration: routeConfiguration).ConfigureAwait(false)
+                            responseType: responseType.Value,
+                            routeConfiguration: routeConfiguration).ConfigureAwait(false),
+                        
+                        Headers = GetResponseHeaders(
+                            document: document,
+                            routeConfiguration: routeConfiguration,
+                            route: route)
                     });;
                 }
                 else
                 {
-                    operation.Responses.Add(responseType.key, new OpenApiResponse
+                    operation.Responses.Add(responseType.Key, new OpenApiResponse
                     {
-                        Description = OasHelpers.GetDefaultResponseDescription(responseType.key)
+                        Description = OasHelpers.GetDefaultResponseDescription(responseType.Key),
+
+                        Headers = GetResponseHeaders(
+                            document: document,
+                            routeConfiguration: routeConfiguration,
+                            route: route)
                     });
                 }
             }
@@ -589,19 +599,17 @@
         /// <summary>Gets the response contents.</summary>
         /// <param name="document">The document.</param>
         /// <param name="responseType">Type of the response.</param>
-        /// <param name="exactResponseType">Type of the exact response.</param>
         /// <param name="routeConfiguration">The route configuration.</param>
         /// <returns></returns>
         private async Task<Dictionary<string, OpenApiMediaType>> GetResponseContents(
             OpenApiDocument document, 
             Type responseType,
-            Type exactResponseType,
             IDeepSleepRequestConfiguration routeConfiguration)
         {
             var contents = new Dictionary<string, OpenApiMediaType>();
 
             var contentTypes = await OasHelpers.GetResponseBodyContentTypes(
-                responseBodyType: exactResponseType,
+                responseBodyType: responseType,
                 serviceProvider: this.serviceProvider,
                 routeConfiguration: routeConfiguration,
                 formatterFactory: this.formatStreamReaderWriterFactory).ConfigureAwait(false);
@@ -613,7 +621,7 @@
                     Schema = this.AddSchema(
                         document: document, 
                         containingMember: null, 
-                        type: exactResponseType,
+                        type: responseType,
                         memberName: null,
                         useReferences: true)
                 });
@@ -1306,28 +1314,33 @@
 
         /// <summary>Gets the header parameters.</summary>
         /// <param name="document">The document.</param>
+        /// <param name="routeConfiguration">The route configuration.</param>
         /// <param name="route">The route.</param>
         /// <returns></returns>
         private List<OpenApiParameter> GetHeaderParameters(
             OpenApiDocument document,
+            IDeepSleepRequestConfiguration routeConfiguration,
             ApiRoutingItem route)
         {
             var parameters = new List<OpenApiParameter>();
 
-            var xCorrelationIdHeader = new OpenApiParameter
+            if (routeConfiguration.UseCorrelationIdHeader ?? false)
             {
-                Name = "X-CorrelationId",
-                In = ParameterLocation.Header,
-                Schema = this.AddSimpleTypeSchema(
-                    document: document,
-                    type: typeof(string),
-                    memberName: null,
-                    containingMember: null)
-            };
+                var xCorrelationIdHeader = new OpenApiParameter
+                {
+                    Name = "X-CorrelationId",
+                    In = ParameterLocation.Header,
+                    Schema = this.AddSimpleTypeSchema(
+                        document: document,
+                        type: typeof(string),
+                        memberName: null,
+                        containingMember: null)
+                };
 
-            xCorrelationIdHeader.Description = "A correlation value that will be echoed back within the X-CorrelationId response header.";
+                xCorrelationIdHeader.Description = "A correlation value that will be echoed back within the X-CorrelationId response header.";
 
-            parameters.Add(xCorrelationIdHeader);
+                parameters.Add(xCorrelationIdHeader);
+            }
 
             return parameters;
         }
@@ -1444,6 +1457,45 @@
                     Description = OasDocHelpers.GetDocumenationSummary(methodInfo.DeclaringType, this.commentDocs)
                 }
             };
+        }
+
+        /// <summary>Gets the response headers.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="routeConfiguration">The route configuration.</param>
+        /// <param name="route">The route.</param>
+        /// <returns></returns>
+        private Dictionary<string, OpenApiHeader> GetResponseHeaders(
+            OpenApiDocument document,
+            IDeepSleepRequestConfiguration routeConfiguration,
+            ApiRoutingItem route)
+        {
+            var headers = new Dictionary<string, OpenApiHeader>();
+
+            if (routeConfiguration?.IncludeRequestIdHeaderInResponse ?? false)
+            {
+                headers.Add("X-RequestId", new OpenApiHeader
+                {
+                    Schema = this.AddSimpleTypeSchema(
+                        document: document,
+                        type: typeof(string),
+                        memberName: null,
+                        containingMember: null)
+                });
+            }
+
+            if (routeConfiguration?.UseCorrelationIdHeader ?? false)
+            {
+                headers.Add("X-CorrelationId", new OpenApiHeader
+                {
+                    Schema = this.AddSimpleTypeSchema(
+                        document: document,
+                        type: typeof(string),
+                        memberName: null,
+                        containingMember: null)
+                });
+            }
+
+            return headers;
         }
     }
 }

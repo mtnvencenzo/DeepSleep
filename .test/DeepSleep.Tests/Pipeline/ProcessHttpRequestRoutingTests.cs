@@ -268,6 +268,50 @@
             context.Configuration.AllowAnonymous.Should().Be(expected);
         }
 
+        [Theory]
+        [InlineData(true, null, null)]
+        [InlineData(true, true, null)]
+        [InlineData(true, true, true)]
+        [InlineData(true, null, true)]
+        [InlineData(true, false, true)]
+        [InlineData(false, true, false)]
+        public async void request_config___usecorrelationidheader_returns_expected(bool expected, bool? def, bool? endpoint)
+        {
+            var defaultConfig = new DeepSleepRequestConfiguration
+            {
+                UseCorrelationIdHeader = def
+            };
+
+            var endpointConfig = new DeepSleepRequestConfiguration
+            {
+                UseCorrelationIdHeader = endpoint
+            };
+
+            var routingTable = GetRoutingTable(endpointConfig);
+            var routeResolver = new ApiRouteResolver();
+
+            var context = new ApiRequestContext
+            {
+                RequestAborted = new CancellationToken(false),
+                Request = GetRequestInfo(),
+                Configuration = null
+            };
+
+            var processed = await context.ProcessHttpRequestRouting(routingTable, routeResolver, defaultConfig).ConfigureAwait(false);
+            processed.Should().BeTrue();
+
+            context.Response.Should().NotBeNull();
+            context.Response.ResponseObject.Should().BeNull();
+            context.Routing.Should().NotBeNull();
+            context.Routing.Route.Should().NotBeNull();
+            context.Routing.Template.Should().NotBeNull();
+            context.Configuration.Should().NotBeNull();
+
+            // Assert the request's configuration
+            AssertConfiguration(context.Configuration, endpointConfig, defaultConfig);
+
+            context.Configuration.UseCorrelationIdHeader.Should().Be(expected);
+        }
 
         [Theory]
         [InlineData(true, null, null)]
@@ -2725,6 +2769,7 @@
             var system = ApiRequestContext.GetDefaultRequestConfiguration();
 
             request.AllowAnonymous.Should().Be(endpoint?.AllowAnonymous ?? def?.AllowAnonymous ?? system.AllowAnonymous);
+            request.UseCorrelationIdHeader.Should().Be(endpoint?.UseCorrelationIdHeader ?? def?.UseCorrelationIdHeader ?? system.UseCorrelationIdHeader);
             request.Deprecated.Should().Be(endpoint?.Deprecated ?? def?.Deprecated ?? system.Deprecated);
             request.IncludeRequestIdHeaderInResponse.Should().Be(endpoint?.IncludeRequestIdHeaderInResponse ?? def?.IncludeRequestIdHeaderInResponse ?? system.IncludeRequestIdHeaderInResponse);
 

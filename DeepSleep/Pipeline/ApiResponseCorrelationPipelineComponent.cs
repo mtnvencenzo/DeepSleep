@@ -1,5 +1,6 @@
 ﻿namespace DeepSleep.Pipeline
 {
+    using DeepSleep.Configuration;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -29,7 +30,9 @@
                      .GetContext()
                      .SetThreadCulure();
 
-                await context.ProcessHttpResponseCorrelation().ConfigureAwait(false);
+                var defaultRequestConfig = context?.RequestServices?.GetService<IDeepSleepRequestConfiguration>();
+
+                await context.ProcessHttpResponseCorrelation(defaultRequestConfig).ConfigureAwait(false);
             }
         }
     }
@@ -49,14 +52,23 @@
 
         /// <summary>Processes the HTTP response correlation.</summary>
         /// <param name="context">The context.</param>
+        /// <param name="defaultRequestConfiguration">The default request configuration.</param>
         /// <returns></returns>
-        internal static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context)
+        internal static Task<bool> ProcessHttpResponseCorrelation(this ApiRequestContext context, IDeepSleepRequestConfiguration defaultRequestConfiguration)
         {
             if (!context.RequestAborted.IsCancellationRequested)
             {
                 if (context.Request?.CorrelationId != null)
                 {
-                    context.Response.AddHeader("X-CorrelationId", context.Request.CorrelationId);
+                    var useCorrelationIdHeader = context.Configuration?.UseCorrelationIdHeader
+                        ?? defaultRequestConfiguration?.UseCorrelationIdHeader
+                        ?? ApiRequestContext.GetDefaultRequestConfiguration().UseCorrelationIdHeader
+                        ?? true;
+
+                    if (useCorrelationIdHeader)
+                    {
+                        context.Response.AddHeader("X-CorrelationId", context.Request.CorrelationId);
+                    }
                 }
             }
 

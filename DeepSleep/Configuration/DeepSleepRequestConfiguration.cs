@@ -30,6 +30,10 @@
         /// <value>The caching directive.</value>
         public ApiCacheDirectiveConfiguration CacheDirective { get; set; }
 
+        /// <summary>Gets or sets the use correlation identifier header.</summary>
+        /// <value>The use correlation identifier header.</value>
+        public bool? UseCorrelationIdHeader { get; set; }
+
         /// <summary>Gets or sets the request validation.</summary>
         /// <value>The request validation.</value>
         public ApiRequestValidationConfiguration RequestValidation { get; set; }

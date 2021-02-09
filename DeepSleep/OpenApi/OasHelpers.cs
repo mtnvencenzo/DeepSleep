@@ -199,41 +199,43 @@
                 .FirstOrDefault()
                 ?.OperationId;
 
-            if (!string.IsNullOrWhiteSpace(operationId))
+            if (string.IsNullOrWhiteSpace(operationId))
             {
-                if (isAutoHeadOperation)
-                {
-                    if (operationId.StartsWith("get", StringComparison.OrdinalIgnoreCase))
+                var routeParts = route.Template
+                    .Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
+                    .Where(i => !string.IsNullOrWhiteSpace(i))
+                    .Select(i => i.Trim())
+                    .Where(i => !i.StartsWith("{") && !i.EndsWith("}"))
+                    .Where(i => !string.IsNullOrWhiteSpace(i))
+                    .Select(i => i.Trim())
+                    .Select(i =>
                     {
-                        operationId = operationId.Substring(3);
-                        return $"Head{operationId}";
-                    }
+                        return i.ToUpperInvariant().Substring(0, 1) + (i.Length == 1 ? "" : i.Substring(1));
+                    })
+                    .ToList();
 
-                    return $"Head{operationId}";
-                }
+                var name = string.Join(string.Empty, routeParts);
 
-                return operationId.Trim();
+                operationId =
+                    httpMethod.ToUpper().Substring(0, 1) +
+                    httpMethod.ToLower().Substring(1) +
+                    name;
             }
 
-            var routeParts = route.Template
-                .Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(i => !string.IsNullOrWhiteSpace(i))
-                .Select(i => i.Trim())
-                .Where(i => !i.StartsWith("{") && !i.EndsWith("}"))
-                .Where(i => !string.IsNullOrWhiteSpace(i))
-                .Select(i => i.Trim())
-                .Select(i =>
+
+            if (isAutoHeadOperation)
+            {
+                if (operationId.StartsWith("get", StringComparison.OrdinalIgnoreCase))
                 {
-                    return i.ToUpperInvariant().Substring(0, 1) + (i.Length == 1 ? "" : i.Substring(1));
-                })
-                .ToList();
+                    operationId = $"Head{operationId.Substring(3)}";
+                }
+                else if (!operationId.StartsWith("head", StringComparison.OrdinalIgnoreCase))
+                {
+                    operationId = $"Head{operationId}";
+                }
+            }
 
-            var name = string.Join(string.Empty, routeParts);
-
-            return
-                httpMethod.ToUpper().Substring(0, 1) +
-                httpMethod.ToLower().Substring(1) +
-                name;
+            return operationId.Trim();
         }
 
         internal static async Task<IList<string>> GetRequestBodyContentTypes(

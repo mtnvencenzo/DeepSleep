@@ -25,6 +25,10 @@
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
         bool? AllowAnonymous { get; set; }
 
+        /// <summary>Gets or sets the use correlation identifier header.</summary>
+        /// <value>The use correlation identifier header.</value>
+        bool? UseCorrelationIdHeader { get; set; }
+
         /// <summary>Gets or sets the caching directive.</summary>
         /// <value>The caching directive.</value>
         ApiCacheDirectiveConfiguration CacheDirective { get; set; }

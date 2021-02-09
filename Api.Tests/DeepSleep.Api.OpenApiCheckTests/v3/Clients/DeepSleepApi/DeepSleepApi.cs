@@ -341,7 +341,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<BasicObject>> PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(int id, BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<BasicObject,PostBasicObjectModelNoDocAttributesHeaders>> PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(int id, BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -446,7 +446,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<BasicObject>();
+            var _result = new HttpOperationResponse<BasicObject,PostBasicObjectModelNoDocAttributesHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -466,6 +466,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostBasicObjectModelNoDocAttributesHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -506,7 +519,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<EnumUriObjectModelRs>> PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<EnumUriObjectModelRs,PostEnumUriModelNoDocAttributesHeaders>> PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -612,7 +625,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<EnumUriObjectModelRs>();
+            var _result = new HttpOperationResponse<EnumUriObjectModelRs,PostEnumUriModelNoDocAttributesHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -632,6 +645,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostEnumUriModelNoDocAttributesHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -672,7 +698,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<EnumUriObjectModelRs>> PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<EnumUriObjectModelRs,PutEnumUriModelNoDocAttributesHeaders>> PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -778,7 +804,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<EnumUriObjectModelRs>();
+            var _result = new HttpOperationResponse<EnumUriObjectModelRs,PutEnumUriModelNoDocAttributesHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -798,6 +824,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PutEnumUriModelNoDocAttributesHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -841,7 +880,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<EnumUriObjectModelRs>> PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<EnumUriObjectModelRs,PatchEnumUriModelNoDocAttributesHeaders>> PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -952,7 +991,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<EnumUriObjectModelRs>();
+            var _result = new HttpOperationResponse<EnumUriObjectModelRs,PatchEnumUriModelNoDocAttributesHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -972,6 +1011,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PatchEnumUriModelNoDocAttributesHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -1016,7 +1068,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<string>> GetEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<string,GetEnumInRouteSimpleMemberHeaders>> GetEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (enumValue == null)
             {
@@ -1118,7 +1170,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<string>();
+            var _result = new HttpOperationResponse<string,GetEnumInRouteSimpleMemberHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1139,6 +1191,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetEnumInRouteSimpleMemberHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1148,6 +1213,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='enumValue'>
         /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1167,7 +1236,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadEnumInRouteSimpleMemberHeaders>> HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (enumValue == null)
             {
@@ -1181,6 +1250,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("enumValue", enumValue);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadEnumInRouteSimpleMember", tracingParameters);
             }
@@ -1194,6 +1264,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -1260,9 +1338,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadEnumInRouteSimpleMemberHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadEnumInRouteSimpleMemberHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1310,7 +1401,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<Int32ObjectModelRq>> PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<Int32ObjectModelRq,PostInt32UriModelNoDocAttributesHeaders>> PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1431,7 +1522,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<Int32ObjectModelRq>();
+            var _result = new HttpOperationResponse<Int32ObjectModelRq,PostInt32UriModelNoDocAttributesHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1451,6 +1542,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostInt32UriModelNoDocAttributesHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -1493,7 +1597,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<int?>> GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<int?,GetInt32ValuesOverriddenOpIdHeaders>> GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1606,7 +1710,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<int?>();
+            var _result = new HttpOperationResponse<int?,GetInt32ValuesOverriddenOpIdHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1627,6 +1731,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetInt32ValuesOverriddenOpIdHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1643,6 +1760,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryInt2'>
         /// The query int2.
         /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
+        /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -1655,7 +1776,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadInt32ValuesOverriddenOpIdHeaders>> HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1667,6 +1788,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 tracingParameters.Add("routeint", routeint);
                 tracingParameters.Add("queryInt1", queryInt1);
                 tracingParameters.Add("queryInt2", queryInt2);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadInt32ValuesOverriddenOpId", tracingParameters);
             }
@@ -1693,6 +1815,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -1759,9 +1889,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadInt32ValuesOverriddenOpIdHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadInt32ValuesOverriddenOpIdHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1794,7 +1937,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,GetSimpleIlistIntArrayResponseHeaders>> GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1900,7 +2043,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,GetSimpleIlistIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -1921,6 +2064,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleIlistIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -1930,6 +2086,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='count'>
         /// The count.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1943,7 +2103,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleIlistIntArrayResponseHeaders>> HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1953,6 +2113,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("count", count);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleIlistIntArrayResponse", tracingParameters);
             }
@@ -1974,6 +2135,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -2040,9 +2209,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleIlistIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleIlistIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2075,7 +2257,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,PostSimpleIlistIntArrayRequestHeaders>> PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2178,7 +2360,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,PostSimpleIlistIntArrayRequestHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2198,6 +2380,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostSimpleIlistIntArrayRequestHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -2231,7 +2426,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,GetSimpleIenumerableIntArrayResponseHeaders>> GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2337,7 +2532,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,GetSimpleIenumerableIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2358,6 +2553,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleIenumerableIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2367,6 +2575,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='count'>
         /// The count.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2380,7 +2592,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayResponseHeaders>> HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2390,6 +2602,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("count", count);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleIenumerableIntArrayResponse", tracingParameters);
             }
@@ -2411,6 +2624,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -2477,9 +2698,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleIenumerableIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2512,7 +2746,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,PostSimpleIenumerableIntArrayRequestHeaders>> PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2615,7 +2849,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,PostSimpleIenumerableIntArrayRequestHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2635,6 +2869,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostSimpleIenumerableIntArrayRequestHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -2668,7 +2915,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,GetSimpleArrayIntArrayResponseHeaders>> GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2774,7 +3021,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,GetSimpleArrayIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -2795,6 +3042,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleArrayIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2804,6 +3064,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='count'>
         /// The count.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -2817,7 +3081,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleArrayIntArrayResponseHeaders>> HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -2827,6 +3091,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("count", count);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleArrayIntArrayResponse", tracingParameters);
             }
@@ -2848,6 +3113,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -2914,9 +3187,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleArrayIntArrayResponseHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleArrayIntArrayResponseHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -2949,7 +3235,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<IList<int?>>> PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<IList<int?>,PostSimpleArrayIntArrayRequestHeaders>> PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3052,7 +3338,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<IList<int?>>();
+            var _result = new HttpOperationResponse<IList<int?>,PostSimpleArrayIntArrayRequestHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -3072,6 +3358,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     }
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
+            }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostSimpleArrayIntArrayRequestHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
             }
             if (_shouldTrace)
             {
@@ -3105,7 +3404,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<int?>> GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<int?,GetSimpleIlistIntArrayQuerystringHeaders>> GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3211,7 +3510,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<int?>();
+            var _result = new HttpOperationResponse<int?,GetSimpleIlistIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -3232,6 +3531,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleIlistIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3241,6 +3553,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='queryItems'>
         /// The query items.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -3254,7 +3570,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleIlistIntArrayQuerystringHeaders>> HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3264,6 +3580,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("queryItems", queryItems);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleIlistIntArrayQuerystring", tracingParameters);
             }
@@ -3285,6 +3602,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -3351,9 +3676,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleIlistIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleIlistIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3386,7 +3724,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<int?>> GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<int?,GetSimpleIenumerableIntArrayQuerystringHeaders>> GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3492,7 +3830,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<int?>();
+            var _result = new HttpOperationResponse<int?,GetSimpleIenumerableIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -3513,6 +3851,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleIenumerableIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3522,6 +3873,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='queryItems'>
         /// The query items.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -3535,7 +3890,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayQuerystringHeaders>> HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3545,6 +3900,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("queryItems", queryItems);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleIenumerableIntArrayQuerystring", tracingParameters);
             }
@@ -3566,6 +3922,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -3632,9 +3996,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleIenumerableIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3667,7 +4044,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<int?>> GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<int?,GetSimpleArrayIntArrayQuerystringHeaders>> GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3773,7 +4150,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<int?>();
+            var _result = new HttpOperationResponse<int?,GetSimpleArrayIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -3794,6 +4171,19 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<GetSimpleArrayIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3803,6 +4193,10 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
 
         /// <param name='queryItems'>
         /// The query items.
+        /// </param>
+        /// <param name='xCorrelationId'>
+        /// A correlation value that will be echoed back within the X-CorrelationId
+        /// response header.
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -3816,7 +4210,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<HeadSimpleArrayIntArrayQuerystringHeaders>> HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -3826,6 +4220,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("queryItems", queryItems);
+                tracingParameters.Add("xCorrelationId", xCorrelationId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "HeadSimpleArrayIntArrayQuerystring", tracingParameters);
             }
@@ -3847,6 +4242,14 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             _httpRequest.Method = new HttpMethod("HEAD");
             _httpRequest.RequestUri = new System.Uri(_url);
             // Set Headers
+            if (xCorrelationId != null)
+            {
+                if (_httpRequest.Headers.Contains("X-CorrelationId"))
+                {
+                    _httpRequest.Headers.Remove("X-CorrelationId");
+                }
+                _httpRequest.Headers.TryAddWithoutValidation("X-CorrelationId", xCorrelationId);
+            }
 
 
             if (customHeaders != null)
@@ -3913,9 +4316,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<HeadSimpleArrayIntArrayQuerystringHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<HeadSimpleArrayIntArrayQuerystringHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -3950,7 +4366,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> PostBasicObjectModelReturnVoidWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnVoidHeaders>> PostBasicObjectModelReturnVoidWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -4053,9 +4469,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<PostBasicObjectModelReturnVoidHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostBasicObjectModelReturnVoidHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -4090,7 +4519,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> PostBasicObjectModelReturnTaskWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskHeaders>> PostBasicObjectModelReturnTaskWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -4193,9 +4622,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostBasicObjectModelReturnTaskHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);
@@ -4230,7 +4672,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse> PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskWith202AttributeHeaders>> PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -4333,9 +4775,22 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse();
+            var _result = new HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskWith202AttributeHeaders>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
+            try
+            {
+                _result.Headers = _httpResponse.GetHeadersAsJson().ToObject<PostBasicObjectModelReturnTaskWith202AttributeHeaders>(JsonSerializer.Create(DeserializationSettings));
+            }
+            catch (JsonException ex)
+            {
+                _httpRequest.Dispose();
+                if (_httpResponse != null)
+                {
+                    _httpResponse.Dispose();
+                }
+                throw new SerializationException("Unable to deserialize the headers.", _httpResponse.GetHeadersAsJson().ToString(), ex);
+            }
             if (_shouldTrace)
             {
                 ServiceClientTracing.Exit(_invocationId, _result);

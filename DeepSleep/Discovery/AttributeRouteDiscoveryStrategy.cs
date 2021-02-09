@@ -105,6 +105,7 @@
                         configuration = this.AssignRouteValidationErrorConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteValidationErrorConfigurationAttribute>());
                         configuration = this.AssignRouteErrorResponseProviderAttribute(configuration, method.GetCustomAttribute<ApiRouteErrorResponseProviderAttribute>());
                         configuration = this.AssignRouteMediaSerializerConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteMediaSerializerConfigurationAttribute>());
+                        configuration = this.AssignRouteUseCorrelationIdHeaderAttribute(configuration, method.GetCustomAttribute<ApiRouteUseCorrelationIdHeaderAttribute>());
 
                         var registration = new DeepSleepRouteRegistration(
                             template: apiRoute.Template,
@@ -145,6 +146,20 @@
             var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.AllowAnonymous = attribute.AllowAnonymous;
+
+            return config;
+        }
+
+        private DeepSleepRequestConfiguration AssignRouteUseCorrelationIdHeaderAttribute(DeepSleepRequestConfiguration configuration, ApiRouteUseCorrelationIdHeaderAttribute attribute)
+        {
+            if (attribute == null)
+            {
+                return configuration;
+            }
+
+            var config = configuration ?? new DeepSleepRequestConfiguration();
+
+            config.UseCorrelationIdHeader = attribute.UseCorrelationIdHeader;
 
             return config;
         }

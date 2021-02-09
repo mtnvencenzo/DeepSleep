@@ -105,7 +105,7 @@
 
             if (httpMethods?.Count == 0)
             {
-                throw new Exception(string.Format("Http methods not specified", endpoint, controller.FullName));
+                throw new Exception($"Http methods not specified on endpoint {endpoint} in controller {controller.FullName}");
             }
 
             this.Template = template ?? string.Empty;
