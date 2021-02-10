@@ -21,8 +21,6 @@
     /// <seealso cref="DeepSleep.Auth.IAuthenticationComponent" />
     public class ApiAuthenticationComponent<T> : IAuthenticationComponent where T : IAuthenticationProvider
     {
-        private IAuthenticationProvider provider;
-
         string IAuthenticationProvider.Realm { get; }
         string IAuthenticationProvider.Scheme { get; }
 
@@ -35,38 +33,37 @@
         /// <returns>The <see cref="DeepSleep.Auth.IAuthenticationProvider" /></returns>
         public virtual IAuthenticationProvider Activate(IApiRequestContextResolver contextResolver)
         {
-            if (this.provider == null)
+            IAuthenticationProvider provider = null;
+            var context = contextResolver?.GetContext();
+
+            if (context != null)
             {
-                var context = contextResolver?.GetContext();
-                if (context != null)
+                try
+                {
+                    if (context.RequestServices != null)
+                    {
+                        provider = context.RequestServices.GetService(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    context.Log(ex.ToString());
+                }
+
+                if (provider == null)
                 {
                     try
                     {
-                        if (context.RequestServices != null)
-                        {
-                            this.provider = context.RequestServices.GetService(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
-                        }
+                        provider = Activator.CreateInstance(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
                     }
                     catch (Exception ex)
                     {
                         context.Log(ex.ToString());
                     }
-
-                    if (this.provider == null)
-                    {
-                        try
-                        {
-                            this.provider = Activator.CreateInstance(Type.GetType(typeof(T).AssemblyQualifiedName)) as IAuthenticationProvider;
-                        }
-                        catch (Exception ex)
-                        {
-                            context.Log(ex.ToString());
-                        }
-                    }
                 }
             }
 
-            return this.provider;
+            return provider;
         }
 
         /// <summary>Authenticates the request.</summary>

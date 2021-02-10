@@ -63,7 +63,8 @@
                     // ----------------------------------------------------------------------------
                     context.Log($"{nameof(ProcessHttpRequestAuthentication)}        Not anonymous");
 
-                    var authenticationComponents = context.Configuration?.AuthenticationProviders ?? new List<IAuthenticationComponent>();
+                    var authenticationComponents = context.Configuration?.AuthenticationProviders 
+                        ?? new List<IAuthenticationComponent>();
 
                     // log
                     // ----------------------------------------------------------------------------

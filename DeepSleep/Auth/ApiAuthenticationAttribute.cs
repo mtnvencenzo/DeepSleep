@@ -23,8 +23,6 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ApiAuthenticationAttribute : Attribute, IAuthenticationComponent
     {
-        private IAuthenticationProvider provider;
-
         string IAuthenticationProvider.Realm { get; }
         string IAuthenticationProvider.Scheme { get; }
 
@@ -74,39 +72,38 @@
         /// <returns>The <see cref="DeepSleep.Auth.IAuthenticationProvider" /></returns>
         public IAuthenticationProvider Activate(IApiRequestContextResolver contextResolver)
         {
-            if (this.provider == null)
+            IAuthenticationProvider provider = null;
+            var context = contextResolver?.GetContext();
+
+            if (context != null)
             {
-                var context = contextResolver?.GetContext();
-                if (context != null)
+                try
+                {
+                    if (context.RequestServices != null)
+                    {
+                        provider = context.RequestServices.GetService(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    context.Log(ex.ToString());
+                }
+
+                if (provider == null)
                 {
                     try
                     {
-                        if (context.RequestServices != null)
-                        {
-                            this.provider = context.RequestServices.GetService(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
-                        }
+                        provider = Activator.CreateInstance(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
                     }
                     catch (Exception ex)
                     {
+                        context.AddInternalException(ex);
                         context.Log(ex.ToString());
-                    }
-
-                    if (this.provider == null)
-                    {
-                        try
-                        {
-                            this.provider = Activator.CreateInstance(Type.GetType(AuthenticationProviderType.AssemblyQualifiedName)) as IAuthenticationProvider;
-                        }
-                        catch (Exception ex)
-                        {
-                            context.AddInternalException(ex);
-                            context.Log(ex.ToString());
-                        }
                     }
                 }
             }
 
-            return this.provider;
+            return provider;
         }
 
         bool IAuthenticationProvider.CanHandleAuthScheme(string scheme)
