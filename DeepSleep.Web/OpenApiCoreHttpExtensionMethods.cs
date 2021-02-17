@@ -27,7 +27,13 @@
                 Info = new OpenApiInfo
                 {
                     Version = "1.0",
-                    Title = Assembly.GetEntryAssembly().GetName().Name
+                    Title = Assembly.GetEntryAssembly().GetName().Name,
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT",
+                        Url = new Uri("https://licenses.nuget.org/MIT")
+                    },
+                    Description = "Deep Sleep Test Api"
                 },
                 PrefixNamesWithNamespace = false,
                 V2RouteTemplate = "openapi/v2",

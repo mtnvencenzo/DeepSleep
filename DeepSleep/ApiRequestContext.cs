@@ -85,11 +85,8 @@
             return new DeepSleepRequestConfiguration
             {
                 AllowAnonymous = false,
-                UseCorrelationIdHeader = true,
                 ApiErrorResponseProvider = (p) => new ValidationErrorResponseProvider(),
-                Deprecated = false,
                 EnableHeadForGetRequests = true,
-                IncludeRequestIdHeaderInResponse = true,
                 CacheDirective = new ApiCacheDirectiveConfiguration
                 {
                     Cacheability = HttpCacheType.NoCache,

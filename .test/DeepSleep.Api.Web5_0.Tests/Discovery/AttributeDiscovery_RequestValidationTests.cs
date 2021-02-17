@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/default HTTP/1.1
 Host: {host}
@@ -52,7 +52,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             string toolong = new string('a', 70);
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified?var={toolong} HTTP/1.1
 Host: {host}
@@ -86,7 +86,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             string toolong = new string('a', 101);
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified HTTP/1.1
 Host: {host}
@@ -121,7 +121,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             string toolong = new string('a', 101);
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified HTTP/1.1
 Host: {host}
@@ -159,7 +159,7 @@ Accept: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified HTTP/1.1
 Host: {host}
@@ -197,7 +197,7 @@ Accept: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified/require/contentlength HTTP/1.1
 Host: {host}
@@ -234,7 +234,7 @@ Accept: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified/requestbody/not/allowed HTTP/1.1
 Host: {host}
@@ -273,7 +273,7 @@ Content-Type: {applicationJson}
             base.SetupEnvironment();
 
             string toolong = new string('a', 101);
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/requestvalidation/specified HTTP/1.1
 Host: {host}

@@ -18,14 +18,14 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/acceptheaderoverride/xml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {accept}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -40,7 +40,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -54,13 +54,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/acceptheaderoverride/xml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -75,7 +75,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -92,14 +92,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/acceptheaderoverride/xml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {accept}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -114,7 +114,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -128,14 +128,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/acceptheaderoverride/406 HTTP/1.1
 Host: {host}
 Connection: keep-alive
 Accept: {applicationJson}
-User-Agent: UnitTest/1.0 DEV
-X-CorrelationId: {correlationId}";
+User-Agent: UnitTest/1.0 DEV";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -149,7 +148,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", $"application/json, text/json, text/xml, application/xml" }
                 });
         }

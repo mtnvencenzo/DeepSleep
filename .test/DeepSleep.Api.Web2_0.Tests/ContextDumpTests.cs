@@ -14,14 +14,14 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/context/dump HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -35,7 +35,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = apiContext.Dump();
@@ -51,7 +51,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/context/dump HTTP/1.1
 Host: {host}
@@ -59,7 +59,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Content-Type: application/json
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}
+
 
 {{
     ""Value"": ""Test""
@@ -78,7 +78,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = apiContext.Dump();

@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/cachedirective/default HTTP/1.1
 Host: {host}
@@ -50,7 +50,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/cachedirective/specified HTTP/1.1
 Host: {host}

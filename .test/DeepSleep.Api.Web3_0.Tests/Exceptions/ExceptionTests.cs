@@ -16,14 +16,14 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/notimplemented HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -37,7 +37,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -46,14 +46,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/validator/notimplemented HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -67,7 +67,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Exception,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -76,7 +76,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authorization/notimplemented HTTP/1.1
 Authorization: Success test
@@ -84,7 +84,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -102,7 +102,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -111,7 +111,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authentication/notimplemented HTTP/1.1
 Authorization: EX-501 test
@@ -119,7 +119,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -133,7 +133,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -145,14 +145,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/badgateway HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -166,7 +166,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -175,14 +175,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/validator/badgateway HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -196,7 +196,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Exception,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -205,7 +205,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authorization/badgateway HTTP/1.1
 Authorization: Success test
@@ -213,7 +213,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -227,7 +227,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -236,7 +236,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authentication/badgateway HTTP/1.1
 Authorization: EX-502 test
@@ -244,7 +244,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -258,7 +258,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -270,14 +270,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/gatewaytimeout HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -291,7 +291,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -300,14 +300,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/validator/gatewaytimeout HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -321,7 +321,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Exception,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -330,7 +330,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authorization/gatewaytimeout HTTP/1.1
 Authorization: Success test
@@ -338,7 +338,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -356,7 +356,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -365,7 +365,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authentication/gatewaytimeout HTTP/1.1
 Authorization: EX-504 test
@@ -373,7 +373,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -387,7 +387,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -399,14 +399,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/serviceunavailable HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -420,7 +420,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -429,14 +429,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/validator/serviceunavailable HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -450,7 +450,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Exception,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -459,7 +459,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authorization/serviceunavailable HTTP/1.1
 Authorization: Success test
@@ -467,7 +467,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -485,7 +485,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -494,7 +494,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authentication/serviceunavailable HTTP/1.1
 Authorization: EX-503 test
@@ -502,7 +502,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -516,7 +516,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -528,14 +528,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/unhandled HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -549,7 +549,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -558,14 +558,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/validator/unhandled HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -579,7 +579,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Exception,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -588,7 +588,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authorization/unhandled HTTP/1.1
 Authorization: Success test
@@ -596,7 +596,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -614,7 +614,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticatedBy: Auth.AuthenticationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -623,7 +623,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/exceptions/authentication/unhandled HTTP/1.1
 Authorization: EX-500 test
@@ -631,7 +631,7 @@ Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -645,7 +645,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
     }

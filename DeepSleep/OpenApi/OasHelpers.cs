@@ -38,6 +38,11 @@
         {
             var rootType = TypeExtensions.GetRootType(type);
 
+            if(TypeExtensions.IsDictionaryType(rootType))
+            {
+                return "object";
+            }
+
             if (rootType == typeof(bool))
             {
                 return "boolean";
@@ -68,7 +73,7 @@
                 return "string";
             }
 
-            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(rootType))
+            if (typeof(IEnumerable).IsAssignableFrom(rootType))
             {
                 return "array";
             }
@@ -179,23 +184,42 @@
                     ? arrayType.FullName
                     : arrayType.Name;
 
+                typeName = TypeExtensions.GetNonGenericTypeName(typeName);
+
                 return $"ArrayOf{typeName}";
+            }
+            else if (rootType.IsGenericType)
+            {
+                var genericParameters = rootType.GetGenericArguments();
+                typeName = prefixNamesWithNamespace
+                    ? rootType.FullName
+                    : rootType.Name;
+
+                typeName = TypeExtensions.GetNonGenericTypeName(typeName);
+
+                var genericNames = string.Join("", genericParameters
+                    .Select(p => TypeExtensions.GetNonGenericTypeName(p.Name))
+                    .ToList());
+
+                return $"{genericNames}{typeName}";
             }
             else
             {
                 typeName = prefixNamesWithNamespace
                     ? rootType.FullName
                     : rootType.Name;
-            }
 
-            return typeName;
+                typeName = TypeExtensions.GetNonGenericTypeName(typeName);
+
+                return typeName;
+            }
         }
 
         internal static string GetOperationId(string httpMethod, ApiRoutingItem route, bool isAutoHeadOperation)
         {
             var operationId = route.Location.MethodInfo
-                .GetCustomAttributes(typeof(OasApiOperationAttribute), false)
-                .Cast<OasApiOperationAttribute>()
+                .GetCustomAttributes(typeof(OasOperationAttribute), false)
+                .Cast<OasOperationAttribute>()
                 .FirstOrDefault()
                 ?.OperationId;
 

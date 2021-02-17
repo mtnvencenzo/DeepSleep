@@ -18,12 +18,12 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/pipeline/multiple/methods HTTP/1.1
 Host: {host}
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -39,7 +39,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MultiMethodsModel>(response).ConfigureAwait(false);
@@ -52,12 +52,12 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/pipeline/multiple/methods HTTP/1.1
 Host: {host}
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -73,7 +73,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MultiMethodsModel>(response).ConfigureAwait(false);
@@ -88,12 +88,12 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/pipeline/multiple/methods/no/auto/head HTTP/1.1
 Host: {host}
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -109,7 +109,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MultiMethodsModel>(response).ConfigureAwait(false);
@@ -122,12 +122,11 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/pipeline/multiple/methods/no/auto/head HTTP/1.1
 Host: {host}
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -141,7 +140,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "Allow", "GET, PUT, POST" }
                 });
 
@@ -156,12 +154,10 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
             var request = @$"
 {method} https://{host}/pipeline/multiple/methods HTTP/1.1
 Host: {host}
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}
 Content-Type: {applicationJson}
 
 {{
@@ -182,7 +178,7 @@ Content-Type: {applicationJson}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MultiMethodsModel>(response).ConfigureAwait(false);

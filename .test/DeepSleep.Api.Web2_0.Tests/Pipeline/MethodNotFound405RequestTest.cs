@@ -20,7 +20,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/method/not/found HTTP/1.1
 Host: {host}
@@ -29,7 +29,7 @@ User-Agent: UnitTest/1.0 DEV
 Accept: */* 
 Referer: https://www.google.com/
 Accept-Language: en-US,en;q=0.9
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -43,7 +43,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "Allow", "GET, PUT, HEAD" }
                 });
 
@@ -62,7 +61,7 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/method/not/found/nohead HTTP/1.1
 Host: {host}
@@ -71,7 +70,7 @@ User-Agent: UnitTest/1.0 DEV
 Accept: */* 
 Referer: https://www.google.com/
 Accept-Language: en-US,en;q=0.9
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -85,7 +84,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "Allow", "GET, PUT" }
                 });
 

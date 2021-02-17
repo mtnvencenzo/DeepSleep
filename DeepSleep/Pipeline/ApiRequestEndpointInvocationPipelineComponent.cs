@@ -95,12 +95,12 @@
                     // -----------------------------------------------------------
                     foreach (var param in context.Routing.Route.Location.MethodInfo.GetParameters())
                     {
-                        if (!addedUriParam && context.Request.InvocationContext.UriModel != null && param.GetCustomAttribute<UriBoundAttribute>() != null)
+                        if (!addedUriParam && context.Request.InvocationContext.UriModel != null && param.GetCustomAttribute<InUriAttribute>() != null)
                         {
                             parameters.Add(context.Request.InvocationContext.UriModel);
                             addedUriParam = true;
                         }
-                        else if (!addedBodyParam && context.Request.InvocationContext.BodyModel != null && param.GetCustomAttribute<BodyBoundAttribute>() != null)
+                        else if (!addedBodyParam && context.Request.InvocationContext.BodyModel != null && param.GetCustomAttribute<InBodyAttribute>() != null)
                         {
                             parameters.Add(context.Request.InvocationContext.BodyModel);
                             addedBodyParam = true;

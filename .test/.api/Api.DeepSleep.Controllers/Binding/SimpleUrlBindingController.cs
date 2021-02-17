@@ -327,7 +327,7 @@
             Guid? nullGuidVar,
             SimpleUrlBindingEnum enumVar,
             SimpleUrlBindingEnum? nullEnumVar,
-            [UriBound] SimpleUrlBindingRs boundType)
+            [InUri] SimpleUrlBindingRs boundType)
         {
             return new List<SimpleUrlBindingRs>
             {

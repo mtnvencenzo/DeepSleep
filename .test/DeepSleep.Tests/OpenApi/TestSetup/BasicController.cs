@@ -21,13 +21,13 @@
         }
 
         [OasResponse("200", typeof(ComplexClassModel))]
-        public Task<ComplexClassModel> EndpointWithRouteParam([UriBound] ComplexRequest request)
+        public Task<ComplexClassModel> EndpointWithRouteParam([InUri] ComplexRequest request)
         {
             throw new NotImplementedException();
         }
 
         [OasResponse("200", typeof(ComplexClassModel))]
-        public Task<ComplexClassModel> EndpointWithBodyParam([BodyBound] ComplexResponse request)
+        public Task<ComplexClassModel> EndpointWithBodyParam([InBody] ComplexResponse request)
         {
             throw new NotImplementedException();
         }

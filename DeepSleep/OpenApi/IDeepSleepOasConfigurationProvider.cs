@@ -1,6 +1,7 @@
 ﻿namespace DeepSleep.OpenApi
 {
     using Microsoft.OpenApi.Models;
+    using System;
     using System.Collections.Generic;
     using System.Text.Json;
 
@@ -21,6 +22,10 @@
         /// <value>The v2 route template.</value>
         string V2RouteTemplate { get; set; }
 
+        /// <summary>Gets or sets the route filter.</summary>
+        /// <value>The route filter.</value>
+        Func<ApiRoutingItem, bool> RouteFilter { get; set; }
+
         /// <summary>Gets or sets the v3 route template.</summary>
         /// <value>The v3 route template.</value>
         string V3RouteTemplate { get; set; }
@@ -40,5 +45,13 @@
         /// <summary>Gets or sets the naming policy.</summary>
         /// <value>The naming policy.</value>
         JsonNamingPolicy EnumNamingPolicy { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether [ignore obsolete endpoints].</summary>
+        /// <value><c>true</c> if [ignore obsolete endpoints]; otherwise, <c>false</c>.</value>
+        bool IgnoreObsoleteEndpoints { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether [ignore obsolete properties].</summary>
+        /// <value><c>true</c> if [ignore obsolete properties]; otherwise, <c>false</c>.</value>
+        bool IgnoreObsoleteProperties { get; set; }
     }
 }

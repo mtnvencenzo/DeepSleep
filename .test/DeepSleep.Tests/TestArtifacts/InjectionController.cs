@@ -31,23 +31,23 @@
             return Task.CompletedTask;
         }
 
-        public void DefaultEndpointWithUri([UriBound] StandardModel requestUri)
+        public void DefaultEndpointWithUri([InUri] StandardModel requestUri)
         {
         }
 
-        public void DefaultEndpointWithBody([BodyBound] StandardModel requestBody)
+        public void DefaultEndpointWithBody([InBody] StandardModel requestBody)
         {
         }
 
-        public void DefaultEndpointWithUriAndBody([UriBound] StandardModel requestUri, [BodyBound] StandardNullableModel requestBody)
+        public void DefaultEndpointWithUriAndBody([InUri] StandardModel requestUri, [InBody] StandardNullableModel requestBody)
         {
         }
 
-        public void DefaultEndpointWithUriAndBodyAndOthersBefore(string uri, string body, [UriBound] StandardModel requestUri, [BodyBound] StandardNullableModel requestBody)
+        public void DefaultEndpointWithUriAndBodyAndOthersBefore(string uri, string body, [InUri] StandardModel requestUri, [InBody] StandardNullableModel requestBody)
         {
         }
 
-        public void DefaultEndpointWithUriAndBodyAndOthersAfter([UriBound] StandardModel requestUri, [BodyBound] StandardNullableModel requestBody, string uri, string body)
+        public void DefaultEndpointWithUriAndBodyAndOthersAfter([InUri] StandardModel requestUri, [InBody] StandardNullableModel requestBody, string uri, string body)
         {
         }
     }

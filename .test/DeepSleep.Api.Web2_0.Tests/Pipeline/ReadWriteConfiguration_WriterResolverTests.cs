@@ -18,14 +18,13 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/writeresolver/text-xml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {accept}
-X-CorrelationId: {correlationId}";
+Accept: {accept}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -39,7 +38,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", "application/xml, other/xml" }
                 });
         }
@@ -53,14 +51,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/writeresolver/text-xml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {accept}
-X-CorrelationId: {correlationId}";
+Accept: {accept}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -75,7 +72,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -99,14 +96,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/writeresolver/none HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {accept}
-X-CorrelationId: {correlationId}";
+Accept: {accept}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -120,7 +116,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", string.Empty }
                 });
         }
@@ -135,14 +130,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/writeresolver/writeabletypes HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {accept}
-X-CorrelationId: {correlationId}";
+Accept: {accept}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -156,7 +150,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Accept", "other/xml" }
                 });
         }
@@ -171,14 +164,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/pipeline/readwrite/configuration/writeresolver/writeabletypes HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {accept}
-X-CorrelationId: {correlationId}";
+Accept: {accept}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -193,7 +185,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);

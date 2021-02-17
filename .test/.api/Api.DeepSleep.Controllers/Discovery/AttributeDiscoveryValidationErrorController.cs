@@ -17,7 +17,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration]
-        public AttributeDiscoveryModel GetValidationErrorDefault(int? queryValue, [UriBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorDefault(int? queryValue, [InUri] AttributeDiscoveryModel request)
         {
             return new AttributeDiscoveryModel
             {
@@ -36,7 +36,7 @@
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "",
             uriBindingValueError: "")]
-        public AttributeDiscoveryModel GetValidationErrorSpecifiedEmpty(int? queryValue, [UriBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorSpecifiedEmpty(int? queryValue, [InUri] AttributeDiscoveryModel request)
         {
             return new AttributeDiscoveryModel
             {
@@ -55,7 +55,7 @@
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "uriBindingError-test",
             uriBindingValueError: "uriBindingValueError-test")]
-        public AttributeDiscoveryModel GetValidationErrorSpecifiedCustomNoReplacements(int? queryValue, [UriBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorSpecifiedCustomNoReplacements(int? queryValue, [InUri] AttributeDiscoveryModel request)
         {
             return new AttributeDiscoveryModel
             {
@@ -74,7 +74,7 @@
         [ApiRouteValidationErrorConfiguration(
             uriBindingError: "{paramName}",
             uriBindingValueError: "{paramName}-{paramValue}-{paramType}")]
-        public AttributeDiscoveryModel GetValidationErrorSpecifiedCustomWithReplacements(int? queryValue, [UriBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorSpecifiedCustomWithReplacements(int? queryValue, [InUri] AttributeDiscoveryModel request)
         {
             return new AttributeDiscoveryModel
             {
@@ -91,7 +91,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
-        public AttributeDiscoveryModel GetValidationErrorDefaultDeserializationError([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorDefaultDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -105,7 +105,7 @@
         [ApiRouteValidationErrorConfiguration(
             requestDeserializationError: "",
             httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
-        public AttributeDiscoveryModel GetValidationErrorEmptyDeserializationError([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorEmptyDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -119,7 +119,7 @@
         [ApiRouteValidationErrorConfiguration(
             requestDeserializationError: "Deserialization Failed",
             httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
-        public AttributeDiscoveryModel GetValidationErrorCustomDeserializationError([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorCustomDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -132,7 +132,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
-        public AttributeDiscoveryModel GetValidationErrorUse450DeserializationError([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorUse450DeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -145,7 +145,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             httpStatusMode: ValidationHttpStatusMode.StrictHttpSpecification)]
-        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForStrict([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForStrict([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -158,7 +158,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             httpStatusMode: ValidationHttpStatusMode.StrictHttpSpecification)]
-        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForCommon([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetValidationErrorUse400DeserializationErrorForCommon([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }

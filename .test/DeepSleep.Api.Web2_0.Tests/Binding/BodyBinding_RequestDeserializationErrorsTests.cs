@@ -18,7 +18,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/binding/body/bad/request/format HTTP/1.1
 Host: {host}
@@ -26,7 +26,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {applicationJson}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {{
@@ -46,7 +45,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
@@ -63,7 +62,7 @@ Content-Length: 1
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/binding/body/bad/request/format HTTP/1.1
 Host: {host}
@@ -71,7 +70,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {applicationXml}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 <MaxRequestLengthModel>
@@ -90,7 +88,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
@@ -107,7 +105,7 @@ Content-Length: 1
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/binding/body/bad/request/format HTTP/1.1
 Host: {host}
@@ -115,7 +113,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {multipartFormData}
-X-CorrelationId: {correlationId}
 
 --{multipartBoundary}
 Content-Disposition: form-data; name=""Value""
@@ -136,7 +133,7 @@ test data
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);

@@ -42,12 +42,15 @@ namespace Api.DeepSleep.Web.OpenApiCheck
                     o.V2RouteTemplate = "openapi/v2/doc";
                     o.V3RouteTemplate = "openapi/v3/doc";
                     o.XmlDocumentationFileNames.Add("Api.DeepSleep.Web.OpenApiCheck.xml");
+                    o.IgnoreObsoleteEndpoints = true;
+                    o.IgnoreObsoleteProperties = true;
+                    o.RouteFilter = (r) => true;
                 })
                 .UseDeepSleepDataAnnotationValidations()
                 .UseDeepSleepServices((o) =>
                 {
                     o.DefaultRequestConfiguration = DefaultRequestConfiguration();
-                    o.WriteConsoleHeader = false;
+                    o.WriteConsoleHeader = true;
                 });
         }
 

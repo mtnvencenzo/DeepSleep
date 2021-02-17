@@ -97,7 +97,6 @@
                     ContentType = GetContentType(context.Request),
                     ContentLength = GetContentLength(context.Request),
                     RequestDate = GetRequestDate(context.Request, serverTime),
-                    CorrelationId = GetCorrelationId(context.Request),
                     RemoteUser = GetRemoteUserFromServerVariables(context.Request),
                     ClientAuthenticationInfo = GetClientAuthInfo(context.Request),
                     CrossOriginRequest = GetCrossOriginRequestValues(context.Request),
@@ -287,40 +286,9 @@
             }
         }
 
-        /// <summary>Gets the client specified correlation id from the reuqest.  A check is first made on the request headers for a
-        ///     header named 'X-CorrelationID'.
-        ///     If non-existent the the check is made against the query string for the xCorrelationID parameter.</summary>
+        /// <summary>Gets the accept types.</summary>
         /// <param name="request">The request.</param>
-        /// <returns>The correlation id from the request or null.</returns>
-        private string GetCorrelationId(HttpRequest request)
-        {
-            if (request == null)
-            {
-                return null;
-            }
-
-            string correlationID = null;
-
-            var header = request.Headers.FirstOrDefault(i => i.Key.ToLower() == "x-correlationid");
-            if (header.Key != null)
-            {
-                foreach (string val in header.Value)
-                {
-                    if (!string.IsNullOrWhiteSpace(val))
-                    {
-                        correlationID = val;
-                    }
-                }
-            }
-
-            return correlationID;
-        }
-
-        /// <summary>Gets the client specified correlation id from the reuqest.  A check is first made on the request headers for a
-        ///     header named 'X-CorrelationID'.
-        ///     If non-existent the the check is made against the query string for the xCorrelationID parameter.</summary>
-        /// <param name="request">The request.</param>
-        /// <returns>The correlation id from the request or null.</returns>
+        /// <returns></returns>
         private string GetAcceptTypes(HttpRequest request)
         {
             if (request == null)

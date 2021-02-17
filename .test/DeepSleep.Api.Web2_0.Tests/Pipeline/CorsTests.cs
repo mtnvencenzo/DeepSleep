@@ -373,7 +373,7 @@ Access-Control-Request-Headers: content-type";
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "Access-Control-Allow-Methods", "GET"},
-                    { "Access-Control-Allow-Headers", "Content-Type, X-CorrelationId" },
+                    { "Access-Control-Allow-Headers", "Content-Type" },
                     { "Access-Control-Allow-Credentials", "true"},
                     { "Access-Control-Allow-Origin", "http://some-origin.com"},
                     { "Access-Control-Max-Age", "0"},
@@ -455,7 +455,7 @@ Access-Control-Request-Headers: content-type";
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "Access-Control-Allow-Methods", "GET, HEAD"},
-                    { "Access-Control-Allow-Headers", "Content-Type, X-CorrelationId"},
+                    { "Access-Control-Allow-Headers", "Content-Type"},
                     { "Access-Control-Allow-Credentials", "false"},
                     { "Access-Control-Allow-Origin", "http://some-origin.com"},
                     { "Access-Control-Max-Age", "0"},
@@ -496,7 +496,7 @@ Access-Control-Request-Headers: content-type";
                 extendedHeaders: new NameValuePairs<string, string>
                 {
                     { "Access-Control-Allow-Methods", "GET, HEAD"},
-                    { "Access-Control-Allow-Headers", "Content-Type, X-CorrelationId"},
+                    { "Access-Control-Allow-Headers", "Content-Type"},
                     { "Access-Control-Allow-Credentials", "false"},
                     { "Access-Control-Allow-Origin", "http://some-origin.com"},
                     { "Access-Control-Max-Age", "0"},

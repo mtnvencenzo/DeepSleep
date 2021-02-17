@@ -37,6 +37,7 @@
 
             var config = builder.ApplicationServices.GetService<IDeepSleepServiceConfiguration>();
             var routingTable = builder.ApplicationServices.GetService<IApiRoutingTable>();
+            var defaultRequetConfiguration = builder.ApplicationServices.GetService<IDeepSleepRequestConfiguration>();
 
             DiscoverRoutes(builder, routingTable, config);
 
@@ -81,7 +82,7 @@
             {
                 try
                 {
-                    WriteDeepsleepToConsole(routingTable);
+                    WriteDeepSleepToConsole(routingTable, defaultRequetConfiguration);
                 }
                 catch { }
             }
@@ -323,16 +324,17 @@
                    CrossOriginConfig = new ApiCrossOriginConfiguration
                    {
                        AllowedOrigins = new string[] { "*" }
-                   },
-                   Deprecated = false
+                   }
                }));
         }
 
         /// <summary>Writes the deepsleep to console.</summary>
         /// <param name="routingTable">The routing table.</param>
-        internal static void WriteDeepsleepToConsole(IApiRoutingTable routingTable)
+        /// <param name="defaultConfiguration">The default configuration.</param>
+        internal static void WriteDeepSleepToConsole(IApiRoutingTable routingTable, IDeepSleepRequestConfiguration defaultConfiguration)
         {
             var deepSleepNetCoreAssembly = Assembly.GetExecutingAssembly();
+            var systemConfiguration = ApiRequestContext.GetDefaultRequestConfiguration();
 
             var deepSleepNetCoreTargetFrameworkAttribute = deepSleepNetCoreAssembly
                 .GetCustomAttributes(true)
@@ -400,14 +402,41 @@
                 .OrderBy(r => r.Template)
                 .ToList();
 
-            routes.ForEach(r =>
+            Action<string, string, bool> writeRoute = (string method, string template, bool isAutoHead) =>
             {
                 existingColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write($"  {r.HttpMethod.ToUpper(),-9}");
+
+                Console.ForegroundColor = isAutoHead ? ConsoleColor.Gray : ConsoleColor.Yellow;
+                Console.Write($"  {method.ToUpper(),-9}");
                 Console.ForegroundColor = existingColor;
 
-                WriteEndpointTemplate(r.Template);
+                WriteEndpointTemplate(template, isAutoHead);
+            };
+
+            routes.ForEach(r =>
+            {
+                writeRoute(r.HttpMethod, r.Template, false);
+
+                if (string.Compare(r.HttpMethod, "GET", true) == 0)
+                {
+                    var enableGet = r.Configuration?.EnableHeadForGetRequests
+                        ?? defaultConfiguration?.EnableHeadForGetRequests
+                        ?? systemConfiguration?.EnableHeadForGetRequests
+                        ?? true;
+
+                    if (enableGet)
+                    {
+                        var matchingHead = routes
+                            .Where(m => m.HttpMethod.ToLowerInvariant() == "head")
+                            .Where(m => m.Template.ToLowerInvariant() == r.Template.ToLowerInvariant())
+                            .FirstOrDefault();
+
+                        if (matchingHead == null)
+                        {
+                            writeRoute("HEAD", r.Template, true);
+                        }
+                    }
+                }
             });
 
             Console.WriteLine("");
@@ -423,7 +452,8 @@
 
         /// <summary>Writes the endpoint template.</summary>
         /// <param name="template">The template.</param>
-        private static void WriteEndpointTemplate(string template)
+        /// <param name="isAutoHead">if set to <c>true</c> [is automatic head].</param>
+        private static void WriteEndpointTemplate(string template, bool isAutoHead)
         {
             var existingColor = Console.ForegroundColor;
 
@@ -431,7 +461,7 @@
             {
                 if (c == '{')
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.ForegroundColor = isAutoHead ? ConsoleColor.Gray : ConsoleColor.DarkYellow;
                 }
 
                 Console.Write(c);

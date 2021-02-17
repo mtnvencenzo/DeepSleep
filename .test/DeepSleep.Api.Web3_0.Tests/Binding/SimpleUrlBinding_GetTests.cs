@@ -102,14 +102,13 @@
             qs += $"enumVar={enumVar}&";
             qs += $"nullEnumVar={nullEnumVar}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -124,7 +123,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -255,14 +254,13 @@ X-CorrelationId: {correlationId}";
             qs += $"enumVar={enumVar}&";
             qs += $"nullEnumVar={nullEnumVar}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -277,7 +275,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -407,14 +405,13 @@ X-CorrelationId: {correlationId}";
             qs += $"enumVar={enumVar}&";
             qs += $"nullEnumVar={nullEnumVar}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -429,7 +426,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -493,14 +490,13 @@ X-CorrelationId: {correlationId}";
             qs += $"boolVar={value}";
             qs += $"&nullBoolVar={value}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -515,7 +511,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -646,14 +642,13 @@ X-CorrelationId: {correlationId}";
             qs += $"enumVar1={enumVar}&";
             qs += $"nullEnumVar1={nullEnumVar}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -668,7 +663,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -804,14 +799,13 @@ X-CorrelationId: {correlationId}";
             qs += $"enumVar={value}&";
             qs += $"nullEnumVar={value}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -826,7 +820,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -915,14 +909,13 @@ X-CorrelationId: {correlationId}";
             qs += $"enumVar=&";
             qs += $"nullEnumVar=";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -937,7 +930,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -987,14 +980,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1009,7 +1001,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -1061,14 +1053,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1083,7 +1074,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -1137,14 +1128,13 @@ X-CorrelationId: {correlationId}";
             qs += $"stringVar=test1&";
             qs += $"stringVar=test2";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1159,7 +1149,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -1294,14 +1284,14 @@ X-CorrelationId: {correlationId}";
             qs += $"nullEnumVar={nullEnumVar}";
 
             var routeUrl = $"/binding/simple/url/{stringVar}/resource";
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}{routeUrl}{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1316,7 +1306,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleUrlBindingRs>(response).ConfigureAwait(false);
@@ -1451,14 +1441,14 @@ X-CorrelationId: {correlationId}";
             qs += $"nullEnumVar={nullEnumVar}";
 
             var routeUrl = $"/binding/simple/url/{stringVar}/mixed";
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}{routeUrl}{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1473,7 +1463,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var list = await base.GetResponseData<IList<SimpleUrlBindingRs>>(response).ConfigureAwait(false);
@@ -1574,14 +1564,14 @@ X-CorrelationId: {correlationId}";
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1597,7 +1587,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: expectedContentLength,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
@@ -1615,14 +1605,14 @@ X-CorrelationId: {correlationId}";
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url/empty/binding/error{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1637,7 +1627,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: expectedContentLength,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);
@@ -1655,14 +1645,14 @@ X-CorrelationId: {correlationId}";
 
             string qs = $"?{UrlEncode(varName)}={UrlEncode(value)}";
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/binding/simple/url/custom/binding/error{qs} HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -1678,7 +1668,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: expectedContentLength,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<CommonErrorResponse>(response).ConfigureAwait(false);

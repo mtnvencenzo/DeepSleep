@@ -16,7 +16,7 @@ namespace DeepSleep.Web.Tests
                 controller: typeof(TestController),
                 endpoint: nameof(TestController.Get)));
 
-            ApiCoreHttpExtensionMethods.WriteDeepsleepToConsole(routingTable: routingTable);
+            ApiCoreHttpExtensionMethods.WriteDeepSleepToConsole(routingTable: routingTable, null);
         }
 
         [Fact]

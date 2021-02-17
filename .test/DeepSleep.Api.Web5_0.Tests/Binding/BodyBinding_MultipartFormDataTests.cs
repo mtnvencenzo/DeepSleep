@@ -15,7 +15,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
 
             var multipart = $@"
 --{multipartBoundary}
@@ -41,7 +41,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {multipartFormData}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {multipart.Replace(Environment.NewLine, "\r\n")}";
@@ -59,7 +58,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleMultipartRs>(response).ConfigureAwait(false);
@@ -77,7 +76,7 @@ Content-Length: 1
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
 
             var multipart = $@"
 --{multipartBoundary}
@@ -103,7 +102,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {multipartFormData}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {multipart.Replace(Environment.NewLine, "\r\n")}";
@@ -121,7 +119,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleMultipartRs>(response).ConfigureAwait(false);

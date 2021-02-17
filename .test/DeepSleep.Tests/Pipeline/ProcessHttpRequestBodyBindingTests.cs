@@ -40,7 +40,7 @@
         [InlineData("trace")]
         [InlineData("options")]
         [InlineData("delete")]
-        public async void body_binding___returns_true_for_non_bodybound_request_method(string method)
+        public async void body_binding___returns_true_for_non_inbody_request_method(string method)
         {
             var context = new ApiRequestContext
             {

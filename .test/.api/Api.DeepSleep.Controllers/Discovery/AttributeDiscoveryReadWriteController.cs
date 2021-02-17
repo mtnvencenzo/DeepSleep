@@ -48,7 +48,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteMediaSerializerConfiguration(readableMediaTypes: new[] { "application/xml" })]
-        public AttributeDiscoveryModel GetReadWriteReadableMediaTypesOverride([BodyBound] AttributeDiscoveryModel request)
+        public AttributeDiscoveryModel GetReadWriteReadableMediaTypesOverride([InBody] AttributeDiscoveryModel request)
         {
             return request;
         }
@@ -60,7 +60,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [CustomApiRouteReadWriteConfigurationWithReadResolver]
-        public AttributeDiscoveryModel GetReadWriteReaderResolverOverride([BodyBound] string request)
+        public AttributeDiscoveryModel GetReadWriteReaderResolverOverride([InBody] string request)
         {
             return new AttributeDiscoveryModel
             {

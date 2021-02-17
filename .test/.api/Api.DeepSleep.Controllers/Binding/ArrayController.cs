@@ -14,7 +14,7 @@
         /// <response code="201" />
         /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "binding/array/ilist")]
-        public IList<SimpleRs> IList([BodyBound] IList<SimpleRs> request)
+        public IList<SimpleRs> IList([InBody] IList<SimpleRs> request)
         {
             return request;
         }
@@ -23,7 +23,7 @@
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "binding/array/list")]
-        public List<SimpleRs> List([BodyBound] List<SimpleRs> request)
+        public List<SimpleRs> List([InBody] List<SimpleRs> request)
         {
             return request;
         }
@@ -32,7 +32,7 @@
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "binding/array/array")]
-        public SimpleRs[] Array([BodyBound] SimpleRs[] request)
+        public SimpleRs[] Array([InBody] SimpleRs[] request)
         {
             return request;
         }
@@ -41,7 +41,7 @@
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "binding/array/ienumerable")]
-        public IEnumerable<SimpleRs> IEnumerable([BodyBound] IEnumerable<SimpleRs> request)
+        public IEnumerable<SimpleRs> IEnumerable([InBody] IEnumerable<SimpleRs> request)
         {
             return request;
         }
@@ -50,7 +50,7 @@
         /// <param name="request">The request.</param>
         /// <returns></returns>
         [ApiRoute(new[] { "POST" }, "binding/array/icollection")]
-        public ICollection<SimpleRs> IListRequestResponse([BodyBound] ICollection<SimpleRs> request)
+        public ICollection<SimpleRs> IListRequestResponse([InBody] ICollection<SimpleRs> request)
         {
             return request;
         }

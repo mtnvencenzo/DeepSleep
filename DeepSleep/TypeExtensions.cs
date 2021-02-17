@@ -114,6 +114,45 @@
             return typeof(System.Collections.IEnumerable).IsAssignableFrom(type);
         }
 
+        /// <summary>Determines whether [is dictionary type] [the specified type].</summary>
+        /// <param name="type">The type.</param>
+        /// <returns><c>true</c> if [is dictionary type] [the specified type]; otherwise, <c>false</c>.</returns>
+        internal static bool IsDictionaryType(Type type)
+        {
+            if (typeof(System.Collections.IDictionary).IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            if (type.IsGenericType)
+            {
+                if (typeof(System.Collections.Generic.IDictionary<,>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Gets the type of the dictionary value.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        internal static Type GetDictionaryValueType(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                return type.GetGenericArguments()[1];
+            }
+
+            if (typeof(System.Collections.IDictionary).IsAssignableFrom(type))
+            {
+                return typeof(object);
+            }
+
+            return typeof(object);
+        }
+
         /// <summary>Gets the type of the array.</summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
@@ -164,8 +203,8 @@
             if (Nullable.GetUnderlyingType(type) != null)
                 return true;
 
-            if (!type.IsValueType)
-                return true;
+            //if (!type.IsValueType)
+            //    return true;
 
             return false;
         }
@@ -212,6 +251,19 @@
 
             // Compile and return the value.
             return e.Compile()();
+        }
+
+        /// <summary>Gets the name of the non generic type.</summary>
+        /// <param name="name">The name.</param>
+        /// <returns></returns>
+        internal static string GetNonGenericTypeName(string name)
+        {
+            if (name.Contains("`"))
+            {
+                return name.Substring(0, name.IndexOf("`"));
+            }
+
+            return name;
         }
     }
 }

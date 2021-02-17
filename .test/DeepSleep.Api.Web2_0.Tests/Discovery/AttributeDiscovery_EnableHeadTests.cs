@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/discovery/attribute/enablehead/default HTTP/1.1
 Host: {host}
@@ -50,7 +50,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/discovery/attribute/enablehead/true HTTP/1.1
 Host: {host}
@@ -84,7 +84,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/discovery/attribute/enablehead/true/with/caching HTTP/1.1
 Host: {host}
@@ -121,7 +121,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/discovery/attribute/enablehead/false HTTP/1.1
 Host: {host}
@@ -155,7 +155,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/discovery/attribute/enablehead/false/with/caching HTTP/1.1
 Host: {host}

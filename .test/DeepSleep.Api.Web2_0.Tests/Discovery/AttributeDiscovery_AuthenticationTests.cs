@@ -50,7 +50,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/true HTTP/1.1
 Date: {utcNow.ToString("r")}
@@ -84,7 +84,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false HTTP/1.1
 Date: {utcNow.ToString("s")}
@@ -125,7 +125,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false?xdate={utcNow.ToUnixTimeSeconds()} HTTP/1.1
 Authorization: Token {staticToken}1
@@ -166,7 +166,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false HTTP/1.1
 Date: {utcNow.ToString("r").Replace("GMT", "UTC")}
@@ -200,7 +200,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -239,7 +239,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -272,7 +272,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -309,7 +309,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -348,7 +348,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -388,7 +388,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -421,7 +421,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -453,7 +453,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -486,7 +486,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -519,7 +519,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}

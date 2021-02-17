@@ -32,7 +32,7 @@
         /// <param name="ints">The ints.</param>
         /// <returns>The number of ilist integers</returns>
         [ApiRoute(httpMethod: "POST", template: "/simple/ilist/int/array/request")]
-        public IList<int> SimpleIListIntArrayRequest([BodyBound] IList<int> ints)
+        public IList<int> SimpleIListIntArrayRequest([InBody] IList<int> ints)
         {
             return ints;
         }
@@ -57,7 +57,7 @@
         /// <param name="ints">The ints.</param>
         /// <returns>The number of ienumerable integers</returns>
         [ApiRoute(httpMethod: "POST", template: "/simple/ienumerable/int/array/request")]
-        public IEnumerable<int> SimpleIEnumerableIntArrayRequest([BodyBound] IEnumerable<int> ints)
+        public IEnumerable<int> SimpleIEnumerableIntArrayRequest([InBody] IEnumerable<int> ints)
         {
             return ints;
         }
@@ -82,7 +82,7 @@
         /// <param name="ints">The ints.</param>
         /// <returns>The number of array integers</returns>
         [ApiRoute(httpMethod: "POST", template: "/simple/array/int/array/request")]
-        public int[] SimpleArrayIntArrayRequest([BodyBound] int[] ints)
+        public int[] SimpleArrayIntArrayRequest([InBody] int[] ints)
         {
             return ints;
         }

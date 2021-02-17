@@ -34,13 +34,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static BasicObject PostBasicObjectModelNoDocAttributes(this IDeepSleepApi operations, int id, BasicObject body = default(BasicObject), string xCorrelationId = default(string))
+            public static BasicObject PostBasicObjectModelNoDocAttributes(this IDeepSleepApi operations, int id, BasicObject body = default(BasicObject))
             {
-                return operations.PostBasicObjectModelNoDocAttributesAsync(id, body, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostBasicObjectModelNoDocAttributesAsync(id, body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -60,16 +56,42 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<BasicObject> PostBasicObjectModelNoDocAttributesAsync(this IDeepSleepApi operations, int id, BasicObject body = default(BasicObject), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(id, body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static CustomObjectIdModel PostCustomObjectDeepModels(this IDeepSleepApi operations, int id, CustomObjectModel body = default(CustomObjectModel))
+            {
+                return operations.PostCustomObjectDeepModelsAsync(id, body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='id'>
+            /// </param>
+            /// <param name='body'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<BasicObject> PostBasicObjectModelNoDocAttributesAsync(this IDeepSleepApi operations, int id, BasicObject body = default(BasicObject), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<CustomObjectIdModel> PostCustomObjectDeepModelsAsync(this IDeepSleepApi operations, int id, CustomObjectModel body = default(CustomObjectModel), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(id, body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostCustomObjectDeepModelsWithHttpMessagesAsync(id, body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -91,13 +113,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// Gets or sets the explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static EnumUriObjectModelRs PostEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string xCorrelationId = default(string))
+            public static EnumUriObjectModelRs PostEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string))
             {
-                return operations.PostEnumUriModelNoDocAttributesAsync(explicitEnumProperty, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostEnumUriModelNoDocAttributesAsync(explicitEnumProperty).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -116,16 +134,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// Gets or sets the explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<EnumUriObjectModelRs> PostEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<EnumUriObjectModelRs> PostEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -147,13 +161,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// Gets or sets the explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static EnumUriObjectModelRs PutEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string xCorrelationId = default(string))
+            public static EnumUriObjectModelRs PutEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string))
             {
-                return operations.PutEnumUriModelNoDocAttributesAsync(explicitEnumProperty, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PutEnumUriModelNoDocAttributesAsync(explicitEnumProperty).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -172,16 +182,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// Gets or sets the explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<EnumUriObjectModelRs> PutEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<EnumUriObjectModelRs> PutEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -206,13 +212,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// The nullable explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static EnumUriObjectModelRs PatchEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), string xCorrelationId = default(string))
+            public static EnumUriObjectModelRs PatchEnumUriModelNoDocAttributes(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string))
             {
-                return operations.PatchEnumUriModelNoDocAttributesAsync(explicitEnumProperty, nullableExplicitEnumProperty, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PatchEnumUriModelNoDocAttributesAsync(explicitEnumProperty, nullableExplicitEnumProperty).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -234,16 +236,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// The nullable explicit enum property. Possible values include: 'None',
             /// 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<EnumUriObjectModelRs> PatchEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<EnumUriObjectModelRs> PatchEnumUriModelNoDocAttributesAsync(this IDeepSleepApi operations, string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, nullableExplicitEnumProperty, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(explicitEnumProperty, nullableExplicitEnumProperty, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -263,13 +261,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='enumValue'>
             /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static string GetEnumInRouteSimpleMember(this IDeepSleepApi operations, string enumValue, string xCorrelationId = default(string))
+            public static string GetEnumInRouteSimpleMember(this IDeepSleepApi operations, string enumValue)
             {
-                return operations.GetEnumInRouteSimpleMemberAsync(enumValue, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetEnumInRouteSimpleMemberAsync(enumValue).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -286,16 +280,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='enumValue'>
             /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<string> GetEnumInRouteSimpleMemberAsync(this IDeepSleepApi operations, string enumValue, string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<string> GetEnumInRouteSimpleMemberAsync(this IDeepSleepApi operations, string enumValue, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetEnumInRouteSimpleMemberWithHttpMessagesAsync(enumValue, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetEnumInRouteSimpleMemberWithHttpMessagesAsync(enumValue, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -307,13 +297,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='enumValue'>
             /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadEnumInRouteSimpleMemberHeaders HeadEnumInRouteSimpleMember(this IDeepSleepApi operations, string enumValue, string xCorrelationId = default(string))
+            public static void HeadEnumInRouteSimpleMember(this IDeepSleepApi operations, string enumValue)
             {
-                return operations.HeadEnumInRouteSimpleMemberAsync(enumValue, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadEnumInRouteSimpleMemberAsync(enumValue).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -322,19 +308,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='enumValue'>
             /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadEnumInRouteSimpleMemberHeaders> HeadEnumInRouteSimpleMemberAsync(this IDeepSleepApi operations, string enumValue, string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadEnumInRouteSimpleMemberAsync(this IDeepSleepApi operations, string enumValue, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(enumValue, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(enumValue, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -361,13 +340,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='nullableUInt32Property'>
             /// Gets or sets the nullable u int32 property.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static Int32ObjectModelRq PostInt32UriModelNoDocAttributes(this IDeepSleepApi operations, int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), string xCorrelationId = default(string))
+            public static Int32ObjectModelRq PostInt32UriModelNoDocAttributes(this IDeepSleepApi operations, int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?))
             {
-                return operations.PostInt32UriModelNoDocAttributesAsync(int32Property, nullableInt32Property, uInt32Property, nullableUInt32Property, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostInt32UriModelNoDocAttributesAsync(int32Property, nullableInt32Property, uInt32Property, nullableUInt32Property).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -394,16 +369,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='nullableUInt32Property'>
             /// Gets or sets the nullable u int32 property.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<Int32ObjectModelRq> PostInt32UriModelNoDocAttributesAsync(this IDeepSleepApi operations, int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<Int32ObjectModelRq> PostInt32UriModelNoDocAttributesAsync(this IDeepSleepApi operations, int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int32Property, nullableInt32Property, uInt32Property, nullableUInt32Property, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int32Property, nullableInt32Property, uInt32Property, nullableUInt32Property, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -427,13 +398,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryInt2'>
             /// The query int2.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static int? GetInt32ValuesOverriddenOpId(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string))
+            public static int? GetInt32ValuesOverriddenOpId(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?))
             {
-                return operations.GetInt32ValuesOverriddenOpIdAsync(routeint, queryInt1, queryInt2, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetInt32ValuesOverriddenOpIdAsync(routeint, queryInt1, queryInt2).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -454,16 +421,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryInt2'>
             /// The query int2.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<int?> GetInt32ValuesOverriddenOpIdAsync(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<int?> GetInt32ValuesOverriddenOpIdAsync(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(routeint, queryInt1, queryInt2, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(routeint, queryInt1, queryInt2, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -481,13 +444,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryInt2'>
             /// The query int2.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadInt32ValuesOverriddenOpIdHeaders HeadInt32ValuesOverriddenOpId(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string))
+            public static void HeadInt32ValuesOverriddenOpId(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?))
             {
-                return operations.HeadInt32ValuesOverriddenOpIdAsync(routeint, queryInt1, queryInt2, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadInt32ValuesOverriddenOpIdAsync(routeint, queryInt1, queryInt2).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -502,19 +461,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryInt2'>
             /// The query int2.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadInt32ValuesOverriddenOpIdHeaders> HeadInt32ValuesOverriddenOpIdAsync(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadInt32ValuesOverriddenOpIdAsync(this IDeepSleepApi operations, int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(routeint, queryInt1, queryInt2, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(routeint, queryInt1, queryInt2, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -526,13 +478,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> GetSimpleIlistIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static IList<int?> GetSimpleIlistIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.GetSimpleIlistIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleIlistIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -544,16 +492,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> GetSimpleIlistIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> GetSimpleIlistIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -565,13 +509,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleIlistIntArrayResponseHeaders HeadSimpleIlistIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static void HeadSimpleIlistIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.HeadSimpleIlistIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleIlistIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -580,19 +520,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleIlistIntArrayResponseHeaders> HeadSimpleIlistIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadSimpleIlistIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -604,13 +537,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> PostSimpleIlistIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string))
+            public static IList<int?> PostSimpleIlistIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>))
             {
-                return operations.PostSimpleIlistIntArrayRequestAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostSimpleIlistIntArrayRequestAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -622,16 +551,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> PostSimpleIlistIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> PostSimpleIlistIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -646,13 +571,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> GetSimpleIenumerableIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static IList<int?> GetSimpleIenumerableIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.GetSimpleIenumerableIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleIenumerableIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -664,16 +585,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> GetSimpleIenumerableIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> GetSimpleIenumerableIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -685,13 +602,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleIenumerableIntArrayResponseHeaders HeadSimpleIenumerableIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static void HeadSimpleIenumerableIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.HeadSimpleIenumerableIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleIenumerableIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -700,19 +613,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleIenumerableIntArrayResponseHeaders> HeadSimpleIenumerableIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadSimpleIenumerableIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -724,13 +630,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> PostSimpleIenumerableIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string))
+            public static IList<int?> PostSimpleIenumerableIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>))
             {
-                return operations.PostSimpleIenumerableIntArrayRequestAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostSimpleIenumerableIntArrayRequestAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -742,16 +644,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> PostSimpleIenumerableIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> PostSimpleIenumerableIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -766,13 +664,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> GetSimpleArrayIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static IList<int?> GetSimpleArrayIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.GetSimpleArrayIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleArrayIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -784,16 +678,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> GetSimpleArrayIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> GetSimpleArrayIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -805,13 +695,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleArrayIntArrayResponseHeaders HeadSimpleArrayIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string))
+            public static void HeadSimpleArrayIntArrayResponse(this IDeepSleepApi operations, int? count = default(int?))
             {
-                return operations.HeadSimpleArrayIntArrayResponseAsync(count, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleArrayIntArrayResponseAsync(count).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -820,19 +706,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='count'>
             /// The count.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleArrayIntArrayResponseHeaders> HeadSimpleArrayIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadSimpleArrayIntArrayResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(count, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -844,13 +723,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static IList<int?> PostSimpleArrayIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string))
+            public static IList<int?> PostSimpleArrayIntArrayRequest(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>))
             {
-                return operations.PostSimpleArrayIntArrayRequestAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                return operations.PostSimpleArrayIntArrayRequestAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -862,16 +737,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The ints.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<IList<int?>> PostSimpleArrayIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IList<int?>> PostSimpleArrayIntArrayRequestAsync(this IDeepSleepApi operations, IList<int?> body = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -886,13 +757,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static int? GetSimpleIlistIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static int? GetSimpleIlistIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.GetSimpleIlistIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleIlistIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -904,16 +771,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<int?> GetSimpleIlistIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<int?> GetSimpleIlistIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -925,13 +788,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleIlistIntArrayQuerystringHeaders HeadSimpleIlistIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static void HeadSimpleIlistIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.HeadSimpleIlistIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleIlistIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -940,19 +799,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleIlistIntArrayQuerystringHeaders> HeadSimpleIlistIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadSimpleIlistIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -964,13 +816,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static int? GetSimpleIenumerableIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static int? GetSimpleIenumerableIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.GetSimpleIenumerableIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleIenumerableIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -982,16 +830,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<int?> GetSimpleIenumerableIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<int?> GetSimpleIenumerableIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1003,13 +847,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleIenumerableIntArrayQuerystringHeaders HeadSimpleIenumerableIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static void HeadSimpleIenumerableIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.HeadSimpleIenumerableIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleIenumerableIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -1018,19 +858,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleIenumerableIntArrayQuerystringHeaders> HeadSimpleIenumerableIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task HeadSimpleIenumerableIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1042,13 +875,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static int? GetSimpleArrayIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static int? GetSimpleArrayIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.GetSimpleArrayIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                return operations.GetSimpleArrayIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1060,16 +889,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<int?> GetSimpleArrayIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<int?> GetSimpleArrayIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -1081,13 +906,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static HeadSimpleArrayIntArrayQuerystringHeaders HeadSimpleArrayIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string))
+            public static void HeadSimpleArrayIntArrayQuerystring(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>))
             {
-                return operations.HeadSimpleArrayIntArrayQuerystringAsync(queryItems, xCorrelationId).GetAwaiter().GetResult();
+                operations.HeadSimpleArrayIntArrayQuerystringAsync(queryItems).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -1096,18 +917,228 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='queryItems'>
             /// The query items.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task HeadSimpleArrayIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(queryItems, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Simples the i dictionary string string response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static IDictionary<string, string> GetSimpleIdctionaryStringStringResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                return operations.GetSimpleIdctionaryStringStringResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Simples the i dictionary string string response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<HeadSimpleArrayIntArrayQuerystringHeaders> HeadSimpleArrayIntArrayQuerystringAsync(this IDeepSleepApi operations, IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<IDictionary<string, string>> GetSimpleIdctionaryStringStringResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(queryItems, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetSimpleIdctionaryStringStringResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
                 {
-                    return _result.Headers;
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static void HeadSimpleIdctionaryStringStringResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                operations.HeadSimpleIdctionaryStringStringResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task HeadSimpleIdctionaryStringStringResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.HeadSimpleIdctionaryStringStringResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Simples the i dictionary int string response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static IDictionary<string, string> GetSimpleIdctionaryIntStringResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                return operations.GetSimpleIdctionaryIntStringResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Simples the i dictionary int string response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IDictionary<string, string>> GetSimpleIdctionaryIntStringResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetSimpleIdctionaryIntStringResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static void HeadSimpleIdctionaryIntStringResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                operations.HeadSimpleIdctionaryIntStringResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task HeadSimpleIdctionaryIntStringResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.HeadSimpleIdctionaryIntStringResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Objects the i dictionary string dictionary object response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static IDictionary<string, DictionaryObject> GetObjectIdctionaryStringDictionaryobjectResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                return operations.GetObjectIdctionaryStringDictionaryobjectResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Objects the i dictionary string dictionary object response.
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<IDictionary<string, DictionaryObject>> GetObjectIdctionaryStringDictionaryobjectResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetObjectIdctionaryStringDictionaryobjectResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            public static void HeadObjectIdctionaryStringDictionaryobjectResponse(this IDeepSleepApi operations, int? count = default(int?))
+            {
+                operations.HeadObjectIdctionaryStringDictionaryobjectResponseAsync(count).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='count'>
+            /// The count.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task HeadObjectIdctionaryStringDictionaryobjectResponseAsync(this IDeepSleepApi operations, int? count = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.HeadObjectIdctionaryStringDictionaryobjectResponseWithHttpMessagesAsync(count, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <summary>
+            /// Posts the touple simple.
+            /// </summary>
+            /// <remarks>
+            /// Post Touple Simple Custom Endpoint Description
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// The request.
+            /// </param>
+            public static object PostToupleSimpleCustomOperation(this IDeepSleepApi operations, object body = default(object))
+            {
+                return operations.PostToupleSimpleCustomOperationAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Posts the touple simple.
+            /// </summary>
+            /// <remarks>
+            /// Post Touple Simple Custom Endpoint Description
+            /// </remarks>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// The request.
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> PostToupleSimpleCustomOperationAsync(this IDeepSleepApi operations, object body = default(object), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.PostToupleSimpleCustomOperationWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
                 }
             }
 
@@ -1125,13 +1156,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static PostBasicObjectModelReturnVoidHeaders PostBasicObjectModelReturnVoid(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string))
+            public static void PostBasicObjectModelReturnVoid(this IDeepSleepApi operations, BasicObject body = default(BasicObject))
             {
-                return operations.PostBasicObjectModelReturnVoidAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                operations.PostBasicObjectModelReturnVoidAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1148,19 +1175,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<PostBasicObjectModelReturnVoidHeaders> PostBasicObjectModelReturnVoidAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task PostBasicObjectModelReturnVoidAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostBasicObjectModelReturnVoidWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.PostBasicObjectModelReturnVoidWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1177,13 +1197,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static PostBasicObjectModelReturnTaskHeaders PostBasicObjectModelReturnTask(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string))
+            public static void PostBasicObjectModelReturnTask(this IDeepSleepApi operations, BasicObject body = default(BasicObject))
             {
-                return operations.PostBasicObjectModelReturnTaskAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                operations.PostBasicObjectModelReturnTaskAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1200,19 +1216,12 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<PostBasicObjectModelReturnTaskHeaders> PostBasicObjectModelReturnTaskAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task PostBasicObjectModelReturnTaskAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostBasicObjectModelReturnTaskWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.PostBasicObjectModelReturnTaskWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
             /// <summary>
@@ -1229,13 +1238,9 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
-            /// </param>
-            public static PostBasicObjectModelReturnTaskWith202AttributeHeaders PostBasicObjectModelReturnTaskWith202Attribute(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string))
+            public static void PostBasicObjectModelReturnTaskWith202Attribute(this IDeepSleepApi operations, BasicObject body = default(BasicObject))
             {
-                return operations.PostBasicObjectModelReturnTaskWith202AttributeAsync(body, xCorrelationId).GetAwaiter().GetResult();
+                operations.PostBasicObjectModelReturnTaskWith202AttributeAsync(body).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -1252,19 +1257,35 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
             /// <param name='body'>
             /// The request.
             /// </param>
-            /// <param name='xCorrelationId'>
-            /// A correlation value that will be echoed back within the X-CorrelationId
-            /// response header.
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task PostBasicObjectModelReturnTaskWith202AttributeAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                (await operations.PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
+            /// </param>
+            public static void PostBasicObjectModelReturnTaskWith200DefaultAttribute(this IDeepSleepApi operations, BasicObject body = default(BasicObject))
+            {
+                operations.PostBasicObjectModelReturnTaskWith200DefaultAttributeAsync(body).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='body'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<PostBasicObjectModelReturnTaskWith202AttributeHeaders> PostBasicObjectModelReturnTaskWith202AttributeAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), string xCorrelationId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task PostBasicObjectModelReturnTaskWith200DefaultAttributeAsync(this IDeepSleepApi operations, BasicObject body = default(BasicObject), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(body, xCorrelationId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Headers;
-                }
+                (await operations.PostBasicObjectModelReturnTaskWith200DefaultAttributeWithHttpMessagesAsync(body, null, cancellationToken).ConfigureAwait(false)).Dispose();
             }
 
     }

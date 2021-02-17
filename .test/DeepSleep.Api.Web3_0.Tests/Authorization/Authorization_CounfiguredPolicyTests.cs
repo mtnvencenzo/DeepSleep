@@ -16,15 +16,14 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/authorization/policy/configured/failing/provider HTTP/1.1
 Host: {host}
 Authorization: Token {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -44,7 +43,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthorizedBy: AuthorizationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthorizationModel>(response).ConfigureAwait(false);
@@ -55,15 +54,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/authorization/policy/configured/mixed/providers HTTP/1.1
 Host: {host}
 Authorization: Token {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -84,7 +82,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthorizedBy: AuthorizationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthorizationModel>(response).ConfigureAwait(false);
@@ -99,15 +97,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/authorization/policy/configured/success/provider HTTP/1.1
 Host: {host}
 Authorization: Token {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -128,7 +125,7 @@ X-CorrelationId: {correlationId}";
                 expectedAuthorizedBy: AuthorizationType.Provider,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthorizationModel>(response).ConfigureAwait(false);

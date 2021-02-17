@@ -122,12 +122,12 @@
                 if (this.boundParameters == null)
                 {
                     this.boundParameters = this.MethodInfo.GetParameters()
-                        .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<InBodyAttribute>() != null || p.GetCustomAttribute<InUriAttribute>() != null)
                         .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
                         .ToArray();
                 }
 
-                return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<UriBoundAttribute>() != null);
+                return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<InUriAttribute>() != null);
             }
 
             return null;
@@ -142,14 +142,14 @@
                 if (this.boundParameters == null)
                 {
                     this.boundParameters = this.MethodInfo.GetParameters()
-                        .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() != null || p.GetCustomAttribute<UriBoundAttribute>() != null)
+                        .Where(p => p.GetCustomAttribute<InBodyAttribute>() != null || p.GetCustomAttribute<InUriAttribute>() != null)
                         .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
                         .ToArray();
                 }
 
                 if (this.HttpMethod.In(StringComparison.InvariantCultureIgnoreCase, "POST", "PUT", "PATCH") == true)
                 {
-                    return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<BodyBoundAttribute>() != null);
+                    return this.boundParameters.FirstOrDefault(p => p.GetCustomAttribute<InBodyAttribute>() != null);
                 }
             }
 
@@ -163,8 +163,8 @@
             if (this.MethodInfo != null)
             {
                 return this.MethodInfo.GetParameters()
-                    .Where(p => p.GetCustomAttribute<BodyBoundAttribute>() == null)
-                    .Where(p => p.GetCustomAttribute<UriBoundAttribute>() == null)
+                    .Where(p => p.GetCustomAttribute<InBodyAttribute>() == null)
+                    .Where(p => p.GetCustomAttribute<InUriAttribute>() == null)
                     .Where(p => p.GetCustomAttribute<NoBindAttribute>() == null)
                     .ToList();
             }

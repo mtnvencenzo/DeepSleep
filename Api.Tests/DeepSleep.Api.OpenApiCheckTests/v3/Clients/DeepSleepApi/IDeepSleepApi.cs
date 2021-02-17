@@ -54,9 +54,17 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The request.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<BasicObject>> PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(int id, BasicObject body = default(BasicObject), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='id'>
+        /// </param>
+        /// <param name='body'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -64,7 +72,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<BasicObject,PostBasicObjectModelNoDocAttributesHeaders>> PostBasicObjectModelNoDocAttributesWithHttpMessagesAsync(int id, BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<CustomObjectIdModel>> PostCustomObjectDeepModelsWithHttpMessagesAsync(int id, CustomObjectModel body = default(CustomObjectModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts the enum model with URI bound enums.
@@ -79,17 +87,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// Gets or sets the explicit enum property. Possible values include:
         /// 'None', 'Item1', 'Item2'
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<EnumUriObjectModelRs,PostEnumUriModelNoDocAttributesHeaders>> PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<EnumUriObjectModelRs>> PostEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Puts the enum model with URI bound enums.
@@ -104,17 +108,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// Gets or sets the explicit enum property. Possible values include:
         /// 'None', 'Item1', 'Item2'
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<EnumUriObjectModelRs,PutEnumUriModelNoDocAttributesHeaders>> PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<EnumUriObjectModelRs>> PutEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Patch the enum model with URI bound enums.
@@ -132,17 +132,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// The nullable explicit enum property. Possible values include:
         /// 'None', 'Item1', 'Item2'
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<EnumUriObjectModelRs,PatchEnumUriModelNoDocAttributesHeaders>> PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<EnumUriObjectModelRs>> PatchEnumUriModelNoDocAttributesWithHttpMessagesAsync(string explicitEnumProperty = default(string), string nullableExplicitEnumProperty = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the enum from route.
@@ -155,32 +151,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='enumValue'>
         /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<string,GetEnumInRouteSimpleMemberHeaders>> GetEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<string>> GetEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='enumValue'>
         /// The enum value. Possible values include: 'None', 'Item1', 'Item2'
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadEnumInRouteSimpleMemberHeaders>> HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadEnumInRouteSimpleMemberWithHttpMessagesAsync(string enumValue, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts the int32 model with URI bound values.
@@ -203,17 +191,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='nullableUInt32Property'>
         /// Gets or sets the nullable u int32 property.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<Int32ObjectModelRq,PostInt32UriModelNoDocAttributesHeaders>> PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<Int32ObjectModelRq>> PostInt32UriModelNoDocAttributesWithHttpMessagesAsync(int? int32Property = default(int?), int? nullableInt32Property = default(int?), int? uInt32Property = default(int?), int? nullableUInt32Property = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Gets the int32 combined route and query values.
@@ -230,17 +214,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryInt2'>
         /// The query int2.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<int?,GetInt32ValuesOverriddenOpIdHeaders>> GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<int?>> GetInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='routeint'>
         /// The route int.
@@ -251,17 +231,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryInt2'>
         /// The query int2.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadInt32ValuesOverriddenOpIdHeaders>> HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadInt32ValuesOverriddenOpIdWithHttpMessagesAsync(int routeint, int? queryInt1 = default(int?), int? queryInt2 = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i list int array response.
@@ -269,32 +245,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,GetSimpleIlistIntArrayResponseHeaders>> GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> GetSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleIlistIntArrayResponseHeaders>> HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadSimpleIlistIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i list int array request.
@@ -302,17 +270,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The ints.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,PostSimpleIlistIntArrayRequestHeaders>> PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> PostSimpleIlistIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i enumerable int array response.
@@ -320,32 +284,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,GetSimpleIenumerableIntArrayResponseHeaders>> GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> GetSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayResponseHeaders>> HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadSimpleIenumerableIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i enumerable int array request.
@@ -353,17 +309,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The ints.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,PostSimpleIenumerableIntArrayRequestHeaders>> PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> PostSimpleIenumerableIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the array int array response.
@@ -371,32 +323,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,GetSimpleArrayIntArrayResponseHeaders>> GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> GetSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='count'>
         /// The count.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleArrayIntArrayResponseHeaders>> HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadSimpleArrayIntArrayResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the array int array request.
@@ -404,17 +348,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The ints.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<IList<int?>,PostSimpleArrayIntArrayRequestHeaders>> PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IList<int?>>> PostSimpleArrayIntArrayRequestWithHttpMessagesAsync(IList<int?> body = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i list int array query string.
@@ -422,32 +362,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<int?,GetSimpleIlistIntArrayQuerystringHeaders>> GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<int?>> GetSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleIlistIntArrayQuerystringHeaders>> HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadSimpleIlistIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the i enumerable int array query string.
@@ -455,32 +387,24 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<int?,GetSimpleIenumerableIntArrayQuerystringHeaders>> GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<int?>> GetSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleIenumerableIntArrayQuerystringHeaders>> HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> HeadSimpleIenumerableIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Simples the array int array query string.
@@ -488,24 +412,30 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<int?,GetSimpleArrayIntArrayQuerystringHeaders>> GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<int?>> GetSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <param name='queryItems'>
         /// The query items.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Simples the i dictionary string string response.
+        /// </summary>
+        /// <param name='count'>
+        /// The count.
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -513,7 +443,85 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<HeadSimpleArrayIntArrayQuerystringHeaders>> HeadSimpleArrayIntArrayQuerystringWithHttpMessagesAsync(IList<int?> queryItems = default(IList<int?>), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<IDictionary<string, string>>> GetSimpleIdctionaryStringStringResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='count'>
+        /// The count.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> HeadSimpleIdctionaryStringStringResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Simples the i dictionary int string response.
+        /// </summary>
+        /// <param name='count'>
+        /// The count.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<IDictionary<string, string>>> GetSimpleIdctionaryIntStringResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='count'>
+        /// The count.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> HeadSimpleIdctionaryIntStringResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Objects the i dictionary string dictionary object response.
+        /// </summary>
+        /// <param name='count'>
+        /// The count.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<IDictionary<string, DictionaryObject>>> GetObjectIdctionaryStringDictionaryobjectResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='count'>
+        /// The count.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> HeadObjectIdctionaryStringDictionaryobjectResponseWithHttpMessagesAsync(int? count = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Posts the touple simple.
+        /// </summary>
+        /// <remarks>
+        /// Post Touple Simple Custom Endpoint Description
+        /// </remarks>
+        /// <param name='body'>
+        /// The request.
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> PostToupleSimpleCustomOperationWithHttpMessagesAsync(object body = default(object), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts the basic object model with void return.
@@ -526,17 +534,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The request.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnVoidHeaders>> PostBasicObjectModelReturnVoidWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> PostBasicObjectModelReturnVoidWithHttpMessagesAsync(BasicObject body = default(BasicObject), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts the basic object model with task return.
@@ -549,17 +553,13 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The request.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
-        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskHeaders>> PostBasicObjectModelReturnTaskWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> PostBasicObjectModelReturnTaskWithHttpMessagesAsync(BasicObject body = default(BasicObject), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Posts the basic object model with task 202 return.
@@ -572,9 +572,15 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='body'>
         /// The request.
         /// </param>
-        /// <param name='xCorrelationId'>
-        /// A correlation value that will be echoed back within the
-        /// X-CorrelationId response header.
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse> PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(BasicObject body = default(BasicObject), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='body'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -582,7 +588,7 @@ namespace DeepSleep.Api.OpenApiCheckTests.v3
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationHeaderResponse<PostBasicObjectModelReturnTaskWith202AttributeHeaders>> PostBasicObjectModelReturnTaskWith202AttributeWithHttpMessagesAsync(BasicObject body = default(BasicObject), string xCorrelationId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse> PostBasicObjectModelReturnTaskWith200DefaultAttributeWithHttpMessagesAsync(BasicObject body = default(BasicObject), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

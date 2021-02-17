@@ -19,7 +19,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/xml HTTP/1.1
 Host: {host}
@@ -27,7 +27,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: application/json
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -45,7 +44,6 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Content-Types", "application/xml, other/xml" }
                 });
         }
@@ -57,7 +55,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/xml HTTP/1.1
 Host: {host}
@@ -65,7 +63,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
+
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -84,7 +82,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -106,7 +104,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/readabletypes HTTP/1.1
 Host: {host}
@@ -114,7 +112,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -132,7 +129,6 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}" },
                     { "X-Allow-Content-Types", "other/xml" }
                 });
         }
@@ -143,7 +139,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/readabletypes HTTP/1.1
 Host: {host}
@@ -151,7 +147,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
+
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -170,7 +166,6 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);
@@ -187,7 +182,6 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/plaintext HTTP/1.1
 Host: {host}
@@ -195,7 +189,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textPlain}
 Content-Type: {textPlain}
-X-CorrelationId: {correlationId}
 
 This is my text data";
 
@@ -212,7 +205,7 @@ This is my text data";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<string>(response).ConfigureAwait(false);
@@ -225,7 +218,7 @@ This is my text data";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/plaintext HTTP/1.1
 Host: {host}
@@ -233,7 +226,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {textJson}
-X-CorrelationId: {correlationId}
+
 
 This is my text data";
 
@@ -249,7 +242,6 @@ This is my text data";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "X-Allow-Accept", "text/plain" }
                 });
 
@@ -262,7 +254,7 @@ This is my text data";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/all/plus/plaintext HTTP/1.1
 Host: {host}
@@ -270,7 +262,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {textJson}
-X-CorrelationId: {correlationId}
+
 
 ""This is my text data""";
 
@@ -287,7 +279,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<string>(response).ConfigureAwait(false);
@@ -300,7 +292,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/all/plus/plaintext HTTP/1.1
 Host: {host}
@@ -308,7 +300,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {applicationXml}
-X-CorrelationId: {correlationId}
+
 
 <string>This is my text data</string>";
 
@@ -325,7 +317,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<string>(response).ConfigureAwait(false);
@@ -337,7 +329,6 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readresolver/all/plus/plaintext HTTP/1.1
 Host: {host}
@@ -345,7 +336,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textPlain}
 Content-Type: {textPlain}
-X-CorrelationId: {correlationId}
 
 This is my text data";
 
@@ -362,7 +352,7 @@ This is my text data";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<string>(response).ConfigureAwait(false);

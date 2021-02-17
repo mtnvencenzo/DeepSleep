@@ -16,7 +16,7 @@
         /// <summary>Gets the with items.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public ContextDump PostDump([BodyBound] ContextDump model)
+        public ContextDump PostDump([InBody] ContextDump model)
         {
             return model;
         }

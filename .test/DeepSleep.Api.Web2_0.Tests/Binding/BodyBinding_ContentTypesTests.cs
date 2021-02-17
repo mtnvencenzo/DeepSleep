@@ -18,7 +18,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method.ToUpper()} https://{host}/binding/simple/{method} HTTP/1.1
 Host: {host}
@@ -26,7 +26,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {applicationJson}; charset=utf-8
-X-CorrelationId: {correlationId}
 
 {{
     ""Value"": ""This is my request""
@@ -45,7 +44,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MaxRequestLengthModel>(response).ConfigureAwait(false);
@@ -61,7 +60,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method.ToUpper()} https://{host}/binding/simple/{method} HTTP/1.1
 Host: {host}
@@ -69,7 +68,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {applicationJson}; charset=us-ascii
-X-CorrelationId: {correlationId}
 
 {{
     ""Value"": ""This is my request""
@@ -88,7 +86,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MaxRequestLengthModel>(response).ConfigureAwait(false);
@@ -104,7 +102,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method.ToUpper()} https://{host}/binding/simple/{method} HTTP/1.1
 Host: {host}
@@ -112,7 +110,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {applicationXml}; charset=utf-8
-X-CorrelationId: {correlationId}
 
 <MaxRequestLengthModel>
     <Value>This is my request</Value>
@@ -131,7 +128,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MaxRequestLengthModel>(response).ConfigureAwait(false);
@@ -147,7 +144,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method.ToUpper()} https://{host}/binding/simple/{method} HTTP/1.1
 Host: {host}
@@ -155,7 +152,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {applicationXml}; charset=us-ascii
-X-CorrelationId: {correlationId}
 
 <MaxRequestLengthModel>
     <Value>This is my request</Value>
@@ -174,7 +170,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<MaxRequestLengthModel>(response).ConfigureAwait(false);
@@ -187,7 +183,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
 
             var multipart = $@"--{multipartBoundary}
 Content-Disposition: form-data; name=""Value""
@@ -203,7 +199,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {multipartFormData}; charset=utf-8
-X-CorrelationId: {correlationId}
 
 {multipart.Replace(System.Environment.NewLine, "\r\n")}";
 
@@ -220,7 +215,6 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
                 });
 
             var data = await base.GetResponseData<SimpleMultipartRs>(response).ConfigureAwait(false);
@@ -233,7 +227,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
 
             var multipart = $@"--{multipartBoundary}
 Content-Disposition: form-data; name=""Value""
@@ -249,7 +243,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {multipartFormData}; charset=""us-ascii""
-X-CorrelationId: {correlationId}
 
 {multipart.Replace(System.Environment.NewLine, "\r\n")}";
 
@@ -266,7 +259,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<SimpleMultipartRs>(response).ConfigureAwait(false);

@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 OPTIONS https://{host}/discovery/attribute/crossorigin/default HTTP/1.1
 Host: {host}
@@ -57,7 +57,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 OPTIONS https://{host}/discovery/attribute/crossorigin/default/with/caching HTTP/1.1
 Host: {host}
@@ -98,7 +98,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 OPTIONS https://{host}/discovery/attribute/crossorigin/specified/empty HTTP/1.1
 Host: {host}
@@ -139,7 +139,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 OPTIONS https://{host}/discovery/attribute/crossorigin/specified HTTP/1.1
 Host: {host}
@@ -181,7 +181,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 OPTIONS https://{host}/discovery/attribute/crossorigin/specified HTTP/1.1
 Host: {host}
@@ -223,7 +223,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/crossorigin/default HTTP/1.1
 Host: {host}
@@ -261,7 +261,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/crossorigin/default/with/caching HTTP/1.1
 Host: {host}
@@ -301,7 +301,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/crossorigin/specified HTTP/1.1
 Host: {host}
@@ -340,7 +340,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/crossorigin/specified HTTP/1.1
 Host: {host}
@@ -379,7 +379,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/crossorigin/specified/with/caching HTTP/1.1
 Host: {host}

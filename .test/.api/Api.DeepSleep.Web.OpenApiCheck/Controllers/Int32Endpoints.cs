@@ -23,7 +23,7 @@
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [ApiRoute(httpMethod: "POST", template: "/int32/uri/model/no/doc/attributes")]
-        public Int32ObjectModelRq PostInt32UriModelNoDocAttributes([UriBound] Int32UriObjectModelRs request)
+        public Int32ObjectModelRq PostInt32UriModelNoDocAttributes([InUri] Int32UriObjectModelRs request)
         {
             return new Int32ObjectModelRq
             {
@@ -43,7 +43,7 @@
         /// <param name="queryInt2">The query int2.</param>
         /// <returns>The combines integer</returns>
         [ApiRoute(httpMethod: "GET", template: "/int32/uri/{routeint}/value")]
-        [OasApiOperation(operationId: "GetInt32ValuesOverriddenOpId", tags: new string[] { "Ints", "AndMoreInts" })]
+        [OasOperation(operationId: "GetInt32ValuesOverriddenOpId", tags: new string[] { "Ints", "AndMoreInts" })]
         public int GetInt32Values(int routeInt, int? queryInt1, uint queryInt2)
         {
             return Convert.ToInt32(routeInt + (queryInt1 ?? 0) + queryInt2);

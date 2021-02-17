@@ -14,7 +14,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using System.Xml.Linq;
 
@@ -86,7 +85,9 @@
         /// <returns></returns>
         public async Task<OpenApiDocument> Generate()
         {
-            var routes = this.routingTable.GetRoutes();
+            var routes = this.routingTable.GetRoutes()
+                .Where(r => this.configurationProvider.IgnoreObsoleteEndpoints == false || r.Location.MethodInfo.GetCustomAttribute<ObsoleteAttribute>() == null)
+                .ToList();
 
             var document = new OpenApiDocument
             {
@@ -105,6 +106,11 @@
                 }
 
                 if (route.Name == $"GET_{this.configurationProvider.V3RouteTemplate}")
+                {
+                    continue;
+                }
+
+                if (this.configurationProvider.RouteFilter != null && this.configurationProvider.RouteFilter(route) == false)
                 {
                     continue;
                 }
@@ -164,7 +170,7 @@
                 return;
             }
 
-            operation.Deprecated = routeConfiguration.Deprecated ?? false;
+            operation.Deprecated = route.Location.MethodInfo.GetCustomAttribute<ObsoleteAttribute>() != null;
             operation.Summary = OasDocHelpers.GetDocumenationSummary(route.Location.MethodInfo, this.commentDocs) ?? string.Empty;
             operation.Description = OasDocHelpers.GetDocumentationDescription(route.Location.MethodInfo, this.commentDocs) ?? string.Empty;
 
@@ -207,7 +213,7 @@
                 }
             }
 
-            var headerParameters = this.GetHeaderParameters(
+            var headerParameters = this.GetRequestHeaders(
                 document: document,
                 routeConfiguration: routeConfiguration,
                 route: route);
@@ -267,7 +273,7 @@
                                 }
                             }
 
-                            var headHeaderParameters = this.GetHeaderParameters(
+                            var headHeaderParameters = this.GetRequestHeaders(
                                 document: document,
                                 routeConfiguration: routeConfiguration,
                                 route: route);
@@ -374,9 +380,10 @@
             {
                 var properties = uriParameter.ParameterType.GetProperties()
                    .Where(p => p.CanWrite)
-                   .ToArray();
+                   .Where(p => this.configurationProvider.IgnoreObsoleteProperties == false || p.GetCustomAttribute<ObsoleteAttribute>() == null)
+                    .ToArray();
 
-                var prop = properties.FirstOrDefault(p => string.Compare($"{p.Name}", routeVar, true) == 0);
+                var prop = properties.FirstOrDefault(p => string.Compare(p.Name, routeVar, true) == 0);
 
                 if (prop != null)
                 {
@@ -648,7 +655,17 @@
         {
             OpenApiRequestBody requestBody = null;
 
-            if (TypeExtensions.IsArrayType(type))
+            if (TypeExtensions.IsDictionaryType(type))
+            {
+                requestBody = await AddDictionaryRequestBody(
+                    document: document,
+                    method: method,
+                    type: type,
+                    memberName: memberName,
+                    routeConfiguration: routeConfiguration,
+                    useReferences: useReferences).ConfigureAwait(false);
+            }
+            else if (TypeExtensions.IsArrayType(type))
             {
                 requestBody = await AddArrayRequestBody(
                     document: document,
@@ -725,7 +742,55 @@
             IDeepSleepRequestConfiguration routeConfiguration,
             bool useReferences = true)
         {
-            var arrayType = TypeExtensions.GetRootType(TypeExtensions.GetArrayType(type));
+            var contents = new Dictionary<string, OpenApiMediaType>();
+
+            var contentTypes = await OasHelpers.GetRequestBodyContentTypes(
+                requestBodyType: type,
+                serviceProvider: this.serviceProvider,
+                routeConfiguration: routeConfiguration,
+                formatterFactory: this.formatStreamReaderWriterFactory,
+                specVersion: this.specVersion).ConfigureAwait(false);
+
+            foreach (var contentType in contentTypes.Distinct())
+            {
+                contents.Add(contentType, new OpenApiMediaType
+                {
+                    Schema = AddSchema(
+                        document: document,
+                        containingMember: method,
+                        type: type,
+                        memberName: memberName,
+                        useReferences: useReferences)
+                });
+            }
+
+            return new OpenApiRequestBody
+            {
+                Description = OasDocHelpers.GetParameterDescription(
+                    methodInfo: method,
+                    parameter: method.GetParameters().FirstOrDefault(p => p.Name == memberName),
+                    commentDocs: this.commentDocs),
+
+                Content = contents
+            };
+        }
+
+        /// <summary>Adds the dictionary request body.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="method">The method.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="memberName">Name of the member.</param>
+        /// <param name="routeConfiguration">The route configuration.</param>
+        /// <param name="useReferences">if set to <c>true</c> [use references].</param>
+        /// <returns></returns>
+        private async Task<OpenApiRequestBody> AddDictionaryRequestBody(
+            OpenApiDocument document,
+            MethodInfo method,
+            Type type,
+            string memberName,
+            IDeepSleepRequestConfiguration routeConfiguration,
+            bool useReferences = true)
+        {
             var contents = new Dictionary<string, OpenApiMediaType>();
 
             var contentTypes = await OasHelpers.GetRequestBodyContentTypes(
@@ -800,7 +865,7 @@
 
             var requestBody = new OpenApiRequestBody
             {
-                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs) ?? string.Empty,
+                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs),
                 Content = contents
             };
 
@@ -856,7 +921,7 @@
                 {
                     Schema = new OpenApiSchema
                     {
-                        Description = OasDocHelpers.GetDocumenationSummary(rootType, this.commentDocs) ?? string.Empty,
+                        Description = OasDocHelpers.GetDocumenationSummary(rootType, this.commentDocs),
                         Type = openApiType,
                         Format = OasHelpers.GetOpenApiSchemaFormat(openApiType, rootType),
                         Nullable = TypeExtensions.IsNullableType(type)
@@ -866,7 +931,7 @@
 
             var requestBody = new OpenApiRequestBody
             {
-                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs) ?? string.Empty,
+                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs),
                 Content = contents
             };
 
@@ -914,7 +979,7 @@
 
             var requestBody = new OpenApiRequestBody
             {
-                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs) ?? string.Empty,
+                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs),
                 Content = contents
             };
 
@@ -937,13 +1002,41 @@
         {
             OpenApiSchema schema = null;
 
-            if (TypeExtensions.IsArrayType(type))
+            if (useReferences)
+            {
+                var referenceSchema = document.Components.Schemas
+                    .FirstOrDefault(s => string.Equals(s.Key, OasHelpers.GetDocumentTypeSchemaName(type, this.configurationProvider.PrefixNamesWithNamespace), StringComparison.Ordinal));
+
+                if (referenceSchema.Key != null)
+                {
+                    return new OpenApiSchema
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = $"{referenceSchema.Key}",
+                            Type = ReferenceType.Schema
+                        }
+                    };
+                }
+            }
+
+            if (TypeExtensions.IsDictionaryType(type))
+            {
+                schema = AddDictionarySchema(
+                    document: document,
+                    containingMember: containingMember,
+                    memberName: memberName,
+                    type: type,
+                    useReferences: true);
+            }
+            else if (TypeExtensions.IsArrayType(type))
             {
                 schema = AddArraySchema(
                     document: document,
                     containingMember: containingMember,
                     memberName: memberName,
-                    type: type);
+                    type: type,
+                    useReferences: true);
             }
             else if (TypeExtensions.IsEnumType(type))
             {
@@ -956,12 +1049,31 @@
             }
             else if (TypeExtensions.IsComplexType(type))
             {
+                // Adding this section for recursion hanlding
+                bool added = false;
+                string key = OasHelpers.GetDocumentTypeSchemaName(type, this.configurationProvider.PrefixNamesWithNamespace);
+
+                if (useReferences)
+                {
+                    var existingComplexSchema = document.Components.Schemas.FirstOrDefault(s => string.Equals(s.Key, key, StringComparison.Ordinal));
+                    if (existingComplexSchema.Key == null)
+                    {
+                        added = true;
+                        document.Components.Schemas.Add(key, new OpenApiSchema());
+                    }
+                }
+
                 schema = AddComplexTypeSchema(
                     document: document,
                     containingMember: containingMember,
                     type: type,
                     memberName: memberName,
                     useReferences: useReferences);
+
+                if (added)
+                {
+                    document.Components.Schemas[key] = schema;
+                }
             }
             else
             {
@@ -994,6 +1106,43 @@
                     Type = ReferenceType.Schema
                 }
             };
+        }
+
+        private OpenApiSchema AddDictionarySchema(
+            OpenApiDocument document,
+            MemberInfo containingMember,
+            Type type,
+            string memberName,
+            bool useReferences = true)
+        {
+            OpenApiSchema schema;
+            var dictionaryValueType = TypeExtensions.GetDictionaryValueType(type);
+
+            if (dictionaryValueType != typeof(object))
+            {
+                schema = new OpenApiSchema
+                {
+                    Description = OasDocHelpers.GetDocumentationSummary(dictionaryValueType, this.commentDocs),
+                    Type = OasHelpers.GetOpenApiSchemaType(type),
+                    AdditionalProperties = AddSchema(
+                        document: document,
+                        containingMember: containingMember,
+                        type: dictionaryValueType,
+                        memberName: memberName,
+                        useReferences: useReferences)
+                };
+            }
+            else
+            {
+                schema = new OpenApiSchema
+                {
+                    Description = OasDocHelpers.GetDocumentationSummary(dictionaryValueType, this.commentDocs),
+                    Type = OasHelpers.GetOpenApiSchemaType(type),
+                    AdditionalPropertiesAllowed = true
+                };
+            }
+
+            return schema;
         }
 
         /// <summary>Adds the array schema.</summary>
@@ -1050,13 +1199,17 @@
 
             var schema = new OpenApiSchema
             {
-                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs) ?? string.Empty,
+                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs),
                 Type = OasHelpers.GetOpenApiSchemaType(rootType),
                 Properties = new Dictionary<string, OpenApiSchema>(),
                 AdditionalPropertiesAllowed = false
             };
 
-            foreach (var prop in rootType.GetProperties())
+            var properties = rootType.GetProperties()
+                .Where(p => this.configurationProvider.IgnoreObsoleteProperties == false || p.GetCustomAttribute<ObsoleteAttribute>() == null)
+                .ToList();
+
+            foreach (var prop in properties)
             {
                 schema.Properties.Add(
                     key: this.configurationProvider.NamingPolicy.ConvertName(prop.Name), 
@@ -1067,7 +1220,6 @@
                         memberName: prop.Name,
                         useReferences: true));
             }
-
 
             if (useReferences)
             {
@@ -1118,7 +1270,7 @@
 
             var schema = new OpenApiSchema
             {
-                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs) ?? string.Empty,
+                Description = OasDocHelpers.GetDocumentationSummary(rootType, this.commentDocs),
                 Type = openApiType,
                 Enum = enumItems,
                 Format = OasHelpers.GetOpenApiSchemaFormat(openApiType, rootType)
@@ -1244,13 +1396,14 @@
                 properties = uriParameter.ParameterType.GetProperties()
                    .Where(p => p.CanWrite)
                    .Where(p => !preparedRouteVars.Contains(p.Name.ToLower()))
+                   .Where(p => this.configurationProvider.IgnoreObsoleteProperties == false || p.GetCustomAttribute<ObsoleteAttribute>() == null)
                    .ToArray();
 
                 foreach (var prop in properties)
                 {
                     var parameter = new OpenApiParameter
                     {
-                        Description = OasDocHelpers.GetDocumenationSummary(prop, this.commentDocs) ?? string.Empty,
+                        Description = OasDocHelpers.GetDocumenationSummary(prop, this.commentDocs),
                         Name = this.configurationProvider.NamingPolicy.ConvertName(prop.Name),
                         Required = false,
                         In = ParameterLocation.Query,
@@ -1275,13 +1428,14 @@
             var simpleParameters = route.Location.GetSimpleParametersInfo()
                 .Where(p => !preparedRouteVars.Contains(p.Name.ToLower()))
                 .Where(p => properties.Any(prop => prop.Name.ToLower() == p.Name.ToLower()) == false)
+                .Where(p => this.configurationProvider.IgnoreObsoleteProperties == false || p.GetCustomAttribute<ObsoleteAttribute>() == null)
                 .ToList();
 
             foreach (var param in simpleParameters)
             {
                 var parameter = new OpenApiParameter
                 {
-                    Description = OasDocHelpers.GetParameterDescription(route.Location.MethodInfo, param, this.commentDocs) ?? string.Empty,
+                    Description = OasDocHelpers.GetParameterDescription(route.Location.MethodInfo, param, this.commentDocs),
                     Name = this.configurationProvider.NamingPolicy.ConvertName(param.Name),
                     Required = false,
                     In = ParameterLocation.Query,
@@ -1310,39 +1464,6 @@
             return parameters.Count > 0
                 ? parameters
                 : null;
-        }
-
-        /// <summary>Gets the header parameters.</summary>
-        /// <param name="document">The document.</param>
-        /// <param name="routeConfiguration">The route configuration.</param>
-        /// <param name="route">The route.</param>
-        /// <returns></returns>
-        private List<OpenApiParameter> GetHeaderParameters(
-            OpenApiDocument document,
-            IDeepSleepRequestConfiguration routeConfiguration,
-            ApiRoutingItem route)
-        {
-            var parameters = new List<OpenApiParameter>();
-
-            if (routeConfiguration.UseCorrelationIdHeader ?? false)
-            {
-                var xCorrelationIdHeader = new OpenApiParameter
-                {
-                    Name = "X-CorrelationId",
-                    In = ParameterLocation.Header,
-                    Schema = this.AddSimpleTypeSchema(
-                        document: document,
-                        type: typeof(string),
-                        memberName: null,
-                        containingMember: null)
-                };
-
-                xCorrelationIdHeader.Description = "A correlation value that will be echoed back within the X-CorrelationId response header.";
-
-                parameters.Add(xCorrelationIdHeader);
-            }
-
-            return parameters;
         }
 
         /// <summary>Replaces the template vars.</summary>
@@ -1431,8 +1552,8 @@
         private IList<OpenApiTag> GetOperationTags(MethodInfo methodInfo)
         {
             var attributeTags = methodInfo
-                .GetCustomAttributes(typeof(OasApiOperationAttribute), false)
-                .Cast<OasApiOperationAttribute>()
+                .GetCustomAttributes(typeof(OasOperationAttribute), false)
+                .Cast<OasOperationAttribute>()
                 .FirstOrDefault()
                 ?.Tags ?? new List<string>();
 
@@ -1469,33 +1590,20 @@
             IDeepSleepRequestConfiguration routeConfiguration,
             ApiRoutingItem route)
         {
-            var headers = new Dictionary<string, OpenApiHeader>();
+            return new Dictionary<string, OpenApiHeader>();
+        }
 
-            if (routeConfiguration?.IncludeRequestIdHeaderInResponse ?? false)
-            {
-                headers.Add("X-RequestId", new OpenApiHeader
-                {
-                    Schema = this.AddSimpleTypeSchema(
-                        document: document,
-                        type: typeof(string),
-                        memberName: null,
-                        containingMember: null)
-                });
-            }
-
-            if (routeConfiguration?.UseCorrelationIdHeader ?? false)
-            {
-                headers.Add("X-CorrelationId", new OpenApiHeader
-                {
-                    Schema = this.AddSimpleTypeSchema(
-                        document: document,
-                        type: typeof(string),
-                        memberName: null,
-                        containingMember: null)
-                });
-            }
-
-            return headers;
+        /// <summary>Gets the header parameters.</summary>
+        /// <param name="document">The document.</param>
+        /// <param name="routeConfiguration">The route configuration.</param>
+        /// <param name="route">The route.</param>
+        /// <returns></returns>
+        private List<OpenApiParameter> GetRequestHeaders(
+            OpenApiDocument document,
+            IDeepSleepRequestConfiguration routeConfiguration,
+            ApiRoutingItem route)
+        {
+            return new List<OpenApiParameter>();
         }
     }
 }

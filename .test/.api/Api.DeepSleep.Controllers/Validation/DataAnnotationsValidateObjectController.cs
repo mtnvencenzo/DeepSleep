@@ -20,7 +20,7 @@
         [ApiRoute(new[] { "POST" }, "validators/validateobject/uri/and/body/{value}")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(ValidateObjectModelValidator), continuation: ValidationContinuation.OnlyIfValid)]
-        public IApiResponse PostMixedEndpointObjectValidations([UriBound] ValidateObjectUriModel uri, [BodyBound] ValidateObjectBodyModel body)
+        public IApiResponse PostMixedEndpointObjectValidations([InUri] ValidateObjectUriModel uri, [InBody] ValidateObjectBodyModel body)
         {
             return ApiResponse.NoContent();
         }

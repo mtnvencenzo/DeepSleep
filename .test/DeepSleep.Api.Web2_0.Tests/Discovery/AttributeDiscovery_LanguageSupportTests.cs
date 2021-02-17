@@ -17,7 +17,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/default HTTP/1.1
 Host: {host}
@@ -55,7 +55,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/fallaback/de-DE HTTP/1.1
 Host: {host}
@@ -94,7 +94,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/fallaback/de-DE HTTP/1.1
 Host: {host}
@@ -134,7 +134,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/fallaback/en HTTP/1.1
 Host: {host}
@@ -174,7 +174,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/fallaback/en/with/supported HTTP/1.1
 Host: {host}
@@ -214,7 +214,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/languagesupport/fallaback/en/with/supported/thread/cultures HTTP/1.1
 Host: {host}

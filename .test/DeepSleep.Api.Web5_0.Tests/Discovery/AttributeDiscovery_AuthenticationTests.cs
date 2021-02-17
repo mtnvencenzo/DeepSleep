@@ -12,12 +12,45 @@
     public class AttributeDiscovery_AuthenticationTests : PipelineTestBase
     {
         [Fact]
+        public async Task discovery_attribute___authentication_anonymous_default()
+        {
+            base.SetupEnvironment();
+
+            var utcNow = DateTimeOffset.UtcNow;
+            var request = @$"
+GET https://{host}/discovery/attribute/authentication/allowanonymous/default HTTP/1.1
+Date: {utcNow.ToString("r")}
+Host: {host}
+Accept: {applicationJson}";
+
+            using var httpContext = new MockHttpContext(this.ServiceProvider, request);
+            var apiContext = await Invoke(httpContext).ConfigureAwait(false);
+            var response = httpContext.Response;
+
+            base.AssertResponse(
+                apiContext: apiContext,
+                response: response,
+                expectedHttpStatus: 200,
+                shouldHaveResponse: true,
+                expectedContentType: applicationJson,
+                expectedAuthenticatedBy: AuthenticationType.Anonymous,
+                expectedValidationState: ApiValidationState.Succeeded,
+                extendedHeaders: new NameValuePairs<string, string>
+                {
+                });
+
+            var data = await base.GetResponseData<AttributeDiscoveryModel>(response).ConfigureAwait(false);
+            data.Should().NotBeNull();
+            data.Value.Should().Be("Test");
+        }
+
+        [Fact]
         public async Task discovery_attribute___authentication_anonymous_true()
         {
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/true HTTP/1.1
 Date: {utcNow.ToString("r")}
@@ -51,7 +84,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false HTTP/1.1
 Date: {utcNow.ToString("s")}
@@ -92,7 +125,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false?xdate={utcNow.ToUnixTimeSeconds()} HTTP/1.1
 Authorization: Token {staticToken}1
@@ -133,7 +166,7 @@ Accept: {applicationJson}";
             base.SetupEnvironment();
 
             var utcNow = DateTimeOffset.UtcNow;
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/allowanonymous/false HTTP/1.1
 Date: {utcNow.ToString("r").Replace("GMT", "UTC")}
@@ -167,7 +200,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -206,7 +239,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -239,7 +272,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/notspecified HTTP/1.1
 Host: {host}
@@ -276,7 +309,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -315,7 +348,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -355,7 +388,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified/empty HTTP/1.1
 Host: {host}
@@ -388,7 +421,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -420,7 +453,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -453,7 +486,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}
@@ -486,7 +519,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/authentication/schemes/specified HTTP/1.1
 Host: {host}

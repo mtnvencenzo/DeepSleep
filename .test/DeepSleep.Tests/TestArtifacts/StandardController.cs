@@ -28,18 +28,18 @@
             return 200;
         }
 
-        public int DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed([UriBound] StandardModel body, [BodyBound] StandardNullableModel uri)
+        public int DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterNotAttributed([InUri] StandardModel body, [InBody] StandardNullableModel uri)
         {
             return uri.IntProp ?? 0;
         }
 
-        public int? DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed([UriBound] StandardModel myUri, [BodyBound] StandardNullableModel myBody)
+        public int? DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAttributed([InUri] StandardModel myUri, [InBody] StandardNullableModel myBody)
         {
 
             return myBody.IntProp;
         }
 
-        public int? DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters(int myInt, [UriBound] StandardModel uri, [BodyBound] StandardNullableModel body, int? myNullableInt, StandardEnum? myNullableEnum, StandardEnum myEnum)
+        public int? DefaultFullApiResponseEndpointWithUriParameterAndBodyParameterAndExtraParameters(int myInt, [InUri] StandardModel uri, [InBody] StandardNullableModel body, int? myNullableInt, StandardEnum? myNullableEnum, StandardEnum myEnum)
         {
             return body.IntProp;
         }

@@ -16,14 +16,14 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/head/configured/disabled HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -38,7 +38,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<RequestHeadModel>(response).ConfigureAwait(false);
@@ -48,15 +48,12 @@ X-CorrelationId: {correlationId}";
 
             base.SetupEnvironment();
 
-
-            correlationId = Guid.NewGuid();
             request = @$"
 HEAD https://{host}/head/configured/disabled HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContextHead = new MockHttpContext(this.ServiceProvider, request);
             apiContext = await Invoke(httpContextHead).ConfigureAwait(false);
@@ -70,7 +67,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "Allow", "GET" }
                 });
 
@@ -83,14 +79,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/head/configured/default HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -105,7 +101,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<RequestHeadModel>(response).ConfigureAwait(false);
@@ -115,15 +111,12 @@ X-CorrelationId: {correlationId}";
 
             base.SetupEnvironment();
 
-
-            correlationId = Guid.NewGuid();
             request = @$"
 HEAD https://{host}/head/configured/default HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContextHead = new MockHttpContext(this.ServiceProvider, request);
             var headApiContext = await Invoke(httpContextHead).ConfigureAwait(false);
@@ -139,7 +132,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: apiContext.Response.ContentLength,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             headApiContext.Response.ContentLength.Should().Be(apiContext.Response.ContentLength);
@@ -187,14 +180,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/head/explicit HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -209,7 +202,7 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<RequestHeadModel>(response).ConfigureAwait(false);
@@ -219,15 +212,12 @@ X-CorrelationId: {correlationId}";
 
             base.SetupEnvironment();
 
-
-            correlationId = Guid.NewGuid();
             request = @$"
 HEAD https://{host}/head/explicit HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContextHead = new MockHttpContext(this.ServiceProvider, request);
             var headApiContext = await Invoke(httpContextHead).ConfigureAwait(false);
@@ -243,7 +233,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: 19,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             data = await base.GetResponseData<RequestHeadModel>(headResponse).ConfigureAwait(false);
@@ -255,14 +245,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 PUT https://{host}/head/configured/default HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -276,7 +266,6 @@ X-CorrelationId: {correlationId}";
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "Allow", $"GET, HEAD"}
                 });
         }

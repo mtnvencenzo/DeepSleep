@@ -512,7 +512,6 @@
                 endpoint: nameof(RequestIdController.GetDisabled),
                 config: new DeepSleepRequestConfiguration
                 {
-                    IncludeRequestIdHeaderInResponse = false
                 });
 
             staticDiscovery.AddRoute(
@@ -867,7 +866,7 @@
                     EnableHeadForGetRequests = false,
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
-                        AllowedHeaders = new string[] { "Content-Type", "X-CorrelationId" }
+                        AllowedHeaders = new string[] { "Content-Type" }
                     }
                 });
 
@@ -942,7 +941,7 @@
                     CrossOriginConfig = new ApiCrossOriginConfiguration
                     {
                         AllowCredentials = false,
-                        AllowedHeaders = new string[] { "Content-Type", "X-CorrelationId" }
+                        AllowedHeaders = new string[] { "Content-Type" }
                     }
                 });
 

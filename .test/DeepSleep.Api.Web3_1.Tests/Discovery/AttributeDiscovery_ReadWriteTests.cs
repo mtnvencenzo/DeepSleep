@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/default HTTP/1.1
 Host: {host}
@@ -51,7 +51,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/acceptheader/override HTTP/1.1
 Host: {host}
@@ -88,7 +88,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/writeablemediatypes/override HTTP/1.1
 Host: {host}
@@ -121,7 +121,7 @@ Accept: {accept}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/writeablemediatypes/override HTTP/1.1
 Host: {host}
@@ -161,7 +161,7 @@ Accept: {applicationXml}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/writerresolver/override HTTP/1.1
 Host: {host}
@@ -194,7 +194,7 @@ Accept: {accept}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/readwrite/writerresolver/override HTTP/1.1
 Host: {host}
@@ -228,7 +228,7 @@ Accept: {textPlain}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/readwrite/readablemediatypes/override HTTP/1.1
 Host: {host}
@@ -266,7 +266,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/readwrite/readablemediatypes/override HTTP/1.1
 Host: {host}
@@ -306,7 +306,7 @@ Content-Type: {applicationXml}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/readwrite/readerresolver/override HTTP/1.1
 Host: {host}
@@ -344,7 +344,7 @@ Content-Type: {textJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/readwrite/readerresolver/override HTTP/1.1
 Host: {host}

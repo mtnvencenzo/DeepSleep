@@ -18,14 +18,13 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v3/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -58,13 +57,12 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v3/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
-User-Agent: UnitTest/1.0 DEV
-X-CorrelationId: {correlationId}";
+User-Agent: UnitTest/1.0 DEV";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -97,14 +95,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v3/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationYaml}
-X-CorrelationId: {correlationId}";
+Accept: {applicationYaml}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -127,14 +124,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v3/doc?format=yaml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -157,14 +153,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v2/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -197,13 +192,12 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v2/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
-User-Agent: UnitTest/1.0 DEV
-X-CorrelationId: {correlationId}";
+User-Agent: UnitTest/1.0 DEV";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -236,14 +230,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v2/doc HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationYaml}
-X-CorrelationId: {correlationId}";
+Accept: {applicationYaml}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -266,14 +259,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/openapi/v2/doc?format=yaml HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(base.serviceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);

@@ -24,7 +24,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 {method} https://{host}/binding/body/max/request/length HTTP/1.1
 Host: {host}
@@ -32,7 +32,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {applicationJson}
-X-CorrelationId: {correlationId}
 
 {{
     ""Value"": ""This is way too long of a request""
@@ -50,7 +49,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -71,7 +70,7 @@ X-CorrelationId: {correlationId}
             });
 
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/body/max/request/length HTTP/1.1
 Host: {host}
@@ -79,7 +78,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationJson}
 Content-Type: {applicationJson}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {{
@@ -98,7 +96,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -109,7 +107,7 @@ Content-Length: 1
             {
                 var jsonFormattingConfiguration = new JsonMediaSerializerConfiguration();
 
-                var instanceMock = new Mock<DeepSleepXmlMediaSerializer>(new object[] { null } ) { CallBase = true };
+                var instanceMock = new Mock<DeepSleepXmlMediaSerializer>(new object[] { null }) { CallBase = true };
                 instanceMock
                     .Setup(m => m.ReadType(It.IsAny<Stream>(), It.IsAny<Type>(), It.IsAny<IMediaSerializerOptions>()))
                     .Throws(new MockBadHttpRequestException());
@@ -119,7 +117,7 @@ Content-Length: 1
             });
 
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/body/max/request/length HTTP/1.1
 Host: {host}
@@ -127,7 +125,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {applicationXml}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 <MaxRequestLengthModel>
@@ -146,7 +143,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
 
@@ -170,7 +167,7 @@ Content-Length: 1
             });
 
 
-            var correlationId = Guid.NewGuid();
+
 
             var multipart = $@"
 --{multipartBoundary}
@@ -187,7 +184,6 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {applicationXml}
 Content-Type: {multipartFormData}
-X-CorrelationId: {correlationId}
 Content-Length: 1
 
 {multipart.Replace(Environment.NewLine, "\r\n")}";
@@ -204,7 +200,7 @@ Content-Length: 1
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
         }
     }

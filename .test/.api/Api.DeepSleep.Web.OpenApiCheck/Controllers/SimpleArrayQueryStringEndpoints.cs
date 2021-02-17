@@ -1,7 +1,6 @@
 ﻿namespace Api.DeepSleep.Web.OpenApiCheck.Controllers
 {
     using global::DeepSleep;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 

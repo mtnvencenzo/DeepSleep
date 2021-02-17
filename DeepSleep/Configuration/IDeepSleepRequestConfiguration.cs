@@ -25,10 +25,6 @@
         /// <value><c>true</c> if [allow anonymous]; otherwise, <c>false</c>.</value>
         bool? AllowAnonymous { get; set; }
 
-        /// <summary>Gets or sets the use correlation identifier header.</summary>
-        /// <value>The use correlation identifier header.</value>
-        bool? UseCorrelationIdHeader { get; set; }
-
         /// <summary>Gets or sets the caching directive.</summary>
         /// <value>The caching directive.</value>
         ApiCacheDirectiveConfiguration CacheDirective { get; set; }
@@ -41,17 +37,9 @@
         /// <value>The language support.</value>
         ApiLanguageSupportConfiguration LanguageSupport { get; set; }
 
-        /// <summary>Gets or sets a value indicating whether the resource is deprecated.</summary>
-        /// <value><c>true</c> if deprecated; otherwise, <c>false</c>.</value>
-        bool? Deprecated { get; set; }
-
         /// <summary>Gets or sets the enable head for get requests.</summary>
         /// <value>The enable head for get requests.</value>
         bool? EnableHeadForGetRequests { get; set; }
-
-        /// <summary>Gets or sets the include request identifier header in response.</summary>
-        /// <value>The include request identifier header in response.</value>
-        bool? IncludeRequestIdHeaderInResponse { get; set; }
 
         /// <summary>Gets or sets the read write configuration.</summary>
         /// <value>The read write configuration.</value>

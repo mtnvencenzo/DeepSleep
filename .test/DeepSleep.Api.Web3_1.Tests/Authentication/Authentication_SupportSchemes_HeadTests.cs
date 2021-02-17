@@ -18,14 +18,13 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/single/supported/schemes HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -43,7 +42,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                 });
         }
@@ -53,15 +51,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/single/supported/schemes HTTP/1.1
 Host: {host}
 Authorization:
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -79,7 +76,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                 });
         }
@@ -89,15 +85,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/single/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: Token
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -115,7 +110,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                 });
         }
@@ -125,15 +119,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/single/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: Token asdasdd
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -151,7 +144,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: "asdasdd",
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                 });
         }
@@ -161,15 +153,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/single/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: Token {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -189,7 +180,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: 16,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthenticatedModel>(response).ConfigureAwait(false);
@@ -204,14 +195,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/multiple/supported/schemes HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -229,7 +219,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" }
                 });
@@ -240,15 +229,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/multiple/supported/schemes HTTP/1.1
 Host: {host}
 Authorization:
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -266,7 +254,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" }
                 });
@@ -279,15 +266,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/multiple/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -305,7 +291,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" }
                 });
@@ -318,15 +303,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/multiple/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme} asdlkasdk
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -344,7 +328,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: "asdlkasdk",
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" }
                 });
@@ -357,15 +340,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/multiple/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme} {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -385,7 +367,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: 16,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthenticatedModel>(response).ConfigureAwait(false);
@@ -400,14 +382,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/not/defined/supported/schemes HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -425,7 +406,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -442,15 +422,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/not/defined/supported/schemes HTTP/1.1
 Host: {host}
 Authorization:
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -468,7 +447,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -487,15 +465,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/not/defined/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -513,7 +490,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -532,15 +508,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/not/defined/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme} ksjdfkjshdfjs
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -558,7 +533,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: "ksjdfkjshdfjs",
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -577,15 +551,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/not/defined/supported/schemes HTTP/1.1
 Host: {host}
 Authorization: {scheme} {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -605,7 +578,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: 16,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthenticatedModel>(response).ConfigureAwait(false);
@@ -620,14 +593,13 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/empty/defined/supported/scheme HTTP/1.1
 Host: {host}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -645,7 +617,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -662,15 +633,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/empty/defined/supported/scheme HTTP/1.1
 Host: {host}
 Authorization:
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -688,7 +658,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -707,15 +676,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/empty/defined/supported/scheme HTTP/1.1
 Host: {host}
 Authorization: {scheme}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -733,7 +701,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: null,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -752,15 +719,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/empty/defined/supported/scheme HTTP/1.1
 Host: {host}
 Authorization: {scheme} ksjdfkjshdfjs
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -778,7 +744,6 @@ X-CorrelationId: {correlationId}";
                 expectedAuthenticationValue: "ksjdfkjshdfjs",
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "WWW-Authenticate", $"Token realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"Token2 realm=\"Api-Unit-Test\"" },
                     { "WWW-Authenticate", $"EX-500 realm=\"Api-Unit-Test\"" },
@@ -797,15 +762,14 @@ X-CorrelationId: {correlationId}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 HEAD https://{host}/authentication/empty/defined/supported/scheme HTTP/1.1
 Host: {host}
 Authorization: {scheme} {staticToken}
 Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
-Accept: {applicationJson}
-X-CorrelationId: {correlationId}";
+Accept: {applicationJson}";
 
             using var httpContext = new MockHttpContext(this.ServiceProvider, request);
             var apiContext = await Invoke(httpContext).ConfigureAwait(false);
@@ -825,7 +789,7 @@ X-CorrelationId: {correlationId}";
                 expectedContentLength: 16,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<AuthenticatedModel>(response).ConfigureAwait(false);

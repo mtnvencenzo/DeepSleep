@@ -13,13 +13,13 @@
         /// <param name="data">The data.</param>
         /// <param name="simpleMultiPartParameter">The simple multi part parameter.</param>
         /// <param name="simpleMultiPartParameterNullableInt">The simple multi part parameter nullable int.</param>
-        public void Post([BodyBound] MultipartHttpRequest data, string simpleMultiPartParameter, int? simpleMultiPartParameterNullableInt)
+        public void Post([InBody] MultipartHttpRequest data, string simpleMultiPartParameter, int? simpleMultiPartParameterNullableInt)
         {
         }
 
         /// <summary>Posts the custom.</summary>
         /// <param name="data">The data.</param>
-        public void PostCustom([BodyBound] CustomMultiPart data)
+        public void PostCustom([InBody] CustomMultiPart data)
         {
         }
     }

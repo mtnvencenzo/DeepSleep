@@ -16,7 +16,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/default?CustomInt=abc HTTP/1.1
 Host: {host}
@@ -52,7 +52,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/default?queryValue=abc HTTP/1.1
 Host: {host}
@@ -88,7 +88,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/empty?CustomInt=abc HTTP/1.1
 Host: {host}
@@ -121,7 +121,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/empty?queryValue=abc HTTP/1.1
 Host: {host}
@@ -154,7 +154,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/custom/no/replacements?CustomInt=abc HTTP/1.1
 Host: {host}
@@ -190,7 +190,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/custom/no/replacements?queryValue=abc HTTP/1.1
 Host: {host}
@@ -226,7 +226,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/custom/with/replacements?CustomInt=abc HTTP/1.1
 Host: {host}
@@ -262,7 +262,7 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 GET https://{host}/discovery/attribute/validationerror/specified/custom/with/replacements?queryValue=abc HTTP/1.1
 Host: {host}
@@ -337,7 +337,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/empty/deserialization/error HTTP/1.1
 Host: {host}
@@ -373,7 +373,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/custom/deserialization/error HTTP/1.1
 Host: {host}
@@ -413,7 +413,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/450/deserialization/error HTTP/1.1
 Host: {host}
@@ -453,7 +453,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/400/deserialization/error/for/strict HTTP/1.1
 Host: {host}
@@ -493,7 +493,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/discovery/attribute/validationerror/400/deserialization/error/for/common HTTP/1.1
 Host: {host}

@@ -12,7 +12,7 @@
         /// <returns></returns>
         [ApiRoute(new[] { "GET", "PUT", "POST" }, "pipeline/multiple/methods")]
         [ApiRouteRequestValidation(requireContentLengthOnRequestBodyRequests: false)]
-        public MultiMethodsModel MultiMethods([BodyBound] MultiMethodsModel model)
+        public MultiMethodsModel MultiMethods([InBody] MultiMethodsModel model)
         {
             return model ?? new MultiMethodsModel { Value = "Test" };
         }
@@ -22,7 +22,7 @@
         /// <returns></returns>
         [ApiRoute(new[] { "GET", "PUT", "POST" }, "pipeline/multiple/methods/no/auto/head")]
         [ApiRouteEnableHead(enableHeadForGetRequests: false)]
-        public MultiMethodsModel MultiMethodsNoAutoHead([BodyBound] MultiMethodsModel model)
+        public MultiMethodsModel MultiMethodsNoAutoHead([InBody] MultiMethodsModel model)
         {
             return model ?? new MultiMethodsModel { Value = "Test" };
         }

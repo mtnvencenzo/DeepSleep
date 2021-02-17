@@ -19,7 +19,7 @@
         [ApiRoute(new[] { "POST" }, "validators/dataannotations/uri/and/body/{value}")]
         [ApiRouteAllowAnonymous(allowAnonymous: true)]
         [ApiEndpointValidation(validatorType: typeof(DataAnnotationsModelValidator), continuation: ValidationContinuation.OnlyIfValid)]
-        public IApiResponse PostMixedEndpointAndDataAnnotations([UriBound] DataAnnotationsUriModel uri, [BodyBound] DataAnnotationsBodyModel body)
+        public IApiResponse PostMixedEndpointAndDataAnnotations([InUri] DataAnnotationsUriModel uri, [InBody] DataAnnotationsBodyModel body)
         {
             return ApiResponse.NoContent();
         }

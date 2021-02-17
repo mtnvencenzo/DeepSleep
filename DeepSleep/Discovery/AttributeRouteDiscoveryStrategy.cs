@@ -94,18 +94,15 @@
                         var apiRoute = method.GetCustomAttribute<ApiRouteAttribute>(false);
 
                         DeepSleepRequestConfiguration configuration = null;
-                        configuration = this.AssignRouteAttribute(configuration, method.GetCustomAttribute<ApiRouteAttribute>());
                         configuration = this.AssignRouteAllowAnonymousAttribute(configuration, method.GetCustomAttribute<ApiRouteAllowAnonymousAttribute>());
                         configuration = this.AssignRouteCacheDirectiveAttribute(configuration, method.GetCustomAttribute<ApiRouteCacheDirectiveAttribute>());
                         configuration = this.AssignRouteCrossOriginAttribute(configuration, method.GetCustomAttribute<ApiRouteCrossOriginAttribute>());
                         configuration = this.AssignRouteEnableHeadAttribute(configuration, method.GetCustomAttribute<ApiRouteEnableHeadAttribute>());
                         configuration = this.AssignRouteLanguageAttribute(configuration, method.GetCustomAttribute<ApiRouteLanguageSupportAttribute>());
                         configuration = this.AssignRouteRequestValidationAttribute(configuration, method.GetCustomAttribute<ApiRouteRequestValidationAttribute>());
-                        configuration = this.AssignRouteIncludeRequestIdHeaderAttribute(configuration, method.GetCustomAttribute<ApiRouteIncludeRequestIdHeaderAttribute>());
                         configuration = this.AssignRouteValidationErrorConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteValidationErrorConfigurationAttribute>());
                         configuration = this.AssignRouteErrorResponseProviderAttribute(configuration, method.GetCustomAttribute<ApiRouteErrorResponseProviderAttribute>());
                         configuration = this.AssignRouteMediaSerializerConfigurationAttribute(configuration, method.GetCustomAttribute<ApiRouteMediaSerializerConfigurationAttribute>());
-                        configuration = this.AssignRouteUseCorrelationIdHeaderAttribute(configuration, method.GetCustomAttribute<ApiRouteUseCorrelationIdHeaderAttribute>());
 
                         var registration = new DeepSleepRouteRegistration(
                             template: apiRoute.Template,
@@ -122,20 +119,6 @@
             return Task.FromResult(registrations as IList<DeepSleepRouteRegistration>);
         }
 
-        private DeepSleepRequestConfiguration AssignRouteAttribute(DeepSleepRequestConfiguration configuration, ApiRouteAttribute attribute)
-        {
-            if (attribute?.Deprecated == null)
-            {
-                return configuration;
-            }
-
-            var config = configuration ?? new DeepSleepRequestConfiguration();
-
-            config.Deprecated = attribute.Deprecated;
-
-            return config;
-        }
-
         private DeepSleepRequestConfiguration AssignRouteAllowAnonymousAttribute(DeepSleepRequestConfiguration configuration, ApiRouteAllowAnonymousAttribute attribute)
         {
             if (attribute == null)
@@ -146,20 +129,6 @@
             var config = configuration ?? new DeepSleepRequestConfiguration();
 
             config.AllowAnonymous = attribute.AllowAnonymous;
-
-            return config;
-        }
-
-        private DeepSleepRequestConfiguration AssignRouteUseCorrelationIdHeaderAttribute(DeepSleepRequestConfiguration configuration, ApiRouteUseCorrelationIdHeaderAttribute attribute)
-        {
-            if (attribute == null)
-            {
-                return configuration;
-            }
-
-            var config = configuration ?? new DeepSleepRequestConfiguration();
-
-            config.UseCorrelationIdHeader = attribute.UseCorrelationIdHeader;
 
             return config;
         }
@@ -256,20 +225,6 @@
                 AllowRequestBodyWhenNoModelDefined = attribute.AllowRequestBodyWhenNoModelDefined,
                 RequireContentLengthOnRequestBodyRequests = attribute.RequireContentLengthOnRequestBodyRequests
             };
-
-            return config;
-        }
-
-        private DeepSleepRequestConfiguration AssignRouteIncludeRequestIdHeaderAttribute(DeepSleepRequestConfiguration configuration, ApiRouteIncludeRequestIdHeaderAttribute attribute)
-        {
-            if (attribute == null)
-            {
-                return configuration;
-            }
-
-            var config = configuration ?? new DeepSleepRequestConfiguration();
-
-            config.IncludeRequestIdHeaderInResponse = attribute.IncludeRequestIdHeaderInResponse;
 
             return config;
         }

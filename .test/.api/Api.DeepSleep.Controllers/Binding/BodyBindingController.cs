@@ -14,7 +14,7 @@
         /// <summary>Posts the length of for maximum request.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PostForMaxRequestLength([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PostForMaxRequestLength([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -22,7 +22,7 @@
         /// <summary>Puts the length of for maximum request.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PutForMaxRequestLength([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PutForMaxRequestLength([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -30,7 +30,7 @@
         /// <summary>Patches the length of for maximum request.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PatchForMaxRequestLength([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PatchForMaxRequestLength([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -38,7 +38,7 @@
         /// <summary>Posts for bad request format.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PostForBadRequestFormat([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PostForBadRequestFormat([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -46,7 +46,7 @@
         /// <summary>Puts for bad request format.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PutForBadRequestFormat([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PutForBadRequestFormat([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -54,7 +54,7 @@
         /// <summary>Patches for bad request format.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel PatchForBadRequestFormat([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel PatchForBadRequestFormat([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -62,7 +62,7 @@
         /// <summary>Simples the post.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel SimplePost([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel SimplePost([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -70,7 +70,7 @@
         /// <summary>Simples the put.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel SimplePut([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel SimplePut([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -78,7 +78,7 @@
         /// <summary>Simples the patch.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public MaxRequestLengthModel SimplePatch([BodyBound] MaxRequestLengthModel model)
+        public MaxRequestLengthModel SimplePatch([InBody] MaxRequestLengthModel model)
         {
             return model;
         }
@@ -86,7 +86,7 @@
         /// <summary>Simples the patch.</summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public SimpleMultipartRs SimpleMultipart([BodyBound] MultipartHttpRequest model)
+        public SimpleMultipartRs SimpleMultipart([InBody] MultipartHttpRequest model)
         {
             string fileData = null;
             var filesSection = model.Sections.FirstOrDefault(m => m.Name == "Files");
@@ -112,7 +112,7 @@
         /// <summary>Multiparts the custom.</summary>
         /// <param name="request">The request.</param>
         /// <returns></returns>
-        public SimpleMultipartRs MultipartCustom([BodyBound] SimpleMultipartRq request)
+        public SimpleMultipartRs MultipartCustom([InBody] SimpleMultipartRq request)
         {
             string fileData = null;
             var filesSection = request.Files.FirstOrDefault(m => m.Name == "files");

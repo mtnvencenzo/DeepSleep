@@ -44,7 +44,6 @@
             NameValuePairs<string, string> extendedHeaders = null,
             bool shouldBeCancelledReuqest = false,
             string expectedProtocol = "HTTP/1.1",
-            bool expectRequestIdHeader = true,
             bool? expectedAuthenticationResult = null,
             string expectedAuthenticationScheme = null,
             string expectedAuthenticationValue = null,
@@ -87,12 +86,6 @@
                 ? 3 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1)
                 : 5 + (extendedHeaders?.Count ?? 0) + (shouldHaveResponse ? 0 : -1);
 
-            if (expectRequestIdHeader)
-            {
-                expectedHeaderCount++;
-            }
-
-
             var responseHeaderCount = response.Headers.Sum(c => c.Value.Count);
 
             // Check for headers
@@ -111,14 +104,6 @@
             apiContext.Response.Headers.HasHeader("Content-Length").Should().BeTrue();
             apiContext.Response.Headers.GetHeader("Content-Length").Value.Should().Be(assertionContentLength.ToString());
             apiContext.Response.ContentLength.Should().Be(assertionContentLength);
-
-            if (expectRequestIdHeader)
-            {
-                response.Headers.Should().ContainKey("X-RequestId");
-                response.Headers["X-RequestId"].Should().Equal(apiContext.Request.RequestIdentifier);
-                apiContext.Response.Headers.HasHeader("X-RequestId").Should().BeTrue();
-                apiContext.Response.Headers.GetHeader("X-RequestId").Value.Should().Be(apiContext.Request.RequestIdentifier);
-            }
 
             if (response.StatusCode < 500 && apiContext.Request.IsCorsPreflightRequest() == false)
             {
@@ -166,7 +151,14 @@
                 response.Headers.Should().NotContainKey("Content-Type");
                 apiContext.Response.Headers.HasHeader("Content-Type").Should().BeFalse();
 
-                apiContext.Response.ResponseObject.Should().BeNull();
+                if (expectedHttpStatus == 304)
+                {
+                    apiContext.Response.ResponseObject.Should().NotBeNull();
+                }
+                else
+                {
+                    apiContext.Response.ResponseObject.Should().BeNull();
+                }
                 apiContext.Response.ResponseWriter.Should().BeNull();
                 apiContext.Response.ResponseWriterOptions.Should().BeNull();
 

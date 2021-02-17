@@ -71,7 +71,7 @@
         /// <param name="model">The model.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">model</exception>
-        public ReadWriteOverrideModel PostWithReadableTypesTextXml([BodyBound] ReadWriteOverrideModel model)
+        public ReadWriteOverrideModel PostWithReadableTypesTextXml([InBody] ReadWriteOverrideModel model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -97,7 +97,7 @@
         /// <param name="model">The model.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">model</exception>
-        public string PostWithReadableTypesPlainText([BodyBound] string model)
+        public string PostWithReadableTypesPlainText([InBody] string model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -109,7 +109,7 @@
         /// <param name="model">The model.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">model</exception>
-        public string PostWithReadableTypesAllPlusPlainText([BodyBound] string model)
+        public string PostWithReadableTypesAllPlusPlainText([InBody] string model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));

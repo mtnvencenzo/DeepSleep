@@ -21,7 +21,7 @@
         /// <a href="http://www.google.com" />.
         /// </remarks>
         [ApiRoute(httpMethod: "POST", template: "/basic/object/model/no/doc/attributes/{id}")]
-        public BasicObject PostBasicObjectModelNoDocAttributes([BodyBound] BasicObject request, int id)
+        public BasicObject PostBasicObjectModelNoDocAttributes([InBody] BasicObject request, int id)
         {
             return new BasicObject
             {

@@ -64,77 +64,64 @@
                         ? context.Request.Accept
                         : AcceptHeader.All();
 
-                    var isConditionalRequestMatch = ApiCondtionalMatchType.None;
+ 
+                    Encoding acceptEncoding = null;
 
-                    if (string.Equals(context.Request.Method, "get", System.StringComparison.OrdinalIgnoreCase) && context.Request.IsHeadRequest() == false)
+                    if (context.Request.AcceptCharset != null as string)
                     {
-                        isConditionalRequestMatch = context.Request.IsConditionalRequestMatch(context.Response);
-                    }
-
-                    if (isConditionalRequestMatch != ApiCondtionalMatchType.ConditionalGetMatch)
-                    {
-                        Encoding acceptEncoding = null;
-
-                        if (context.Request.AcceptCharset != null as string)
+                        foreach (var value in context.Request.AcceptCharset.Values)
                         {
-                            foreach (var value in context.Request.AcceptCharset.Values)
+                            try
                             {
-                                try
+                                if (!string.IsNullOrWhiteSpace(value.Charset))
                                 {
-                                    if (!string.IsNullOrWhiteSpace(value.Charset))
-                                    {
-                                        acceptEncoding = Encoding.GetEncoding(value.Charset);
-                                    }
-
-                                    if (acceptEncoding != null)
-                                    {
-                                        break;
-                                    }
+                                    acceptEncoding = Encoding.GetEncoding(value.Charset);
                                 }
-                                catch { }
+
+                                if (acceptEncoding != null)
+                                {
+                                    break;
+                                }
                             }
-                        }
-
-                        IMediaSerializerOptions options = new MediaSerializerOptions
-                        {
-                            Culture = context.Request.AcceptCulture,
-                            Encoding = acceptEncoding ?? Encoding.UTF8
-                        };
-
-                        var returnType = context.Response.ResponseObject.GetType();
-
-                        var formatter = await formatterFactory.GetAcceptableFormatter(
-                            objType: returnType,
-                            acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
-                            writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
-                            formatterType: out var formatterType).ConfigureAwait(false);
-
-                        if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
-                        {
-                            var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(context?.RequestServices).ConfigureAwait(false);
-
-                            if (overrides?.Formatters != null)
-                            {
-                                formatter = await formatterFactory.GetAcceptableFormatter(
-                                    objType: returnType,
-                                    acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
-                                    writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
-                                    writeableFormatters: overrides.Formatters,
-                                    formatterType: out formatterType).ConfigureAwait(false);
-                            }
-                        }
-
-                        if (formatter != null)
-                        {
-                            isWriteableResponse = true;
-                            context.Response.ResponseWriter = formatter;
-                            context.Response.ResponseWriterOptions = options;
-                            context.Response.ContentType = formatterType;
+                            catch { }
                         }
                     }
-                    else
+
+                    IMediaSerializerOptions options = new MediaSerializerOptions
                     {
-                        context.Response.StatusCode = 304;
+                        Culture = context.Request.AcceptCulture,
+                        Encoding = acceptEncoding ?? Encoding.UTF8
+                    };
+
+                    var returnType = context.Response.ResponseObject.GetType();
+
+                    var formatter = await formatterFactory.GetAcceptableFormatter(
+                        objType: returnType,
+                        acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                        writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
+                        formatterType: out var formatterType).ConfigureAwait(false);
+
+                    if (context.Configuration.ReadWriteConfiguration?.WriterResolver != null)
+                    {
+                        var overrides = await context.Configuration.ReadWriteConfiguration.WriterResolver(context?.RequestServices).ConfigureAwait(false);
+
+                        if (overrides?.Formatters != null)
+                        {
+                            formatter = await formatterFactory.GetAcceptableFormatter(
+                                objType: returnType,
+                                acceptHeader: context.Configuration?.ReadWriteConfiguration?.AcceptHeaderOverride ?? accept,
+                                writeableMediaTypes: context.Configuration?.ReadWriteConfiguration?.WriteableMediaTypes,
+                                writeableFormatters: overrides.Formatters,
+                                formatterType: out formatterType).ConfigureAwait(false);
+                        }
+                    }
+
+                    if (formatter != null)
+                    {
+                        isWriteableResponse = true;
+                        context.Response.ResponseWriter = formatter;
+                        context.Response.ResponseWriterOptions = options;
+                        context.Response.ContentType = formatterType;
                     }
                 }
 

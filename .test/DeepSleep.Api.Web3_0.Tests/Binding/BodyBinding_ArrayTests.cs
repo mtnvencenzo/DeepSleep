@@ -20,7 +20,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/ilist HTTP/1.1
 Host: {host}
@@ -63,7 +63,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/list HTTP/1.1
 Host: {host}
@@ -106,7 +106,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/array HTTP/1.1
 Host: {host}
@@ -149,7 +149,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/ienumerable HTTP/1.1
 Host: {host}
@@ -194,7 +194,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/icollection HTTP/1.1
 Host: {host}
@@ -242,7 +242,7 @@ Content-Type: {applicationJson}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/list HTTP/1.1
 Host: {host}
@@ -285,7 +285,7 @@ Content-Type: {applicationXml}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/binding/array/array HTTP/1.1
 Host: {host}

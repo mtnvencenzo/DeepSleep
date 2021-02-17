@@ -30,10 +30,6 @@
         /// <value>The caching directive.</value>
         public ApiCacheDirectiveConfiguration CacheDirective { get; set; }
 
-        /// <summary>Gets or sets the use correlation identifier header.</summary>
-        /// <value>The use correlation identifier header.</value>
-        public bool? UseCorrelationIdHeader { get; set; }
-
         /// <summary>Gets or sets the request validation.</summary>
         /// <value>The request validation.</value>
         public ApiRequestValidationConfiguration RequestValidation { get; set; }
@@ -41,14 +37,6 @@
         /// <summary>Gets or sets the language support.</summary>
         /// <value>The language support.</value>
         public ApiLanguageSupportConfiguration LanguageSupport { get; set; }
-
-        /// <summary>Gets or sets a value indicating whether the resource is deprecated.</summary>
-        /// <value><c>true</c> if deprecated; otherwise, <c>false</c>.</value>
-        public bool? Deprecated { get; set; }
-
-        /// <summary>Gets or sets the include request identifier header in response.</summary>
-        /// <value>The include request identifier header in response.</value>
-        public bool? IncludeRequestIdHeaderInResponse { get; set; }
 
         /// <summary>Gets or sets the enable head for get requests.</summary>
         /// <value>The enable head for get requests.</value>

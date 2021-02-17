@@ -300,18 +300,6 @@
                 ?? defaultConfig?.AllowAnonymous
                 ?? systemConfig.AllowAnonymous;
 
-            requestConfig.UseCorrelationIdHeader = endpointConfig?.UseCorrelationIdHeader
-                ?? defaultConfig?.UseCorrelationIdHeader
-                ?? systemConfig.UseCorrelationIdHeader;
-
-            requestConfig.Deprecated = endpointConfig?.Deprecated
-                ?? defaultConfig?.Deprecated
-                ?? systemConfig.Deprecated;
-
-            requestConfig.IncludeRequestIdHeaderInResponse = endpointConfig?.IncludeRequestIdHeaderInResponse
-                ?? defaultConfig?.IncludeRequestIdHeaderInResponse
-                ?? systemConfig.IncludeRequestIdHeaderInResponse;
-
             requestConfig.EnableHeadForGetRequests = endpointConfig?.EnableHeadForGetRequests
                 ?? defaultConfig?.EnableHeadForGetRequests
                 ?? systemConfig.EnableHeadForGetRequests;

@@ -72,10 +72,6 @@
         /// <value>The length of the content.</value>
         public virtual long? ContentLength { get; set; }
 
-        /// <summary>Gets or sets the client specified correlation id for the request.</summary>
-        /// <value>The correlation id.</value>
-        public virtual string CorrelationId { get; set; }
-
         /// <summary>Gets or sets the method.</summary>
         /// <value>The method.</value>
         public virtual string Method { get; set; }
@@ -165,80 +161,6 @@
             }
 
             return false;
-        }
-
-        /// <summary>Determines whether [is conditional request match] [the specified response].</summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        /// <returns></returns>
-        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestInfo request, ApiResponseInfo response)
-        {
-            var etag = response?.Headers.GetValue("ETag");
-            var lastModifiedRaw = response?.Headers.GetValue("Last-Modified");
-
-            DateTimeOffset? lastModified = null;
-            if (DateTimeOffset.TryParse(lastModifiedRaw, out var parsed))
-            {
-                lastModified = parsed;
-            }
-
-            return IsConditionalRequestMatch(request, etag, lastModified);
-        }
-
-        /// <summary>Determines whether [is conditional request match] [the specified etag].</summary>
-        /// <param name="request">The request.</param>
-        /// <param name="etag">The etag.</param>
-        /// <param name="lastModified">The last modified.</param>
-        /// <returns></returns>
-        public static ApiCondtionalMatchType IsConditionalRequestMatch(this ApiRequestInfo request, string etag, DateTimeOffset? lastModified)
-        {
-            var condtionalRequestETag = request.IfMatch;
-            var condtionalRequestLastModfied = request.IfModifiedSince;
-
-            // Conditional Get Request
-            if (!string.IsNullOrWhiteSpace(condtionalRequestETag) || condtionalRequestLastModfied != null)
-            {
-                var match = true;
-                if (!string.IsNullOrWhiteSpace(condtionalRequestETag) && condtionalRequestETag != etag)
-                {
-                    match = false;
-                }
-
-                if (condtionalRequestLastModfied != null && condtionalRequestLastModfied.Value.ToString("r") != lastModified?.ToString("r"))
-                {
-                    match = false;
-                }
-
-                if (match)
-                {
-                    return ApiCondtionalMatchType.ConditionalGetMatch;
-                }
-            }
-
-            // Concurrency Request
-            var currencyRequestETag = request.IfNoneMatch;
-            var currencyRequestLastModfied = request.IfUnmodifiedSince;
-
-            if (!string.IsNullOrWhiteSpace(currencyRequestETag) || currencyRequestLastModfied != null)
-            {
-                var match = true;
-                if (!string.IsNullOrWhiteSpace(currencyRequestETag) && currencyRequestETag == etag)
-                {
-                    match = false;
-                }
-
-                if (currencyRequestLastModfied != null && currencyRequestLastModfied.Value.ToString("r") == lastModified?.ToString("r"))
-                {
-                    match = false;
-                }
-
-                if (match)
-                {
-                    return ApiCondtionalMatchType.ConditionalConcurrencyNoMatch;
-                }
-            }
-
-            return ApiCondtionalMatchType.None;
         }
     }
 }

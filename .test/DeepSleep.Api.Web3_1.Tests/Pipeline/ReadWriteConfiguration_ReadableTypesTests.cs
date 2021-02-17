@@ -20,7 +20,7 @@
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readabletypes/text-xml HTTP/1.1
 Host: {host}
@@ -28,7 +28,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: application/json
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
+
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -46,7 +46,6 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.NotAttempted,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"},
                     { "X-Allow-Content-Types", "text/xml, other/xml" }
                 });
         }
@@ -57,7 +56,7 @@ X-CorrelationId: {correlationId}
         {
             base.SetupEnvironment();
 
-            var correlationId = Guid.NewGuid();
+
             var request = @$"
 POST https://{host}/pipeline/readwrite/configuration/readabletypes/text-xml HTTP/1.1
 Host: {host}
@@ -65,7 +64,7 @@ Connection: keep-alive
 User-Agent: UnitTest/1.0 DEV
 Accept: {textJson}
 Content-Type: {contentType}
-X-CorrelationId: {correlationId}
+
 
 <ReadWriteOverrideModel>
     <AcceptHeader>test</AcceptHeader>
@@ -84,7 +83,7 @@ X-CorrelationId: {correlationId}
                 expectedValidationState: ApiValidationState.Succeeded,
                 extendedHeaders: new NameValuePairs<string, string>
                 {
-                    { "X-CorrelationId", $"{correlationId}"}
+                    
                 });
 
             var data = await base.GetResponseData<ReadWriteOverrideModel>(response).ConfigureAwait(false);

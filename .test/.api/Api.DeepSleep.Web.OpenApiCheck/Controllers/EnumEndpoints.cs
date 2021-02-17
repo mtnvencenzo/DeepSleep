@@ -22,7 +22,7 @@
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [ApiRoute(httpMethod: "POST", template: "/enum/uri/model/no/doc/attributes")]
-        public EnumUriObjectModelRs PostEnumUriObjectNoDocAttributes([UriBound] EnumUriObjectModelRq request)
+        public EnumUriObjectModelRs PostEnumUriObjectNoDocAttributes([InUri] EnumUriObjectModelRq request)
         {
             return new EnumUriObjectModelRs
             {
@@ -41,7 +41,7 @@
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [ApiRoute(httpMethod: "PUT", template: "/enum/uri/model/no/doc/attributes")]
-        public EnumUriObjectModelRs PutEnumUriObjectNoDocAttributes([UriBound] EnumUriObjectModelRq request)
+        public EnumUriObjectModelRs PutEnumUriObjectNoDocAttributes([InUri] EnumUriObjectModelRq request)
         {
             return new EnumUriObjectModelRs
             {
