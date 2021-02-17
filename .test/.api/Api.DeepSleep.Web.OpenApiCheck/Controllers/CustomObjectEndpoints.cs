@@ -74,7 +74,7 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <seealso cref="Api.DeepSleep.Web.OpenApiCheck.Controllers.CustomObjectEndpoints.CustomDescriptionModel" />
+        /// <seealso cref="Api.DeepSleep.Web.OpenApiCheck.Controllers.CustomObjectEndpoints.CustomObjectIdModel" />
         public class CustomObjectIdModel : CustomObjectModel
         {
             /// <summary>Gets or sets the identifier.</summary>
