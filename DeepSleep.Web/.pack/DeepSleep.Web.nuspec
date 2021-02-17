@@ -14,19 +14,7 @@
     <copyright>Copyright 2021</copyright>
     <tags>deepsleep web api rest</tags>
     <dependencies>
-      <group targetFramework="netcoreapp2.0">
-        <dependency id="DeepSleep" version="0.0.11" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
-      </group>
       <group targetFramework="netcoreapp2.1">
-        <dependency id="DeepSleep" version="0.0.11" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework="netcoreapp2.2">
-        <dependency id="DeepSleep" version="0.0.11" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework="netcoreapp3.0">
         <dependency id="DeepSleep" version="0.0.11" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
@@ -48,22 +36,10 @@
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.web.dll" target="lib\netcoreapp3.1" />
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.web.xml" target="lib\netcoreapp3.1" />
     <file src="..\bin\Release\netcoreapp3.1\deepsleep.web.pdb" target="lib\netcoreapp3.1" />
-    
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.web.dll" target="lib\netcoreapp3.0" />
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.web.xml" target="lib\netcoreapp3.0" />
-    <file src="..\bin\Release\netcoreapp3.0\deepsleep.web.pdb" target="lib\netcoreapp3.0" />
-
-    <file src="..\bin\Release\netcoreapp2.2\deepsleep.web.dll" target="lib\netcoreapp2.2" />
-    <file src="..\bin\Release\netcoreapp2.2\deepsleep.web.xml" target="lib\netcoreapp2.2" />
-    <file src="..\bin\Release\netcoreapp2.2\deepsleep.web.pdb" target="lib\netcoreapp2.2" />
 
     <file src="..\bin\Release\netcoreapp2.1\deepsleep.web.dll" target="lib\netcoreapp2.1" />
     <file src="..\bin\Release\netcoreapp2.1\deepsleep.web.xml" target="lib\netcoreapp2.1" />
     <file src="..\bin\Release\netcoreapp2.1\deepsleep.web.pdb" target="lib\netcoreapp2.1" />
-
-    <file src="..\bin\Release\netcoreapp2.0\deepsleep.web.dll" target="lib\netcoreapp2.0" />
-    <file src="..\bin\Release\netcoreapp2.0\deepsleep.web.xml" target="lib\netcoreapp2.0" />
-    <file src="..\bin\Release\netcoreapp2.0\deepsleep.web.pdb" target="lib\netcoreapp2.0" />
     
     <file src="..\.pack\deepsleep_web.png" target="images\" />
   </files>
