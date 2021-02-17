@@ -43,7 +43,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.DeepSleep.Web.OpenApiCh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Api.OpenApiCheckTests", "Api.Tests\DeepSleep.Api.OpenApiCheckTests\DeepSleep.Api.OpenApiCheckTests.csproj", "{21BF9E95-F27B-4936-B685-D481C44D7DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.DeepSleep.Web.WebApiCheck", ".test\.api\Api.DeepSleep.Web.WebApiCheck\Api.DeepSleep.Web.WebApiCheck.csproj", "{B9F5174D-2AC0-4C5A-A14A-4242BE95B0E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.DeepSleep.Web.WebApiCheck", ".test\.api\Api.DeepSleep.Web.WebApiCheck\Api.DeepSleep.Web.WebApiCheck.csproj", "{B9F5174D-2AC0-4C5A-A14A-4242BE95B0E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{7F01DE59-70C5-489B-8EEE-195945959D18}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
