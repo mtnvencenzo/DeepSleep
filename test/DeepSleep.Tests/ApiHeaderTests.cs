@@ -14,6 +14,7 @@
             headers.SetValue("X-Test1", "test");
 
             headers.Should().BeNull();
+
         }
 
         [Fact]
