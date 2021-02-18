@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>DeepSleep.Api.Web.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="Moq" Version="4.16.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,7 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DeepSleep.Web\DeepSleep.Web.csproj" />
+    <ProjectReference Include="..\..\src\DeepSleep.Web\DeepSleep.Web.csproj" />
+    <ProjectReference Include="..\Api.DeepSleep.Web5_0\Api.DeepSleep.Web5_0.csproj" />
+    <ProjectReference Include="..\DeepSleep.Api.Web.TestBase\DeepSleep.Api.Web.TestBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

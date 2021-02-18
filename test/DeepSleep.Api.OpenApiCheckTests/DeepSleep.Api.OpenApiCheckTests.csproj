@@ -47,10 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\.test\.api\Api.DeepSleep.Web.OpenApiCheck\Api.DeepSleep.Web.OpenApiCheck.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="_resources\TestResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -74,6 +70,10 @@
   <ItemGroup>
     <Folder Include="v2\Clients\" />
     <Folder Include="v3\Clients\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Api.DeepSleep.Web.OpenApiCheck\Api.DeepSleep.Web.OpenApiCheck.csproj" />
   </ItemGroup>
 
 </Project>
