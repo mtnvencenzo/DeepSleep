@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DeepSleep.Web\DeepSleep.Web.csproj" />
+    <ProjectReference Include="..\..\src\DeepSleep.Web\DeepSleep.Web.csproj" />
   </ItemGroup>
 
 </Project>

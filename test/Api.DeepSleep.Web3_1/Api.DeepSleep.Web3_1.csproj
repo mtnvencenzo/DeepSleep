@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DeepSleep.Web\DeepSleep.Web.csproj" />
+    <ProjectReference Include="..\..\src\DeepSleep.Web\DeepSleep.Web.csproj" />
     <ProjectReference Include="..\Api.DeepSleep.Controllers\Api.DeepSleep.Controllers.csproj" />
     <ProjectReference Include="..\Api.DeepSleep.Models\Api.DeepSleep.Models.csproj" />
   </ItemGroup>
