@@ -11,6 +11,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  disable.coverage.autogenerate: true
 
 steps:
 - task: UseDotNet@2
