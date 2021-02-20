@@ -65,7 +65,7 @@ steps:
   displayName: 'nuget pack DeepSleep'
   inputs:
     command: pack
-    packagesToPack: src/DeelSleep/.pack/DeepSleep.nuspec
+    packagesToPack: src/DeepSleep/.pack/DeepSleep.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep'
   inputs:
@@ -78,7 +78,7 @@ steps:
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
     command: pack
-    packagesToPack: src/DeelSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
+    packagesToPack: src/DeepSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep.OpenApi'
   inputs:
@@ -91,7 +91,7 @@ steps:
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
     command: pack
-    packagesToPack: src/DeelSleep.Web/.pack/DeepSleep.Web.nuspec
+    packagesToPack: src/DeepSleep.Web/.pack/DeepSleep.Web.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep.Web'
   inputs:
