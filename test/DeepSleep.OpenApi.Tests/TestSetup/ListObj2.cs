@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Tests.OpenApi.TestSetup
+﻿namespace DeepSleep.OpenApi.Tests.TestSetup
 {
     public class ListObj2
     {

@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Web.Controllers
+﻿namespace DeepSleep.OpenApi.Controllers
 {
     using DeepSleep.OpenApi;
     using Microsoft.OpenApi;

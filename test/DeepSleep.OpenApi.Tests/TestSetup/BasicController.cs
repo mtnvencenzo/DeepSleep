@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.Tests.OpenApi.TestSetup
+﻿namespace DeepSleep.OpenApi.Tests.TestSetup
 {
     using DeepSleep.OpenApi.Decorators;
     using System;

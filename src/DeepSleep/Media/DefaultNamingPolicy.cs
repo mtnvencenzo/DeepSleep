@@ -1,4 +1,4 @@
-﻿namespace DeepSleep.OpenApi
+﻿namespace DeepSleep.Media
 {
     using System.Text.Json;
 
@@ -6,7 +6,7 @@
     /// 
     /// </summary>
     /// <seealso cref="System.Text.Json.JsonNamingPolicy" />
-    public class OasDefaultNamingPolicy : JsonNamingPolicy
+    public class DefaultNamingPolicy : JsonNamingPolicy
     {
         /// <summary>When overridden in a derived class, converts the specified name according to the policy.</summary>
         /// <param name="name">The name to convert.</param>

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DeepSleep.OpenApi\DeepSleep.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\DeepSleep\DeepSleep.csproj" />
     <ProjectReference Include="..\Api.DeepSleep.Models\Api.DeepSleep.Models.csproj" />
   </ItemGroup>

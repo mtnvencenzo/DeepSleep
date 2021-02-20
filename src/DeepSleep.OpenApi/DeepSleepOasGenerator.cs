@@ -5,6 +5,7 @@
     using DeepSleep.OpenApi.Decorators;
     using DeepSleep.OpenApi.Extensions;
     using DeepSleep.Pipeline;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OpenApi;
     using Microsoft.OpenApi.Any;
     using Microsoft.OpenApi.Interfaces;
@@ -73,11 +74,11 @@
 
                 this.configurationProvider.NamingPolicy = this.configurationProvider.NamingPolicy 
                     ?? jsonConfiguration?.SerializerOptions?.PropertyNamingPolicy 
-                    ?? new OasDefaultNamingPolicy();
+                    ?? new DefaultNamingPolicy();
 
                 this.configurationProvider.EnumNamingPolicy = this.configurationProvider.EnumNamingPolicy
                     ?? OasHelpers.GetEnumNamingPolicy(jsonConfiguration?.SerializerOptions)
-                    ?? new OasDefaultNamingPolicy();
+                    ?? new DefaultNamingPolicy();
             }
         }
 

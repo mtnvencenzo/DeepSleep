@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{7F01DE59-7
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
-		.nuget\NuGet.Config = .nuget\NuGet.Config
+		NuGet.Config = NuGet.Config
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -44,6 +44,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Tests", "test\DeepSleep.Tests\DeepSleep.Tests.csproj", "{AC9459E0-9CCF-4F4D-95F9-2FC913308FD3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.Web.Tests", "test\DeepSleep.Web.Tests\DeepSleep.Web.Tests.csproj", "{AA51A6A3-69F1-46E7-8AD8-A97E2CABADCB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".samples", ".samples", "{774EBA0B-A36B-46DD-B556-0933338755F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.Simple.Api", "samples\Samples.Simple.Api\Samples.Simple.Api.csproj", "{3B2F0C69-0F0C-4439-A392-210091828034}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepSleep.OpenApi", "src\DeepSleep.OpenApi\DeepSleep.OpenApi.csproj", "{2E80FD42-77EB-4DF7-910F-B2320A721413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepSleep.OpenApi.Tests", "test\DeepSleep.OpenApi.Tests\DeepSleep.OpenApi.Tests.csproj", "{572A248D-97CA-47E0-BD46-87A1C0FC71E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +119,18 @@ Global
 		{AA51A6A3-69F1-46E7-8AD8-A97E2CABADCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA51A6A3-69F1-46E7-8AD8-A97E2CABADCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA51A6A3-69F1-46E7-8AD8-A97E2CABADCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B2F0C69-0F0C-4439-A392-210091828034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B2F0C69-0F0C-4439-A392-210091828034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B2F0C69-0F0C-4439-A392-210091828034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2F0C69-0F0C-4439-A392-210091828034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E80FD42-77EB-4DF7-910F-B2320A721413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E80FD42-77EB-4DF7-910F-B2320A721413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E80FD42-77EB-4DF7-910F-B2320A721413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E80FD42-77EB-4DF7-910F-B2320A721413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{572A248D-97CA-47E0-BD46-87A1C0FC71E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{572A248D-97CA-47E0-BD46-87A1C0FC71E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{572A248D-97CA-47E0-BD46-87A1C0FC71E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{572A248D-97CA-47E0-BD46-87A1C0FC71E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +150,8 @@ Global
 		{DE308F1A-4196-4DDF-9D3B-BEC885389F8F} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{AC9459E0-9CCF-4F4D-95F9-2FC913308FD3} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 		{AA51A6A3-69F1-46E7-8AD8-A97E2CABADCB} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
+		{3B2F0C69-0F0C-4439-A392-210091828034} = {774EBA0B-A36B-46DD-B556-0933338755F9}
+		{572A248D-97CA-47E0-BD46-87A1C0FC71E4} = {DFEBD416-C35F-45CF-89E8-29BD52268577}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8628A44-548F-4E07-8852-1C13652D7637}
