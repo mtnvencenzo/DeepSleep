@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DeepSleep.OpenApi\DeepSleep.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\DeepSleep.Web\DeepSleep.Web.csproj" />
   </ItemGroup>
 

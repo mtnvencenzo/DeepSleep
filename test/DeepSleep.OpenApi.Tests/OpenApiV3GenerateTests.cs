@@ -1,9 +1,9 @@
-namespace DeepSleep.Tests.OpenApi
+namespace DeepSleep.OpenApi.Tests
 {
     using DeepSleep.Configuration;
     using DeepSleep.Discovery;
     using DeepSleep.OpenApi;
-    using DeepSleep.Tests.OpenApi.TestSetup;
+    using DeepSleep.OpenApi.Tests.TestSetup;
     using Microsoft.OpenApi;
     using Microsoft.OpenApi.Extensions;
     using Microsoft.OpenApi.Models;

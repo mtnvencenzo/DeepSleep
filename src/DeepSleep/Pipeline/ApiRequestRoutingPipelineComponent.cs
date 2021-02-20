@@ -275,7 +275,7 @@
         /// <param name="defaultConfig">The default configuration.</param>
         /// <param name="endpointConfig">The endpoint configuration.</param>
         /// <returns></returns>
-        internal static IDeepSleepRequestConfiguration MergeConfigurations(
+        public static IDeepSleepRequestConfiguration MergeConfigurations(
             IServiceProvider serviceProvider,
             IDeepSleepRequestConfiguration defaultConfig,
             IDeepSleepRequestConfiguration endpointConfig)

@@ -6,7 +6,6 @@
     using DeepSleep.Media.Converters;
     using DeepSleep.Media.Serializers;
     using DeepSleep.Health;
-    using DeepSleep.OpenApi;
     using DeepSleep.Pipeline;
     using DeepSleep.Validation;
     using DeepSleep.Web.Controllers;
@@ -43,36 +42,22 @@
 
 
             // ---------------------------------
-            // Setup Ping Endpoint if being used
+            // Setup endpoints registered suring startup
             // ---------------------------------
-            IPingEndpointConfigurationProvider pingConfiguration = null;
+            IEnumerable<IDeepSleepSingleRouteRegistrationProvider> singleRouteProviders = new List<IDeepSleepSingleRouteRegistrationProvider>();
 
             try
             {
-                pingConfiguration = builder.ApplicationServices.GetService<IPingEndpointConfigurationProvider>();
+                singleRouteProviders = builder.ApplicationServices.GetServices<IDeepSleepSingleRouteRegistrationProvider>();
             }
             catch { }
 
-            if (pingConfiguration != null)
+            if (singleRouteProviders != null)
             {
-                AddPingEndpoint(routingTable, pingConfiguration);
-            }
-
-
-            // ---------------------------------
-            // Setup OpenApi Endpoint(s) if being used
-            // ---------------------------------
-            IDeepSleepOasConfigurationProvider openApiConfiguration = null;
-
-            try
-            {
-                openApiConfiguration = builder.ApplicationServices.GetService<IDeepSleepOasConfigurationProvider>();
-            }
-            catch { }
-
-            if (openApiConfiguration != null)
-            {
-                AddOpenApiEndpoints(routingTable, openApiConfiguration);
+                foreach (var singleRouteProvider in singleRouteProviders)
+                {
+                    routingTable.AddRoute(singleRouteProvider.GetRouteRegistration());
+                }
             }
 
             // ---------------------------------
@@ -209,7 +194,6 @@
             return services;
         }
 
-
         /// <summary>Gets the default routing table.</summary>
         /// <returns></returns>
         private static IApiRoutingTable GetDefaultRoutingTable()
@@ -254,78 +238,6 @@
                     routingTable.AddRoute(registration);
                 }
             }
-        }
-
-        /// <summary>Adds the open API endpoints.</summary>
-        /// <param name="routingTable">The routing table.</param>
-        /// <param name="openApiConfiguration">The open API configuration.</param>
-        private static void AddOpenApiEndpoints(IApiRoutingTable routingTable, IDeepSleepOasConfigurationProvider openApiConfiguration)
-        {
-            Action<string, string> add = (string endpoint, string template) =>
-            {
-                routingTable.AddRoute(new DeepSleepRouteRegistration(
-                    template: template,
-                    httpMethods: new[] { "GET" },
-                    controller: Type.GetType(typeof(OasController).AssemblyQualifiedName),
-                    endpoint: endpoint,
-                    config: new DeepSleepRequestConfiguration
-                    {
-                        AllowAnonymous = true,
-                        ReadWriteConfiguration = new ApiMediaSerializerConfiguration
-                        {
-                            AcceptHeaderFallback = "application/json; q=1.0, application/yaml; q=0.9",
-                            WriterResolver = (serviceProvider) =>
-                            {
-                                var jsonFormatter = serviceProvider.GetService<DeepSleepOasJsonFormatter>();
-                                var yamlFormatter = serviceProvider.GetService<DeepSleepOasYamlFormatter>();
-
-                                return Task.FromResult(new MediaSerializerWriteOverrides(new List<IDeepSleepMediaSerializer>
-                                {
-                                    jsonFormatter,
-                                    yamlFormatter
-                                }));
-                            }
-                        }
-                    }));
-            };
-
-            if (!string.IsNullOrWhiteSpace(openApiConfiguration.V2RouteTemplate))
-            {
-                add(nameof(OasController.DocV2), openApiConfiguration.V2RouteTemplate);
-            }
-
-            if (!string.IsNullOrWhiteSpace(openApiConfiguration.V3RouteTemplate))
-            {
-                add(nameof(OasController.DocV3), openApiConfiguration.V3RouteTemplate);
-            }
-        }
-
-        /// <summary>Adds the ping endpoint.</summary>
-        /// <param name="table">The table.</param>
-        /// <param name="pingConfiguration">The ping configuration.</param>
-        private static void AddPingEndpoint(IApiRoutingTable table, IPingEndpointConfigurationProvider pingConfiguration)
-        {
-            string template = pingConfiguration?.Template ?? "ping";
-
-            table.AddRoute(new DeepSleepRouteRegistration(
-               template: template,
-               httpMethods: new[] { "GET" },
-               controller: typeof(PingController),
-               endpoint: nameof(PingController.Ping),
-               config: new DeepSleepRequestConfiguration
-               {
-                   AllowAnonymous = true,
-                   CacheDirective = new ApiCacheDirectiveConfiguration
-                   {
-                       Cacheability = HttpCacheType.NoCache,
-                       CacheLocation = HttpCacheLocation.Private,
-                       ExpirationSeconds = -1
-                   },
-                   CrossOriginConfig = new ApiCrossOriginConfiguration
-                   {
-                       AllowedOrigins = new string[] { "*" }
-                   }
-               }));
         }
 
         /// <summary>Writes the deepsleep to console.</summary>
@@ -496,7 +408,7 @@
 
             settings.Converters.Add(new NullableBooleanConverter());
             settings.Converters.Add(new BooleanConverter());
-            settings.Converters.Add(new JsonStringEnumConverter(namingPolicy: new OasDefaultNamingPolicy(), allowIntegerValues: true));
+            settings.Converters.Add(new JsonStringEnumConverter(namingPolicy: new DefaultNamingPolicy(), allowIntegerValues: true));
             settings.Converters.Add(new NullableTimeSpanConverter());
             settings.Converters.Add(new TimeSpanConverter());
             settings.Converters.Add(new NullableDateTimeConverter());
@@ -530,7 +442,6 @@
             Console.WriteLine(@"              /_        \o========o/        _\");
             Console.WriteLine(@"                `--...__|`-._  _.-'|__...--'");
             Console.WriteLine(@"                        |    `'    |");
-
 
             Console.WriteLine("");
             Console.WriteLine(@"                 May the fourth be with you!");

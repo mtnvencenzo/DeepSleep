@@ -77,22 +77,27 @@
 
         /// <summary>Gets the method information.</summary>
         /// <value>The method information.</value>
-        internal MethodInfo MethodInfo { get; }
+        [JsonIgnore]
+        public MethodInfo MethodInfo { get; }
 
         /// <summary>Gets the URI parameter.</summary>
         /// <value>The URI parameter.</value>
+        [JsonIgnore]
         internal Type UriParameterType { get; }
 
         /// <summary>Gets the body parameter.</summary>
         /// <value>The body parameter.</value>
+        [JsonIgnore]
         internal Type BodyParameterType { get; }
 
         /// <summary>Gets the simple parameters.</summary>
         /// <value>The simple parameters.</value>
-        internal IList<ParameterInfo> SimpleParameters { get; }
+        [JsonIgnore]
+        public IList<ParameterInfo> SimpleParameters { get; }
 
         /// <summary>Gets the type of the method return.</summary>
         /// <value>The type of the method return.</value>
+        [JsonIgnore]
         internal Type MethodReturnType { get; }
 
         /// <summary>Gets the type of the endpoint return.</summary>

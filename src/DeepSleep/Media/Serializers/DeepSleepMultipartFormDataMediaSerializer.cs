@@ -1,6 +1,5 @@
 ﻿namespace DeepSleep.Media.Serializers
 {
-    using Microsoft.OpenApi.Models;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -48,11 +47,6 @@
         public override bool CanHandleType(Type type)
         {
             if (type == null)
-            {
-                return false;
-            }
-
-            if (Type.GetType(type.AssemblyQualifiedName) == Type.GetType(typeof(OpenApiDocument).AssemblyQualifiedName))
             {
                 return false;
             }

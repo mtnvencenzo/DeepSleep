@@ -15,38 +15,88 @@ variables:
 
 steps:
 - task: UseDotNet@2
+  displayName: 'Use NetCore 3.1.x'
   inputs:
     packageType: 'sdk'
     version: '3.1.x'
 - task: UseDotNet@2
+  displayName: 'Use NetCore 5.0.x'
   inputs:
     packageType: 'sdk'
     version: '5.0.x'
 - task: DotNetCoreCLI@2
+  displayName: 'Restore'
   inputs:
     command: 'restore'
     projects: '**/*.sln'
     feedsToUse: 'config'
-    nugetConfigPath: '.nuget/NuGet.Config'
+    nugetConfigPath: 'NuGet.Config'
 - task: DotNetCoreCLI@2
+  displayName: 'Build'
   inputs:
     command: 'build'
     projects: 'DeepSleep.sln'
     arguments: '--configuration $(BuildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: 'Test'
   inputs:
     command: 'test'
     projects: '**/*[Tt]ests/*.csproj'
     arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" --no-build'
     publishTestResults: false
 - task: reportgenerator@4
+  displayName: 'Generate Code Coverage'
   inputs:
     reports: '$(Build.SourcesDirectory)/**/*.cobertura.xml'
     targetdir: '$(Build.SourcesDirectory)/CodeCoverage'
     reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
     classfilters: '+*;-DeepSleep.Api.*;-Api.DeepSleep.*'
 - task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage'
   inputs:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
     reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+- task: NuGetToolInstaller@1
+  displayName: 'Use NuGet '
+  inputs:
+    checkLatest: true
+- task: NuGetCommand@2
+  displayName: 'nuget pack DeepSleep'
+  inputs:
+    command: pack
+    packagesToPack: src/DeelSleep/.pack/DeepSleep.nuspec
+- task: NuGetCommand@2
+  displayName: 'nuget push DeepSleep'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
+    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
+    allowPackageConflicts: true
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: NuGetCommand@2
+  displayName: 'nuget pack DeepSleep.OpenApi'
+  inputs:
+    command: pack
+    packagesToPack: src/DeelSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
+- task: NuGetCommand@2
+  displayName: 'nuget push DeepSleep.OpenApi'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg'
+    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
+    allowPackageConflicts: true
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: NuGetCommand@2
+  displayName: 'nuget pack DeepSleep.Web'
+  inputs:
+    command: pack
+    packagesToPack: src/DeelSleep.Web/.pack/DeepSleep.Web.nuspec
+- task: NuGetCommand@2
+  displayName: 'nuget push DeepSleep.Web'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg'
+    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
+    allowPackageConflicts: true
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))

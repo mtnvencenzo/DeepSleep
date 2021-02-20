@@ -1,16 +1,13 @@
 namespace Api.DeepSleep.Web5_0
 {
     using Api.DeepSleep.Controllers;
-    using global::DeepSleep;
-    using global::DeepSleep.Configuration;
-    using global::DeepSleep.Validation;
+    using global::DeepSleep.OpenApi;
     using global::DeepSleep.Web;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public class Startup
@@ -45,7 +42,7 @@ namespace Api.DeepSleep.Web5_0
 
             services
                 .AddLogging()
-                .UseDeepSleepPingEndpoint("ping")
+                .UseDeepSleepPingEndpoint()
                 .UseDeepSleepJsonNegotiation()
                 .UseDeepSleepXmlNegotiation()
                 .UseDeepSleepMultipartFormDataNegotiation()
