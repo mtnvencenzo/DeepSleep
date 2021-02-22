@@ -57,13 +57,6 @@
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
 
-#if DEBUG
-            var previousForeColor = Console.ForegroundColor;
-            Console.Write($"{context.Runtime.Duration.UtcStart.ToString("yyyy-MM-ddT HH:mm:ss.fffzzz", CultureInfo.CurrentCulture)} ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{context.Request.Method.ToUpper()} {context.Request.RequestUri} {context.Request.Protocol}");
-            Console.ForegroundColor = previousForeColor;
-#endif
             var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IDeepSleepRequestConfiguration)) as IDeepSleepRequestConfiguration;
 
             await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, defaultRequestConfiguration);
@@ -870,20 +863,6 @@
 
                 // Merge status code to the http response
                 httpcontext.Response.StatusCode = context.Response.StatusCode;
-
-                if (context.Response.StatusCode == 450)
-                {
-                    try
-                    {
-                        var feature = httpcontext?.Response?.HttpContext?.Features?.Get<IHttpResponseFeature>();
-                        if (feature != null)
-                        {
-                            feature.ReasonPhrase = "Bad Request Format";
-                        }
-                    }
-                    catch { }
-                }
-
  
                 if (context.Response.ResponseWriter != null && context.Response.ResponseWriterOptions != null)
                 {

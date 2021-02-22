@@ -31,6 +31,10 @@
         /// <value>The paths to exclude.</value>
         public IList<string> ExcludePaths { get; set; }
 
+        /// <summary>Gets or sets the route prefix.</summary>
+        /// <value>The route prefix.</value>
+        public string RoutePrefix { get; set; }
+
         /// <summary>Gets or sets a value indicating whether [write console header].</summary>
         /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>
         public bool WriteConsoleHeader { get; set; } = false;

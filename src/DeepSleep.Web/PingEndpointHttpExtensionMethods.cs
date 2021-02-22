@@ -30,31 +30,31 @@
                 configure(configuration);
             }
 
-            services.AddTransient<PingController>();
-            services.AddTransient<IDeepSleepSingleRouteRegistrationProvider, PingRouteRegistrationProvider>((p) =>
-            {
-                return new PingRouteRegistrationProvider(new DeepSleepRouteRegistration(
-                   template: configuration?.Template ?? "ping",
-                   httpMethods: new[] { "GET" },
-                   controller: typeof(PingController),
-                   endpoint: nameof(PingController.Ping),
-                   config: new DeepSleepRequestConfiguration
-                   {
-                       AllowAnonymous = true,
-                       CacheDirective = new ApiCacheDirectiveConfiguration
+            return services
+                .AddTransient<PingController>()
+                .AddTransient<IDeepSleepSingleRouteRegistrationProvider>((p) =>
+                {
+                    return new DeepSleepSingleRouteRegistrationProvider(new DeepSleepRouteRegistration(
+                       template: configuration?.Template ?? "ping",
+                       httpMethods: new[] { "GET" },
+                       controller: typeof(PingController),
+                       endpoint: nameof(PingController.Ping),
+                       config: new DeepSleepRequestConfiguration
                        {
-                           Cacheability = HttpCacheType.NoCache,
-                           CacheLocation = HttpCacheLocation.Private,
-                           ExpirationSeconds = -1
-                       },
-                       CrossOriginConfig = new ApiCrossOriginConfiguration
-                       {
-                           AllowedOrigins = new string[] { "*" }
-                       }
-                   }));
-            });
-
-            return services;
+                           AllowAnonymous = true,
+                           EnableHeadForGetRequests = false,
+                           CacheDirective = new ApiCacheDirectiveConfiguration
+                           {
+                               Cacheability = HttpCacheType.NoCache,
+                               CacheLocation = HttpCacheLocation.Private,
+                               ExpirationSeconds = -1
+                           },
+                           CrossOriginConfig = new ApiCrossOriginConfiguration
+                           {
+                               AllowedOrigins = new string[] { "*" }
+                           }
+                       }));
+                });
         }
     }
 }

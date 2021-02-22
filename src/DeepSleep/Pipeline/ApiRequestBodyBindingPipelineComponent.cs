@@ -194,7 +194,7 @@
                             else
                             {
                                 context.AddValidationError(context.Configuration?.ValidationErrorConfiguration?.RequestDeserializationError);
-                                context.Response.StatusCode = context.Configuration?.ValidationErrorConfiguration?.BodyDeserializationErrorStatusCode ?? 400;
+                                context.Response.StatusCode = 400;
                             }
 
                             return false;

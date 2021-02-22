@@ -10,8 +10,5 @@
 
         /// <summary>The strict HTTP specification</summary>
         StrictHttpSpecification = 2,
-
-        /// <summary>The common HTTP specification with custom deserialization status</summary>
-        CommonHttpSpecificationWithCustomDeserializationStatus = 3
     }
 }

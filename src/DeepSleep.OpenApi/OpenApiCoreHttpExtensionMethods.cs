@@ -22,9 +22,9 @@
         /// <returns></returns>
         public static IServiceCollection UseDeepSleepOpenApi(
             this IServiceCollection services,
-            Action<IDeepSleepOasConfigurationProvider> configure = null)
+            Action<IDeepSleepOasConfiguration> configure = null)
         {
-            var configuration = new DeepSleepOasConfigurationProvider
+            var configuration = new DeepSleepOasConfiguration
             {
                 Info = new OpenApiInfo
                 {
@@ -65,6 +65,7 @@
                     config: new DeepSleepRequestConfiguration
                     {
                         AllowAnonymous = true,
+                        EnableHeadForGetRequests = false,
                         ReadWriteConfiguration = new ApiMediaSerializerConfiguration
                         {
                             AcceptHeaderFallback = "application/json; q=1.0, application/yaml; q=0.9",
@@ -85,22 +86,22 @@
 
             if (!string.IsNullOrWhiteSpace(configuration.V2RouteTemplate))
             {
-                services.AddTransient<IDeepSleepSingleRouteRegistrationProvider, OasV2RouteRegistrationProvider>((p) =>
+                services.AddTransient<IDeepSleepSingleRouteRegistrationProvider>((p) =>
                 {
-                    return new OasV2RouteRegistrationProvider(getRoute(nameof(OasController.DocV2), configuration.V2RouteTemplate));
+                    return new DeepSleepSingleRouteRegistrationProvider(getRoute(nameof(OasController.DocV2), configuration.V2RouteTemplate));
                 });
             }
 
             if (!string.IsNullOrWhiteSpace(configuration.V3RouteTemplate))
             {
-                services.AddTransient<IDeepSleepSingleRouteRegistrationProvider, OasV2RouteRegistrationProvider>((p) =>
+                services.AddTransient<IDeepSleepSingleRouteRegistrationProvider>((p) =>
                 {
-                    return new OasV2RouteRegistrationProvider(getRoute(nameof(OasController.DocV3), configuration.V3RouteTemplate));
+                    return new DeepSleepSingleRouteRegistrationProvider(getRoute(nameof(OasController.DocV3), configuration.V3RouteTemplate));
                 });
             }
 
             return services
-                .AddSingleton<IDeepSleepOasConfigurationProvider>(configuration)
+                .AddSingleton<IDeepSleepOasConfiguration>(configuration)
                 .AddScoped<IDeepSleepOasGenerator, DeepSleepOasGenerator>()
                 .AddScoped<DeepSleepOasJsonFormatter>()
                 .AddScoped<DeepSleepOasYamlFormatter>()

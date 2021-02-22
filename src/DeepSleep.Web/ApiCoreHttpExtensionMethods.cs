@@ -81,7 +81,6 @@
         /// <returns></returns>
         public static IServiceCollection UseDeepSleepServices(this IServiceCollection services, Action<IDeepSleepServiceConfiguration> configure = null)
         {
-            var routingTable = new ApiRoutingTable();
             var configuration = new DeepSleepServiceConfiguration
             {
                 DefaultRequestConfiguration = ApiRequestContext.GetDefaultRequestConfiguration(),
@@ -97,6 +96,9 @@
 
             configuration.DefaultRequestConfiguration = configuration.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration();
             configuration.ExcludePaths = configuration.ExcludePaths ?? new List<string>();
+
+
+            var routingTable = new ApiRoutingTable(routePrefix: configuration.RoutePrefix);
 
             services
                 .AddScoped<IApiRequestContextResolver, ApiRequestContextResolver>()
@@ -194,13 +196,6 @@
             return services;
         }
 
-        /// <summary>Gets the default routing table.</summary>
-        /// <returns></returns>
-        private static IApiRoutingTable GetDefaultRoutingTable()
-        {
-            return new ApiRoutingTable();
-        }
-
         /// <summary>Discovers the routes.</summary>
         /// <param name="builder">The builder.</param>
         /// <param name="routingTable">The routing table.</param>
@@ -245,37 +240,12 @@
         /// <param name="defaultConfiguration">The default configuration.</param>
         internal static void WriteDeepSleepToConsole(IApiRoutingTable routingTable, IDeepSleepRequestConfiguration defaultConfiguration)
         {
-            var deepSleepNetCoreAssembly = Assembly.GetExecutingAssembly();
             var systemConfiguration = ApiRequestContext.GetDefaultRequestConfiguration();
-
-            var deepSleepNetCoreTargetFrameworkAttribute = deepSleepNetCoreAssembly
-                .GetCustomAttributes(true)
-                .OfType<TargetFrameworkAttribute>()
-                .FirstOrDefault();
-
-            var deepSleepNetCoreTargetDisplay = !string.IsNullOrWhiteSpace(deepSleepNetCoreTargetFrameworkAttribute?.FrameworkName)
-                ? deepSleepNetCoreTargetFrameworkAttribute.FrameworkName
-                : deepSleepNetCoreTargetFrameworkAttribute?.FrameworkDisplayName;
-
-            var deepSleepNetCoreAssemblyName = deepSleepNetCoreAssembly.GetName();
-            var deepSleepNetCoreVersion = deepSleepNetCoreAssemblyName.Version;
-
-
-            var deepSleepAssembly = Assembly.GetAssembly(typeof(ApiRequestContext));
-
-            var deepSleepTargetFrameworkAttribute = deepSleepAssembly
-                .GetCustomAttributes(true)
-                .OfType<TargetFrameworkAttribute>()
-                .FirstOrDefault();
-
-            var deepSleepTargetDisplay = !string.IsNullOrWhiteSpace(deepSleepTargetFrameworkAttribute?.FrameworkName)
-                ? deepSleepTargetFrameworkAttribute.FrameworkName
-                : deepSleepTargetFrameworkAttribute?.FrameworkDisplayName;
-
-            var deepSleepAssemblyName = deepSleepAssembly.GetName();
-            var deepSleepVersion = deepSleepAssemblyName.Version;
-
             var existingColor = Console.ForegroundColor;
+
+            var deepSleepAssemblyInfo = GetAssemplyInfo(typeof(ApiRequestContext));
+            var deepSleepWebAssemblyInfo = GetAssemplyInfo(typeof(ApiCoreHttpExtensionMethods));
+            var deepSleepOpenApiAssemblyInfo = GetAssemplyInfo(Type.GetType("DeepSleep.OpenApi.DeepSleepOasGenerator, deepsleep.openapi", false, false));
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($@"");
@@ -286,10 +256,10 @@
             Console.Write($@"              |_|               |_|  ");
             Console.ForegroundColor = existingColor;
 
-            Console.WriteLine($"   v{deepSleepVersion}");
+            Console.WriteLine($"   v{deepSleepAssemblyInfo.version}");
             Console.WriteLine($"");
 
-            if (!string.IsNullOrWhiteSpace(deepSleepNetCoreTargetDisplay))
+            if (!string.IsNullOrWhiteSpace(deepSleepWebAssemblyInfo.framework))
             {
                 Console.WriteLine($"");
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -297,8 +267,14 @@
                 Console.ForegroundColor = existingColor;
                 Console.WriteLine($"------------------------------------------------");
                 Console.ForegroundColor = existingColor;
-                Console.WriteLine($"           {deepSleepAssemblyName.Name}, {deepSleepAssemblyName.Version}, {deepSleepTargetDisplay}");
-                Console.WriteLine($"           {deepSleepNetCoreAssemblyName.Name}, {deepSleepNetCoreAssemblyName.Version}, {deepSleepNetCoreTargetDisplay}");
+                Console.WriteLine($"           {deepSleepAssemblyInfo.name}, {deepSleepAssemblyInfo.version}, {deepSleepAssemblyInfo.framework}");
+
+                if (!string.IsNullOrWhiteSpace(deepSleepOpenApiAssemblyInfo.name))
+                {
+                    Console.WriteLine($"           {deepSleepOpenApiAssemblyInfo.name}, {deepSleepOpenApiAssemblyInfo.version}, {deepSleepOpenApiAssemblyInfo.framework}");
+                }
+
+                Console.WriteLine($"           {deepSleepWebAssemblyInfo.name}, {deepSleepWebAssemblyInfo.version}, {deepSleepWebAssemblyInfo.framework}");
                 Console.WriteLine($"");
             }
 
@@ -420,6 +396,43 @@
             settings.Converters.Add(new ObjectConverter());
 
             return settings;
+        }
+
+        /// <summary>Gets the assemply information.</summary>
+        /// <param name="typeInAssemply">The type in assemply.</param>
+        /// <returns></returns>
+        internal static (string name, Version version, string framework) GetAssemplyInfo(Type typeInAssemply)
+        {
+            try
+            {
+                if (typeInAssemply != null)
+                {
+                    var assembly = Assembly.GetAssembly(typeInAssemply);
+
+                    if (assembly != null)
+                    {
+                        var targetFrameworkAttribute = assembly
+                            .GetCustomAttributes(true)
+                            .OfType<TargetFrameworkAttribute>()
+                            .FirstOrDefault();
+
+                        var targetDisplay = !string.IsNullOrWhiteSpace(targetFrameworkAttribute?.FrameworkName)
+                            ? targetFrameworkAttribute.FrameworkName
+                            : targetFrameworkAttribute?.FrameworkDisplayName;
+
+                        var assemblyName = assembly.GetName();
+
+                        return (
+                            name: assemblyName.Name,
+                            version: assemblyName.Version,
+                            framework: targetDisplay
+                        );
+                    }
+                }
+            }
+            catch { }
+
+            return default;
         }
 
         /// <summary>Mays the fourth.</summary>

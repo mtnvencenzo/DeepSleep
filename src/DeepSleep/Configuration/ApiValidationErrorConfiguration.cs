@@ -36,21 +36,6 @@
             }
         }
 
-        /// <summary>Gets the body deserialization error status code.</summary>
-        /// <value>The body deserialization error status code.</value>
-        public int BodyDeserializationErrorStatusCode
-        {
-            get
-            {
-                if (HttpStatusMode == ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)
-                {
-                    return 450;
-                }
-
-                return 400;
-            }
-        }
-
         /// <summary>Gets the body validation error status code.</summary>
         /// <value>The body validation error status code.</value>
         public int BodyValidationErrorStatusCode

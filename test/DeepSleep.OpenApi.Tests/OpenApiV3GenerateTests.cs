@@ -53,7 +53,7 @@ namespace DeepSleep.OpenApi.Tests
                 endpoint: nameof(BasicController.EndpointWithBodyParam),
                 config: new DeepSleepRequestConfiguration()));
 
-            var configuration = new DeepSleepOasConfigurationProvider
+            var configuration = new DeepSleepOasConfiguration
             {
                 Info = new OpenApiInfo
                 {
@@ -64,7 +64,7 @@ namespace DeepSleep.OpenApi.Tests
             };
 
             var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IDeepSleepOasConfigurationProvider)))).Returns(configuration);
+            mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IDeepSleepOasConfiguration)))).Returns(configuration);
             mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IApiRoutingTable)))).Returns(table);
 
             var generator = new DeepSleepOasGenerator(mockServiceProvider.Object);
@@ -110,7 +110,7 @@ namespace DeepSleep.OpenApi.Tests
                 endpoint: nameof(ListController.ListContainer),
                 config: new DeepSleepRequestConfiguration()));
 
-            var configuration = new DeepSleepOasConfigurationProvider
+            var configuration = new DeepSleepOasConfiguration
             {
                 Info = new OpenApiInfo
                 {
@@ -121,7 +121,7 @@ namespace DeepSleep.OpenApi.Tests
             };
 
             var mockServiceProvider = new Mock<IServiceProvider>();
-            mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IDeepSleepOasConfigurationProvider)))).Returns(configuration);
+            mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IDeepSleepOasConfiguration)))).Returns(configuration);
             mockServiceProvider.Setup(m => m.GetService(It.Is<Type>(t => t == typeof(IApiRoutingTable)))).Returns(table);
 
             var generator = new DeepSleepOasGenerator(mockServiceProvider.Object);
