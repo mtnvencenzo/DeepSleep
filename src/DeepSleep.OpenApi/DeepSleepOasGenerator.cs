@@ -25,7 +25,7 @@
     {
         private readonly IList<XDocument> commentDocs;
         private readonly IServiceProvider serviceProvider;
-        private readonly IDeepSleepOasConfigurationProvider configurationProvider;
+        private readonly IDeepSleepOasConfiguration configurationProvider;
         private readonly IDeepSleepRequestConfiguration defaultRequestConfiguration;
         private readonly IDeepSleepMediaSerializerFactory formatStreamReaderWriterFactory;
         private readonly IApiRoutingTable routingTable;
@@ -43,7 +43,7 @@
             OpenApiSpecVersion specVersion = OpenApiSpecVersion.OpenApi3_0)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            this.configurationProvider = serviceProvider.GetRequiredService<IDeepSleepOasConfigurationProvider>();
+            this.configurationProvider = serviceProvider.GetRequiredService<IDeepSleepOasConfiguration>();
             this.defaultRequestConfiguration = serviceProvider.GetService<IDeepSleepRequestConfiguration>();
             this.routingTable = serviceProvider.GetRequiredService<IApiRoutingTable>();
             this.formatStreamReaderWriterFactory = serviceProvider.GetService<IDeepSleepMediaSerializerFactory>();

@@ -41,29 +41,21 @@
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
-            if (config?.ExcludePaths != null)
+            if (!IsIncludedPath(path, config.IncludePaths))
             {
-                foreach (var excludedPath in config.ExcludePaths)
-                {
-                    var match = Regex.IsMatch(path, excludedPath);
-                    if (match)
-                    {
-                        await apinext.Invoke(httpcontext);
-                        return;
-                    }
-                }
+                await apinext.Invoke(httpcontext);
+                return;
+            }
+
+            if (IsExcludedPath(path, config.ExcludePaths))
+            {
+                await apinext.Invoke(httpcontext);
+                return;
             }
 
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
             var context = contextResolver.GetContext();
 
-#if DEBUG
-            var previousForeColor = Console.ForegroundColor;
-            Console.Write($"{context.Runtime.Duration.UtcStart.ToString("yyyy-MM-ddT HH:mm:ss.fffzzz", CultureInfo.CurrentCulture)} ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"{context.Request.Method.ToUpper()} {context.Request.RequestUri} {context.Request.Protocol}");
-            Console.ForegroundColor = previousForeColor;
-#endif
             var defaultRequestConfiguration = context.RequestServices.GetService(typeof(IDeepSleepRequestConfiguration)) as IDeepSleepRequestConfiguration;
 
             await context.ProcessApiRequest(httpcontext, contextResolver, requestPipeline, defaultRequestConfiguration);
@@ -117,6 +109,47 @@
             apiContext.Runtime.Duration.UtcStart = serverTime;
 
             return Task.FromResult(apiContext);
+        }
+
+        /// <summary>Determines whether [is included path] [the specified path].</summary>
+        /// <param name="path">The path.</param>
+        /// <param name="includedPaths">The included paths.</param>
+        /// <returns><c>true</c> if [is included path] [the specified path]; otherwise, <c>false</c>.</returns>
+        private bool IsIncludedPath(string path, IList<string> includedPaths)
+        {
+            foreach (var includedPath in includedPaths)
+            {
+                if (includedPath == "*")
+                {
+                    return true;
+                }
+
+                var match = Regex.IsMatch(path, includedPath);
+                if (match)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Determines whether [is excluded path] [the specified path].</summary>
+        /// <param name="path">The path.</param>
+        /// <param name="excludedPaths">The excluded paths.</param>
+        /// <returns><c>true</c> if [is excluded path] [the specified path]; otherwise, <c>false</c>.</returns>
+        private bool IsExcludedPath(string path, IList<string> excludedPaths)
+        {
+            foreach (var excludedPath in excludedPaths)
+            {
+                var match = Regex.IsMatch(path, excludedPath);
+                if (match)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>Gets the request date.</summary>
@@ -870,20 +903,6 @@
 
                 // Merge status code to the http response
                 httpcontext.Response.StatusCode = context.Response.StatusCode;
-
-                if (context.Response.StatusCode == 450)
-                {
-                    try
-                    {
-                        var feature = httpcontext?.Response?.HttpContext?.Features?.Get<IHttpResponseFeature>();
-                        if (feature != null)
-                        {
-                            feature.ReasonPhrase = "Bad Request Format";
-                        }
-                    }
-                    catch { }
-                }
-
  
                 if (context.Response.ResponseWriter != null && context.Response.ResponseWriterOptions != null)
                 {

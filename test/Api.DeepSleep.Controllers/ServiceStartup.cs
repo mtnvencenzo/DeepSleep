@@ -421,7 +421,7 @@
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
-                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecification
                     }
                 });
 
@@ -434,7 +434,7 @@
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
-                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecification
                     }
                 });
 
@@ -447,7 +447,7 @@
                 {
                     ValidationErrorConfiguration = new ApiValidationErrorConfiguration
                     {
-                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus
+                        HttpStatusMode = ValidationHttpStatusMode.CommonHttpSpecification
                     }
                 });
 

@@ -27,9 +27,17 @@
         /// <value>The on request processed.</value>
         public virtual Func<IApiRequestContextResolver, Task> OnRequestProcessed { get; set; }
 
+        /// <summary>Gets or sets the include paths.</summary>
+        /// <value>The included paths.</value>
+        public IList<string> IncludePaths { get; set; }
+
         /// <summary>Gets or sets a list of regular expression paths to exclude from processing</summary>
         /// <value>The paths to exclude.</value>
         public IList<string> ExcludePaths { get; set; }
+
+        /// <summary>Gets or sets the route prefix.</summary>
+        /// <value>The route prefix.</value>
+        public string RoutePrefix { get; set; }
 
         /// <summary>Gets or sets a value indicating whether [write console header].</summary>
         /// <value><c>true</c> if [write console header]; otherwise, <c>false</c>.</value>

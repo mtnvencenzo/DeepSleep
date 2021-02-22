@@ -22,6 +22,8 @@ namespace Api.DeepSleep.Web.OpenApiCheck
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseIISIntegration();
+                    webBuilder.UseIIS();
                     webBuilder.UseStartup<Startup>();
                 });
     }

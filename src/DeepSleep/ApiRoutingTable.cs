@@ -12,18 +12,33 @@
     public class ApiRoutingTable : IApiRoutingTable
     {
         private readonly List<ApiRoutingItem> routes;
+        private readonly string routePrefix;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRoutingTable"/> class.
         /// </summary>
-        public ApiRoutingTable()
+        public ApiRoutingTable(string routePrefix = null)
         {
             routes = new List<ApiRoutingItem>();
+
+            if (!string.IsNullOrWhiteSpace(routePrefix))
+            {
+                this.routePrefix = routePrefix?.Trim();
+
+                if (this.routePrefix.StartsWith("/") && this.routePrefix.Length == 1)
+                {
+                    this.routePrefix = null;
+                }
+                else if (this.routePrefix.StartsWith("/"))
+                {
+                    this.routePrefix = this.routePrefix.Substring(1);
+                }
+            }
         }
 
         /// <summary>Gets the routes.</summary>
         /// <returns></returns>
-        public IList<ApiRoutingItem> GetRoutes()
+        public virtual IList<ApiRoutingItem> GetRoutes()
         {
             return routes;
         }
@@ -74,6 +89,13 @@
             else if (template.StartsWith("/"))
             {
                 template = template.Substring(1);
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.routePrefix))
+            {
+                template = (this.routePrefix.EndsWith("/"))
+                    ? $"{this.routePrefix}{template}"
+                    : $"{this.routePrefix}/{template}";
             }
 
             foreach (var httpMethod in registration.HttpMethods.Where(h => h != null))

@@ -7,6 +7,7 @@ namespace Api.DeepSleep.Web.OpenApiCheck
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Api.DeepSleep.Web.OpenApiCheck.Controllers;
 
     /// <summary>
     /// 
@@ -32,6 +33,12 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ContextEndpoints>();
+            services.Configure<IISServerOptions>((o) =>
+            {
+                o.AllowSynchronousIO = true;
+            });
+
             services
                 .AddLogging()
                 .UseDeepSleepJsonNegotiation()
@@ -48,7 +55,11 @@ namespace Api.DeepSleep.Web.OpenApiCheck
                 .UseDeepSleepServices((o) =>
                 {
                     o.DefaultRequestConfiguration = DefaultRequestConfiguration();
-                    o.WriteConsoleHeader = false;
+                    o.WriteConsoleHeader = true;
+                    o.ExcludePaths = new[]
+                    {
+                        @".*\.html"
+                    };
                 });
         }
 
@@ -58,7 +69,8 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         {
             app
                 .UseDeepSleep()
-                .UseForwardedHeaders();
+                .UseForwardedHeaders()
+                .UseStaticFiles();
 
             app.Build();
         }

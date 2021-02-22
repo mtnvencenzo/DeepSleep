@@ -90,7 +90,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecification)]
         public AttributeDiscoveryModel GetValidationErrorDefaultDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
@@ -104,7 +104,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             requestDeserializationError: "",
-            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecification)]
         public AttributeDiscoveryModel GetValidationErrorEmptyDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
@@ -118,7 +118,7 @@
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
             requestDeserializationError: "Deserialization Failed",
-            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecification)]
         public AttributeDiscoveryModel GetValidationErrorCustomDeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;
@@ -131,7 +131,7 @@
         [ApiRouteAllowAnonymous(allowAnonymous: false)]
         [ApiAuthorization(authorizationProviderType: typeof(DefaultAuthorizationProvider))]
         [ApiRouteValidationErrorConfiguration(
-            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecificationWithCustomDeserializationStatus)]
+            httpStatusMode: ValidationHttpStatusMode.CommonHttpSpecification)]
         public AttributeDiscoveryModel GetValidationErrorUse450DeserializationError([InBody] AttributeDiscoveryModel request)
         {
             return request;

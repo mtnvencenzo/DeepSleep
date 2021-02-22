@@ -17,6 +17,7 @@
     using Microsoft.AspNetCore.Hosting;
     using System.Reflection;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.FileProviders;
 
     public abstract class TestBase
     {
@@ -89,6 +90,11 @@
             var hostingEnvironmentMock = new Mock<IWebHostEnvironment>();
             hostingEnvironmentMock.Setup(m => m.EnvironmentName).Returns("Development");
             hostingEnvironmentMock.Setup(m => m.ContentRootPath).Returns(basePath);
+
+            hostingEnvironmentMock.Setup(m => m.ContentRootFileProvider).Returns(new PhysicalFileProvider("/"));
+            hostingEnvironmentMock.Setup(m => m.WebRootFileProvider).Returns(new PhysicalFileProvider("/"));
+
+            services.AddSingleton<IWebHostEnvironment>(hostingEnvironmentMock.Object);
 
             startup = new Startup(hostingEnvironmentMock.Object);
             startup.ConfigureServices(services);

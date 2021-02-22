@@ -6,7 +6,7 @@
     /// 
     /// </summary>
     /// <seealso cref="DeepSleep.Discovery.IDeepSleepSingleRouteRegistrationProvider" />
-    public abstract class DeepSleepSingleRouteRegistrationProvider : IDeepSleepSingleRouteRegistrationProvider
+    public class DeepSleepSingleRouteRegistrationProvider : IDeepSleepSingleRouteRegistrationProvider
     {
         private readonly DeepSleepRouteRegistration registration;
 
@@ -20,7 +20,7 @@
 
         /// <summary>Gets the route registration.</summary>
         /// <returns></returns>
-        public DeepSleepRouteRegistration GetRouteRegistration()
+        public virtual DeepSleepRouteRegistration GetRouteRegistration()
         {
             return this.registration;
         }
