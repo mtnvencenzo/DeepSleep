@@ -19,12 +19,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="test.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.21" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DeepSleep.OpenApi\DeepSleep.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\DeepSleep.Web\DeepSleep.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\test.html">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

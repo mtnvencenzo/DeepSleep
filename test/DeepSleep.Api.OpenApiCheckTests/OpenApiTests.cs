@@ -57,7 +57,6 @@ Accept: {applicationJson}";
         {
             base.SetupEnvironment();
 
-
             var request = @$"
 GET https://{host}/openapi/v3/doc HTTP/1.1
 Host: {host}

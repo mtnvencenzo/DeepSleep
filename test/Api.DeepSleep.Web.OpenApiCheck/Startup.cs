@@ -34,7 +34,6 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<ContextEndpoints>();
-
             services.Configure<IISServerOptions>((o) =>
             {
                 o.AllowSynchronousIO = true;
@@ -57,6 +56,10 @@ namespace Api.DeepSleep.Web.OpenApiCheck
                 {
                     o.DefaultRequestConfiguration = DefaultRequestConfiguration();
                     o.WriteConsoleHeader = true;
+                    o.ExcludePaths = new[]
+                    {
+                        @".*\.html"
+                    };
                 });
         }
 
@@ -66,7 +69,8 @@ namespace Api.DeepSleep.Web.OpenApiCheck
         {
             app
                 .UseDeepSleep()
-                .UseForwardedHeaders();
+                .UseForwardedHeaders()
+                .UseStaticFiles();
 
             app.Build();
         }

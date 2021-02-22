@@ -26,6 +26,10 @@
         /// <value>The on request processed.</value>
         Func<IApiRequestContextResolver, Task> OnRequestProcessed { get; set; }
 
+        /// <summary>Gets or sets the include paths.</summary>
+        /// <value>The include paths.</value>
+        IList<string> IncludePaths { get; set; }
+
         /// <summary>Gets or sets the exclude paths.</summary>
         /// <value>The exclude paths.</value>
         IList<string> ExcludePaths { get; set; }

@@ -41,17 +41,16 @@
         {
             var path = httpcontext?.Request?.Path.ToString() ?? string.Empty;
 
-            if (config?.ExcludePaths != null)
+            if (!IsIncludedPath(path, config.IncludePaths))
             {
-                foreach (var excludedPath in config.ExcludePaths)
-                {
-                    var match = Regex.IsMatch(path, excludedPath);
-                    if (match)
-                    {
-                        await apinext.Invoke(httpcontext);
-                        return;
-                    }
-                }
+                await apinext.Invoke(httpcontext);
+                return;
+            }
+
+            if (IsExcludedPath(path, config.ExcludePaths))
+            {
+                await apinext.Invoke(httpcontext);
+                return;
             }
 
             contextResolver.SetContext(await BuildApiRequestContext(httpcontext));
@@ -110,6 +109,47 @@
             apiContext.Runtime.Duration.UtcStart = serverTime;
 
             return Task.FromResult(apiContext);
+        }
+
+        /// <summary>Determines whether [is included path] [the specified path].</summary>
+        /// <param name="path">The path.</param>
+        /// <param name="includedPaths">The included paths.</param>
+        /// <returns><c>true</c> if [is included path] [the specified path]; otherwise, <c>false</c>.</returns>
+        private bool IsIncludedPath(string path, IList<string> includedPaths)
+        {
+            foreach (var includedPath in includedPaths)
+            {
+                if (includedPath == "*")
+                {
+                    return true;
+                }
+
+                var match = Regex.IsMatch(path, includedPath);
+                if (match)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Determines whether [is excluded path] [the specified path].</summary>
+        /// <param name="path">The path.</param>
+        /// <param name="excludedPaths">The excluded paths.</param>
+        /// <returns><c>true</c> if [is excluded path] [the specified path]; otherwise, <c>false</c>.</returns>
+        private bool IsExcludedPath(string path, IList<string> excludedPaths)
+        {
+            foreach (var excludedPath in excludedPaths)
+            {
+                var match = Regex.IsMatch(path, excludedPath);
+                if (match)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>Gets the request date.</summary>

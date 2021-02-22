@@ -85,6 +85,7 @@
             {
                 DefaultRequestConfiguration = ApiRequestContext.GetDefaultRequestConfiguration(),
                 ExcludePaths = new List<string>(),
+                IncludePaths = new List<string> { "*" },
                 WriteConsoleHeader = true,
                 DiscoveryStrategies = new List<IDeepSleepDiscoveryStrategy>()
             };
@@ -96,7 +97,7 @@
 
             configuration.DefaultRequestConfiguration = configuration.DefaultRequestConfiguration ?? ApiRequestContext.GetDefaultRequestConfiguration();
             configuration.ExcludePaths = configuration.ExcludePaths ?? new List<string>();
-
+            configuration.IncludePaths = configuration.IncludePaths ?? new List<string>();
 
             var routingTable = new ApiRoutingTable(routePrefix: configuration.RoutePrefix);
 
