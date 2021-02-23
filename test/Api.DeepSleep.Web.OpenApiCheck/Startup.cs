@@ -55,7 +55,7 @@ namespace Api.DeepSleep.Web.OpenApiCheck
                 .UseDeepSleepServices((o) =>
                 {
                     o.DefaultRequestConfiguration = DefaultRequestConfiguration();
-                    o.WriteConsoleHeader = true;
+                    o.WriteConsoleHeader = false;
                     o.ExcludePaths = new[]
                     {
                         @".*\.html"

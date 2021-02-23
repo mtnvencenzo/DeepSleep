@@ -115,7 +115,7 @@
         /// <param name="path">The path.</param>
         /// <param name="includedPaths">The included paths.</param>
         /// <returns><c>true</c> if [is included path] [the specified path]; otherwise, <c>false</c>.</returns>
-        private bool IsIncludedPath(string path, IList<string> includedPaths)
+        internal static bool IsIncludedPath(string path, IList<string> includedPaths)
         {
             foreach (var includedPath in includedPaths)
             {
@@ -138,7 +138,7 @@
         /// <param name="path">The path.</param>
         /// <param name="excludedPaths">The excluded paths.</param>
         /// <returns><c>true</c> if [is excluded path] [the specified path]; otherwise, <c>false</c>.</returns>
-        private bool IsExcludedPath(string path, IList<string> excludedPaths)
+        internal static bool IsExcludedPath(string path, IList<string> excludedPaths)
         {
             foreach (var excludedPath in excludedPaths)
             {
