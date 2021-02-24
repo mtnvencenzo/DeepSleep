@@ -68,12 +68,14 @@ steps:
     packagesToPack: src/DeepSleep/.pack/DeepSleep.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
-    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
-    allowPackageConflicts: true
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Nuget Service Connection'
+    verbosityPush: 'Normal'
+    allowPackageConflicts: true
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
@@ -81,12 +83,14 @@ steps:
     packagesToPack: src/DeepSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep.OpenApi'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg'
-    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
-    allowPackageConflicts: true
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Nuget Service Connection'
+    verbosityPush: 'Normal'
+    allowPackageConflicts: true
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
@@ -94,9 +98,11 @@ steps:
     packagesToPack: src/DeepSleep.Web/.pack/DeepSleep.Web.nuspec
 - task: NuGetCommand@2
   displayName: 'nuget push DeepSleep.Web'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg'
-    publishVstsFeed: 'abf7b7c2-ee86-4442-a473-00914f41749b'
-    allowPackageConflicts: true
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Nuget Service Connection'
+    verbosityPush: 'Normal'
+    allowPackageConflicts: true
