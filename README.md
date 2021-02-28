@@ -4,3 +4,5 @@
 
 
 Bear with me,  getting things setup...
+
+Here is the doc site: [docs](https://deepsleep-doc.azurewebsites.net), also in progress so kinda useless right now :/
