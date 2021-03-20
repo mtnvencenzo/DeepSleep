@@ -3,12 +3,12 @@
     /// <summary>
     /// 
     /// </summary>
-    public static class IncludePaths
+    public static class ApiPaths
     {
-        /// <summary>Roots the regex.</summary>
+        /// <summary>Froms the root.</summary>
         /// <param name="rootPath">The root path.</param>
         /// <returns></returns>
-        public static string RootRegex(string rootPath)
+        public static string FromRoot(string rootPath)
         {
             var root = rootPath
                 .TrimStart('/')
