@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.Web</id>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <projectUrl>https://github.com/mtnvencenzo/DeepSleep</projectUrl>
@@ -17,15 +17,15 @@
     <tags>deepsleep api rest framework webapi</tags>
     <dependencies>
       <group targetFramework="netcoreapp2.1">
-        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="netcoreapp3.1">
-        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="net5.0">
-        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="0.0.1" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
