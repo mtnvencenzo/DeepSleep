@@ -85,7 +85,7 @@
             {
                 DefaultRequestConfiguration = ApiRequestContext.GetDefaultRequestConfiguration(),
                 ExcludePaths = new List<string>(),
-                IncludePaths = new List<string> { IncludePaths.All() },
+                IncludePaths = new List<string> { ApiPaths.All() },
                 WriteConsoleHeader = true,
                 DiscoveryStrategies = new List<IDeepSleepDiscoveryStrategy>()
             };
