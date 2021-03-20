@@ -2,30 +2,30 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep.Web</id>
-    <version>0.0.15</version>
+    <version>1.0.0</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <projectUrl>https://github.com/mtnvencenzo/DeepSleep</projectUrl>
     <repository type="git" url="https://github.com/mtnvencenzo/DeepSleep.git" branch="master" />
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <iconUrl>https://cezzi.azureedge.net/nuget/deepsleep_web.png</iconUrl>
+    <iconUrl>https://deepsleep-doc.azurewebsites.net/deepsleep_web.png</iconUrl>
     <icon>images\deepsleep_web.png</icon>
     <description>DeepSleep Web Shim</description>
     <releaseNotes>Release of the DeepSleep.Web package</releaseNotes>
     <license type="expression">MIT</license>
     <copyright>Copyright 2021</copyright>
-    <tags>deepsleep web api rest</tags>
+    <tags>deepsleep api rest framework webapi</tags>
     <dependencies>
       <group targetFramework="netcoreapp2.1">
-        <dependency id="DeepSleep" version="0.0.15" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="netcoreapp3.1">
-        <dependency id="DeepSleep" version="0.0.15" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="net5.0">
-        <dependency id="DeepSleep" version="0.0.15" exclude="Build,Analyzers" />
+        <dependency id="DeepSleep" version="1.0.0" exclude="Build,Analyzers" />
         <dependency id="Microsoft.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>

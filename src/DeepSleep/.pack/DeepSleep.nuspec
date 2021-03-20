@@ -2,19 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DeepSleep</id>
-    <version>0.0.15</version>
+    <version>1.0.0</version>
     <authors>Ronaldo Vecchi</authors>
     <owners>Ronaldo Vecchi</owners>
     <projectUrl>https://github.com/mtnvencenzo/DeepSleep</projectUrl>
     <repository type="git" url="https://github.com/mtnvencenzo/DeepSleep.git" branch="master" />
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <iconUrl>https://cezzi.azureedge.net/nuget/deepsleep.png</iconUrl>
+    <iconUrl>https://deepsleep-doc.azurewebsites.net/deepsleep.png</iconUrl>
     <icon>images\deepsleep.png</icon>
     <description>DeepSleep</description>
-    <releaseNotes>Release of the DeepSleep package</releaseNotes>
+    <releaseNotes>Release of the DeepSleep API package</releaseNotes>
     <license type="expression">MIT</license>
     <copyright>Copyright 2021</copyright>
-    <tags>deepsleep api rest</tags>
+    <tags>deepsleep api rest framework webapi</tags>
     <dependencies>
       <group targetFramework="netstandard2.0">
         <dependency id="System.Text.Json" version="5.0.1" exclude="Build,Analyzers" />
