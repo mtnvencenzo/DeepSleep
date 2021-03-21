@@ -72,7 +72,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: push -s $(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate
+    arguments: push -s '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg' -k $(NugetApiKey) --skip-duplicate
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
