@@ -17,3 +17,9 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
 * **Route Discovery** - The process of the DeepSleep runtime identifing and enroling your API routes into registered endpoints.
   * [Attribute Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/attribute-routing/attribute-routing) - The simplist and easiest to use form of discovery
   * [Static Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/static-routing/static-routing) - Allows for pulling routing meta-data from external sources or defined methods handling route information and configuration
+* **Request Pipeline** - The core middleware tasked with processing API requests.
+  * [Authentication](https://deepsleep-doc.azurewebsites.net/request-pipeline/authentication/overview) - Extensible middleware to enforce request authentication.
+  * [Authorization](https://deepsleep-doc.azurewebsites.net/request-pipeline/authorization/overview) - Extensible middleware to enforce request authorization.
+  * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
+  * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
+  * [Content Negotiation](https://deepsleep-doc.azurewebsites.net/content-negotiation/overview) - Customizable support for media serializers to process inbound request and out going response bodies.
