@@ -14,7 +14,7 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
 
 ## List of Features
 
-* **Route Discovery** - The process of the DeepSleep runtime identifing and enroling your API routes into registered endpoints.
+* **Route Discovery** - The process of the DeepSleep runtime identifing and enroling your API routes into registered endpoints.  Support for automated creation of HEAD routes for registered GET endpoints.
   * [Attribute Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/attribute-routing/attribute-routing) - The simplist and easiest to use form of discovery
   * [Static Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/static-routing/static-routing) - Allows for pulling routing meta-data from external sources or defined methods handling route information and configuration
 * **Request Pipeline** - The core middleware tasked with processing API requests.
@@ -24,5 +24,9 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
   * [Content Negotiation](https://deepsleep-doc.azurewebsites.net/content-negotiation/overview) - Customizable support for media serializers to process inbound request and out going response bodies.
   * [Model Binding](https://deepsleep-doc.azurewebsites.net/request-pipeline/model-binding/overview) - Complex request uri and body object model support. Supports custom poco object binding for Uri and Body as well as simple binding for primitive/simple type method paramter binding.
   * [4xx-5xx Response Handling](https://deepsleep-doc.azurewebsites.net/request-pipeline/error-handling/error-responses) - Customizable support for standard 4xx and 5xx error responses.  Global handler for standardized responses orb customize for more granular error responses.
-  * [Routing](https://deepsleep-doc.azurewebsites.net/request-pipeline/routing/overview) - Full featured request routing framework.
+  * [Routing](https://deepsleep-doc.azurewebsites.net/request-pipeline/routing/overview) - Full featured request routing framework.  
   * [Validation](https://deepsleep-doc.azurewebsites.net/request-pipeline/validation/overview) - Common validation middleware for validating bound pcoc's, simple parameters and giving the ability to validate the full request with access to all request inputs.
+  * [Response Helpers](https://deepsleep-doc.azurewebsites.net/request-pipeline/response-helpers/overview) - Helper methods/objects that allow for better control over the full HTTP response.
+  * [Localization](https://deepsleep-doc.azurewebsites.net/request-pipeline/localization/overview) - Middleware support for managing the request thread's culture and ui-culture based on the incoming request.
+  * [Request Logging](https://deepsleep-doc.azurewebsites.net/request-pipeline/request-logging/global-handler) - Global handler for logging the full HTTP request.
+  * [Exception Handling](https://deepsleep-doc.azurewebsites.net/request-pipeline/exception-handling/global-handler) - Global handler for catching all unhandled exceptions.
