@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: windows-latest
+  vmImage: 	ubuntu-20.04
 
 variables:
   buildConfiguration: 'Release'
@@ -81,14 +81,13 @@ steps:
     command: pack
     packagesToPack: src/DeepSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
 - task: DotNetCoreCLI@2
-  displayName: 'nuget push DeepSleep.OpenApi'
+  displayName: 'nuget push DeepSleep'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
     nuGetFeedType: 'external'
-    publishFeedCredentials: 'Nuget Service Connection'
-    arguments: '--skip-duplicate'
+    arguments: '-k $(NugetApiKey) --skip-duplicate'
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
