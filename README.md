@@ -22,4 +22,7 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
   * [Authorization](https://deepsleep-doc.azurewebsites.net/request-pipeline/authorization/overview) - Extensible middleware to enforce request authorization.
   * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
   * [Content Negotiation](https://deepsleep-doc.azurewebsites.net/content-negotiation/overview) - Customizable support for media serializers to process inbound request and out going response bodies.
-  * [Model Binding](https://deepsleep-doc.azurewebsites.net/request-pipeline/model-binding/overview) - Uri (querystring and route variable) binding as well as inbound request body object binding.
+  * [Model Binding](https://deepsleep-doc.azurewebsites.net/request-pipeline/model-binding/overview) - Complex request uri and body object model support. Supports custom poco object binding for Uri and Body as well as simple binding for primitive/simple type method paramter binding.
+  * [4xx-5xx Response Handling](https://deepsleep-doc.azurewebsites.net/request-pipeline/error-handling/error-responses) - Customizable support for standard 4xx and 5xx error responses.  Global handler for standardized responses orb customize for more granular error responses.
+  * [Routing](https://deepsleep-doc.azurewebsites.net/request-pipeline/routing/overview) - Full featured request routing framework.
+  * [Validation](https://deepsleep-doc.azurewebsites.net/request-pipeline/validation/overview) - Common validation middleware for validating bound pcoc's, simple parameters and giving the ability to validate the full request with access to all request inputs.
