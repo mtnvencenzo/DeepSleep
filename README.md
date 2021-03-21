@@ -6,10 +6,10 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
 
 ## DeepSleep Nuget Packages
 
-| Package Name | Target Framework | Version |
+| Package Name | Target Framework(s) | Version |
 | -------------- | :-------: | :------- | 
 | [DeepSleep](https://www.nuget.org/packages/DeepSleep) | 2.0 | ![DeepSleep Nuget Package](https://buildstats.info/nuget/deepsleep) |
-| [DeepSleep.Web](https://www.nuget.org/packages/DeepSleep.Web) | 2.0 | ![DeepSleep.Web Nuget Package](https://buildstats.info/nuget/deepsleep.web) |
+| [DeepSleep.Web](https://www.nuget.org/packages/DeepSleep.Web) | netcoreapp2.1<br/>netcoreapp3.1<br/>net5.0 | ![DeepSleep.Web Nuget Package](https://buildstats.info/nuget/deepsleep.web) |
 | [DeepSleep.OpenApi](https://www.nuget.org/packages/DeepSleep.OpenApi)  | 2.0 | ![DeepSleep.OpenApi Nuget Package](https://buildstats.info/nuget/deepsleep.openapi) |
 
 ## List of Features
