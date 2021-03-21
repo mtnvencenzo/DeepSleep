@@ -74,7 +74,7 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget Service Connection'
-    arguments: '--skip-duplicate'
+    arguments: '-k $(NugetApiKey) --skip-duplicate'
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
