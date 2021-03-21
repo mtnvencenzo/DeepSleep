@@ -70,24 +70,27 @@ steps:
   displayName: 'nuget push DeepSleep'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'Nuget Service Connection'
-    arguments: '-k $(NugetApiKey) --skip-duplicate'
+    command: custom
+    custom: nuget
+    arguments: >
+    push $(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg
+    -k $(NugetApiKey)
+    --skip-duplicate
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
     command: pack
     packagesToPack: src/DeepSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
 - task: DotNetCoreCLI@2
-  displayName: 'nuget push DeepSleep'
+  displayName: 'nuget push DeepSleep.OpenApi'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
-    nuGetFeedType: 'external'
-    arguments: '-k $(NugetApiKey) --skip-duplicate'
+    command: custom
+    custom: nuget
+    arguments: >
+    push $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg
+    -k $(NugetApiKey)
+    --skip-duplicate
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
