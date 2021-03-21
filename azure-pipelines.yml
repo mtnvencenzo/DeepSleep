@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 	ubuntu-20.04
+  vmImage: ubuntu-20.04
 
 variables:
   buildConfiguration: 'Release'
@@ -72,10 +72,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: >
-    push $(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg
-    -k $(NugetApiKey)
-    --skip-duplicate
+    arguments: push $(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
@@ -87,10 +84,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: >
-    push $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg
-    -k $(NugetApiKey)
-    --skip-duplicate
+    arguments: push $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
