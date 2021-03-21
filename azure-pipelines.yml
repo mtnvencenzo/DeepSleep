@@ -66,7 +66,7 @@ steps:
   inputs:
     command: pack
     packagesToPack: src/DeepSleep/.pack/DeepSleep.nuspec
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'nuget push DeepSleep'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
@@ -74,14 +74,13 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget Service Connection'
-    verbosityPush: 'Normal'
-    allowPackageConflicts: true
+    arguments: '--skip-duplicate'
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
     command: pack
     packagesToPack: src/DeepSleep.OpenApi/.pack/DeepSleep.OpenApi.nuspec
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'nuget push DeepSleep.OpenApi'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
@@ -89,14 +88,13 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget Service Connection'
-    verbosityPush: 'Normal'
-    allowPackageConflicts: true
+    arguments: '--skip-duplicate'
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
     command: pack
     packagesToPack: src/DeepSleep.Web/.pack/DeepSleep.Web.nuspec
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'nuget push DeepSleep.Web'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
@@ -104,5 +102,4 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget Service Connection'
-    verbosityPush: 'Normal'
-    allowPackageConflicts: true
+    arguments: '--skip-duplicate'
