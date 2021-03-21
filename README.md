@@ -12,13 +12,18 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
 | [DeepSleep.Web](https://www.nuget.org/packages/DeepSleep.Web) | netcoreapp2.1<br/>netcoreapp3.1<br/>net5.0 | ![DeepSleep.Web Nuget Package](https://buildstats.info/nuget/deepsleep.web) |
 | [DeepSleep.OpenApi](https://www.nuget.org/packages/DeepSleep.OpenApi)  | 2.0 | ![DeepSleep.OpenApi Nuget Package](https://buildstats.info/nuget/deepsleep.openapi) |
 
+
 ## List of Features
 
 * **Route Discovery** - The process of the DeepSleep runtime identifing and enroling your API routes into registered endpoints.  Support for automated creation of HEAD routes for registered GET endpoints.
   * [Attribute Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/attribute-routing/attribute-routing) - The simplist and easiest to use form of discovery
+    * Full support for routing and request configuration via method attributes.
   * [Static Routing](https://deepsleep-doc.azurewebsites.net/route-discovery/static-routing/static-routing) - Allows for pulling routing meta-data from external sources or defined methods handling route information and configuration
 * **Request Pipeline** - The core middleware tasked with processing API requests.
   * [Authentication](https://deepsleep-doc.azurewebsites.net/request-pipeline/authentication/overview) - Extensible middleware to enforce request authentication.
+    * Create and plug in authentication components into the request pipeline.
+    * Insert authenticaton components at the global level or define them at a per endpoint level..
+    * Opt-in/Opt-out of authentication either globally or endpoint.
   * [Authorization](https://deepsleep-doc.azurewebsites.net/request-pipeline/authorization/overview) - Extensible middleware to enforce request authorization.
   * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
   * [Content Negotiation](https://deepsleep-doc.azurewebsites.net/content-negotiation/overview) - Customizable support for media serializers to process inbound request and out going response bodies.
