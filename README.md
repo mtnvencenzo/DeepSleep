@@ -21,5 +21,5 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
   * [Authentication](https://deepsleep-doc.azurewebsites.net/request-pipeline/authentication/overview) - Extensible middleware to enforce request authentication.
   * [Authorization](https://deepsleep-doc.azurewebsites.net/request-pipeline/authorization/overview) - Extensible middleware to enforce request authorization.
   * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
-  * [Cross Origin Resource Sharing (CORS)](https://deepsleep-doc.azurewebsites.net/request-pipeline/cors/overview) - Middleware to support CORS pre-flight and standard requests.
   * [Content Negotiation](https://deepsleep-doc.azurewebsites.net/content-negotiation/overview) - Customizable support for media serializers to process inbound request and out going response bodies.
+  * [Model Binding](https://deepsleep-doc.azurewebsites.net/request-pipeline/model-binding/overview) - Uri (querystring and route variable) binding as well as inbound request body object binding.
