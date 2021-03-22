@@ -72,7 +72,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: push -s '$(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg' -k $(NugetApiKey) --skip-duplicate
+    arguments: push $(Build.ArtifactStagingDirectory)/DeepSleep.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate -s https://api.nuget.org/v3/index.json
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.OpenApi'
   inputs:
@@ -84,7 +84,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: push -s $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate
+    arguments: push $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate -s https://api.nuget.org/v3/index.json
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
