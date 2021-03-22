@@ -84,7 +84,7 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: push $(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg -k $(NugetApiKey) --skip-duplicate -s https://api.nuget.org/v3/index.json
+    arguments: push "$(Build.ArtifactStagingDirectory)/DeepSleep.OpenApi.*.*.*.nupkg" -k $(NugetApiKey) --skip-duplicate -s https://api.nuget.org/v3/index.json
 - task: NuGetCommand@2
   displayName: 'nuget pack DeepSleep.Web'
   inputs:
@@ -94,8 +94,6 @@ steps:
   displayName: 'nuget push DeepSleep.Web'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'Nuget Service Connection'
-    arguments: '--skip-duplicate'
+    command: custom
+    custom: nuget
+    arguments: push "$(Build.ArtifactStagingDirectory)/DeepSleep.Web.*.*.*.nupkg" -k $(NugetApiKey) --skip-duplicate -s https://api.nuget.org/v3/index.json
