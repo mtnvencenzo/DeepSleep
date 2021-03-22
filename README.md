@@ -44,3 +44,14 @@ View the [documentation site](https://deepsleep-doc.azurewebsites.net) for more 
   * [Localization](https://deepsleep-doc.azurewebsites.net/request-pipeline/localization/overview) - Middleware support for managing the request thread's culture and ui-culture based on the incoming request.
   * [Request Logging](https://deepsleep-doc.azurewebsites.net/request-pipeline/request-logging/global-handler) - Global handler for logging the full HTTP request.
   * [Exception Handling](https://deepsleep-doc.azurewebsites.net/request-pipeline/exception-handling/global-handler) - Global handler for catching all unhandled exceptions.
+
+## Samples
+
+Sample projects can be found in the $/samples directory
+
+#### $/Samples.Simple.Api
+This is a basic sample that illustrates a basic bootraping using all the default configurations.  Includes a simple *Hello World* endpoint.
+
+#### $/Samples.Mixed.Api
+This is a basic sample that illustrates a basic bootraping using all the default configurations but also shows how to include/exclude routes to use with mixing DeepSleep apis along side Razor and/or Static files or SPA.  Includes a simple *Hello World* endpoint.
+
