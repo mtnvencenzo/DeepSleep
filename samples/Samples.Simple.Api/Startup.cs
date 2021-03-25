@@ -13,10 +13,7 @@ namespace Samples.Simple.Api
         {
             services
                 .UseDeepSleepJsonNegotiation()
-                .UseDeepSleepServices((o) =>
-                {
-                    o.DefaultRequestConfiguration.AllowAnonymous = true;
-                });
+                .UseDeepSleepServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
