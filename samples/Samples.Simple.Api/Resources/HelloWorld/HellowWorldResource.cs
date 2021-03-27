@@ -11,7 +11,8 @@
         /// <summary>Gets this instance.</summary>
         /// <returns></returns>
         [ApiRoute(httpMethod: "GET", template: "/helloworld")]
-        public HelloWorldRs Get()
+        [ApiRouteAllowAnonymous(true)]
+        public HelloWorldRs HelloWorld()
         {
             return new HelloWorldRs();
         }

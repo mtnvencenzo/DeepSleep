@@ -68,6 +68,19 @@ namespace Api.DeepSleep.Web.WebApiCheck
 
             app.UseHttpsRedirection();
 
+            app.UseCors((p) =>
+            {
+                p.SetIsOriginAllowed((o) =>
+                {
+                    if (o == "https://localhost:44390")
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
