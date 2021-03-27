@@ -16,16 +16,17 @@
         public Task<AuthenticationResult> Authenticate(IApiRequestContextResolver contextResolver)
         {
             var context = contextResolver.GetContext();
-            var token = context.Request.ClientAuthenticationInfo.AuthValue ?? string.Empty;
+            var clientValue = context.Request.ClientAuthenticationInfo.AuthValue ?? string.Empty;
+            var isMatch = clientValue == "91E4BCD0-9C67-4AA1-9821-D2AC6B7AB037";
 
-            var match = token == "token-oasoasjjuq09qrufaisfasaasjd";
-
-            if (!match)
+            if (!isMatch)
             {
-                return Task.FromResult(new AuthenticationResult("Invalid Token"));
+                return Task.FromResult(new AuthenticationResult("InvalidToken"));
             }
 
-            return Task.FromResult(new AuthenticationResult(true));
+            var myIPrincipal = new SecurityContextPrincipal(1, new[] { "SiteUser" }, "AuthType");
+
+            return Task.FromResult(new AuthenticationResult(true, myIPrincipal));
         }
 
         public bool CanHandleAuthScheme(string scheme)

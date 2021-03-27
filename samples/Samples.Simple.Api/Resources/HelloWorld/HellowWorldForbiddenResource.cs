@@ -4,11 +4,12 @@
     using DeepSleep.Auth;
     using Samples.Simple.Api.Models;
 
-    public class HellowWorldAuthenticatedResource
+    public class HellowWorldForbiddenResource
     {
-        [ApiRoute(httpMethod: "GET", template: "/helloworld/authenticate")]
+        [ApiRoute(httpMethod: "GET", template: "/helloworld/authorize")]
         [ApiAuthentication(typeof(StaticTokenAuthenticationProvider))]
-        public HelloWorldRs HelloWorldAuthenticated()
+        [ApiAuthorization(typeof(AdminRoleAuthorizationProvider))]
+        public HelloWorldRs HelloWorldForbidden()
         {
             return new HelloWorldRs();
         }
