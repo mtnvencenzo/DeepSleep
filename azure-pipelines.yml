@@ -24,6 +24,11 @@ steps:
   inputs:
     packageType: 'sdk'
     version: '5.0.x'
+- task: DotnetGlobalToolInstaller@0
+  displayName: 'Download Tool Security Code Scan'
+  inputs:
+    name: 'global security-scan'
+    checkLatest: true
 - task: DotNetCoreCLI@2
   displayName: 'Restore'
   inputs:
@@ -37,6 +42,10 @@ steps:
     command: 'build'
     projects: 'DeepSleep.sln'
     arguments: '--configuration $(BuildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Static Code Analysis'
+  inputs:
+    command: 'security-scan DeepSleep.sln'
 - task: DotNetCoreCLI@2
   displayName: 'Test'
   inputs:
