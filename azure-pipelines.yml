@@ -41,12 +41,12 @@ steps:
   inputs:
     command: 'build'
     projects: 'DeepSleep.sln'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration $(BuildConfiguration) --warnAsError'
 - task: PowerShell@2
   displayName: 'Run Static Code Analysis'
   inputs:
     targetType: 'inline'
-    script: 'security-scan DeepSleep.sln'
+    script: 'security-scan DeepSleep.sln -warnAsError'
     failOnStderr: true
     showWarnings: true
     pwsh: true
