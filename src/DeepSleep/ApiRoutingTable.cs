@@ -13,6 +13,18 @@
     {
         private readonly List<ApiRoutingItem> routes;
         private readonly string routePrefix;
+        private static string[] methods = new[]
+        {
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "DELETE",
+            "CONNECT",
+            "OPTIONS",
+            "TRACE",
+            "PATCH"
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiRoutingTable"/> class.
@@ -79,6 +91,14 @@
             {
                 throw new Exception($"{nameof(registration.Template)} must be specified");
             }
+
+            registration.HttpMethods.Where(i => i != null).ToList().ForEach(m =>
+            {
+                if (!methods.Contains(m.ToUpper()))
+                {
+                    throw new Exception($"HTTP Method '{m.ToUpper()} is not supported");
+                }
+            });
 
             var template = registration.Template.Trim();
 
