@@ -27,9 +27,8 @@ steps:
 - task: DotnetGlobalToolInstaller@0
   displayName: 'Download Tool Security Code Scan'
   inputs:
-    name: 'global security-scan'
+    name: 'security-scan'
     versionSpec: '5.1.1'
-    checkLatest: true
 - task: DotNetCoreCLI@2
   displayName: 'Restore'
   inputs:
