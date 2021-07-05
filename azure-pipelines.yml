@@ -42,10 +42,18 @@ steps:
     command: 'build'
     projects: 'DeepSleep.sln'
     arguments: '--configuration $(BuildConfiguration)'
-- task: DotNetCoreCLI@2
-  displayName: 'Static Code Analysis'
+- task: WhiteSource@21
+  displayName: 'Run WhiteSource Analysis'
   inputs:
-    command: 'security-scan DeepSleep.sln'
+    cwd: '$(System.DefaultWorkingDirectory)'
+- task: PowerShell@2
+  displayName: 'Run Static Code Analysis'
+  inputs:
+    targetType: 'inline'
+    script: 'security-scan DeepSleep.sln'
+    failOnStderr: true
+    showWarnings: true
+    pwsh: true
 - task: DotNetCoreCLI@2
   displayName: 'Test'
   inputs:
